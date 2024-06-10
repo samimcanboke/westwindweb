@@ -23,6 +23,12 @@ class RegisteredUserController extends Controller
         return Inertia::render('Auth/Register');
     }
 
+    public function show()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
+
     /**
      * Handle an incoming registration request.
      *
@@ -30,11 +36,32 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        event(new Registered($user));
+        Auth::login($user);
+
+        return redirect(route('dashboard', absolute: false));
+    }
+
+    public function store_inside(Request $request): RedirectResponse
+    {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'driver_id' => 'required|string|max:255|unique:'.User::class,
-            'fullname' => 'required|string|max:255',
             'birth_date' => 'required|date',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -46,9 +73,9 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        return response()->json(['success'=>true, 'message' => 'User created successfully']);
+        // Auth::login($user);
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        // return redirect(route('users.create', absolute: false));
     }
 }

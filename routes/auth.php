@@ -60,4 +60,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->withoutMiddleware([IsAdmin::class])
                 ->name('logout');
+
+    Route::post('registered', [RegisteredUserController::class, 'store_inside'])->name('registered');
+    Route::get('show', [RegisteredUserController::class, 'show'])->name('users.show');
+
 });

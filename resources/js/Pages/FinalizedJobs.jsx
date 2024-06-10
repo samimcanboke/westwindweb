@@ -2,6 +2,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function FinalizedJobs({ auth }) {
     const [year, setYear] = useState("");
@@ -11,8 +12,16 @@ export default function FinalizedJobs({ auth }) {
         axios
             .post("/finalized-jobs/export", { year, month })
             .then((response) => {
-                console.log(response.data);
-                // Burada filtrelenmiş verileri işleyebilirsiniz
+                if(response.data.status){
+                    let url = "/download-pdf/" + response.data.file + ".pdf";
+                    window.open(url, "_blank", "noreferrer");
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata',
+                        text: 'Onaylanan İş Bulunamadı',
+                    })
+                }
             })
             .catch((error) => {
                 console.error("There was an error filtering the jobs!", error);

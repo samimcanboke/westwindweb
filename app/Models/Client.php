@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\DraftJobs;
+use App\Models\FinalizedJobs;
 
 class Client extends Model
 {
@@ -11,11 +13,11 @@ class Client extends Model
 
     public function draftJobs()
     {
-        return $this->hasMany(DraftJob::class);
+        return $this->hasMany(DraftJobs::class);
     }
 
     public function finalizedJobs()
     {
-        return $this->hasMany(finalizedJobs::class);
+        return $this->hasMany(FinalizedJobs::class);
     }
 }

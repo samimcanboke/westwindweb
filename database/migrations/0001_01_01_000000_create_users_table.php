@@ -15,9 +15,9 @@ return new class extends Migration
         //working_hours, sick_holiday, annual_leave_rights, phone
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname');
-            $table->string('driver_id');
-            $table->date('birth_date');
+            $table->string('name');
+            $table->string('driver_id')->nullable();
+            $table->date('birth_date')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

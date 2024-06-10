@@ -84,6 +84,9 @@ Route::get('/new-jobs', function () {
     return Inertia::render('NewJobs');
 })->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('new-jobs');
 
+
+
+
 Route::get('/draft-jobs', function () {
     return Inertia::render('DraftJobs');
 })->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('draft-jobs');

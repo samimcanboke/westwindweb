@@ -22,8 +22,9 @@
     "dependencies": {
         "@react-pdf/renderer": "^3.4.2",
         "flowbite-react": "^0.7.5",
-        "formik": "^2.4.5",
+        "formik": "^2.4.6",
         "react-calendar-timeline": "^0.28.0",
-        "sweetalert2": "^11.11.0"
+        "sweetalert2": "^11.11.0",
+        "yup": "^1.4.0"
     }
 }

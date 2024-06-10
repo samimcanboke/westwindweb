@@ -29,18 +29,18 @@ export default function CreateUsers({ auth }) {
 
             <div className="container mx-auto mt-10">
                 <Formik
-                    initialValues={{ email: "", password: "", driverId: "", fullName: "", birthDate: "", }}
+                    initialValues={{ email: "", password: "", driver_id: "", name: "", birth_date: "", }}
                     validate={(values) => {
                         const errors = {};
-                        if (!values.driverId) {
+                        if (!values.driver_id) {
                             errors.driverId = "Sürücü ID gerekli";
                         }
 
-                        if (!values.fullName) {
+                        if (!values.name) {
                             errors.fullName = "İsim Soyisim gerekli";
                         }
 
-                        if (!values.birthDate) {
+                        if (!values.birth_date) {
                             errors.birthDate = "Doğum Tarihi gerekli";
                         }
                         if (!values.email) {
@@ -55,11 +55,11 @@ export default function CreateUsers({ auth }) {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        axios.post('/register', {
+                        axios.post(route('registered'), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                             
+                                
                             },
                             body: JSON.stringify(values)
                         })
@@ -96,17 +96,17 @@ export default function CreateUsers({ auth }) {
                         <Form>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="driverId" className="block text-sm font-medium text-gray-700">Sürücü ID</label>
-                                <Field type="text" name="driverId" className="mt-1 block w-full" />
+                                <Field type="text" name="driver_id" className="mt-1 block w-full" />
                                 <ErrorMessage name="driverId" component="div" className="text-red-500 text-xs mt-1" />
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">İsim Soyisim</label>
-                                <Field type="text" name="fullName" className="mt-1 block w-full" />
+                                <Field type="text" name="name" className="mt-1 block w-full" />
                                 <ErrorMessage name="fullName" component="div" className="text-red-500 text-xs mt-1" />
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">Doğum Tarihi</label>
-                                <Field type="date" name="birthDate" className="mt-1 block w-full" />
+                                <Field type="date" name="birth_date" className="mt-1 block w-full" />
                                 <ErrorMessage name="birthDate" component="div" className="text-red-500 text-xs mt-1" />
                             </div>
                             <div className="mb-4 mx-4">
