@@ -32,8 +32,6 @@ export default function WaitingConfirmed({ auth }) {
     const [loading, setLoading] = useState(true);
     const [showEdit, setShowEdit] = useState(false);
     const [values, setValues] = useState({});
-    const [breakStart, setBreakStart] = useState("");
-    const [breakEnd, setBreakEnd] = useState("");
     const [drivers, setDrivers] = useState("");
     const [clients, setClients] = useState("");
 
@@ -61,12 +59,10 @@ export default function WaitingConfirmed({ auth }) {
         return newObj;
     };
 
-    const edit = (finalized) => {
-        let editingDraft = finalized;
-        console.log(finalized);
-        editingDraft.breaks = JSON.parse(finalized.breaks);
-        console.log("editing", editingDraft);
-        setValues(camelCase(editingDraft));
+    const edit = async (finalized) => {
+        let editingDraft =  finalized;
+        editingDraft.breaks = await JSON.parse(finalized.breaks);
+        setValues(await camelCase(await   editingDraft));
         setShowEdit(true);
     };
 
@@ -206,14 +202,9 @@ export default function WaitingConfirmed({ auth }) {
                                         )
                                         .then((res) => {
                                             if (res.status) {
-                                                axios
-                                                    .get("/data-draft-jobs")
-                                                    .then((res) => {
-                                                        setData(res.data);
-                                                        setLoading(false);
-                                                        setShowEdit(false);
-                                                        setSubmitting(false);
-                                                    });
+                                                setLoading(false);
+                                                setShowEdit(false);
+                                                setSubmitting(false);
                                             }
                                         });
                                 }}
@@ -1032,11 +1023,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                 push,
                                                             }) => (
                                                                 <div className="">
-                                                                    {values.breaks &&
-                                                                        values
-                                                                            .breaks
-                                                                            .length >
-                                                                            0 &&
+                                                                    {values.breaks && 
+                                                                        typeof values.breaks !== "string" &&
                                                                         values.breaks.map(
                                                                             (
                                                                                 breakItem,
@@ -1078,6 +1066,77 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             name={`breaks.${index}.end`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                setFieldValue(
+                                                                                                    `breaks.${index}.end`,
+                                                                                                    e
+                                                                                                        .target
+                                                                                                        .value
+                                                                                                );
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="bg-red-500 text-white p-2 rounded-md mt-5"
+                                                                                        onClick={() =>
+                                                                                            remove(
+                                                                                                index
+                                                                                            )
+                                                                                        }
+                                                                                    >
+                                                                                        Sil
+                                                                                    </button>
+                                                                                </div>
+                                                                            )
+                                                                        )}
+                                                                    {values.breaks && 
+                                                                        typeof values.breaks !== "object" &&
+                                                                        JSON.parse(values.breaks).map(
+                                                                            (
+                                                                                breakItem,
+                                                                                index
+                                                                            ) => (
+                                                                                <div
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                    className="flex justify-around items-center mt-5 mb-5"
+                                                                                >
+                                                                                    <div>
+                                                                                        <label className="text-sm">
+                                                                                            Break
+                                                                                            Start
+                                                                                        </label>
+                                                                                        <Field
+                                                                                            name={`breaks.${index}.start`}
+                                                                                            type="time"
+                                                                                            className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                                            value={breakItem.start}
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                setFieldValue(
+                                                                                                    `breaks.${index}.start`,
+                                                                                                    e
+                                                                                                        .target
+                                                                                                        .value
+                                                                                                );
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label className="text-sm">
+                                                                                            Break
+                                                                                            End
+                                                                                        </label>
+                                                                                        <Field
+                                                                                            name={`breaks.${index}.end`}
+                                                                                            type="time"
+                                                                                            className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                                            value={breakItem.end}
                                                                                             onChange={(
                                                                                                 e
                                                                                             ) => {
@@ -1410,8 +1469,7 @@ export default function WaitingConfirmed({ auth }) {
                                                 >
                                                     Kaydet
                                                 </Button>
-                                                 <Button
-                                                    
+                                                <Button 
                                                     onClick={handleConfirm}
                                                     className="ml-4 bg-green-500"
                                                 >

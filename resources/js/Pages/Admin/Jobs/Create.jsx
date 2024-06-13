@@ -1,137 +1,418 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { useEffect,useState} from 'react';
-import { Accordion, AccordionContent, AccordionPanel, AccordionTitle,Label,Datepicker,Textarea,ToggleSwitch,Select, Button, Table } from "flowbite-react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionPanel,
+    AccordionTitle,
+    Label,
+    Datepicker,
+    Textarea,
+    ToggleSwitch,
+    Select,
+    Button,
+    Table,
+} from "flowbite-react";
+import { Formik, Field, FieldArray, Form } from "formik";
+import * as Yup from "yup";
+import Swal from "sweetalert2";
 
+const initialValues = {
+    client: 0,
+    start_date: new Date(),
+    start_time: "",
+    end_date: new Date(),
+    end_time: "",
+    zug_nummer: "",
+    locomotive_nummer: "",
+    tour_name: "",
+    from: "",
+    to: "",
+    description: "",
+};
+
+const validationSchema = Yup.object().shape({
+    client: Yup.number().required("Required"),
+    start_date: Yup.date().required("Required"),
+    start_time: Yup.string().required("Required"),
+    end_date: Yup.date().required("Required"),
+    end_time: Yup.string().required("Required"),
+    zug_nummer: Yup.string().required("Required"),
+    locomotive_nummer: Yup.string().required("Required"),
+    tour_name: Yup.string().required("Required"),
+    from: Yup.string().required("Required"),
+    to: Yup.string().required("Required"),
+    description: Yup.string(),
+});
 
 export default function Dashboard({ auth }) {
-
-    const [filterView,setFilterView] = useState(false);
-    const [confirmedJobs,setConfirmedJobs] = useState([]);
-    const [filter,setFilter] = useState({});
-    const [filterSources,setFilterSources] = useState({
-        user: "",
-        client: "",
-        month: "",
-        year: "",
-    });
-    
-
-    useEffect(()=>{
-        axios.get("finalized-filter").then((res)=>{
-            if(res.status == 200){
-                setFilterSources({
-                    user: res.data.users,
-                    client: res.data.clients,
-                    month: res.data.months,
-                    year: res.data.year
-                })
-            }
-        })
-    },[])
-
-
-
-    const handleChange = (e)=> {
-        let key = e.target.id;
-        let value = e.target.value;        
-        setFilter(filter => ({
-            ...filter,
-            [key]: value,
-        }))
-        
-    }
-  
-
-    const filterAction = () => {
-        setFilterView(false);
-        axios.post("/finalized-jobs/export",{filter}).then(res => {
-            let url = "/download-pdf/" + res.data + ".pdf";
-            window.open(url, "_blank", "noreferrer");
-        })
-    }
+    const [client, setClient] = useState([]);
+    useEffect(() => {
+        axios.get("/clients").then((res) => {
+            setClient(res.data);
+        });
+    }, []);
 
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Confirmed Jobs</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    Confirmed Jobs
+                </h2>
+            }
         >
-            <Head title="Confirmed Jobs" />
+            <Head title="Create New Jobs" />
 
-            {filterView && (<div className='flex justify-start flex-col p-5'>
-                <div className="max-w-md">
-                    <div className="mb-2 block">
-                        <Label htmlFor="client" value="Select client" />
-                    </div>
-                    <Select id="client" onChange={handleChange}>
-                        <option >Seçiniz...</option>
-                        {filterSources.client && (filterSources.client.map((client)=>(
-                            <option key={client.id} value={client.id}>{client.name}</option>
-                        )))}
-                    </Select>
-                </div>
-                <br/>
-                <div className="max-w-md">
-                    <div className="mb-2 block">
-                        <Label htmlFor="id" value="Select user id" />
-                    </div>
-                    <Select id="user" onChange={handleChange}>
-                        <option >Seçiniz...</option>
-                        {filterSources.user && (filterSources.user.map((user)=>(
-                            <option key={user.id} value={user.id}>{user.name}</option>
-                        )))}
-                    </Select>
-                </div>
-                <br/>
-                <div className="max-w-md">
-                    <div className="mb-2 block">
-                        <Label htmlFor="id" value="Month" />
-                    </div>
-                    <Select id="month" onChange={handleChange}>
-                        <option id="" >Seçiniz...</option>
-                        {filterSources.month && (filterSources.month.map((month,index)=>(
-                            <option key={index} value={index + 1}>{month}</option>
-                        )))}
-                    </Select>
-                </div>
-                <br/>
-                <div className="max-w-md">
-                    <div className="mb-2 block">
-                        <Label htmlFor="id" value="Year" />
-                    </div>
-                    <Select id="year" onChange={handleChange}>
-                        <option>Seçiniz...</option>
-                        {filterSources.year && (filterSources.year.map((year,index)=>(
-                            <option key={index} value={year}>{year}</option>
-                        )))}
-                    </Select>
-                </div>
-                
-                <br/>
-                <div className="max-w-md flex justify-end p-5">
-                    <div className="mb-2 block">
-                        <Button  onClick={filterAction}>Dosyayı Getir</Button>
-                    </div>
-                    
-                </div>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={(values, { setSubmitting, resetForm  }) => {
+                    setSubmitting(true);
+                   
+                    axios.post("/planner/jobs", values).then((res) => {
+                        if (res.data.status) {
+                            Swal.fire(
+                                "Başarılı",
+                                "Görev Kaydedildi",
+                                "success"
+                            );
+                            setSubmitting(false);
+                            resetForm();
+                        } else {
+                            Swal.fire(
+                                "Başarısız",
+                                "Görev Kaydedilemedi",
+                                "error"
+                            );
+                        }
+                    });
+                    setSubmitting(false);
+                }}
+            >
+                {({
+                    values,
+                    handleSubmit,
+                    errors,
+                    touched,
+                    setFieldValue,
+                    isSubmitting,
+                }) => (
+                    <Form onSubmit={handleSubmit}>
+                        <div className="container mx-auto mt-10 flex flex-row justify-center">
+                            <div className="">
+                                <Label>Start Date</Label>
+                                <Datepicker
+                                    language="de-DE"
+                                    labelTodayButton="Heute"
+                                    labelClearButton="Löschen"
+                                    id="start_date"
+                                    name="start_date"
+                                    value={
+                                        values.start_date
+                                            ? new Date(
+                                                  values.start_date
+                                              ).toDateString()
+                                            : new Date().toDateString()
+                                    }
+                                    onSelectedDateChanged={(date) => {
+                                        setFieldValue("start_date", date);
+                                    }}
+                                />
+                                {errors.start_date &&
+                                    touched.start_date &&
+                                    errors.start_date}
+                            </div>
+                            <span className="mx-4 mt-9 text-gray-500">to</span>
+                            <div className="">
+                                <Label>End Date</Label>
+                                <Datepicker
+                                    language="de-DE"
+                                    labelTodayButton="Heute"
+                                    labelClearButton="Löschen"
+                                    id="end_date"
+                                    name="end_date"
+                                    value={
+                                        values.end_date
+                                            ? new Date(
+                                                  values.end_date
+                                              ).toDateString()
+                                            : new Date().toDateString()
+                                    }
+                                    onSelectedDateChanged={(date) => {
+                                        setFieldValue("end_date", date);
+                                    }}
+                                />
+                                {errors.end_date &&
+                                    touched.end_date &&
+                                    errors.end_date}
+                            </div>
+                        </div>
 
-              
-            
+                        <div className="container mx-auto mt-3 flex flex-row justify-center">
+                            <div className="">
+                                <Label>Start Time</Label>
+                                <div className="flex">
+                                    <input
+                                        type="time"
+                                        id="start_time"
+                                        name="start_time"
+                                        className={
+                                            errors.start_time &&
+                                            touched.start_time
+                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        }
+                                        value={values.start_time}
+                                        onChange={(e) => {
+                                            setFieldValue(
+                                                "start_time",
+                                                e.target.value
+                                            );
+                                        }}
+                                    />
+                                    <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <svg
+                                            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                {errors.start_time &&
+                                    touched.start_time &&
+                                    errors.start_time}
+                            </div>
+                            <span className="mx-4 mt-9 text-gray-500">to</span>
+                            <div className="">
+                                <Label>End Time</Label>
+                                <div className="flex">
+                                    <input
+                                        type="time"
+                                        id="end_time"
+                                        name="end_time"
+                                        className={
+                                            errors.end_time &&
+                                            touched.end_time
+                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        }
+                                        value={values.end_time}
+                                        onChange={(e) => {
+                                            setFieldValue(
+                                                "end_time",
+                                                e.target.value
+                                            );
+                                        }}
+                                    />
+                                    <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <svg
+                                            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                {errors.end_time &&
+                                    touched.end_time &&
+                                    errors.end_time}
+                            </div>
+                        </div>
+                       
+                        <div className="container mx-auto mt-10">
+                            <Label>Zug Nummer</Label>
+                            <Field
+                                id="zugNummer"
+                                type="text"
+                                placeholder="Zug Nummer"
+                                name="zugNummer"
+                                className={
+                                    errors.zug_nummer && touched.zug_nummer
+                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white border border-red-500 w-full rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        : "placeholder:italic placeholder:text-slate-400 block bg-white  border border-slate-300 w-full rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("zug_nummer", e.target.value);
+                                }}
+                                value={values.zug_nummer}
+                            />
+                            {errors.zug_nummer && touched.zug_nummer && (
+                                <p className="text-red-500">
+                                    *{errors.zug_nummer}
+                                </p>
+                            )}
+                        </div>
+                        
 
-            </div>)}
+                        <div className="container mx-auto mt-10">
+                            <Label>Locomotive Nummer</Label>
+                            <Field
+                                id="locomotive_nummer"
+                                type="text"
+                                placeholder="Locomotive Nummer"
+                                name="locomotive_nummer"
+                                className={
+                                    errors.locomotive_nummer && touched.locomotive_nummer
+                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("locomotive_nummer", e.target.value);
+                                }}
+                                value={values.locomotive_nummer}
+                            />
+                            {errors.locomotive_nummer && touched.locomotive_nummer && (
+                                <p className="text-red-500">
+                                    *{errors.locomotive_nummer}
+                                </p>
+                            )}
+                        </div>
+                  
 
-            {!filterView && (
-                <div className='flex justify-end p-5'>
-                    <Button onClick={()=>{
-                    setFilterView(true);
+                        <div className="container mx-auto mt-10">
+                            <Label>Tour Name</Label>
+                            <Field
+                                id="tour_name"
+                                type="text"
+                                placeholder="Tour Name"
+                                name="tour_name"
+                                className={
+                                    errors.tour_name && touched.tour_name
+                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("tour_name", e.target.value);
+                                }}
+                                value={values.tour_name}
+                            />
+                            {errors.tour_name && touched.tour_name && (
+                                <p className="text-red-500">
+                                    *{errors.tour_name}
+                                </p>
+                            )}
+                        </div>
+                        
 
-                    }}>Filtreleri Göster</Button>
-                </div>
-            )}
+                        <div className="container mx-auto mt-10">
+                            <Label>From</Label>
+                            <Field
+                                id="from"
+                                type="text"
+                                placeholder="From"
+                                name="from"
+                                className={
+                                    errors.from && touched.from
+                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("from", e.target.value);
+                                }}
+                                value={values.from}
+                            />
+                            {errors.from && touched.from && (
+                                <p className="text-red-500">
+                                    *{errors.from}
+                                </p>
+                            )}
+                        </div>
+                        <br />
+                        <div className="container mx-auto mt-10">
+                            <Label>To</Label>
+                            <Field
+                                id="to"
+                                type="text"
+                                placeholder="To"
+                                name="to"
+                                className={
+                                    errors.to && touched.to
+                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("to", e.target.value);
+                                }}
+                                value={values.to}
+                            />
+                            {errors.to && touched.to && (
+                                <p className="text-red-500">
+                                    *{errors.to}
+                                </p>
+                            )}
+                        </div>
+                        <br />
+                        <div className="container mx-auto mt-10">
+                        <Label>Comment</Label>
+                        <Textarea
+                            id="description"
+                            name="description"
+                            placeholder="Leave a comment..."
+                            value={values.description}
+                            rows={4}
+                            className={
+                                errors.description && touched.description
+                                    ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                            }
+                            onChange={(e) => {
+                                setFieldValue("description", e.target.value);
+                            }}
+                        />
+                        {errors.description && touched.description && (
+                            <p className="text-red-500">*{errors.description}</p>
+                        )}
+                        </div>
+                        
+                        <div className="container mx-auto mt-10">
+                            <div className="mb-2 block">
+                                <Label
+                                    htmlFor="client"
+                                    value="Select your client"
+                                />
+                            </div>
+                            <Select
+                                id="client"
+                                name="client"
+                                required
+                                onChange={(e) => {
+                                    setFieldValue("client", e.target.value);
+                                }}
+                            >
+                                <option>Seçiniz...</option>
+                                {client.map((client) => (
+                                    <option key={client.id} value={client.id}>
+                                        {client.name}
+                                    </option>
+                                ))}
+                            </Select>
+                        </div>
+                        {errors.client && touched.client && (
+                            <p className="text-red-500">*{errors.client}</p>
+                        )}
+                        <br />
 
-            
-                
-
+                        <div className="flex justify-center items-center">
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="mb-5"
+                            >
+                                Kaydet
+                            </Button>
+                        </div>
+                    </Form>
+                )}
+            </Formik>
         </AuthenticatedLayout>
     );
 }

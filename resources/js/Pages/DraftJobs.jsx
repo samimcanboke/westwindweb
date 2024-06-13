@@ -77,6 +77,19 @@ export default function DraftJobs({ auth }) {
             setData(newArr);
         });
     };
+
+    const generateTimeOptions = () => {
+        const options = [];
+        for (let hour = 0; hour < 24; hour++) {
+            for (let minute = 0; minute < 60; minute += 15) {
+                const formattedHour = String(hour).padStart(2, "0");
+                const formattedMinute = String(minute).padStart(2, "0");
+                options.push(`${formattedHour}:${formattedMinute}`);
+            }
+        }
+        return options;
+    };
+
     const sendSubmit = (draft_id) => {
         axios
             .post("/send-submit-draft-jobs", { draft_id: draft_id })
@@ -409,7 +422,7 @@ export default function DraftJobs({ auth }) {
                                                         id="comment"
                                                         name="comment"
                                                         placeholder="Leave a comment..."
-                                                        value={values.comment}
+                                                        
                                                         rows={4}
                                                         className={
                                                             errors.comment &&
@@ -423,7 +436,7 @@ export default function DraftJobs({ auth }) {
                                                                 e.target.value
                                                             );
                                                         }}
-                                                    />
+                                                    >{values.comment}</Textarea>
                                                     {errors.comment &&
                                                         touched.comment && (
                                                             <p className="text-red-500">
@@ -964,7 +977,9 @@ export default function DraftJobs({ auth }) {
                                                                         (
                                                                             breakItem,
                                                                             index
-                                                                        ) => (
+                                                                        ) => {
+                                                                            return  (
+                                                                            
                                                                             <div
                                                                                 key={
                                                                                     index
@@ -976,42 +991,86 @@ export default function DraftJobs({ auth }) {
                                                                                         Break
                                                                                         Start
                                                                                     </label>
-                                                                                    <Field
-                                                                                        name={`breaks.${index}.start`}
-                                                                                        type="time"
-                                                                                        className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                                        onChange={(
-                                                                                            e
-                                                                                        ) => {
-                                                                                            setFieldValue(
-                                                                                                `breaks.${index}.start`,
-                                                                                                e
-                                                                                                    .target
-                                                                                                    .value
-                                                                                            );
-                                                                                        }}
-                                                                                    />
+                                                                                    <Select
+                                                                        name={`breaks.${index}.start`}
+                                                                        type="time"
+                                                                        value={breakItem.start}
+                                                                        className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                        onChange={(
+                                                                            e
+                                                                        ) => {
+                                                                            setFieldValue(
+                                                                                `breaks.${index}.start`,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {generateTimeOptions().map(
+                                                                            (
+                                                                                timeOption,
+                                                                                index
+                                                                            ) => (
+                                                                                <option
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                    value={
+                                                                                        timeOption
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        timeOption
+                                                                                    }
+                                                                                </option>
+                                                                            )
+                                                                        )}
+                                                                    </Select>
+                                                                                    
                                                                                 </div>
                                                                                 <div>
                                                                                     <label className="text-sm">
                                                                                         Break
                                                                                         End
                                                                                     </label>
-                                                                                    <Field
-                                                                                        name={`breaks.${index}.end`}
-                                                                                        type="time"
-                                                                                        className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                                        onChange={(
-                                                                                            e
-                                                                                        ) => {
-                                                                                            setFieldValue(
-                                                                                                `breaks.${index}.end`,
-                                                                                                e
-                                                                                                    .target
-                                                                                                    .value
-                                                                                            );
-                                                                                        }}
-                                                                                    />
+                                                                                    <Select
+                                                                        name={`breaks.${index}.end`}
+                                                                        type="time"
+                                                                        value={breakItem.end}
+                                                                        className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                        onChange={(
+                                                                            e
+                                                                        ) => {
+                                                                            setFieldValue(
+                                                                                `breaks.${index}.end`,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {generateTimeOptions().map(
+                                                                            (
+                                                                                timeOption,
+                                                                                index
+                                                                            ) => (
+                                                                                <option
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                    value={
+                                                                                        timeOption
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        timeOption
+                                                                                    }
+                                                                                </option>
+                                                                            )
+                                                                        )}
+                                                                    </Select>
+                                                                                    
                                                                                 </div>
                                                                                 <button
                                                                                     type="button"
@@ -1025,7 +1084,7 @@ export default function DraftJobs({ auth }) {
                                                                                     Sil
                                                                                 </button>
                                                                             </div>
-                                                                        )
+                                                                        )}
                                                                     )}
                                                                 <div className="flex justify-center items-center">
                                                                     <button

@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DraftJobsController;
 use App\Http\Controllers\FinalizedJobsController;
 use App\Http\Controllers\ClientController;
-use App\Exports\FinalizedJobsExport;
+use App\Http\Controllers\JobPlansController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -123,6 +123,8 @@ Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])
 Route::get('/admin/finalized-jobs', [FinalizedJobsController::class, 'index']);
 
 Route::resource('clients', ClientController::class)->middleware(['auth', 'verified',IsAdmin::class]);
+
+Route::resource('/planner/jobs', JobPlansController::class)->middleware(['auth', 'verified',IsAdmin::class]);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->withoutMiddleware([IsAdmin::class])->name('profile.edit');

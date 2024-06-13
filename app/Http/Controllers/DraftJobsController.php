@@ -33,9 +33,10 @@ class DraftJobsController extends Controller
      */
     public function store(Request $request)
     {
+     
         $draftJob = new DraftJobs();
         $draftJob->user_id = $request->user()->id;
-        $draftJob->client_id = 1;
+        $draftJob->client_id = $request->client;
         $draftJob->initial_date = $request->initialDate;
         $draftJob->zug_nummer = $request->zugNummer;
         $draftJob->tour_name = $request->tourName;

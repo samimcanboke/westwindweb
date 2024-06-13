@@ -85,13 +85,13 @@ def add_lines(ws, rows):
             cell.value = None
             cell.fill = PatternFill(start_color="FFFFFFFF", end_color="FFFFFFFF", fill_type="solid")
     start = 9
-
     for index, row in enumerate(rows['rows']):
-        row = list(row.values())
+        row_values = list(row.values())
         for col in range(2, 17):
             cell = ws.cell(row=start + index, column=col)
             cell.border = full_border
-            cell.value = row[col - 2]
+            cell.value = row_values[col - 2]
+          
     total = str(count + start + 1)
     number_format = NamedStyle(name="number")
     number_format.number_format = '#,##0.00'
@@ -192,7 +192,7 @@ def sum_lines(ws,used_data):
     ws['E35'].value = str(used_data['totals']['dates']) + " Tage"
     ws['E36'].value = str(used_data['totals']['workhours']) + " St"
     ws['E37'].value = str(used_data['totals']['breaks']) + " St"
-    ws['E38'].value = str(used_data['totals']['workhours'] + used_data['totals']['breaks']) + " St"
+    ws['E38'].value = str(used_data['totals']['sub_total']) + " St"
     ws['E39'].value = str(used_data['totals']['night_shift']) + " St"
     ws['E40'].value = str(used_data['totals']['midnight_shift']) + " St"
     ws['E41'].value = str(used_data['totals']['sunday_holidays']) + " St"
