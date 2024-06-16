@@ -67,6 +67,7 @@ export default function NewJobs({ auth }) {
     useEffect(() => {
         axios.get("/clients").then((res) => {
             if (res.status == 200) {
+                console.log(res.data);
                 setClient(res.data);
             }
         });
@@ -341,7 +342,7 @@ export default function NewJobs({ auth }) {
                                                 value="Select your client"
                                             />
                                         </div>
-                                        <Select
+                                       <Select
                                             id="client"
                                             name="client"
                                             required
@@ -353,7 +354,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         >
                                             <option>Seçiniz...</option>
-                                            {client.map((client) => (
+                                            {client && client.length > 0 && client.map((client) => (
                                                 <option
                                                     key={client.id}
                                                     value={client.id}

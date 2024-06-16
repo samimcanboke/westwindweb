@@ -26,8 +26,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('dashboard');
 
-//Admin Routes Start
-
 Route::get('/users/index', function () {
     return Inertia::render('Admin/Users/Index');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('users.index');
@@ -36,7 +34,6 @@ Route::get('/clients/index', function () {
     return Inertia::render('Admin/Clients/Index');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('clients-index');
 
-
 Route::get('/users/create', function () {
     return Inertia::render('Admin/Users/Create');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('users.create');
@@ -44,8 +41,6 @@ Route::get('/users/create', function () {
 Route::get('/clients/create', function () {
     return Inertia::render('Admin/Clients/Create');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('clients.create');
-
-
 
 Route::get('/confirmed-jobs', function () {
     return Inertia::render('Admin/Jobs/Confirmed');
@@ -64,28 +59,9 @@ Route::get('/clients/new-job', function () {
 })->middleware(['auth', 'verified', IsAdmin::class])->name('clients.new-job');
 
 
-
-
-
-//Admin Routes End
-
-
-
-//Test
-
-Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->name('get-finalized');
-Route::get('/download-pdf/{filename}', [PdfController::class, 'downloadPdf'])->name('download.pdf');
-
-
-// test end
-
-
 Route::get('/new-jobs', function () {
     return Inertia::render('NewJobs');
 })->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('new-jobs');
-
-
-
 
 Route::get('/draft-jobs', function () {
     return Inertia::render('DraftJobs');
@@ -122,14 +98,26 @@ Route::post('/jobs-confirmation', [FinalizedJobsController::class, 'confirm_jobs
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');
 Route::get('/admin/finalized-jobs', [FinalizedJobsController::class, 'index']);
 
-Route::resource('clients', ClientController::class)->middleware(['auth', 'verified',IsAdmin::class]);
 
-Route::resource('/planner/jobs', JobPlansController::class)->middleware(['auth', 'verified',IsAdmin::class]);
+
+Route::get('/planner/jobs', [JobPlansController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs');
+Route::post('/planner/jobs', [JobPlansController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-store');
+Route::put('/planner/jobs/{job}', [JobPlansController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-update');
+Route::delete('/planner/jobs', [JobPlansController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-destroy');
+Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
+Route::get('/planner/jobs/get-users-jobs', [JobPlansController::class, 'get_users_jobs'])->middleware(['auth', 'verified'])->name('get-users-jobs');
+
+
+
+//Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->withoutMiddleware([IsAdmin::class])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->withoutMiddleware([IsAdmin::class])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware([IsAdmin::class])->name('profile.destroy');
+    Route::get('/clients', [ClientController::class, 'index'])->withoutMiddleware([IsAdmin::class])->name('clients.index');
+    Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->withoutMiddleware([IsAdmin::class])->name('get-finalized');
+    Route::get('/download-pdf/{filename}', [PdfController::class, 'downloadPdf'])->withoutMiddleware([IsAdmin::class])->name('download.pdf');
 });
 
 

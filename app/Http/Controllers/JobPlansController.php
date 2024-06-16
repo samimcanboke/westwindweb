@@ -14,8 +14,14 @@ class JobPlansController extends Controller
      */
     public function index()
     {
-        $draftJobs = JobPlans::get();
+        $draftJobs = JobPlans::whereNull('user_id')->get();
         return response()->json($draftJobs);
+    }
+
+    public function get_users_jobs()
+    {
+        $jobs = JobPlans::whereNotNull('user_id')->get();
+        return response()->json($jobs);
     }
 
     /**
@@ -48,12 +54,20 @@ class JobPlansController extends Controller
 
     }
 
+    public function get_user_job_plans()
+    {
+        $user_id = Auth::user()->id;
+        $jobPlan = JobPlans::where('user_id',$user_id)->get();
+        return response()->json($jobPlan);
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(JobPlans $client)
+    public function show(Request $request)
     {
-        //
+        $jobPlan = JobPlans::where('id',$request->id)->first();
+        return response()->json($jobPlan);
     }
 
     /**
@@ -68,10 +82,11 @@ class JobPlansController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, JobPlans $client)
-    {
-        $jobPlan = JobPlans::find($request->id);
-        
+    {  
+        $jobPlan = JobPlans::where('id',$request->id)->first();
+        $jobPlan->user_id = $request->user_id;
         $jobPlan->save();
+        return response()->json(["status" => true, "jobPlan" => $jobPlan]);
     }
         /**
      * Update the specified resource in storage.

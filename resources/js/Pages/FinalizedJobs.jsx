@@ -3,12 +3,15 @@ import { Head } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 export default function FinalizedJobs({ auth }) {
     const [year, setYear] = useState("");
     const [month, setMonth] = useState("");
     const [file, setFile] = useState("");
     const [showFile, setShowFile] = useState(false);
+    const [url, setUrl] = useState("");
 
     const handleFilter = () => {
         axios
@@ -31,8 +34,7 @@ export default function FinalizedJobs({ auth }) {
     };
     const handleDownload = () => {
         let url = "/download-pdf/" + file + ".pdf";
-        window.open(url, "_blank", "noreferrer");
-        setShowFile(false);
+        window.open(window.location.origin + url, "_blank", "noreferrer");
     };
     return (
         <AuthenticatedLayout
@@ -120,29 +122,24 @@ export default function FinalizedJobs({ auth }) {
             </div>
 
             {showFile && (
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 bg-white border-b border-gray-200">
-                            <div className="flex items-center space-x-4">
-                                
-                                    <div className="flex items-center justify-center">
-                                        Dosya Hazırlandı İndirmek için butona
-                                        tıklayın.
+                <div className="py-12">
+                    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6 bg-white border-b border-gray-200">
+                                    <div style={{ minWidth: "100vw", height: "750px" }}>
                                         <button
-                                            onClick={handleDownload}
-                                            className="bg-blue-500 text-white px-4 py-2 rounded-md mx-5"
+                                            onClick={() => handleDownload(file)}
+                                            className="bg-red-500 text-white px-4 py-2 rounded-md mx-5"
                                         >
-                                            İndir
+                                            Göster
                                         </button>
                                     </div>
-                               
+                             
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-             )}
+            )}
         </AuthenticatedLayout>
     );
 }

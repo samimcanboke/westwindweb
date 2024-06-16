@@ -1,42 +1,25 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import Timeline from "react-calendar-timeline";
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
-
-const groups = [
-    { id: 1, title: "Hüseyin Eroğlu" },
-    { id: 2, title: "Saadettin Gkçen" },
-    { id: 3, title: "Src 1" },
-    { id: 4, title: "Src 2" },
-    { id: 5, title: "Src 3" },
-];
-
-const items = [
-    {
-        id: 1,
-        group: 1,
-        title: "item 1",
-        start_time: moment(),
-        end_time: moment().add(1, "hour"),
-    },
-    {
-        id: 2,
-        group: 2,
-        title: "item 2",
-        start_time: moment().add(-0.5, "hour"),
-        end_time: moment().add(0.5, "hour"),
-    },
-    {
-        id: 3,
-        group: 1,
-        title: "item 3",
-        start_time: moment().add(2, "hour"),
-        end_time: moment().add(3, "hour"),
-    },
-];
+import { useState, useEffect } from "react";
+import { Accordion, AccordionPanel, AccordionTitle, AccordionContent, Label } from "flowbite-react";
 
 export default function Planner({ auth }) {
+    const [jobs, setJobs] = useState([]);
+    const getJobs = async () => {
+        await axios.get(route("get-user-job-plans")).then((response) => {
+            console.log(response.data);
+            setJobs(response.data);
+        });
+    };
+    useEffect(() => {
+        let id = setInterval(() => {
+            getJobs();
+        }, 50000);
+        getJobs();
+        return () => clearInterval(id);
+    }, []);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -51,12 +34,43 @@ export default function Planner({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <Timeline
+                        {/*<Timeline
                             groups={groups}
                             items={items}
                             defaultTimeStart={moment().add(-256, "hour")}
                             defaultTimeEnd={moment().add(256, "hour")}
-                        />
+        />*/}           
+                        { jobs && jobs.map((job) => (
+                            <div key={job.id}>
+                                                        <Accordion>
+                            <AccordionPanel isOpen={false}>
+                                <AccordionTitle>
+                                {moment(job.start_date + " " + job.start_time).format("DD-MM-YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("HH:mm")} : {job.from} - {job.to}
+                                </AccordionTitle>
+                                <AccordionContent>
+                                    <Label>Dates : </Label>
+                                    {moment(job.start_date + " " + job.start_time).format("DD-MM-YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("DD-MM-YYYY HH:mm")}
+                                    <br/>
+                                    <Label>Route : </Label>
+                                    {job.from} - {job.to}
+                                    <br/>
+                                    <Label>Locomotive : </Label>
+                                    {job.locomotive_nummer}
+                                    <br/>
+                                    <Label>Tour : </Label>
+                                    {job.tour_name}
+                                    <br/>
+                                    <Label>Zug : </Label>
+                                    {job.zug_nummer}
+                                    <br/>
+                                    <Label>Comment : </Label>
+                                    {job.description}
+                                </AccordionContent>
+                            </AccordionPanel>
+                        </Accordion>
+                                
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
