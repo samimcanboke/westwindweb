@@ -11,6 +11,7 @@ export default function Authenticated({ user, header, children }) {
         console.log(header);
     },[user])
     return (
+        
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,32 +30,32 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('new-jobs')} active={route().current('new-jobs')}>
-                                    New Jobs
+                                Neue Berichte 
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('draft-jobs')} active={route().current('draft-jobs')}>
-                                    Draft Jobs
+                                Bericht Entwürfe
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('finalized-jobs')} active={route().current('finalized-jobs')}>
-                                    FinalizedJobs
+                                    Eingereichte Berichte 
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('planner')} active={route().current('planner')}>
-                                    Planner
+                                    Planung
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('sick-leaves')} active={route().current('sick-leaves')}>
-                                    Sick Leave Requests
+                                    Krankmeldungen
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('annual-leaves')} active={route().current('annual-leaves')}>
-                                    Annual Leave Requests
+                                Urlaubsanträge
                                 </NavLink>
                             </div>
                             {user.is_admin && (
@@ -65,7 +66,7 @@ export default function Authenticated({ user, header, children }) {
                                                     type="button"
                                                     className="inline-flex mt-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                                 >
-                                                    Admin Menü
+                                                    Admin-Menü
 
                                                     <svg
                                                         className="ms-2 -me-0.5 h-4 w-4"
@@ -82,12 +83,13 @@ export default function Authenticated({ user, header, children }) {
                                                 </button>
                                         </Dropdown.Trigger>
                                         <Dropdown.Content>
-                                            <Dropdown.Link href={route('users.index')}>Users</Dropdown.Link>
-                                            <Dropdown.Link href={route('clients-index')}>Clients</Dropdown.Link>
-                                            <Dropdown.Link href={route('confirmed-jobs')}>Confirmed Jobs</Dropdown.Link>
-                                            <Dropdown.Link href={route('wait-confirmed-jobs')}>Unconfirmed Jobs</Dropdown.Link>
-                                            <Dropdown.Link href={route('admin-planner')}>Planner</Dropdown.Link>
-                                            <Dropdown.Link href={route('clients.new-job')}>Client Jobs</Dropdown.Link>
+                                            
+                                            <Dropdown.Link href={route('users.index')}>Benutzer</Dropdown.Link>
+                                            <Dropdown.Link href={route('clients-index')}>Kunden</Dropdown.Link>
+                                            <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Berichte</Dropdown.Link>
+                                            <Dropdown.Link href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</Dropdown.Link>
+                                            <Dropdown.Link href={route('admin-planner')}>Planung</Dropdown.Link>
+                                            <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>
@@ -123,15 +125,16 @@ export default function Authenticated({ user, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('new-jobs')}>New Jobs</Dropdown.Link>
-                                        <Dropdown.Link href={route('draft-jobs')}>Draft Jobs</Dropdown.Link>
-                                        <Dropdown.Link href={route('finalized-jobs')}>Finalized Jobs</Dropdown.Link>
-                                        <Dropdown.Link href={route('planner')}>Planner</Dropdown.Link>
-                                        <Dropdown.Link href={route('sick-leaves')}>Sick Leaves</Dropdown.Link>
-                                        <Dropdown.Link href={route('annual-leaves')}>Annual Leaves</Dropdown.Link>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+
+                                        <Dropdown.Link href={route('new-jobs')}>Neue Berichte</Dropdown.Link>
+                                        <Dropdown.Link href={route('draft-jobs')}>Bericht Entwürfe</Dropdown.Link>
+                                        <Dropdown.Link href={route('finalized-jobs')}>Eingereichte Berichte </Dropdown.Link>
+                                        <Dropdown.Link href={route('planner')}>Planung</Dropdown.Link>
+                                        <Dropdown.Link href={route('sick-leaves')}>Krankmeldungen</Dropdown.Link>
+                                        <Dropdown.Link href={route('annual-leaves')}>Urlaubsanträge</Dropdown.Link>
+                                        <Dropdown.Link href={route('profile.edit')}>Profil</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
+                                            Abmelden
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -178,15 +181,15 @@ export default function Authenticated({ user, header, children }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('new-jobs')}>New Jobs</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('draft-jobs')}>Draft Jobs</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('finalized-jobs')}>Finalized Jobs</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('planner')}>Planner</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('sick-leaves')}>Sick Leaves</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('annual-leaves')}>Annual Leaves</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('new-jobs')}>Neue Berichte</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('draft-jobs')}>Bericht Entwürfe</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('finalized-jobs')}>Eingereichte Berichte</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('planner')}>Planung</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('sick-leaves')}>Krankmeldungen</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('annual-leaves')}>Urlaubsanträge</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('profile.edit')}>Profil</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
+                            Abmelden
                             </ResponsiveNavLink>
                         </div>
                     </div>

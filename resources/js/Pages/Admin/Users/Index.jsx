@@ -16,7 +16,7 @@ export default function Dashboard({ auth }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Users list
+                    Benutzername
                 </h2>
             }
         >
@@ -29,10 +29,9 @@ export default function Dashboard({ auth }) {
                             <div className="flex justify-between align-middle">
                                 <div>
                                     {" "}
-                                    Users List
+                                    Benutzername
                                     <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                                        Kullanıcı Listesi aşağıda
-                                        listelenecektir.
+                                        Die Benutzerliste wird unten angezeigt.
                                     </p>
                                 </div>
                                 <div>
@@ -40,7 +39,7 @@ export default function Dashboard({ auth }) {
                                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                                     href={route("users.create")}
                                     >
-                                        Yeni Ekle
+                                        Neu Hinzufügen
                                     </a>
                                 </div>
                             </div>
@@ -52,19 +51,19 @@ export default function Dashboard({ auth }) {
                                     ID
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Ad Soyad
+                                    Name Nachname
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     E-Mail
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Telefon
+                                    Handy
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Durum
+                                    Status
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    <span className="sr-only">Edit</span>
+                                    <span className="sr-only">Bearbeiten</span>
                                 </th>
                             </tr>
                         </thead>
@@ -85,7 +84,7 @@ export default function Dashboard({ auth }) {
                                         href="#"
                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                     >
-                                        Edit
+                                        Bearbeiten
                                     </a>
                                 </td>
                             </tr>
