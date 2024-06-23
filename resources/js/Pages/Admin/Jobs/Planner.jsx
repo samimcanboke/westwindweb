@@ -78,7 +78,7 @@ export default function Planner({ auth }) {
                     itemProps: {
                         "data-custom-attribute": "Random content",
                         "aria-hidden": true,
-                        onDoubleClick: async (itemId) => {
+                        onItemClick: async (itemId) => {
                             try {
                                 let item =
                                     itemId.target.parentElement.getAttribute(
@@ -98,6 +98,7 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
+                        
                         canMove: false,
                         className: "weekend",
                         style: {
