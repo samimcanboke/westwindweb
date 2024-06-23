@@ -6,6 +6,10 @@ use App\Models\JobPlans;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Mail\JobPlanMail;
+use App\Mail\JobPlanDeleteMail;
+use App\Mail\JobPlanChangeMail;
+use Illuminate\Support\Facades\Mail;
 
 class JobPlansController extends Controller
 {
@@ -14,7 +18,7 @@ class JobPlansController extends Controller
      */
     public function index()
     {
-        $draftJobs = JobPlans::whereNull('user_id')->get();
+        $draftJobs = JobPlans::get();
         return response()->json($draftJobs);
     }
 
@@ -38,8 +42,8 @@ class JobPlansController extends Controller
     public function store(Request $request)
     {
         $jobPlan = new JobPlans();
-        $jobPlan->start_date = Carbon::createFromTimeString($request->start_date)->format('Y-m-d');
-        $jobPlan->end_date = Carbon::createFromTimeString($request->end_date)->format('Y-m-d');
+        $jobPlan->start_date = Carbon::createFromDate($request->start_date)->format('Y-m-d');
+        $jobPlan->end_date = Carbon::createFromDate($request->end_date)->format('Y-m-d');
         $jobPlan->start_time = $request->start_time;
         $jobPlan->end_time = $request->end_time;
         $jobPlan->zug_nummer = $request->zug_nummer;
@@ -48,9 +52,10 @@ class JobPlansController extends Controller
         $jobPlan->description = $request->description;
         $jobPlan->to = $request->to;
         $jobPlan->from = $request->from;
+        $jobPlan->client_id = $request->client;
         $jobPlan->save();
 
-        return response()->json(["status" => true]);
+        return response()->json(["status" => true, "jobPlan" => $jobPlan]);
 
     }
 
@@ -75,19 +80,53 @@ class JobPlansController extends Controller
      */
     public function edit(JobPlans $client)
     {
+   
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JobPlans $client)
+    public function update(Request $request, JobPlans $plans)
     {  
-        $jobPlan = JobPlans::where('id',$request->id)->first();
-        $jobPlan->user_id = $request->user_id;
+        $jobPlan = JobPlans::where('id',$request->id)->first();  
+        $oldJobPlane = $jobPlan;    
+        $jobPlan->start_date = Carbon::createFromDate($request->start_date)->format('Y-m-d');
+        $jobPlan->end_date = Carbon::createFromDate($request->end_date)->format('Y-m-d');
+        $jobPlan->start_time = $request->start_time;
+        $jobPlan->end_time = $request->end_time;
+        $jobPlan->zug_nummer = $request->zug_nummer;
+        $jobPlan->locomotive_nummer = $request->locomotive_nummer;
+        $jobPlan->tour_name = $request->tour_name;
+        $jobPlan->description = $request->description;
+        $jobPlan->to = $request->to;
+        $jobPlan->from = $request->from;
+        $jobPlan->client_id = $request->client_id;
+        $jobPlan->save();
+        if($jobPlan->user_id != null){
+            Mail::to($jobPlan->user->email)->send(new JobPlanChangeMail($jobPlan, $oldJobPlane));
+        }
+        return response()->json(["status" => true, "jobPlan" => $jobPlan]);
+    }
+
+
+    public function leave_job(Request $request){
+        $jobPlan = JobPlans::where('id',$request->id)->first();       
+        if($request->user_id == null){
+            if($jobPlan->user_id != null){
+                Mail::to($jobPlan->user->email)->send(new JobPlanDeleteMail($jobPlan));
+            }
+            $jobPlan->user_id = null;
+        }else{
+            
+            $jobPlan->user_id = $request->user_id;
+            Mail::to($jobPlan->user->email)->send(new JobPlanMail($jobPlan));
+        }
         $jobPlan->save();
         return response()->json(["status" => true, "jobPlan" => $jobPlan]);
     }
+
+
         /**
      * Update the specified resource in storage.
      */    /**

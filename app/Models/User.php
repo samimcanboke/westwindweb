@@ -20,7 +20,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'driver_id',
+        'birth_date',
+        'phone',
+        'working_hours',
+        'sick_holiday',
+        'annual_leave_rights',
+        'is_admin',
+        'start_working_date'
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -53,5 +62,10 @@ class User extends Authenticatable
     public function finalizedJobs()
     {
         return $this->hasMany(finalizedJobs::class);
+    }
+
+    public function jobPlans()
+    {
+        return $this->hasMany(JobPlans::class);
     }
 }

@@ -3,7 +3,6 @@ import { Head } from "@inertiajs/react";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
 export default function FinalizedJobs({ auth }) {
@@ -41,11 +40,11 @@ export default function FinalizedJobs({ auth }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Finalized Jobs
+                    Abgeschlossene Berichte
                 </h2>
             }
         >
-            <Head title="Finalized Jobs" />
+            <Head title="Abgeschlossene Berichte" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -57,7 +56,7 @@ export default function FinalizedJobs({ auth }) {
                                         htmlFor="year"
                                         className="block text-sm font-medium text-gray-700"
                                     >
-                                        Yıl
+                                        Jahr
                                     </label>
                                     <select
                                         id="year"
@@ -67,7 +66,7 @@ export default function FinalizedJobs({ auth }) {
                                         }
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     >
-                                        <option value="">Yıl Seçin</option>
+                                        <option value="">Jahr auswählen</option>
                                         <option value="2020">2020</option>
                                         <option value="2021">2021</option>
                                         <option value="2022">2022</option>
@@ -82,7 +81,7 @@ export default function FinalizedJobs({ auth }) {
                                         htmlFor="month"
                                         className="block text-sm font-medium text-gray-700"
                                     >
-                                        Ay
+                                        Monat
                                     </label>
                                     <select
                                         id="month"
@@ -92,7 +91,7 @@ export default function FinalizedJobs({ auth }) {
                                         }
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     >
-                                        <option value="">Ay Seçin</option>
+                                        <option value="">Monat Auswählen</option>
                                         <option value="1">Ocak</option>
                                         <option value="2">Şubat</option>
                                         <option value="3">Mart</option>
@@ -112,7 +111,7 @@ export default function FinalizedJobs({ auth }) {
                                         onClick={handleFilter}
                                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        Filtrele
+                                        Filtern
                                     </button>
                                 </div>
                             </div>
@@ -131,7 +130,7 @@ export default function FinalizedJobs({ auth }) {
                                             onClick={() => handleDownload(file)}
                                             className="bg-red-500 text-white px-4 py-2 rounded-md mx-5"
                                         >
-                                            Göster
+                                            Anzeigen
                                         </button>
                                     </div>
                              

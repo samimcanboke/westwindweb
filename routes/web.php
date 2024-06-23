@@ -3,12 +3,20 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DraftJobsController;
 use App\Http\Controllers\FinalizedJobsController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\JobPlansController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
+use App\Mail\MyTestEmail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+
+use App\Events\UserRegistered;
+
+
 
 use Inertia\Inertia;
 
@@ -30,6 +38,10 @@ Route::get('/users/index', function () {
     return Inertia::render('Admin/Users/Index');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('users.index');
 
+Route::get('/users/edit/{user_id}', function ($user_id) {
+    return Inertia::render('Admin/Users/Edit', ['user_id' => $user_id]);
+})->middleware(['auth', 'verified', IsAdmin::class])->name('users.edit');
+
 Route::get('/clients/index', function () {
     return Inertia::render('Admin/Clients/Index');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('clients-index');
@@ -37,6 +49,7 @@ Route::get('/clients/index', function () {
 Route::get('/users/create', function () {
     return Inertia::render('Admin/Users/Create');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('users.create');
+
 
 Route::get('/clients/create', function () {
     return Inertia::render('Admin/Clients/Create');
@@ -94,19 +107,27 @@ Route::get('/data-confirmed-jobs', [FinalizedJobsController::class, 'confirmed_j
 Route::post('/jobs-editing', [FinalizedJobsController::class, 'edit'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-editing');
 Route::post('/jobs-confirmation', [FinalizedJobsController::class, 'confirm_jobs'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-confirmation');
 
+Route::post('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
+
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');
 Route::get('/admin/finalized-jobs', [FinalizedJobsController::class, 'index']);
-
+Route::post('/admin/register_inside', [RegisteredUserController::class, 'store_inside'])->middleware(['auth', 'verified',IsAdmin::class])->name('register.inside');
+Route::post('/admin/edit_inside', [RegisteredUserController::class, 'edit_inside'])->middleware(['auth', 'verified',IsAdmin::class])->name('edit.inside');
 
 
 Route::get('/planner/jobs', [JobPlansController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs');
+Route::get('/planner/jobs/show/{id}', [JobPlansController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-show');
 Route::post('/planner/jobs', [JobPlansController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-store');
-Route::put('/planner/jobs/{job}', [JobPlansController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-update');
+Route::put('/planner/jobs/update/{job}', [JobPlansController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-update');
+Route::put('/planner/jobs/{id}', [JobPlansController::class, 'leave_job'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-leave');
 Route::delete('/planner/jobs', [JobPlansController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-destroy');
 Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
 Route::get('/planner/jobs/get-users-jobs', [JobPlansController::class, 'get_users_jobs'])->middleware(['auth', 'verified'])->name('get-users-jobs');
 
+Route::get('/planner/jobs/edit/{id}', function ($id) {
+    return Inertia::render('Admin/Jobs/Edit', ['id' => $id]);
+})->middleware(['auth', 'verified'])->name('planner-jobs-edit');
 
 
 //Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
@@ -119,6 +140,26 @@ Route::middleware('auth')->group(function () {
     Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->withoutMiddleware([IsAdmin::class])->name('get-finalized');
     Route::get('/download-pdf/{filename}', [PdfController::class, 'downloadPdf'])->withoutMiddleware([IsAdmin::class])->name('download.pdf');
 });
+
+
+Route::get('/testroute', function() {
+    $name = "Funny Coder";
+    Mail::to('samimcanboke@hotmail.com')->send(new MyTestEmail($name));
+});
+
+Route::get('/test-email', function () {
+    $user = \App\Models\User::first(); // Örneğin ilk kullanıcıya mail gönderelim
+    $asd = Mail::to($user->email)->send(new WelcomeMail($user));
+    dd($asd);
+    return 'Mail sent!';
+})->withoutMiddleware(['auth', 'verified',IsAdmin::class]);
+
+Route::get('/trigger-event', function () {
+    $user = \App\Models\User::first(); // Örneğin ilk kullanıcı
+    $a = event(new UserRegistered($user));
+    dd($a);
+    return 'Event triggered!';
+})->withoutMiddleware(['auth', 'verified',IsAdmin::class]);
 
 
 

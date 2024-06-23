@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Events\UserRegistered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,11 @@ class RegisteredUserController extends Controller
         return response()->json($users);
     }
 
+    public function show_user($user_id)
+    {
+        $user = User::find($user_id);
+        return response()->json($user);
+    }
     /**
      * Handle an incoming registration request.
      *
@@ -49,33 +55,59 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        event(new UserRegistered($user));
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
     }
 
-    public function store_inside(Request $request): RedirectResponse
+    public function store_inside(Request $request): JsonResponse
     {
-
+        $data = $request->all();
+        $request->merge($data);
+        
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'driver_id' => 'required|string|max:255|unique:'.User::class,
-            'birth_date' => 'required|date',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'unique:users,phone'],
+            'driver_id' => ['required', 'string', 'max:255', 'unique:users,driver_id'],
+            'birth_date' => ['required', 'date'],
+            'working_hours' => ['required', 'numeric'],
+            'sick_holiday' => ['required', 'numeric'],
+            'start_working_date' => ['required', 'date'],
+            'annual_leave_rights' => ['required', 'numeric'],
+            'password' => ['required', Rules\Password::defaults()],
         ]);
+
 
         $user = User::create([
+            'driver_id' => $request->driver_id,
+            'birth_date' => $request->birth_date,
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'working_hours' => $request->working_hours,
+            'annual_leave_rights' => $request->annual_leave_rights,
+            'start_working_date' => $request->start_working_date,
+            'is_admin' => $request->is_admin,
+            'sick_holiday' => $request->sick_holiday,
             'password' => Hash::make($request->password),
+            'is_admin' => $request->is_Admin
         ]);
 
-        event(new Registered($user));
+        event(new UserRegistered($user));
         return response()->json(['success'=>true, 'message' => 'User created successfully']);
-        // Auth::login($user);
+    }
 
-        // return redirect(route('users.create', absolute: false));
+    public function edit_inside(Request $request)
+    {
+        $user = User::find($request->id);
+        if($request->password != null){
+            $request->merge(['password' => Hash::make($request->password)]);
+        } else{
+            $request->merge(['password' => $user->password]);
+        }
+        $user->update($request->all());
+        return response()->json(['success'=>true, 'message' => 'User updated successfully']);
     }
 }

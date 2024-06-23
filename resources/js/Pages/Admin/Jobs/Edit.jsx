@@ -12,22 +12,8 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 
-const initialValues = {
-    start_date: "",
-    start_time: "",
-    end_date: "",
-    end_time: "",
-    zug_nummer: "",
-    locomotive_nummer: "",
-    tour_name: "",
-    from: "",
-    to: "",
-    description: "",
-    client: 0,
-};
-
 const validationSchema = Yup.object().shape({
-    client: Yup.number().required("Required"),
+    client_id: Yup.number().required("Required"),
     start_date: Yup.date().required("Required"),
     start_time: Yup.string().required("Required"),
     end_date: Yup.date().required("Required"),
@@ -40,11 +26,17 @@ const validationSchema = Yup.object().shape({
     description: Yup.string(),
 });
 
-export default function Dashboard({ auth }) {
-    const [clients, setClients] = useState([]);
+export default function EditUser({ auth, id }) {
+    const [client, setClient] = useState([]);
+    const [job, setJob] = useState([]);
+
     useEffect(() => {
+        axios.get("/planner/jobs/show/"+id).then((res) => {
+            console.log(res.data);
+            setJob(res.data);
+        });
         axios.get("/clients").then((res) => {
-            setClients(res.data);
+            setClient(res.data);
         });
     }, []);
 
@@ -59,12 +51,13 @@ export default function Dashboard({ auth }) {
         >
             <Head title="Create New Jobs" />
 
+            {   job.id && (
             <Formik
-                initialValues={initialValues}
+                initialValues={job}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting, resetForm  }) => {
                     setSubmitting(true);
-                    axios.post("/planner/jobs", values).then((res) => {
+                    axios.put(route("planner-jobs-update", { id: id }), values).then((res) => {
                         if (res.data.status) {
                             Swal.fire(
                                 "Erfolgreich",
@@ -94,6 +87,7 @@ export default function Dashboard({ auth }) {
                 }) => (
                     <Form onSubmit={handleSubmit}>
                         <div className="container mx-auto mt-10 flex flex-row justify-center">
+
                             <div className="">
                                 <Label>Startdatum</Label>
                                 <Datepicker
@@ -123,9 +117,9 @@ export default function Dashboard({ auth }) {
                                     labelTodayButton="Heute"
                                     labelClearButton="Löschen"
                                     id="end_date"
+                                    name="end_date"
                                     format="yyyy-MM-dd"
                                     type="date"
-                                    name="end_date"
                                     value={
                                         values.end_date
                                     }
@@ -216,6 +210,7 @@ export default function Dashboard({ auth }) {
                                     errors.end_time}
                             </div>
                         </div>
+
                        
                         <div className="container mx-auto mt-10">
                             <Label>Zug Nummer</Label>
@@ -370,27 +365,26 @@ export default function Dashboard({ auth }) {
                                 />
                             </div>
                             <Select
-                                id="client"
-                                name="client"
+                                id="client_id"
+                                name="client_id"
                                 required
-                                value={values.client}
+                                value={values.client_id}
                                 onChange={(e) => {
-                                    setFieldValue("client", e.target.value);
+                                    setFieldValue("client_id", e.target.value);
                                 }}
                             >
-                                <option value={0}>Wählen Sie...</option>
-                               {clients.map((client) => (
-                                <option key={client.id} value={client.id}>
-                                    {client.name}
-                                </option>
-                               ))}
+                                <option>Wählen Sie...</option>
+                                {client.map((client) => (
+                                    <option key={client.id} value={client.id} >
+                                        {client.name}
+                                    </option>
+                                ))}
                             </Select>
                         </div>
                         {errors.client && touched.client && (
                             <p className="text-red-500">*{errors.client}</p>
                         )}
                         <br />
-
                         <div className="flex justify-center items-center">
                             <Button
                                 type="submit"
@@ -403,6 +397,7 @@ export default function Dashboard({ auth }) {
                     </Form>
                 )}
             </Formik>
+            )}
         </AuthenticatedLayout>
     );
 }

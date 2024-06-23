@@ -5,12 +5,21 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Datepicker, ToggleSwitch } from "flowbite-react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { values } from "pdf-lib";
 
 
-export default function CreateUsers({ auth }) {
+export default function EditUser({ auth,user_id }) {
+    const [user, setUser] = useState(null);
+
+   
     useEffect(() => {
-        console.log(auth);
+        axios.post(route('user.show',user_id))
+        .then(res => {
+            res.data.start_working_date = new Date(res.data.start_working_date).toISOString().split('T')[0];
+            setUser(res.data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }, []);
     return (
         <AuthenticatedLayout
@@ -24,8 +33,11 @@ export default function CreateUsers({ auth }) {
             <Head title="User List" />
 
             <div className="container mx-auto mt-10">
-                <Formik
-                    initialValues={{ email: "", password: "", driver_id: "", name: "", birth_date: "", phone: "", working_hours: 160,annual_leave_rights: 160, sick_holiday: 160,start_working_date: new Date(), is_admin: false }}
+                {user && (
+                    <Formik
+                    initialValues={{...user,
+                        is_admin: user.is_admin != null && user.is_admin == 1 ? true : false, 
+                    }}
                     validate={(values) => {
                         const errors = {};
                         if (!values.driver_id) {
@@ -54,21 +66,23 @@ export default function CreateUsers({ auth }) {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting, resetForm  }) => {
-                        axios.post(route('register.inside'), values)
+                        axios.post(route('edit.inside'), values)
                         .then(res => {
                             if (res.data.success) {
-                                resetForm();
+                        
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Başarılı',
                                     text: 'Kullanıcı başarıyla kaydedildi!',
                                 });
+                                window.location.href = route('users.index');
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Hata',
                                     text: data.data.message || 'Kullanıcı kaydedilemedi!',
                                 });
+                                
                             }
                             setSubmitting(false);
                         })
@@ -183,8 +197,8 @@ export default function CreateUsers({ auth }) {
                                 </div>
                             </div>
                             <div className="mb-4 mx-4">
-                                    <label htmlFor="start_working_date" className="block text-sm font-medium text-gray-700">İşe Başlama Tarihi</label>
-                                    <Datepicker name="start_working_date" id="start_working_date" className="mt-1 block w-full" />
+                                    <label htmlFor="start_working_date" className="block text-sm font-medium text-gray-7000">İşe Başlama Tarihi</label>
+                                    <Field type="date" name="start_working_date" id="start_working_date" className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
                                     {errors.start_working_date && touched.start_working_date && (
                                         <p className="text-red-500">
                                             *{errors.start_working_date}
@@ -195,7 +209,7 @@ export default function CreateUsers({ auth }) {
                                         label="Admin ?"
                                         id="is_admin"
                                         name="is_admin"
-                                        checked={values.is_admin}
+                                        checked={values.is_admin ? true : false}
                                         onChange={(e)=>{setFieldValue('is_admin',e)}}
                                     />
                             <div className="flex items-center justify-end mt-4 mx-4">
@@ -206,6 +220,7 @@ export default function CreateUsers({ auth }) {
                         </Form>
                     )}
                 </Formik>
+                )}
             </div>
         </AuthenticatedLayout>
     );

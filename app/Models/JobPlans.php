@@ -21,4 +21,9 @@ class JobPlans extends Model
         'to',
         'from',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

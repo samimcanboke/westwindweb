@@ -57,10 +57,11 @@ export default function Dashboard({ auth }) {
                                     E-Mail
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Handy
+                                    Telefon
                                 </th>
+                              
                                 <th scope="col" className="px-6 py-3">
-                                    Status
+                                    Is Admin
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     <span className="sr-only">Bearbeiten</span>
@@ -74,14 +75,15 @@ export default function Dashboard({ auth }) {
                                     scope="row"
                                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                 >
-                                    {user.id}
+                                    {user.driver_id}
                                 </th>
                                 <td className="px-6 py-4">{user.name}</td>
                                 <td className="px-6 py-4">{user.email}</td>
                                 <td className="px-6 py-4">{user.phone}</td>
+                                <td className="px-6 py-4">{user.is_admin == 1 ? "Yes" : "No"}</td>
                                 <td className="px-6 py-4 text-right">
                                     <a
-                                        href="#"
+                                        href={route("users.edit", user.id)}
                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                     >
                                         Bearbeiten

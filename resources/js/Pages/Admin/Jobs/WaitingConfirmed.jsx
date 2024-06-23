@@ -100,7 +100,7 @@ export default function WaitingConfirmed({ auth }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Waiting Confirmed Jobs
+                    Warten auf bestätigte Jobs
                 </h2>
             }
         >
@@ -108,7 +108,7 @@ export default function WaitingConfirmed({ auth }) {
 
             {data.length == 0 && (
                 <div className="flex justify-center items-center h-48">
-                    Hiç veri bulunamadı.
+                    Keine Daten gefunden.
                 </div>
             )}
 
@@ -117,12 +117,12 @@ export default function WaitingConfirmed({ auth }) {
                     <div className="overflow-x-auto">
                         <Table striped>
                             <Table.Head>
-                                <Table.HeadCell>Initial Date</Table.HeadCell>
+                                <Table.HeadCell>Anfangsdatum</Table.HeadCell>
                                 <Table.HeadCell>Tour Name</Table.HeadCell>
-                                <Table.HeadCell>Driver ID</Table.HeadCell>
-                                <Table.HeadCell>Driver Name</Table.HeadCell>
+                                <Table.HeadCell>Fahrer ID</Table.HeadCell>
+                                <Table.HeadCell>Fahrer Name</Table.HeadCell>
                                 <Table.HeadCell>
-                                    <span className="sr-only">Edit</span>
+                                    <span className="sr-only">Bearbeiten</span>
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
@@ -153,7 +153,7 @@ export default function WaitingConfirmed({ auth }) {
                                                           )
                                                           .id.toString()
                                                           .padStart(3, "0")
-                                                    : "Sürücü Bulunamadı"}
+                                                    : "Fahrer nicht gefunden"}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.user_id &&
@@ -164,7 +164,7 @@ export default function WaitingConfirmed({ auth }) {
                                                               driver.id ==
                                                               draft.user_id
                                                       ).name
-                                                    : "Sürücü Bulunamadı"}
+                                                    : "Fahrer nicht gefunden"}
                                             </Table.Cell>
                                             <Table.Cell className=" text-center ">
                                                 <a
@@ -174,7 +174,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         edit(draft);
                                                     }}
                                                 >
-                                                    View
+                                                    Anzeigen
                                                 </a>
                                             </Table.Cell>
                                         </Table.Row>
@@ -186,7 +186,7 @@ export default function WaitingConfirmed({ auth }) {
                     {showEdit && (
                         <div>
                             <div className="flex justify-center items-center flex-column h-24 font-bold ">
-                                <p>Edit Information</p>
+                                <p>Informationen bearbeiten</p>
                             </div>
                             <Formik
                                 initialValues={values}
@@ -223,11 +223,11 @@ export default function WaitingConfirmed({ auth }) {
                                             <Accordion>
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        General Information
+                                                        Allgemeine Informationen
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            Start Date
+                                                            Startdatum
                                                         </Label>
                                                         <Datepicker
                                                             language="de-DE"
@@ -322,7 +322,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             )}
                                                         <br />
                                                         <Label>
-                                                            Locomotive Number
+                                                            Lok Nummer
                                                         </Label>
                                                         <Field
                                                             id="locomotiveNumber"
@@ -358,7 +358,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             checked={
                                                                 values.cancel
                                                             }
-                                                            label="Cancel"
+                                                            label="Storniert"
                                                             id="cancel"
                                                             name="cancel"
                                                             onChange={(
@@ -377,7 +377,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             checked={
                                                                 values.accomodation
                                                             }
-                                                            label="Accomodation"
+                                                            label="Unterkunft"
                                                             id="accomodation"
                                                             name="accomodation"
                                                             onChange={(
@@ -413,11 +413,11 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                         />
                                                         <br />
-                                                        <Label>Comment</Label>
+                                                        <Label>Kommentar</Label>
                                                         <Textarea
                                                             id="comment"
                                                             name="comment"
-                                                            placeholder="Leave a comment..."
+                                                            placeholder="Hinterlassen Sie einen Kommentar..."
                                                             value={
                                                                 values.comment
                                                             }
@@ -451,7 +451,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             <div className="mb-2 block">
                                                                 <Label
                                                                     htmlFor="client"
-                                                                    value="Select your client"
+                                                                    value="Wählen Sie Ihren Kunden"
                                                                 />
                                                             </div>
                                                             <Select
@@ -472,7 +472,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 }
                                                             >
                                                                 <option>
-                                                                    Seçiniz...
+                                                                    Wählen Sie...
                                                                 </option>
                                                                 {clients.map(
                                                                     (
@@ -509,10 +509,11 @@ export default function WaitingConfirmed({ auth }) {
                                                             <div className="mb-2 block">
                                                                 <Label
                                                                     htmlFor="feedingFee"
-                                                                    value="Select your feeding Fee"
+                                                                    value="Wählen Sie Ihre Verpflegungspauschale                                                                    "
                                                                 />
                                                             </div>
                                                             <Select
+                                                            
                                                                 id="feedingFee"
                                                                 name="feedingFee"
                                                                 onChange={(
@@ -554,17 +555,17 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        Misafir Gidişi
+                                                        Gastfahrt
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            Nereden Gittiği
+                                                            Gastfahrt Beginn 
                                                         </Label>
                                                         <Field
                                                             id="guestStartPlace"
                                                             name="guestStartPlace"
                                                             type="text"
-                                                            placeholder="Zug Nummer"
+                                                            placeholder="Gastfahrt Beginn"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "guestStartPlace",
@@ -596,7 +597,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Gidiş Saat:
+                                                            Gastfahrt Start
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -645,13 +646,13 @@ export default function WaitingConfirmed({ auth }) {
                                                             )}
                                                         <br />
                                                         <Label>
-                                                            Varış Yeri
+                                                            Gastfahrt Ende
                                                         </Label>
                                                         <input
                                                             id="guestStartEndPlace"
                                                             name="guestStartEndPlace"
                                                             type="text"
-                                                            placeholder="Varış Yeri"
+                                                            placeholder="Gastfahrt Ende"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "guestStartEndPlace",
@@ -682,7 +683,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Varış Saati:
+                                                            Gastfahrt Ende 
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -738,17 +739,17 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        İş Başlangıcı
+                                                        Dienst Beginn
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            Başlangıç Yeri
+                                                            Startort
                                                         </Label>
                                                         <input
                                                             id="workStartPlace"
                                                             name="workStartPlace"
                                                             type="text"
-                                                            placeholder="İş Başlangıcı"
+                                                            placeholder="Startort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "workStartPlace",
@@ -778,7 +779,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Başlangıç Saat:
+                                                            Anfangszeit:
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -833,17 +834,17 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        Tren Kalkış ve Varış
+                                                        Zug Abfahrt und Ankunft
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            Tren Kalkış Yeri
+                                                            Zug Abfahrtsort
                                                         </Label>
                                                         <input
                                                             id="trainStartPlace"
                                                             name="trainStartPlace"
                                                             type="text"
-                                                            placeholder="Tren Kalkış Yeri"
+                                                            placeholder="Zug Abfahrtsort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainStartPlace",
@@ -873,7 +874,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Tren Kalkış Saati:
+                                                            Zug Abfahrtszeit:
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -921,13 +922,13 @@ export default function WaitingConfirmed({ auth }) {
                                                                 </p>
                                                             )}
                                                         <Label>
-                                                            Tren Varış Yeri
+                                                            Zug Ankunftsort
                                                         </Label>
                                                         <input
                                                             id="trainEndPlace"
                                                             name="trainEndPlace"
                                                             type="text"
-                                                            placeholder="Tren Varış Yeri"
+                                                            placeholder="Zug Ankunftsort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainEndPlace",
@@ -957,7 +958,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Tren Varış Saati:
+                                                            Zug Ankunftszeit:
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1012,7 +1013,7 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        Mola
+                                                        Pause
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <br />
@@ -1038,8 +1039,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                 >
                                                                                     <div>
                                                                                         <label className="text-sm">
-                                                                                            Break
-                                                                                            Start
+                                                                                            Pause Anfang
                                                                                         </label>
                                                                                         <Field
                                                                                             name={`breaks.${index}.start`}
@@ -1059,8 +1059,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                     </div>
                                                                                     <div>
                                                                                         <label className="text-sm">
-                                                                                            Break
-                                                                                            End
+                                                                                            Pause Ende
                                                                                         </label>
                                                                                         <Field
                                                                                             name={`breaks.${index}.end`}
@@ -1087,7 +1086,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             )
                                                                                         }
                                                                                     >
-                                                                                        Sil
+                                                                                        Löschen
                                                                                     </button>
                                                                                 </div>
                                                                             )
@@ -1189,16 +1188,16 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        İş Bitişi
+                                                        Arbeitsende
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            İş Bitiş Yeri
+                                                            Arbeitsende Ort
                                                         </Label>
                                                         <input
                                                             id="workEndPlace"
                                                             type="text"
-                                                            placeholder="İş Başlangıcı"
+                                                            placeholder="Arbeitsende Ort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "workEndPlace",
@@ -1228,7 +1227,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            İş Bitiş Saat:
+                                                            Arbeitsende Zeit:
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1281,16 +1280,16 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        Misafir Eve Dnş
+                                                        Rückkehr des Gastes nach Hause
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            Nereden Gittiği
+                                                            Gastfahrt Start Ort
                                                         </Label>
                                                         <input
                                                             id="guestEndPlace"
                                                             type="text"
-                                                            placeholder="Şehir"
+                                                            placeholder="Gastfahrt Start Ort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "guestEndPlace",
@@ -1320,7 +1319,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Gidiş Saat:
+                                                        Gastfahrt Start Zeit
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1368,12 +1367,12 @@ export default function WaitingConfirmed({ auth }) {
                                                         </div>
                                                         <br />
                                                         <Label>
-                                                            Varış Yeri
+                                                        Gastfahrt End Ort
                                                         </Label>
                                                         <input
                                                             id="guestEndEndPlace"
                                                             type="text"
-                                                            placeholder="Varış Şehri"
+                                                            placeholder="Gastfahrt End Ort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "guestEndEndPlace",
@@ -1403,7 +1402,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Gidiş Saat:
+                                                        Gastfahrt End Zeit :
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1467,13 +1466,13 @@ export default function WaitingConfirmed({ auth }) {
                                                     disabled={isSubmitting}
                                                     className="ml-4"
                                                 >
-                                                    Kaydet
+                                                    Speichern
                                                 </Button>
                                                 <Button 
                                                     onClick={handleConfirm}
                                                     className="ml-4 bg-green-500"
                                                 >
-                                                    Onayla
+                                                    Bestätigen
                                                 </Button>
                                             </div>
                                         </Form>

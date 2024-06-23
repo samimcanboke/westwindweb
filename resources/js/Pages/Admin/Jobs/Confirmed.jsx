@@ -63,17 +63,17 @@ export default function Dashboard({ auth }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Confirmed Jobs</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Monats Berichte</h2>}
         >
             <Head title="Confirmed Jobs" />
 
             {filterView && (<div className='flex justify-start flex-col p-5'>
                 <div className="max-w-md">
                     <div className="mb-2 block">
-                        <Label htmlFor="client" value="Select client" />
+                        <Label htmlFor="client" value="Kunden" />
                     </div>
                     <Select id="client" onChange={handleChange}>
-                        <option >Seçiniz...</option>
+                        <option >Suchen...</option>
                         {filterSources.client && (filterSources.client.map((client)=>(
                             <option key={client.id} value={client.id}>{client.name}</option>
                         )))}
@@ -82,7 +82,7 @@ export default function Dashboard({ auth }) {
                 <br/>
                 <div className="max-w-md">
                     <div className="mb-2 block">
-                        <Label htmlFor="id" value="Select user id" />
+                        <Label htmlFor="id" value="Mitarbeiten" />
                     </div>
                     <Select id="user" onChange={handleChange}>
                         <option >Seçiniz...</option>
@@ -94,7 +94,7 @@ export default function Dashboard({ auth }) {
                 <br/>
                 <div className="max-w-md">
                     <div className="mb-2 block">
-                        <Label htmlFor="id" value="Month" />
+                        <Label htmlFor="id" value="Monat" />
                     </div>
                     <Select id="month" onChange={handleChange}>
                         <option id="" >Seçiniz...</option>
@@ -106,7 +106,7 @@ export default function Dashboard({ auth }) {
                 <br/>
                 <div className="max-w-md">
                     <div className="mb-2 block">
-                        <Label htmlFor="id" value="Year" />
+                        <Label htmlFor="id" value="Jahr" />
                     </div>
                     <Select id="year" onChange={handleChange}>
                         <option>Seçiniz...</option>
@@ -119,7 +119,7 @@ export default function Dashboard({ auth }) {
                 <br/>
                 <div className="max-w-md flex justify-end p-5">
                     <div className="mb-2 block">
-                        <Button  onClick={filterAction}>Dosyayı Getir</Button>
+                        <Button  onClick={filterAction}>Datei Abrufen</Button>
                     </div>
                     
                 </div>
@@ -133,8 +133,7 @@ export default function Dashboard({ auth }) {
                 <div className='flex justify-end p-5'>
                     <Button onClick={()=>{
                     setFilterView(true);
-
-                    }}>Filtreleri Göster</Button>
+                    }}>Filter Anzeigen</Button>
                 </div>
             )}
 

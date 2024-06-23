@@ -43,6 +43,7 @@ export default function Planner({ auth }) {
                         { jobs && jobs.map((job) => (
                             <div key={job.id}>
                                                         <Accordion>
+                                                            <AccordionPanel></AccordionPanel>
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle>
                                 {moment(job.start_date + " " + job.start_time).format("DD-MM-YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("HH:mm")} : {job.from} - {job.to}

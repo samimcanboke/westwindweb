@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('job_plans', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('client_id')->nullable()->constrained('clients');
         });
     }
 
@@ -24,6 +25,8 @@ return new class extends Migration
         Schema::table('job_plans', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
+            $table->dropForeign(['client_id']);
+            $table->dropColumn('client_id');
         });
     }
 };

@@ -107,7 +107,7 @@ export default function DraftJobs({ auth }) {
                     setData(res.data);
                     setLoading(false);
                 });
-                Swal.fire("Başarılı", "Taslak Yönetime gönderildi.", "success");
+                Swal.fire("Erfolgreich", "Der Entwurf wurde an die Verwaltung gesendet.", "success");
             });
     };
 
@@ -128,7 +128,7 @@ export default function DraftJobs({ auth }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    DraftJobs
+                    Entwurf Berichte
                 </h2>
             }
         >
@@ -136,7 +136,7 @@ export default function DraftJobs({ auth }) {
 
             {data.length == 0 && (
                 <div className="flex justify-center items-center h-48">
-                    Hiç veri bulunamadı.
+                    Keine Daten gefunden.
                 </div>
             )}
 
@@ -145,10 +145,10 @@ export default function DraftJobs({ auth }) {
                     <div className="overflow-x-auto">
                         <Table striped>
                             <Table.Head>
-                                <Table.HeadCell>Initial Date</Table.HeadCell>
+                                <Table.HeadCell>Anfangsdatum</Table.HeadCell>
                                 <Table.HeadCell>Tour Name</Table.HeadCell>
                                 <Table.HeadCell>
-                                    <span className="sr-only">Edit</span>
+                                    <span className="sr-only">Bearbeiten</span>
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
@@ -160,7 +160,7 @@ export default function DraftJobs({ auth }) {
                                             className="bg-white dark:border-gray-700 dark:bg-gray-800"
                                         >
                                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                                {draft.initial_date}
+                                                {new Date(draft.initial_date).toLocaleDateString()}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.tour_name}
@@ -173,7 +173,7 @@ export default function DraftJobs({ auth }) {
                                                         deleteDraft(draft.id);
                                                     }}
                                                 >
-                                                    Delete
+                                                    Löschen
                                                 </a>{" "}
                                                 <br /> <br /> <br />
                                                 <a
@@ -183,7 +183,7 @@ export default function DraftJobs({ auth }) {
                                                         edit(draft);
                                                     }}
                                                 >
-                                                    Edit
+                                                    Bearbeiten
                                                 </a>{" "}
                                                 <br /> <br /> <br />
                                                 <a
@@ -193,7 +193,7 @@ export default function DraftJobs({ auth }) {
                                                         sendSubmit(draft.id);
                                                     }}
                                                 >
-                                                    Submit
+                                                    Einreichen
                                                 </a>
                                             </Table.Cell>
                                         </Table.Row>
@@ -205,7 +205,7 @@ export default function DraftJobs({ auth }) {
                     {showEdit && (
                         <div>
                             <div className="flex justify-center items-center flex-column h-24 font-bold ">
-                                <p>Edit Information</p>
+                                <p>Informationen bearbeiten</p>
                             </div>
                             <Formik
                                 initialValues={values}
@@ -244,10 +244,10 @@ export default function DraftJobs({ auth }) {
                                         <Accordion>
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    General Information
+                                                    Allgemeine Informationen
                                                 </AccordionTitle>
                                                 <AccordionContent>
-                                                    <Label>Start Date</Label>
+                                                    <Label>Startdatum</Label>
                                                     <Datepicker
                                                         language="de-DE"
                                                         labelTodayButton="Heute"
@@ -310,7 +310,7 @@ export default function DraftJobs({ auth }) {
                                                         id="tourName"
                                                         name="tourName"
                                                         type="text"
-                                                        placeholder="T-123"
+                                                        placeholder="Tour Name"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "tourName",
@@ -335,13 +335,13 @@ export default function DraftJobs({ auth }) {
                                                         )}
                                                     <br />
                                                     <Label>
-                                                        Locomotive Number
+                                                        Lokomotiv Nummer
                                                     </Label>
                                                     <Field
                                                         id="locomotiveNumber"
                                                         name="locomotiveNumber"
                                                         type="text"
-                                                        placeholder="L123123"
+                                                        placeholder="Lokomotiv Nummer"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "locomotiveNumber",
@@ -368,7 +368,7 @@ export default function DraftJobs({ auth }) {
 
                                                     <ToggleSwitch
                                                         checked={values.cancel}
-                                                        label="Cancel"
+                                                        label="Storniert"
                                                         id="cancel"
                                                         name="cancel"
                                                         onChange={(value) => {
@@ -385,7 +385,7 @@ export default function DraftJobs({ auth }) {
                                                         checked={
                                                             values.accomodation
                                                         }
-                                                        label="Accomodation"
+                                                        label="Unterkunft"
                                                         id="accomodation"
                                                         name="accomodation"
                                                         onChange={(value) => {
@@ -417,11 +417,11 @@ export default function DraftJobs({ auth }) {
                                                         }}
                                                     />
                                                     <br />
-                                                    <Label>Comment</Label>
+                                                    <Label>Kommenter</Label>
                                                     <Textarea
                                                         id="comment"
                                                         name="comment"
-                                                        placeholder="Leave a comment..."
+                                                        placeholder="Hinterlassen Sie einen Kommentar..."
                                                         
                                                         rows={4}
                                                         className={
@@ -450,7 +450,7 @@ export default function DraftJobs({ auth }) {
                                                         <div className="mb-2 block">
                                                             <Label
                                                                 htmlFor="client"
-                                                                value="Select your client"
+                                                                value="Wählen Sie Ihren Kunden"
                                                             />
                                                         </div>
                                                         <Select
@@ -466,7 +466,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             value={values.clientId}
                                                         >
-                                                             <option>Seçiniz...</option>
+                                                             <option>Wählen Sie...</option>
                                                 {client.map((client) => (
                                                     <option key={client.id} value={client.id}>{client.name}</option>
                                                 ))}
@@ -484,7 +484,7 @@ export default function DraftJobs({ auth }) {
                                                         <div className="mb-2 block">
                                                             <Label
                                                                 htmlFor="feedingFee"
-                                                                value="Select your feeding Fee"
+                                                                value="Wählen Sie Ihre Verpflegungspauschale"
                                                             />
                                                         </div>
                                                         <Select
@@ -522,11 +522,11 @@ export default function DraftJobs({ auth }) {
                                             <AccordionPanel />
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    Misafir Gidişi
+                                                Gastfahrt
                                                 </AccordionTitle>
                                                 <AccordionContent>
                                                     <Label>
-                                                        Nereden Gittiği
+                                                    Gastfahrt Begin
                                                     </Label>
                                                     <Field
                                                         id="guestStartPlace"
@@ -562,7 +562,7 @@ export default function DraftJobs({ auth }) {
 
                                                     <br />
 
-                                                    <Label>Gidiş Saat:</Label>
+                                                    <Label>Gastfahrt Start</Label>
                                                     <div className="flex">
                                                         <input
                                                             type="time"
@@ -607,7 +607,7 @@ export default function DraftJobs({ auth }) {
                                                             </p>
                                                         )}
                                                     <br />
-                                                    <Label>Varış Yeri</Label>
+                                                    <Label>Gastfahrt Ende</Label>
                                                     <input
                                                         id="guestStartEndPlace"
                                                         name="guestStartEndPlace"
@@ -641,7 +641,7 @@ export default function DraftJobs({ auth }) {
 
                                                     <br />
 
-                                                    <Label>Varış Saati:</Label>
+                                                    <Label>Gastfahrt Ende</Label>
                                                     <div className="flex">
                                                         <input
                                                             type="time"
@@ -694,17 +694,17 @@ export default function DraftJobs({ auth }) {
                                             <AccordionPanel />
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    İş Başlangıcı
+                                                    Dienst Beginn
                                                 </AccordionTitle>
                                                 <AccordionContent>
                                                     <Label>
-                                                        Başlangıç Yeri
+                                                    Start Ort
                                                     </Label>
                                                     <input
                                                         id="workStartPlace"
                                                         name="workStartPlace"
                                                         type="text"
-                                                        placeholder="İş Başlangıcı"
+                                                        placeholder="Start Ort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "workStartPlace",
@@ -733,7 +733,7 @@ export default function DraftJobs({ auth }) {
                                                     <br />
 
                                                     <Label>
-                                                        Başlangıç Saat:
+                                                    Anfangszeit
                                                     </Label>
                                                     <div className="flex">
                                                         <input
@@ -786,7 +786,7 @@ export default function DraftJobs({ auth }) {
                                             <AccordionPanel />
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    Tren Kalkış ve Varış
+                                                Zug Abfahrt und Ankunft
                                                 </AccordionTitle>
                                                 <AccordionContent>
                                                     <Label>
@@ -796,7 +796,7 @@ export default function DraftJobs({ auth }) {
                                                         id="trainStartPlace"
                                                         name="trainStartPlace"
                                                         type="text"
-                                                        placeholder="Tren Kalkış Yeri"
+                                                        placeholder="Zug Abfahrtsort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "trainStartPlace",
@@ -825,7 +825,7 @@ export default function DraftJobs({ auth }) {
                                                     <br />
 
                                                     <Label>
-                                                        Tren Kalkış Saati:
+                                                        Zug Abfahrtszeit
                                                     </Label>
                                                     <div className="flex">
                                                         <input
@@ -871,13 +871,13 @@ export default function DraftJobs({ auth }) {
                                                             </p>
                                                         )}
                                                     <Label>
-                                                        Tren Varış Yeri
+                                                        Zug Ankunftsort
                                                     </Label>
                                                     <input
                                                         id="trainEndPlace"
                                                         name="trainEndPlace"
                                                         type="text"
-                                                        placeholder="Tren Varış Yeri"
+                                                        placeholder="Zug Ankunftsort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "trainEndPlace",
@@ -906,7 +906,7 @@ export default function DraftJobs({ auth }) {
                                                     <br />
 
                                                     <Label>
-                                                        Tren Varış Saati:
+                                                    Zug Ankunftszeit
                                                     </Label>
                                                     <div className="flex">
                                                         <input
@@ -959,7 +959,7 @@ export default function DraftJobs({ auth }) {
                                             <AccordionPanel />
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    Mola
+                                                Pause
                                                 </AccordionTitle>
                                                 <AccordionContent>
                                                     <br />
@@ -988,8 +988,7 @@ export default function DraftJobs({ auth }) {
                                                                             >
                                                                                 <div>
                                                                                     <label className="text-sm">
-                                                                                        Break
-                                                                                        Start
+                                                                                    Pause Anfang
                                                                                     </label>
                                                                                     <Select
                                                                         name={`breaks.${index}.start`}
@@ -1031,8 +1030,7 @@ export default function DraftJobs({ auth }) {
                                                                                 </div>
                                                                                 <div>
                                                                                     <label className="text-sm">
-                                                                                        Break
-                                                                                        End
+                                                                                    Pause Ende
                                                                                     </label>
                                                                                     <Select
                                                                         name={`breaks.${index}.end`}
@@ -1081,7 +1079,7 @@ export default function DraftJobs({ auth }) {
                                                                                         )
                                                                                     }
                                                                                 >
-                                                                                    Sil
+                                                                                    Löschen
                                                                                 </button>
                                                                             </div>
                                                                         )}
@@ -1112,14 +1110,14 @@ export default function DraftJobs({ auth }) {
                                             <AccordionPanel />
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    İş Bitişi
+                                                Dienst Ende
                                                 </AccordionTitle>
                                                 <AccordionContent>
-                                                    <Label>İş Bitiş Yeri</Label>
+                                                    <Label>Dienst Ende Ort</Label>
                                                     <input
                                                         id="workEndPlace"
                                                         type="text"
-                                                        placeholder="İş Başlangıcı"
+                                                        placeholder="Dienst Ende Ort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "workEndPlace",
@@ -1148,7 +1146,7 @@ export default function DraftJobs({ auth }) {
                                                     <br />
 
                                                     <Label>
-                                                        İş Bitiş Saat:
+                                                    Dienst Ende Zeit
                                                     </Label>
                                                     <div className="flex">
                                                         <input
@@ -1199,16 +1197,16 @@ export default function DraftJobs({ auth }) {
                                             <AccordionPanel />
                                             <AccordionPanel isOpen={false}>
                                                 <AccordionTitle>
-                                                    Misafir Eve Dnş
+                                                Gastfahrt Zürück
                                                 </AccordionTitle>
                                                 <AccordionContent>
                                                     <Label>
-                                                        Nereden Gittiği
+                                                    Gastfahrt Zürück Ort
                                                     </Label>
                                                     <input
                                                         id="guestEndPlace"
                                                         type="text"
-                                                        placeholder="Şehir"
+                                                        placeholder="Gastfahrt Zürück Ort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "guestEndPlace",
@@ -1236,7 +1234,7 @@ export default function DraftJobs({ auth }) {
                                                         )}
                                                     <br />
 
-                                                    <Label>Gidiş Saat:</Label>
+                                                    <Label>Gastfahrt Zürück Zeit</Label>
                                                     <div className="flex">
                                                         <input
                                                             type="time"
@@ -1280,11 +1278,11 @@ export default function DraftJobs({ auth }) {
                                                             )}
                                                     </div>
                                                     <br />
-                                                    <Label>Varış Yeri</Label>
+                                                    <Label>Gastfahrt Zürück End Ort</Label>
                                                     <input
                                                         id="guestEndEndPlace"
                                                         type="text"
-                                                        placeholder="Varış Şehri"
+                                                        placeholder="Gastfahrt Zürück End Ort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "guestEndEndPlace",
@@ -1312,7 +1310,7 @@ export default function DraftJobs({ auth }) {
                                                         )}
                                                     <br />
 
-                                                    <Label>Gidiş Saat:</Label>
+                                                    <Label>Gastfahrt Zürück End Zeit</Label>
                                                     <div className="flex">
                                                         <input
                                                             type="time"
@@ -1366,14 +1364,14 @@ export default function DraftJobs({ auth }) {
                                                     setShowEdit(false);
                                                 }}
                                             >
-                                                İptal
+                                                Abbrechen
                                             </Button>
                                             <Button
                                                 type="submit"
                                                 disabled={isSubmitting}
                                                 className="ml-4"
                                             >
-                                                Kaydet
+                                                Speichern
                                             </Button>
                                         </div>
                                     </Form>)
