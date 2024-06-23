@@ -108,7 +108,10 @@ export default function Dashboard({ auth }) {
                                         values.start_date
                                     }
                                     onSelectedDateChanged={(date) => {
-                                        setFieldValue("start_date", new Date(date).toLocaleDateString().split('.').reverse().join('-'));
+                                        let date = new Date(date).toLocaleDateString().split('.')
+                                        date[0] = date[0].padStart(2, '0');
+                                        date[1] = date[1].padStart(2, '0');
+                                        setFieldValue("start_date", date.reverse().join('-'));
                                     }}
                                 />
                                 {errors.start_date &&
@@ -130,7 +133,10 @@ export default function Dashboard({ auth }) {
                                         values.end_date
                                     }
                                     onSelectedDateChanged={(date) => {
-                                        setFieldValue("end_date", new Date(date).toLocaleDateString().split('.').reverse().join('-'));
+                                        let date = new Date(date).toLocaleDateString().split('.')
+                                        date[0] = date[0].padStart(2, '0');
+                                        date[1] = date[1].padStart(2, '0');
+                                        setFieldValue("end_date", date.reverse().join('-'));
                                     }}
                                 />
                                 {errors.end_date &&
