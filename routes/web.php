@@ -117,6 +117,7 @@ Route::post('/admin/edit_inside', [RegisteredUserController::class, 'edit_inside
 
 
 Route::get('/planner/jobs', [JobPlansController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs');
+Route::get('/planner/jobs/without-user', [JobPlansController::class, 'index_without_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-without-user');
 Route::get('/planner/jobs/show/{id}', [JobPlansController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-show');
 Route::post('/planner/jobs', [JobPlansController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-store');
 Route::put('/planner/jobs/update/{job}', [JobPlansController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-update');

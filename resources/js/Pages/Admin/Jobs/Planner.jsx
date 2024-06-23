@@ -10,6 +10,7 @@ import interact from "interactjs";
 
 export default function Planner({ auth }) {
     const [jobs, setJobs] = useState([]);
+    const [withoutUserJobs, setWithoutUserJobs] = useState([]);
     const [drivers, setDrivers] = useState([]);
     const [driver, setDriver] = useState(null);
     const [job, setJob] = useState(null);
@@ -41,8 +42,14 @@ export default function Planner({ auth }) {
     };
 
     const getPlans = async () => {
-        await axios.get("/planner/jobs").then((response) => {
+        await axios.get("/planner/jobs/").then((response) => {
             setJobs(response.data);
+        });
+    };
+
+    const getPlansWithoutUser = async () => {
+        await axios.get("/planner/jobs/without-user").then((response) => {
+            setWithoutUserJobs(response.data);
         });
     };
 
@@ -378,9 +385,9 @@ export default function Planner({ auth }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {jobs &&
-                                        jobs.length > 0 &&
-                                        jobs.map((job) => (
+                                    {withoutUserJobs &&
+                                        withoutUserJobs.length > 0 &&
+                                        withoutUserJobs.map((job) => (
                                             <tr
                                                 key={job.id}
                                                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"

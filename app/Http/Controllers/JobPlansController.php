@@ -22,6 +22,12 @@ class JobPlansController extends Controller
         return response()->json($draftJobs);
     }
 
+    public function index_without_user()
+    {
+        $draftJobs = JobPlans::whereNull('user_id')->get();
+        return response()->json($draftJobs);
+    }
+
     public function get_users_jobs()
     {
         $jobs = JobPlans::whereNotNull('user_id')->get();
