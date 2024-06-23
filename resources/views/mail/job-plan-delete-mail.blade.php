@@ -1,7 +1,7 @@
 
 Hi {{$jobPlan->user->name}} 
 <br/>
-Eine Schicht wurde fr Sie storniert 
+Eine Schicht wurde für Sie storniert 
 <br/>
 Details zur Planung 
 <br/>

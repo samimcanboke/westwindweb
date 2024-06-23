@@ -77,6 +77,7 @@ export default function Planner({ auth }) {
                                     itemId.target.parentElement.getAttribute(
                                         "title"
                                     );
+                                console.log(item);
                                 let id = item.split("|")[1];
                                 let job = await axios.get(
                                     "/planner/jobs/show/" + id

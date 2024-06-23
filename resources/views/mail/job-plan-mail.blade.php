@@ -1,7 +1,7 @@
 
 Hi {{$jobPlan->user->name}} 
 <br/>
-Eine Neue Schicht ist fr Sie geplant 
+Eine Neue Schicht ist für Sie geplant 
 <br/>
 Details zur Planung 
 <br/>
