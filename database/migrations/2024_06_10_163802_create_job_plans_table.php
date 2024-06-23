@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('start_time');
             $table->string('end_time');
             $table->string('zug_nummer');
-            $table->string('locomotive_nummer');
-            $table->string('tour_name');
-            $table->string('description');
+            $table->string('locomotive_nummer')->nullable();
+            $table->string('tour_name')->nullable();
+            $table->string('description')->nullable();
             $table->string('to');
             $table->string('from');
             $table->timestamps();
