@@ -102,7 +102,10 @@ export default function EditUser({ auth, id }) {
                                         values.start_date
                                     }
                                     onSelectedDateChanged={(date) => {
-                                        setFieldValue("start_date", new Date(date).toLocaleDateString().split('.').reverse().join('-'));
+                                        let datenew = new Date(date).toLocaleDateString().split('.')
+                                        datenew[0] = datenew[0].padStart(2, '0');
+                                        datenew[1] = datenew[1].padStart(2, '0');
+                                        setFieldValue("start_date", datenew.reverse().join('-'));
                                     }}
                                 />
                                 {errors.start_date &&
@@ -124,8 +127,10 @@ export default function EditUser({ auth, id }) {
                                         values.end_date
                                     }
                                     onSelectedDateChanged={(date) => {
-                                        setFieldValue("end_date", new Date(date).toLocaleDateString().split('.').reverse().join('-'));
-                                    }}
+                                        let datenew = new Date(date).toLocaleDateString().split('.')
+                                        datenew[0] = datenew[0].padStart(2, '0');
+                                        datenew[1] = datenew[1].padStart(2, '0');
+                                        setFieldValue("end_date", datenew.reverse().join('-'));                                    }}
                                 />
                                 {errors.end_date &&
                                     touched.end_date &&
