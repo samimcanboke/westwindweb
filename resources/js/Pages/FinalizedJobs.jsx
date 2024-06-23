@@ -92,18 +92,18 @@ export default function FinalizedJobs({ auth }) {
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     >
                                         <option value="">Monat Auswählen</option>
-                                        <option value="1">Ocak</option>
-                                        <option value="2">Şubat</option>
-                                        <option value="3">Mart</option>
-                                        <option value="4">Nisan</option>
-                                        <option value="5">Mayıs</option>
-                                        <option value="6">Haziran</option>
-                                        <option value="7">Temmuz</option>
-                                        <option value="8">Ağustos</option>
-                                        <option value="9">Eylül</option>
-                                        <option value="10">Ekim</option>
-                                        <option value="11">Kasım</option>
-                                        <option value="12">Aralık</option>
+                                        <option value="1">Januar</option>
+                                        <option value="2">Februar</option>
+                                        <option value="3">März</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mai</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Dezember</option>
                                     </select>
                                 </div>
                                 <div className="pt-6">
