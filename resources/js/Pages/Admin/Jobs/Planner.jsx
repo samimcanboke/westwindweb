@@ -98,6 +98,7 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
+                        canMove: false,
                         className: "weekend",
                         style: {
                             background: "fuchsia",
