@@ -111,7 +111,7 @@ export default function Dashboard({ auth }) {
                                         let datenew = new Date(date).toLocaleDateString().split('.')
                                         datenew[0] = datenew[0].padStart(2, '0');
                                         datenew[1] = datenew[1].padStart(2, '0');
-                                        setFieldValue("start_date", date.reverse().join('-'));
+                                        setFieldValue("start_date", datenew.reverse().join('-'));
                                     }}
                                 />
                                 {errors.start_date &&
@@ -136,7 +136,7 @@ export default function Dashboard({ auth }) {
                                         let datenew = new Date(date).toLocaleDateString().split('.')
                                         datenew[0] = datenew[0].padStart(2, '0');
                                         datenew[1] = datenew[1].padStart(2, '0');
-                                        setFieldValue("end_date", date.reverse().join('-'));
+                                        setFieldValue("end_date", datenew.reverse().join('-'));
                                     }}
                                 />
                                 {errors.end_date &&
