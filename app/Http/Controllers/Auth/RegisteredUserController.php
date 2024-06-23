@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class RegisteredUserController extends Controller
 {
@@ -64,8 +65,8 @@ class RegisteredUserController extends Controller
     public function store_inside(Request $request): JsonResponse
     {
         $data = $request->all();
+        $data['start_working_date'] = Carbon::createFromDate($request->start_working_date)->format('Y-m-d');
         $request->merge($data);
-        
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -92,7 +93,7 @@ class RegisteredUserController extends Controller
             'is_admin' => $request->is_admin,
             'sick_holiday' => $request->sick_holiday,
             'password' => Hash::make($request->password),
-            'is_admin' => $request->is_Admin
+            'is_admin' => $request->is_admin
         ]);
 
         event(new UserRegistered($user));
