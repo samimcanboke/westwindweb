@@ -6,17 +6,17 @@ Hallo {{$jobPlan->user->name}},
 Es wurde eine Änderung an Ihrem zugewiesenen Job vorgenommen. Details finden Sie unten:
 <br/>
 <br/>
-Start - Enddatum : {{$oldJobPlan->start_date}} - {{$oldJobPlan->end_date}} => {{$jobPlan->start_date}} - {{$jobPlan->end_date}}
+Start - Enddatum :  {{$jobPlan->start_date}} - {{$jobPlan->end_date}}
 <br/>
-Tourname : {{$oldJobPlan->tour_name}} => {{$jobPlan->tour_name}}
+Tourname : {{$jobPlan->tour_name}}
 <br/>
-Zugnummer : {{$oldJobPlan->zug_nummer}} => {{$jobPlan->zug_nummer}}
+Zugnummer :  {{$jobPlan->zug_nummer}}
 <br/>
-Lokomotivnummer : {{$oldJobPlan->locomotive_nummer}} => {{$jobPlan->locomotive_nummer}}
+Lokomotivnummer : {{$jobPlan->locomotive_nummer}}
 <br/>
-Von : {{$oldJobPlan->from}} => {{$jobPlan->from}}
+Von : {{$jobPlan->from}}
 <br/>
-Nach : {{$oldJobPlan->to}} => {{$jobPlan->to}}
+Nach : {{$jobPlan->to}}
 <br/>
 <br/>
 Mit freundlichen Grüßen,
