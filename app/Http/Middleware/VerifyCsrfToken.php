@@ -23,11 +23,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected function tokensMatch($request)
     {
-        // Tüm POST ve PUT isteklerinde CSRF doğrulamasını devre dışı bırak
-        if (in_array($request->method(), ['POST', 'PUT'])) {
-            return true;
-        }
-
-        return parent::tokensMatch($request);
+        return true;
     }
 }
