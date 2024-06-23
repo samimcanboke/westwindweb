@@ -34,6 +34,7 @@ export default function Planner({ auth }) {
             .then((response) => {
                 console.log(response.data);
                 getPlans();
+                getPlansWithoutUser();
                 getUsersJobs();
                 if (openDetailModal) {
                     setOpenDetailModal(false);
@@ -139,6 +140,7 @@ export default function Planner({ auth }) {
             .then((response) => {
                 console.log(response);
                 getPlans();
+                getPlansWithoutUser();
                 getUsersJobs();
                 setOpenModal(false);
             });
@@ -146,6 +148,7 @@ export default function Planner({ auth }) {
 
     useEffect(() => {
         getPlans();
+        getPlansWithoutUser();
         getUsers();
         getUsersJobs();
 
