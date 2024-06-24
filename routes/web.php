@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DraftJobsController;
 use App\Http\Controllers\FinalizedJobsController;
+use App\Http\Controllers\SickLeavesController;
+use App\Http\Controllers\AnnualLeavesController;
+use App\Http\Controllers\AdminExtraController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\JobPlansController;
@@ -130,6 +133,16 @@ Route::get('/planner/jobs/edit/{id}', function ($id) {
     return Inertia::render('Admin/Jobs/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('planner-jobs-edit');
 
+Route::get('/sick-leaves', [SickLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('sick-leaves');
+Route::post('/sick-leaves', [SickLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('sick-leaves-store');
+
+Route::get('/annual-leaves', [AnnualLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('annual-leaves');
+Route::post('/annual-leaves', [AnnualLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('annual-leaves-store');
+
+Route::get('/admin-extras', [AdminExtraController::class, 'index'])->middleware(['auth', 'verified'])->name('admin-extras');
+Route::post('/admin-extras', [AdminExtraController::class, 'store'])->middleware(['auth', 'verified'])->name('admin-extras-store');
+
+Route::get('/user-confirmed-jobs', [FinalizedJobsController::class, 'user_confirmed_jobs'])->middleware(['auth', 'verified'])->name('user-confirmed-jobs');
 
 //Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
 

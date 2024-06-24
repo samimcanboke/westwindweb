@@ -606,6 +606,12 @@ class FinalizedJobsController extends Controller
         return response()->json($unconfirmeds);
     }
 
+    public function user_confirmed_jobs(Request $request)
+    {
+        $user_id = $request->user()->id;
+        $confirmed_jobs = FinalizedJobs::where("user_id", $user_id)->where("confirmation", true)->get();
+        return response()->json($confirmed_jobs);
+    }
     /**
      * Show the form for creating a new resource.
      */

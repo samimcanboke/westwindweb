@@ -6,6 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\AnnualLeaves;
+use App\Models\SickLeaves;
+use App\Models\JobPlans;
+use App\Models\FinalizedJobs;
+use App\Models\DraftJobs;
+use App\Models\AdminExtra;
 
 class User extends Authenticatable
 {
@@ -67,5 +73,20 @@ class User extends Authenticatable
     public function jobPlans()
     {
         return $this->hasMany(JobPlans::class);
+    }
+
+    public function sickLeaves()
+    {
+        return $this->hasMany(SickLeaves::class);
+    }
+
+    public function annualLeaves()
+    {
+        return $this->hasMany(AnnualLeaves::class);
+    }
+
+    public function adminExtras()
+    {
+        return $this->hasMany(AdminExtra::class);
     }
 }

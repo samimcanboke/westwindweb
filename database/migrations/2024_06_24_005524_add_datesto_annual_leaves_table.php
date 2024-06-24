@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_admin_extras', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table('users_annual_leaves', function (Blueprint $table) {
             $table->date('start_date')->nullable();
             $table->time('start_time')->nullable();
             $table->date('end_date')->nullable();
             $table->time('end_time')->nullable();
-            $table->float('amount')->nullable();
-            $table->tinyInteger('type')->nullable();
-            $table->timestamps();
         });
     }
 
@@ -30,6 +24,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users_admin_extras');
+        Schema::table('users_annual_leaves', function (Blueprint $table) {
+            $table->dropColumn('start_date');
+            $table->dropColumn('start_time');
+            $table->dropColumn('end_date');
+            $table->dropColumn('end_time');
+        });
     }
 };

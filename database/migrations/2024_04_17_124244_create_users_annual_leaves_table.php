@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->float('amount');
-            $table->tinyInteger('type');
-            $table->boolean('submitted');
-            $table->boolean('confirmed');
+            $table->float('amount')->nullable();
+            $table->tinyInteger('type')->nullable();
+            $table->boolean('submitted')->nullable();
+            $table->boolean('confirmed')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ import moment from "moment";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, Modal, Select, Datepicker } from "flowbite-react";
+import Swal from "sweetalert2";
 import interact from "interactjs";
 
 export default function Planner({ auth }) {
@@ -20,8 +21,23 @@ export default function Planner({ auth }) {
     const [openModal, setOpenModal] = useState(false);
     const [openDetailModal, setOpenDetailModal] = useState(false);
     const [openSickModal, setOpenSickModal] = useState(false);
-    const [sickDate, setSickDate] = useState("");
+    const [openAnnualLeaveModal, setOpenAnnualLeaveModal] = useState(false);
+    const [openAdminExtraModal, setOpenAdminExtraModal] = useState(false);
+    const [sickStartDate, setSickStartDate] = useState("");
+    const [sickStartTime, setSickStartTime] = useState("");
+    const [sickEndDate, setSickEndDate] = useState("");
+    const [sickEndTime, setSickEndTime] = useState("");
     const [sickDriver, setSickDriver] = useState(0);
+    const [annualLeaveStartDate, setAnnualLeaveStartDate] = useState("");
+    const [annualLeaveStartTime, setAnnualLeaveStartTime] = useState("");
+    const [annualLeaveEndDate, setAnnualLeaveEndDate] = useState("");
+    const [annualLeaveEndTime, setAnnualLeaveEndTime] = useState("");
+    const [annualLeaveDriver, setAnnualLeaveDriver] = useState(0);
+    const [adminExtraStartDate, setAdminExtraStartDate] = useState("");
+    const [adminExtraStartTime, setAdminExtraStartTime] = useState("");
+    const [adminExtraEndDate, setAdminExtraEndDate] = useState("");
+    const [adminExtraEndTime, setAdminExtraEndTime] = useState("");
+    const [adminExtraDriver, setAdminExtraDriver] = useState(0);
 
     const deleteFromuser = async (id) => {
         let job = jobs.find((job) => job.id === id);
@@ -55,11 +71,16 @@ export default function Planner({ auth }) {
     };
 
     const showModal = (type) => {
+        console.log(type);
         switch (type) {
             case "sick":
                 setOpenSickModal(true);
                 break;
-            case "holiday":
+            case "annualLeave":
+                setOpenAnnualLeaveModal(true);
+                break;
+            case "adminExtra":
+                setOpenAdminExtraModal(true);
                 break;
             default:
                 console.log(type);
@@ -67,19 +88,26 @@ export default function Planner({ auth }) {
     };
 
     const getUsersJobs = async () => {
-        await axios.get("/planner/jobs/get-users-jobs").then((response) => {
-            let newJobList = [];
-            response.data.map((job) => {
+        let newJobList = [];
+        let newSickList = [];
+        let newAnnualLeaveList = [];
+        let newAdminExtraList = [];
+        let userFinalizedJobs = [];
+        await axios.get("/planner/jobs/get-users-jobs").then(async (response) => {
+           
+            for(const job of response.data){
                 let newJobs = {
-                    id: job.id,
+                    id: "j"+job.id,
                     group: job.user_id,
                     start_time: moment(job.start_date + " " + job.start_time),
                     end_time: moment(job.end_date + " " + job.end_time),
                     title: job.from + " - " + job.to + "|" + job.id,
+                    canMove: false,
+                    canResize: false,
                     itemProps: {
                         "data-custom-attribute": "Random content",
                         "aria-hidden": true,
-                        onItemClick: async (itemId) => {
+                        onContextMenu: async (itemId) => {
                             try {
                                 let item =
                                     itemId.target.parentElement.getAttribute(
@@ -99,8 +127,46 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
-                        
-                        canMove: false,
+                        onClick: async (itemId) => {
+                            try {
+                                let item =
+                                    itemId.target.parentElement.getAttribute(
+                                        "title"
+                                    );
+                                console.log(item);
+                                let id = item.split("|")[1];
+                                let job = await axios.get(
+                                    "/planner/jobs/show/" + id
+                                );
+                                console.log(job.data);
+                                if (job.status === 200) {
+                                    setOpenDetailModal(true);
+                                    setEditingJob(job.data);
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
+                        onDoubleClick: async (itemId) => {
+                            try {
+                                let item =
+                                    itemId.target.parentElement.getAttribute(
+                                        "title"
+                                    );
+                                console.log(item);
+                                let id = item.split("|")[1];
+                                let job = await axios.get(
+                                    "/planner/jobs/show/" + id
+                                );
+                                console.log(job.data);
+                                if (job.status === 200) {
+                                    setOpenDetailModal(true);
+                                    setEditingJob(job.data);
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
                         className: "weekend",
                         style: {
                             background: "fuchsia",
@@ -111,10 +177,108 @@ export default function Planner({ auth }) {
                     },
                 };
                 newJobList.push(newJobs);
-            });
-            setUserJobs(newJobList);
-            console.log(userJobs);
+            }
         });
+
+        await axios.get("/sick-leaves").then(async (response) => {
+            for(const sick of response.data.sickLeaves){
+                let newSick = {
+                    id: "s"+sick.id,
+                    group: sick.user_id,
+                    start_time: moment(sick.start_date).set({hour: sick.start_time.split(":")[0], minute: sick.start_time.split(":")[1]}),
+                    end_time: moment(sick.end_date).set({hour: sick.end_time.split(":")[0], minute: sick.end_time.split(":")[1]}),
+                    title: sick.user.name,
+                    canMove: false,
+                    canResize: false,
+                    itemProps: {
+                        className: "weekend",
+                        style: {
+                            background: "blue",
+                            zIndex: 49,
+                        },
+                        itemIdKey: "id",
+                        itemTitleKey: "title",
+                    },
+                };
+                newSickList.push(newSick);
+            }
+            
+        });
+        await axios.get("/annual-leaves").then(async (response) => {
+            for(const annualLeave of response.data.annualLeaves){
+                let newAnnualLeave = {
+                    id: "a"+annualLeave.id,
+                    group: annualLeave.user_id,
+                    start_time: moment(annualLeave.start_date).set({hour: annualLeave.start_time.split(":")[0], minute: annualLeave.start_time.split(":")[1]}),
+                    end_time: moment(annualLeave.end_date).set({hour: annualLeave.end_time.split(":")[0], minute: annualLeave.end_time.split(":")[1]}),
+                    title: annualLeave.user.name,
+                    canMove: false,
+                    canResize: false,
+                    itemProps: {
+                        className: "weekend",
+                        style: {
+                            background: "green",
+                            zIndex: 49,
+                        },
+                    },
+                }
+                newAnnualLeaveList.push(newAnnualLeave);
+            }
+        })
+
+        await axios.get("/admin-extras").then(async (response) => {
+            for(const adminExtra of response.data.adminExtras){
+                let newAdminExtra = {
+                    id: "e"+adminExtra.id,
+                    group: adminExtra.user_id,
+                    start_time: moment(adminExtra.start_date).set({hour: adminExtra.start_time.split(":")[0], minute: adminExtra.start_time.split(":")[1]}),
+                    end_time: moment(adminExtra.end_date).set({hour: adminExtra.end_time.split(":")[0], minute: adminExtra.end_time.split(":")[1]}),
+                    title: adminExtra.user.name,
+                    canMove: false,
+                    canResize: false,
+                    itemProps: {
+                        className: "weekend",
+                        style: {
+                            background: "gray",
+                            zIndex: 49,
+                        },
+                    },
+                }
+                newAdminExtraList.push(newAdminExtra);
+            }
+        });
+
+        await axios.get("/user-confirmed-jobs").then(async (response) => {
+            for(const job of response.data){
+                let workStartTime = job.work_start_time.split(":");
+                let workEndTime = job.work_end_time.split(":");
+                let startDate = moment(job.initial_date);
+                let endDate = moment(job.initial_date);
+                if(workStartTime[0] < workEndTime[0]){
+                    endDate.add(1, "day");
+                }
+                let newUserFinalizedJob = {
+                    id: "u"+job.id,
+                    group: job.user_id,
+                    start_time: startDate.set({hour: workStartTime[0], minute: workStartTime[1]}),
+                    end_time: endDate.set({hour: workEndTime[0], minute: workEndTime[1]}),
+                    title: job.from + " - " + job.to,
+                    canMove: false,
+                    canResize: false,
+                    itemProps: {
+                        className: "weekend",
+                        style: {
+                            background: "purple",
+                            zIndex: 49,
+                        },
+                    },
+                }
+                userFinalizedJobs.push(newUserFinalizedJob);
+            }
+        });
+
+
+        setUserJobs([...newJobList, ...newSickList, ...newAnnualLeaveList, ...newAdminExtraList, ...userFinalizedJobs]);
     };
 
     const getUsers = async () => {
@@ -145,6 +309,118 @@ export default function Planner({ auth }) {
                 setOpenModal(false);
             });
     };
+    const setSick = async () => {
+        console.log(sickStartDate);
+        console.log(sickStartTime);
+        console.log(sickEndDate);
+        console.log(sickEndTime);
+        console.log(sickDriver);
+        await axios.post("/sick-leaves", {
+            start_date: sickStartDate,
+            start_time: sickStartTime,
+            end_date: sickEndDate,
+            end_time: sickEndTime,
+            user_id: sickDriver,
+            confirmed: true
+        }).then((response) => {
+            if(response.status === 200){
+                setOpenSickModal(false);
+                getPlans();
+                getPlansWithoutUser();
+                getUsersJobs();
+                setSickStartDate("");
+                setSickStartTime("");
+                setSickEndDate("");
+                setSickEndTime("");
+                setSickDriver(0);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Hastalık İzni Ekleme',
+                    text: 'Hastalık İzni Ekleme Başarılı',
+                });
+
+            } 
+        }).catch((error) => {
+            console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hastalık İzni Ekleme Hatası',
+                    text: error.response.data.message,
+                });
+        });
+    };
+    const setAnnualLeave = async () => {
+        await axios.post("/annual-leaves", {
+            start_date: annualLeaveStartDate,
+            start_time: annualLeaveStartTime,
+            end_date: annualLeaveEndDate,
+            end_time: annualLeaveEndTime,
+            user_id: annualLeaveDriver,
+            confirmed: true
+        }).then((response) => {
+            if(response.status === 200){
+                setOpenAnnualLeaveModal(false);
+                getPlans();
+                getPlansWithoutUser();
+                getUsersJobs();
+                setAnnualLeaveStartDate("");
+                setAnnualLeaveStartTime("");
+                setAnnualLeaveEndDate("");
+                setAnnualLeaveEndTime("");
+                setAnnualLeaveDriver(0);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Yıllık İzni Ekleme',
+                    text: 'Yıllık İzni Ekleme Başarılı',
+                });
+
+            } 
+        }).catch((error) => {
+            console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Yıllık İzni Ekleme Hatası',
+                    text: error.response.data.message,
+                });
+        });
+    };
+    const setAdminExtra = async () => {
+
+        await axios.post("/admin-extras", {
+            start_date: adminExtraStartDate,
+            start_time: adminExtraStartTime,
+            end_date: adminExtraEndDate,
+            end_time: adminExtraEndTime,
+            user_id: adminExtraDriver,
+            confirmed: true
+        }).then((response) => {
+            if(response.status === 200){
+                setOpenAdminExtraModal(false);
+                getPlans();
+                getPlansWithoutUser();
+                getUsersJobs();
+                setAdminExtraStartDate("");
+                setAdminExtraStartTime("");
+                setAdminExtraEndDate("");
+                setAdminExtraEndTime("");
+                setAdminExtraDriver(0);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Admin İzni Ekleme',
+                    text: 'Admin İzni Ekleme Başarılı',
+                });
+            }
+        }).catch((error) => {
+            console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Admin İzni Ekleme Hatası',
+                    text: error.response.data.message,
+                });
+        });
+    };
+
+
 
     useEffect(() => {
         getPlans();
@@ -244,7 +520,6 @@ export default function Planner({ auth }) {
             <Modal
                 show={openSickModal}
                 size={"5xl"}
-                style={{ zIndex: 9999999 }}
                 onClose={() => setOpenSickModal(false)}
             >
                 <Modal.Header>Hastalık İzni Ekle</Modal.Header>
@@ -257,13 +532,21 @@ export default function Planner({ auth }) {
                             <Datepicker
                                 inline
                                 language="de-DE"
-                                labelTodayButton="Heute"
-                                labelClearButton="Löschen"
-                                id="sickDate"
-                                name="sickDate"
-                                value={sickDate}
-                                onSelectedDateChanged={(date) => {
-                                    setSickDate(date);
+                                showTodayButton={false}
+                                showClearButton={false}
+                                id="sickStartDate"
+                                name="sickStartDate"
+                                type="date"
+                                value={sickStartDate}
+                                onSelectedDateChanged={(date) => {        
+                                    let datenew = new Date(date).toLocaleDateString().split('.')
+                                    datenew[0] = datenew[0].padStart(2, '0');
+                                    datenew[1] = datenew[1].padStart(2, '0');
+                                    setSickStartDate(datenew.reverse().join('-'));
+                                    setSickEndDate(datenew.reverse().join('-'));
+                                    setSickEndTime("00:00");
+                                    setSickStartTime("00:00");
+                              
                                 }}
                             />
 
@@ -276,9 +559,9 @@ export default function Planner({ auth }) {
                                     id="sickStartTime"
                                     name="sickStartTime"
                                     className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    value={""}
+                                    value={sickStartTime}
                                     onChange={(e) => {
-                                        console.log(e);
+                                        setSickStartTime(e.target.value);
                                     }}
                                 />
                                 <p className="justify-self-center">bis</p>
@@ -286,24 +569,28 @@ export default function Planner({ auth }) {
                                     type="time"
                                     id="sickEndTime"
                                     name="sickEndTime"
-                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    value={""}
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-6000 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={sickEndTime}
                                     onChange={(e) => {
-                                        console.log(e);
+                                        setSickEndTime(e.target.value);
                                     }}
                                 />
                             </div>
 
                             <Datepicker
-                                inline
+                            inline
                                 language="de-DE"
-                                labelTodayButton="Heute"
-                                labelClearButton="Löschen"
-                                id="sickDate"
-                                name="sickDate"
-                                value={sickDate}
+                                id="sickEndDate"
+                                name="sickEndDate"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                value={sickEndDate}
+                                type="date"
                                 onSelectedDateChanged={(date) => {
-                                    setSickDate(date);
+                                    let datenew = new Date(date).toLocaleDateString().split('.')
+                                    datenew[0] = datenew[0].padStart(2, '0');
+                                    datenew[1] = datenew[1].padStart(2, '0');
+                                    setSickEndDate(datenew.reverse().join('-'));
                                 }}
                             />
                         </div>
@@ -314,6 +601,7 @@ export default function Planner({ auth }) {
                         <Select
                             className="w-full mb-10"
                             onChange={(e) => setSickDriver(e.target.value)}
+                            value={sickDriver}
                         >
                             <option>Seçiniz</option>
                             {drivers &&
@@ -326,8 +614,217 @@ export default function Planner({ auth }) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setMachinist}>Atama Yap</Button>
-                    <Button color="gray" onClick={() => setOpenModal(false)}>
+                    <Button onClick={setSick}>Hastalık İzni Ekle</Button>
+                    <Button color="gray" onClick={() => setOpenSickModal(false)}>
+                        İptal
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={openAdminExtraModal}
+                size={"5xl"}
+                onClose={() => setOpenAdminExtraModal(false)}
+            >
+                <Modal.Header>Admin İzni Ekle</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Tarih
+                        </p>
+                        <div className="flex justify-between">
+                            <Datepicker
+                                inline
+                                language="de-DE"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                id="adminExtraDate"
+                                name="adminExtraDate"
+                                type="date"
+                                value={adminExtraStartDate}
+                                onSelectedDateChanged={(date) => {        
+                                    let datenew = new Date(date).toLocaleDateString().split('.')
+                                    datenew[0] = datenew[0].padStart(2, '0');
+                                    datenew[1] = datenew[1].padStart(2, '0');
+                                    setAdminExtraStartDate(datenew.reverse().join('-'));
+                                    setAdminExtraEndDate(datenew.reverse().join('-'));
+                                    setAdminExtraEndTime("00:00");
+                                    setAdminExtraStartTime("00:00");
+                              
+                                }}
+                            />
+
+                            <div
+                                className="flex flex-row gap-2 justify-center"
+                                style={{ maxHeight: 50 }}
+                            >
+                                <input
+                                    type="time"
+                                    id="adminExtraStartTime"
+                                    name="adminExtraStartTime"
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-3000 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-4000 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={adminExtraStartTime}
+                                    onChange={(e) => {
+                                        setAdminExtraStartTime(e.target.value);
+                                    }}
+                                />
+                                <p className="justify-self-center">bis</p>
+                                <input
+                                    type="time"
+                                    id="adminExtraEndTime"
+                                    name="adminExtraEndTime"
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-6000 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={adminExtraEndTime}
+                                    onChange={(e) => {
+                                        setAdminExtraEndTime(e.target.value);
+                                    }}
+                                />
+                            </div>
+
+                            <Datepicker
+                                inline
+                                language="de-DE"
+                                id="adminExtraDate"
+                                name="adminExtraDate"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                value={adminExtraEndDate}
+                                type="date"
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date).toLocaleDateString().split('.')
+                                    datenew[0] = datenew[0].padStart(2, '0');
+                                    datenew[1] = datenew[1].padStart(2, '0');
+                                    setAdminExtraEndDate(datenew.reverse().join('-'));
+                                }}
+                            />
+                        </div>
+                        <br />
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Makinist
+                        </p>
+                        <Select
+                            className="w-full mb-10"
+                            onChange={(e) => setAdminExtraDriver(e.target.value)}
+                            value={adminExtraDriver}
+                        >
+                            <option>Seçiniz</option>
+                            {drivers &&
+                                drivers.map((driver) => (
+                                    <option key={driver.id} value={driver.id}>
+                                        {driver.name}
+                                    </option>
+                                ))}
+                        </Select>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={setAdminExtra}>Admin İzni Ekle</Button>
+                    <Button color="gray" onClick={() => setOpenAdminExtraModal(false)}>
+                        İptal
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            <Modal
+                show={openAnnualLeaveModal}
+                size={"5xl"}
+                onClose={() => setOpenAnnualLeaveModal(false)}
+            >
+                <Modal.Header>Yıllık İzni Ekle</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Tarih
+                        </p>
+                        <div className="flex justify-between">
+                            <Datepicker
+                                inline
+                                language="de-DE"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                id="annualLeaveDate"
+                                name="annualLeaveDate"
+                                type="date"
+                                value={annualLeaveStartDate}
+                                onSelectedDateChanged={(date) => {        
+                                    let datenew = new Date(date).toLocaleDateString().split('.')
+                                    datenew[0] = datenew[0].padStart(2, '0');
+                                    datenew[1] = datenew[1].padStart(2, '0');
+                                    setAnnualLeaveStartDate(datenew.reverse().join('-'));
+                                    setAnnualLeaveEndDate(datenew.reverse().join('-'));
+                                    setAnnualLeaveEndTime("00:00");
+                                    setAnnualLeaveStartTime("00:00");
+                              
+                                }}
+                            />
+
+                            <div
+                                className="flex flex-row gap-2 justify-center"
+                                style={{ maxHeight: 50 }}
+                            >
+                                <input
+                                    type="time"
+                                    id="annualLeaveStartTime"
+                                    name="annualLeaveStartTime"
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-4000 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={annualLeaveStartTime}
+                                    onChange={(e) => {
+                                        setAnnualLeaveStartTime(e.target.value);
+                                    }}
+                                />
+                                <p className="justify-self-center">bis</p>
+                                <input
+                                    type="time"
+                                    id="annualLeaveEndTime"
+                                    name="annualLeaveEndTime"
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-6000 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={annualLeaveEndTime}
+                                    onChange={(e) => {
+                                        setAnnualLeaveEndTime(e.target.value);
+                                    }}
+                                />
+                            </div>
+
+                            <Datepicker
+                                inline
+                                language="de-DE"
+                                id="annualLeaveEndDate"
+                                name="annualLeaveEndDate"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                value={annualLeaveEndDate}
+                                type="date"
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date).toLocaleDateString().split('.')
+                                    datenew[0] = datenew[0].padStart(2, '0');
+                                    datenew[1] = datenew[1].padStart(2, '0');
+                                    setAnnualLeaveEndDate(datenew.reverse().join('-'));
+                                }}
+                            />
+                        </div>
+                        <br />
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Makinist
+                        </p>
+                        <Select
+                            className="w-full mb-10"
+                            onChange={(e) => setAnnualLeaveDriver(e.target.value)}
+                            value={annualLeaveDriver}
+                        >
+                            <option>Seçiniz</option>
+                            {drivers &&
+                                drivers.map((driver) => (
+                                    <option key={driver.id} value={driver.id}>
+                                        {driver.name}
+                                    </option>
+                                ))}
+                        </Select>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={setAnnualLeave}>Yıllık İzni Ekle</Button>
+                    <Button color="gray" onClick={() => setOpenAnnualLeaveModal(false)}>
                         İptal
                     </Button>
                 </Modal.Footer>
@@ -493,13 +990,13 @@ export default function Planner({ auth }) {
                                             Hastalık
                                         </Button>
                                         <Button
-                                            onClick={() => showModal("holiday")}
+                                            onClick={() => showModal("annualLeave")}
                                         >
-                                            İzin
+                                            Yıllık İzni
                                         </Button>
                                         <Button
                                             onClick={() =>
-                                                showModal("relaxing")
+                                                showModal("adminExtra")
                                             }
                                         >
                                             Dinlenme
