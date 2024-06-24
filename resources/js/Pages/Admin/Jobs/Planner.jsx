@@ -113,7 +113,7 @@ export default function Planner({ auth }) {
                                     itemId.target.parentElement.getAttribute(
                                         "title"
                                     );
-                                console.log(item);
+                              
                                 let id = item.split("|")[1];
                                 let job = await axios.get(
                                     "/planner/jobs/show/" + id
@@ -183,14 +183,48 @@ export default function Planner({ auth }) {
         await axios.get("/sick-leaves").then(async (response) => {
             for(const sick of response.data.sickLeaves){
                 let newSick = {
-                    id: "s"+sick.id,
+                    id: sick.id,
                     group: sick.user_id,
                     start_time: moment(sick.start_date).set({hour: sick.start_time.split(":")[0], minute: sick.start_time.split(":")[1]}),
                     end_time: moment(sick.end_date).set({hour: sick.end_time.split(":")[0], minute: sick.end_time.split(":")[1]}),
-                    title: sick.user.name,
+                    title: sick.user.name + "|" + sick.id,
                     canMove: false,
                     canResize: false,
                     itemProps: {
+                        onContextMenu: async (itemId) => {
+                            try {
+                                let item =
+                                    itemId.target.parentElement.getAttribute(
+                                        "title"
+                                    );
+                              
+                                let id = item.split("|")[1];
+                                Swal.fire({
+                                    title: "Eminmisin?",
+                                    text: "Silmek istediğinize eminmisiniz?",
+                                    icon: "warning",
+                                    dangerMode: true,
+                                  })
+                                  .then(async willDelete => {
+                                    if (willDelete) {
+                                        await axios.delete("/sick-leaves/" + id);
+                                        getPlans();
+                                        getPlansWithoutUser();
+                                        getUsersJobs();
+                                        Swal.fire({
+                                            title: "Tamam!",
+                                            text: "Kayıt Silindi",
+                                            icon: "success",
+                                            timer: 1000,
+                                            button: false
+                                          })
+                                    }
+                                  });
+                               
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
                         className: "weekend",
                         style: {
                             background: "red",

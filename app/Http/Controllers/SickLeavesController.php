@@ -37,4 +37,11 @@ class SickLeavesController extends Controller
         $sickLeaves->save();
         return response()->json(['message' => 'Sick leave created successfully', 'sickLeaves' => $sickLeaves]);
     }
+
+    public function destroy($id)
+    {
+        $sickLeave = SickLeaves::find($id);
+        $sickLeave->delete();
+        return response()->json(['sickLeave' => $sickLeave]);
+    }
 }

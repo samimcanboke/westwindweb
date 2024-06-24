@@ -135,6 +135,7 @@ Route::get('/planner/jobs/edit/{id}', function ($id) {
 
 Route::get('/sick-leaves', [SickLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('sick-leaves');
 Route::post('/sick-leaves', [SickLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('sick-leaves-store');
+Route::delete('/sick-leaves/{id}', [SickLeavesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('sick-leaves-destroy');
 
 Route::get('/annual-leaves', [AnnualLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('annual-leaves');
 Route::post('/annual-leaves', [AnnualLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('annual-leaves-store');
