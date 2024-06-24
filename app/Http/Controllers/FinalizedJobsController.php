@@ -341,7 +341,7 @@ class FinalizedJobsController extends Controller
         $endDate = Carbon::create($year, $month, 1)->endOfMonth();
         $data['year'] = $year;
         $data['month'] = $month;
-        $user = User::find($user_id)->first();
+        $user = User::where('id', $user_id)->first();
         $data['id'] = sprintf('%03d', $user->id);
         $data['name'] = $user->name ?? "";
         $data['mail'] = $user->email ?? "";
