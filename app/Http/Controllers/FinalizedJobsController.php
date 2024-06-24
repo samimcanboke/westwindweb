@@ -336,8 +336,7 @@ class FinalizedJobsController extends Controller
 
         $month = $request->month;
         $year = $request->year;
-        $user_id = $request->user->id;
-        dd($user_id);
+        $user_id = $request->user_id;
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth();
         $data['year'] = $year;

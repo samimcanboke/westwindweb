@@ -14,7 +14,7 @@ export default function FinalizedJobs({ auth }) {
 
     const handleFilter = () => {
         axios
-            .post("/finalized-jobs/export", { year, month })
+            .post("/finalized-jobs/export", { year, month, user_id: auth.user.id })
             .then((response) => {
                 if (response.data.status) {
                     setFile(response.data.file);
