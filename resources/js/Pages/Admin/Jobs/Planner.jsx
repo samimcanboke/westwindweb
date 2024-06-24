@@ -239,7 +239,7 @@ export default function Planner({ auth }) {
                     itemProps: {
                         className: "weekend",
                         style: {
-                            background: "beige",
+                            background: "purple",
                             zIndex: 49,
                         },
                     },
@@ -428,9 +428,20 @@ export default function Planner({ auth }) {
         getUsers();
         getUsersJobs();
 
+
+
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);
         });
+    }, []);
+
+    useEffect(() => {
+        const id = setInterval(() => {
+            getPlans();
+            getPlansWithoutUser();
+            getUsersJobs();
+        }, 1000);
+        return () => clearInterval(id);
     }, []);
 
     return (
