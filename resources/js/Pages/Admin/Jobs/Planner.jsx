@@ -1,6 +1,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import Timeline from "react-calendar-timeline";
+import Timeline, {
+    TimelineMarkers,
+    CustomMarker,
+    TodayMarker,
+    CursorMarker,
+} from "react-calendar-timeline";
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
 import { useState, useEffect } from "react";
@@ -93,100 +98,109 @@ export default function Planner({ auth }) {
         let newAnnualLeaveList = [];
         let newAdminExtraList = [];
         let userFinalizedJobs = [];
-        await axios.get("/planner/jobs/get-users-jobs").then(async (response) => {
-           
-            for(const job of response.data){
-                let newJobs = {
-                    id: "j"+job.id,
-                    group: job.user_id,
-                    start_time: moment(job.start_date + " " + job.start_time),
-                    end_time: moment(job.end_date + " " + job.end_time),
-                    title: job.from + " - " + job.to + "|" + job.id,
-                    canMove: false,
-                    canResize: false,
-                    itemProps: {
-                        "data-custom-attribute": "Random content",
-                        "aria-hidden": true,
-                        onContextMenu: async (itemId) => {
-                            try {
-                                let item =
-                                    itemId.target.parentElement.getAttribute(
-                                        "title"
+        await axios
+            .get("/planner/jobs/get-users-jobs")
+            .then(async (response) => {
+                for (const job of response.data) {
+                    let newJobs = {
+                        id: "j" + job.id,
+                        group: job.user_id,
+                        start_time: moment(
+                            job.start_date + " " + job.start_time
+                        ),
+                        end_time: moment(job.end_date + " " + job.end_time),
+                        title: job.from + " - " + job.to + "|" + job.id,
+                        canMove: false,
+                        canResize: false,
+                        itemProps: {
+                            "data-custom-attribute": "Random content",
+                            "aria-hidden": true,
+                            onContextMenu: async (itemId) => {
+                                try {
+                                    let item =
+                                        itemId.target.parentElement.getAttribute(
+                                            "title"
+                                        );
+
+                                    let id = item.split("|")[1];
+                                    let job = await axios.get(
+                                        "/planner/jobs/show/" + id
                                     );
-                              
-                                let id = item.split("|")[1];
-                                let job = await axios.get(
-                                    "/planner/jobs/show/" + id
-                                );
-                                console.log(job.data);
-                                if (job.status === 200) {
-                                    setOpenDetailModal(true);
-                                    setEditingJob(job.data);
+                                    console.log(job.data);
+                                    if (job.status === 200) {
+                                        setOpenDetailModal(true);
+                                        setEditingJob(job.data);
+                                    }
+                                } catch (e) {
+                                    console.log(e);
                                 }
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        },
-                        onClick: async (itemId) => {
-                            try {
-                                let item =
-                                    itemId.target.parentElement.getAttribute(
-                                        "title"
+                            },
+                            onClick: async (itemId) => {
+                                try {
+                                    let item =
+                                        itemId.target.parentElement.getAttribute(
+                                            "title"
+                                        );
+                                    console.log(item);
+                                    let id = item.split("|")[1];
+                                    let job = await axios.get(
+                                        "/planner/jobs/show/" + id
                                     );
-                                console.log(item);
-                                let id = item.split("|")[1];
-                                let job = await axios.get(
-                                    "/planner/jobs/show/" + id
-                                );
-                                console.log(job.data);
-                                if (job.status === 200) {
-                                    setOpenDetailModal(true);
-                                    setEditingJob(job.data);
+                                    console.log(job.data);
+                                    if (job.status === 200) {
+                                        setOpenDetailModal(true);
+                                        setEditingJob(job.data);
+                                    }
+                                } catch (e) {
+                                    console.log(e);
                                 }
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        },
-                        onDoubleClick: async (itemId) => {
-                            try {
-                                let item =
-                                    itemId.target.parentElement.getAttribute(
-                                        "title"
+                            },
+                            onDoubleClick: async (itemId) => {
+                                try {
+                                    let item =
+                                        itemId.target.parentElement.getAttribute(
+                                            "title"
+                                        );
+                                    console.log(item);
+                                    let id = item.split("|")[1];
+                                    let job = await axios.get(
+                                        "/planner/jobs/show/" + id
                                     );
-                                console.log(item);
-                                let id = item.split("|")[1];
-                                let job = await axios.get(
-                                    "/planner/jobs/show/" + id
-                                );
-                                console.log(job.data);
-                                if (job.status === 200) {
-                                    setOpenDetailModal(true);
-                                    setEditingJob(job.data);
+                                    console.log(job.data);
+                                    if (job.status === 200) {
+                                        setOpenDetailModal(true);
+                                        setEditingJob(job.data);
+                                    }
+                                } catch (e) {
+                                    console.log(e);
                                 }
-                            } catch (e) {
-                                console.log(e);
-                            }
+                            },
+                            className: "weekend",
+                            style: {
+                                background: "green",
+                                zIndex: 49,
+                            },
+                            itemIdKey: "id",
+                            itemTitleKey: "title",
                         },
-                        className: "weekend",
-                        style: {
-                            background: "green",
-                            zIndex: 49,
-                        },
-                        itemIdKey: "id",
-                        itemTitleKey: "title",
-                    },
-                };
-                newJobList.push(newJobs);
-            }
-        });
+                    };
+                    newJobList.push(newJobs);
+                }
+            });
 
         await axios.get("/sick-leaves").then(async (response) => {
-            for(const sick of response.data.sickLeaves){
+            for (const sick of response.data.sickLeaves) {
                 let newSick = {
                     id: sick.id,
                     group: sick.user_id,
-                    start_time: moment(sick.start_date).set({hour: sick.start_time.split(":")[0], minute: sick.start_time.split(":")[1]}),
-                    end_time: moment(sick.end_date).set({hour: sick.end_time.split(":")[0], minute: sick.end_time.split(":")[1]}),
+                    start_time: moment(sick.start_date).set({
+                        hour: sick.start_time.split(":")[0],
+                        minute: sick.start_time.split(":")[1],
+                    }),
+                    end_time: moment(sick.end_date).set({
+                        hour: sick.end_time.split(":")[0],
+                        minute: sick.end_time.split(":")[1],
+                    }),
                     title: sick.user.name + "|" + sick.id,
                     canMove: false,
                     canResize: false,
@@ -197,17 +211,18 @@ export default function Planner({ auth }) {
                                     itemId.target.parentElement.getAttribute(
                                         "title"
                                     );
-                              
+
                                 let id = item.split("|")[1];
                                 Swal.fire({
                                     title: "Eminmisin?",
                                     text: "Silmek istediğinize eminmisiniz?",
                                     icon: "warning",
                                     dangerMode: true,
-                                  })
-                                  .then(async willDelete => {
+                                }).then(async (willDelete) => {
                                     if (willDelete) {
-                                        await axios.delete("/sick-leaves/" + id);
+                                        await axios.delete(
+                                            "/sick-leaves/" + id
+                                        );
                                         getPlans();
                                         getPlansWithoutUser();
                                         getUsersJobs();
@@ -216,11 +231,10 @@ export default function Planner({ auth }) {
                                             text: "Kayıt Silindi",
                                             icon: "success",
                                             timer: 1000,
-                                            button: false
-                                          })
+                                            button: false,
+                                        });
                                     }
-                                  });
-                               
+                                });
                             } catch (e) {
                                 console.log(e);
                             }
@@ -236,15 +250,20 @@ export default function Planner({ auth }) {
                 };
                 newSickList.push(newSick);
             }
-            
         });
         await axios.get("/annual-leaves").then(async (response) => {
-            for(const annualLeave of response.data.annualLeaves){
+            for (const annualLeave of response.data.annualLeaves) {
                 let newAnnualLeave = {
-                    id: "a"+annualLeave.id,
+                    id: "a" + annualLeave.id,
                     group: annualLeave.user_id,
-                    start_time: moment(annualLeave.start_date).set({hour: annualLeave.start_time.split(":")[0], minute: annualLeave.start_time.split(":")[1]}),
-                    end_time: moment(annualLeave.end_date).set({hour: annualLeave.end_time.split(":")[0], minute: annualLeave.end_time.split(":")[1]}),
+                    start_time: moment(annualLeave.start_date).set({
+                        hour: annualLeave.start_time.split(":")[0],
+                        minute: annualLeave.start_time.split(":")[1],
+                    }),
+                    end_time: moment(annualLeave.end_date).set({
+                        hour: annualLeave.end_time.split(":")[0],
+                        minute: annualLeave.end_time.split(":")[1],
+                    }),
                     title: annualLeave.user.name,
                     canMove: false,
                     canResize: false,
@@ -255,18 +274,24 @@ export default function Planner({ auth }) {
                             zIndex: 49,
                         },
                     },
-                }
+                };
                 newAnnualLeaveList.push(newAnnualLeave);
             }
-        })
+        });
 
         await axios.get("/admin-extras").then(async (response) => {
-            for(const adminExtra of response.data.adminExtras){
+            for (const adminExtra of response.data.adminExtras) {
                 let newAdminExtra = {
-                    id: "e"+adminExtra.id,
+                    id: "e" + adminExtra.id,
                     group: adminExtra.user_id,
-                    start_time: moment(adminExtra.start_date).set({hour: adminExtra.start_time.split(":")[0], minute: adminExtra.start_time.split(":")[1]}),
-                    end_time: moment(adminExtra.end_date).set({hour: adminExtra.end_time.split(":")[0], minute: adminExtra.end_time.split(":")[1]}),
+                    start_time: moment(adminExtra.start_date).set({
+                        hour: adminExtra.start_time.split(":")[0],
+                        minute: adminExtra.start_time.split(":")[1],
+                    }),
+                    end_time: moment(adminExtra.end_date).set({
+                        hour: adminExtra.end_time.split(":")[0],
+                        minute: adminExtra.end_time.split(":")[1],
+                    }),
                     title: adminExtra.user.name,
                     canMove: false,
                     canResize: false,
@@ -277,25 +302,31 @@ export default function Planner({ auth }) {
                             zIndex: 49,
                         },
                     },
-                }
+                };
                 newAdminExtraList.push(newAdminExtra);
             }
         });
 
         await axios.get("/user-confirmed-jobs").then(async (response) => {
-            for(const job of response.data){
+            for (const job of response.data) {
                 let workStartTime = job.work_start_time.split(":");
                 let workEndTime = job.work_end_time.split(":");
                 let startDate = moment(job.initial_date);
                 let endDate = moment(job.initial_date);
-                if(workStartTime[0] < workEndTime[0]){
+                if (workStartTime[0] < workEndTime[0]) {
                     endDate.add(1, "day");
                 }
                 let newUserFinalizedJob = {
-                    id: "u"+job.id,
+                    id: "u" + job.id,
                     group: job.user_id,
-                    start_time: startDate.set({hour: workStartTime[0], minute: workStartTime[1]}),
-                    end_time: endDate.set({hour: workEndTime[0], minute: workEndTime[1]}),
+                    start_time: startDate.set({
+                        hour: workStartTime[0],
+                        minute: workStartTime[1],
+                    }),
+                    end_time: endDate.set({
+                        hour: workEndTime[0],
+                        minute: workEndTime[1],
+                    }),
                     title: job.from + " - " + job.to,
                     canMove: false,
                     canResize: false,
@@ -306,13 +337,18 @@ export default function Planner({ auth }) {
                             zIndex: 49,
                         },
                     },
-                }
+                };
                 userFinalizedJobs.push(newUserFinalizedJob);
             }
         });
 
-
-        setUserJobs([...newJobList, ...newSickList, ...newAnnualLeaveList, ...newAdminExtraList, ...userFinalizedJobs]);
+        setUserJobs([
+            ...newJobList,
+            ...newSickList,
+            ...newAnnualLeaveList,
+            ...newAdminExtraList,
+            ...userFinalizedJobs,
+        ]);
     };
 
     const getUsers = async () => {
@@ -349,120 +385,122 @@ export default function Planner({ auth }) {
         console.log(sickEndDate);
         console.log(sickEndTime);
         console.log(sickDriver);
-        await axios.post("/sick-leaves", {
-            start_date: sickStartDate,
-            start_time: sickStartTime,
-            end_date: sickEndDate,
-            end_time: sickEndTime,
-            user_id: sickDriver,
-            confirmed: true
-        }).then((response) => {
-            if(response.status === 200){
-                setOpenSickModal(false);
-                getPlans();
-                getPlansWithoutUser();
-                getUsersJobs();
-                setSickStartDate("");
-                setSickStartTime("");
-                setSickEndDate("");
-                setSickEndTime("");
-                setSickDriver(0);
+        await axios
+            .post("/sick-leaves", {
+                start_date: sickStartDate,
+                start_time: sickStartTime,
+                end_date: sickEndDate,
+                end_time: sickEndTime,
+                user_id: sickDriver,
+                confirmed: true,
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    setOpenSickModal(false);
+                    getPlans();
+                    getPlansWithoutUser();
+                    getUsersJobs();
+                    setSickStartDate("");
+                    setSickStartTime("");
+                    setSickEndDate("");
+                    setSickEndTime("");
+                    setSickDriver(0);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Hastalık İzni Ekleme",
+                        text: "Hastalık İzni Ekleme Başarılı",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Hastalık İzni Ekleme',
-                    text: 'Hastalık İzni Ekleme Başarılı',
-                });
-
-            } 
-        }).catch((error) => {
-            console.log(error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Hastalık İzni Ekleme Hatası',
+                    icon: "error",
+                    title: "Hastalık İzni Ekleme Hatası",
                     text: error.response.data.message,
                 });
-        });
+            });
     };
     const setAnnualLeave = async () => {
-        await axios.post("/annual-leaves", {
-            start_date: annualLeaveStartDate,
-            start_time: annualLeaveStartTime,
-            end_date: annualLeaveEndDate,
-            end_time: annualLeaveEndTime,
-            user_id: annualLeaveDriver,
-            confirmed: true
-        }).then((response) => {
-            if(response.status === 200){
-                setOpenAnnualLeaveModal(false);
-                getPlans();
-                getPlansWithoutUser();
-                getUsersJobs();
-                setAnnualLeaveStartDate("");
-                setAnnualLeaveStartTime("");
-                setAnnualLeaveEndDate("");
-                setAnnualLeaveEndTime("");
-                setAnnualLeaveDriver(0);
+        await axios
+            .post("/annual-leaves", {
+                start_date: annualLeaveStartDate,
+                start_time: annualLeaveStartTime,
+                end_date: annualLeaveEndDate,
+                end_time: annualLeaveEndTime,
+                user_id: annualLeaveDriver,
+                confirmed: true,
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    setOpenAnnualLeaveModal(false);
+                    getPlans();
+                    getPlansWithoutUser();
+                    getUsersJobs();
+                    setAnnualLeaveStartDate("");
+                    setAnnualLeaveStartTime("");
+                    setAnnualLeaveEndDate("");
+                    setAnnualLeaveEndTime("");
+                    setAnnualLeaveDriver(0);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Yıllık İzni Ekleme",
+                        text: "Yıllık İzni Ekleme Başarılı",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Yıllık İzni Ekleme',
-                    text: 'Yıllık İzni Ekleme Başarılı',
-                });
-
-            } 
-        }).catch((error) => {
-            console.log(error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Yıllık İzni Ekleme Hatası',
+                    icon: "error",
+                    title: "Yıllık İzni Ekleme Hatası",
                     text: error.response.data.message,
                 });
-        });
+            });
     };
     const setAdminExtra = async () => {
-
-        await axios.post("/admin-extras", {
-            start_date: adminExtraStartDate,
-            start_time: adminExtraStartTime,
-            end_date: adminExtraEndDate,
-            end_time: adminExtraEndTime,
-            user_id: adminExtraDriver,
-            confirmed: true
-        }).then((response) => {
-            if(response.status === 200){
-                setOpenAdminExtraModal(false);
-                getPlans();
-                getPlansWithoutUser();
-                getUsersJobs();
-                setAdminExtraStartDate("");
-                setAdminExtraStartTime("");
-                setAdminExtraEndDate("");
-                setAdminExtraEndTime("");
-                setAdminExtraDriver(0);
+        await axios
+            .post("/admin-extras", {
+                start_date: adminExtraStartDate,
+                start_time: adminExtraStartTime,
+                end_date: adminExtraEndDate,
+                end_time: adminExtraEndTime,
+                user_id: adminExtraDriver,
+                confirmed: true,
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    setOpenAdminExtraModal(false);
+                    getPlans();
+                    getPlansWithoutUser();
+                    getUsersJobs();
+                    setAdminExtraStartDate("");
+                    setAdminExtraStartTime("");
+                    setAdminExtraEndDate("");
+                    setAdminExtraEndTime("");
+                    setAdminExtraDriver(0);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Admin İzni Ekleme",
+                        text: "Admin İzni Ekleme Başarılı",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Admin İzni Ekleme',
-                    text: 'Admin İzni Ekleme Başarılı',
-                });
-            }
-        }).catch((error) => {
-            console.log(error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Admin İzni Ekleme Hatası',
+                    icon: "error",
+                    title: "Admin İzni Ekleme Hatası",
                     text: error.response.data.message,
                 });
-        });
+            });
     };
-
-
 
     useEffect(() => {
         getPlans();
         getPlansWithoutUser();
         getUsers();
         getUsersJobs();
-
-
 
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);
@@ -539,7 +577,6 @@ export default function Planner({ auth }) {
                             Tour Name : {editingJob.tour_name}
                             <br />
                             Von - Bis : {editingJob.from} - {editingJob.to}
-                            
                         </p>
                     </div>
                 </Modal.Body>
@@ -586,15 +623,18 @@ export default function Planner({ auth }) {
                                 name="sickStartDate"
                                 type="date"
                                 value={sickStartDate}
-                                onSelectedDateChanged={(date) => {        
-                                    let datenew = new Date(date).toLocaleDateString().split('.')
-                                    datenew[0] = datenew[0].padStart(2, '0');
-                                    datenew[1] = datenew[1].padStart(2, '0');
-                                    setSickStartDate(datenew.reverse().join('-'));
-                                    setSickEndDate(datenew.reverse().join('-'));
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setSickStartDate(
+                                        datenew.reverse().join("-")
+                                    );
+                                    setSickEndDate(datenew.reverse().join("-"));
                                     setSickEndTime("00:00");
                                     setSickStartTime("00:00");
-                              
                                 }}
                             />
 
@@ -626,7 +666,7 @@ export default function Planner({ auth }) {
                             </div>
 
                             <Datepicker
-                            inline
+                                inline
                                 language="de-DE"
                                 id="sickEndDate"
                                 name="sickEndDate"
@@ -635,10 +675,12 @@ export default function Planner({ auth }) {
                                 value={sickEndDate}
                                 type="date"
                                 onSelectedDateChanged={(date) => {
-                                    let datenew = new Date(date).toLocaleDateString().split('.')
-                                    datenew[0] = datenew[0].padStart(2, '0');
-                                    datenew[1] = datenew[1].padStart(2, '0');
-                                    setSickEndDate(datenew.reverse().join('-'));
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setSickEndDate(datenew.reverse().join("-"));
                                 }}
                             />
                         </div>
@@ -663,7 +705,10 @@ export default function Planner({ auth }) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={setSick}>Hastalık İzni Ekle</Button>
-                    <Button color="gray" onClick={() => setOpenSickModal(false)}>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenSickModal(false)}
+                    >
                         İptal
                     </Button>
                 </Modal.Footer>
@@ -690,15 +735,20 @@ export default function Planner({ auth }) {
                                 name="adminExtraDate"
                                 type="date"
                                 value={adminExtraStartDate}
-                                onSelectedDateChanged={(date) => {        
-                                    let datenew = new Date(date).toLocaleDateString().split('.')
-                                    datenew[0] = datenew[0].padStart(2, '0');
-                                    datenew[1] = datenew[1].padStart(2, '0');
-                                    setAdminExtraStartDate(datenew.reverse().join('-'));
-                                    setAdminExtraEndDate(datenew.reverse().join('-'));
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setAdminExtraStartDate(
+                                        datenew.reverse().join("-")
+                                    );
+                                    setAdminExtraEndDate(
+                                        datenew.reverse().join("-")
+                                    );
                                     setAdminExtraEndTime("00:00");
                                     setAdminExtraStartTime("00:00");
-                              
                                 }}
                             />
 
@@ -739,10 +789,14 @@ export default function Planner({ auth }) {
                                 value={adminExtraEndDate}
                                 type="date"
                                 onSelectedDateChanged={(date) => {
-                                    let datenew = new Date(date).toLocaleDateString().split('.')
-                                    datenew[0] = datenew[0].padStart(2, '0');
-                                    datenew[1] = datenew[1].padStart(2, '0');
-                                    setAdminExtraEndDate(datenew.reverse().join('-'));
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setAdminExtraEndDate(
+                                        datenew.reverse().join("-")
+                                    );
                                 }}
                             />
                         </div>
@@ -752,7 +806,9 @@ export default function Planner({ auth }) {
                         </p>
                         <Select
                             className="w-full mb-10"
-                            onChange={(e) => setAdminExtraDriver(e.target.value)}
+                            onChange={(e) =>
+                                setAdminExtraDriver(e.target.value)
+                            }
                             value={adminExtraDriver}
                         >
                             <option>Seçiniz</option>
@@ -767,12 +823,14 @@ export default function Planner({ auth }) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={setAdminExtra}>Admin İzni Ekle</Button>
-                    <Button color="gray" onClick={() => setOpenAdminExtraModal(false)}>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenAdminExtraModal(false)}
+                    >
                         İptal
                     </Button>
                 </Modal.Footer>
             </Modal>
-
 
             <Modal
                 show={openAnnualLeaveModal}
@@ -795,15 +853,20 @@ export default function Planner({ auth }) {
                                 name="annualLeaveDate"
                                 type="date"
                                 value={annualLeaveStartDate}
-                                onSelectedDateChanged={(date) => {        
-                                    let datenew = new Date(date).toLocaleDateString().split('.')
-                                    datenew[0] = datenew[0].padStart(2, '0');
-                                    datenew[1] = datenew[1].padStart(2, '0');
-                                    setAnnualLeaveStartDate(datenew.reverse().join('-'));
-                                    setAnnualLeaveEndDate(datenew.reverse().join('-'));
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setAnnualLeaveStartDate(
+                                        datenew.reverse().join("-")
+                                    );
+                                    setAnnualLeaveEndDate(
+                                        datenew.reverse().join("-")
+                                    );
                                     setAnnualLeaveEndTime("00:00");
                                     setAnnualLeaveStartTime("00:00");
-                              
                                 }}
                             />
 
@@ -844,10 +907,14 @@ export default function Planner({ auth }) {
                                 value={annualLeaveEndDate}
                                 type="date"
                                 onSelectedDateChanged={(date) => {
-                                    let datenew = new Date(date).toLocaleDateString().split('.')
-                                    datenew[0] = datenew[0].padStart(2, '0');
-                                    datenew[1] = datenew[1].padStart(2, '0');
-                                    setAnnualLeaveEndDate(datenew.reverse().join('-'));
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setAnnualLeaveEndDate(
+                                        datenew.reverse().join("-")
+                                    );
                                 }}
                             />
                         </div>
@@ -857,7 +924,9 @@ export default function Planner({ auth }) {
                         </p>
                         <Select
                             className="w-full mb-10"
-                            onChange={(e) => setAnnualLeaveDriver(e.target.value)}
+                            onChange={(e) =>
+                                setAnnualLeaveDriver(e.target.value)
+                            }
                             value={annualLeaveDriver}
                         >
                             <option>Seçiniz</option>
@@ -872,14 +941,20 @@ export default function Planner({ auth }) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={setAnnualLeave}>Yıllık İzni Ekle</Button>
-                    <Button color="gray" onClick={() => setOpenAnnualLeaveModal(false)}>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenAnnualLeaveModal(false)}
+                    >
                         İptal
                     </Button>
                 </Modal.Footer>
             </Modal>
             <Head title="Planner" />
 
-            <div className="py-12" style={window.innerWidth > 3000 ? {display: "none"} : {}}>
+            <div
+                className="py-12"
+                style={window.innerWidth > 3000 ? { display: "none" } : {}}
+            >
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="relative overflow-x-auto">
@@ -923,14 +998,10 @@ export default function Planner({ auth }) {
                                             Makinist
                                         </th>
                                         <th scope="col" className="px-6 py-3">
-                                        
-                                                Zuweisung
-                                        
+                                            Zuweisung
                                         </th>
                                         <th scope="col" className="px-6 py-3">
-                                        
-                                                Edit
-                                        
+                                            Edit
                                         </th>
                                     </tr>
                                 </thead>
@@ -993,10 +1064,15 @@ export default function Planner({ auth }) {
                                                 <td>
                                                     <button
                                                         onClick={() => {
-                                                            window.location.href = route("planner-jobs-edit", { id: job.id });
+                                                            window.location.href =
+                                                                route(
+                                                                    "planner-jobs-edit",
+                                                                    {
+                                                                        id: job.id,
+                                                                    }
+                                                                );
                                                         }}
                                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline text-center"
-
                                                     >
                                                         Edit
                                                     </button>
@@ -1023,8 +1099,14 @@ export default function Planner({ auth }) {
                 </div>
             </div>
 
-            <div className={window.innerWidth > 3000 ? "" : "py-12" }>
-                <div className={window.innerWidth > 3000 ? "w-full mx-auto sm:px-6 lg:px-8" : "max-w-7xl mx-auto sm:px-6 lg:px-8"}>
+            <div className={window.innerWidth > 3000 ? "" : "py-12"}>
+                <div
+                    className={
+                        window.innerWidth > 3000
+                            ? "w-full mx-auto sm:px-6 lg:px-8"
+                            : "max-w-7xl mx-auto sm:px-6 lg:px-8"
+                    }
+                >
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         {userJobs &&
                             users &&
@@ -1033,16 +1115,21 @@ export default function Planner({ auth }) {
                                 <>
                                     <div className="flex justify-between mx-5 my-5">
                                         <Button
+                                            className="bg-red-500"
                                             onClick={() => showModal("sick")}
                                         >
                                             Hastalık
                                         </Button>
                                         <Button
-                                            onClick={() => showModal("annualLeave")}
+                                            className="bg-blue-500"
+                                            onClick={() =>
+                                                showModal("annualLeave")
+                                            }
                                         >
                                             Yıllık İzni
                                         </Button>
                                         <Button
+                                            className="bg-purple-500"
                                             onClick={() =>
                                                 showModal("adminExtra")
                                             }
@@ -1053,6 +1140,7 @@ export default function Planner({ auth }) {
                                     <Timeline
                                         groups={users}
                                         items={userJobs}
+                                        language="de-DE"
                                         defaultTimeStart={moment().add(
                                             -256,
                                             "hour"
@@ -1064,6 +1152,8 @@ export default function Planner({ auth }) {
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
                                     />
+                                  
+                                    
                                 </>
                             )}
                     </div>
