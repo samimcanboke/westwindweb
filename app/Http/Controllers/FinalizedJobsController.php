@@ -340,7 +340,47 @@ class FinalizedJobsController extends Controller
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth();
         $data['year'] = $year;
-        $data['month'] = $month;
+        switch($month){
+            case 1:
+                $data['month'] = "Januar";
+                break;
+            case 2:
+                $data['month'] = "Februar";
+                break;
+            case 3:
+                $data['month'] = "März";
+                break;
+            case 4:
+                $data['month'] = "April";
+                break;
+            case 5:
+                $data['month'] = "Mai";
+                break;
+            case 6:
+                $data['month'] = "Juni";
+                break;
+            case 7:
+                $data['month'] = "Juli";
+                break;
+            case 8:
+                $data['month'] = "August";
+                break;
+            case 9:
+                $data['month'] = "September";
+                break;
+            case 10:
+                $data['month'] = "Oktober";
+                break;
+            case 11:
+                $data['month'] = "November";
+                break;
+            case 12:
+                $data['month'] = "Dezember";
+                break;
+            default:
+                $data['month'] = $month;
+                break;
+        }
         $user = User::where('id', $user_id)->first();
         $data['id'] = sprintf('%03d', $user->id);
         $data['name'] = $user->name ?? "";
