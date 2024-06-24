@@ -34,6 +34,7 @@ export default function FinalizedJobs({ auth }) {
     const handleDownload = () => {
         let url = "/download-pdf/" + file + ".pdf";
         window.open(window.location.origin + url, "_blank", "noreferrer");
+        setShowFile(false);
     };
     return (
         <AuthenticatedLayout
