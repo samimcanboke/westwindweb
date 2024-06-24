@@ -217,9 +217,13 @@ export default function Planner({ auth }) {
                                     title: "Eminmisin?",
                                     text: "Silmek istediğinize eminmisiniz?",
                                     icon: "warning",
+                                    showCancelButton: true,
+                                    cancelButtonText: "İptal",
+                                    showConfirmButton: true,
+                                    confirmButtonText: "Sil",
                                     dangerMode: true,
                                 }).then(async (willDelete) => {
-                                    if (willDelete) {
+                                    if (willDelete.isConfirmed) {
                                         await axios.delete(
                                             "/sick-leaves/" + id
                                         );
