@@ -169,7 +169,7 @@ export default function Planner({ auth }) {
                         },
                         className: "weekend",
                         style: {
-                            background: "fuchsia",
+                            background: "green",
                             zIndex: 49,
                         },
                         itemIdKey: "id",
@@ -193,7 +193,7 @@ export default function Planner({ auth }) {
                     itemProps: {
                         className: "weekend",
                         style: {
-                            background: "blue",
+                            background: "red",
                             zIndex: 49,
                         },
                         itemIdKey: "id",
@@ -217,7 +217,7 @@ export default function Planner({ auth }) {
                     itemProps: {
                         className: "weekend",
                         style: {
-                            background: "green",
+                            background: "blue",
                             zIndex: 49,
                         },
                     },
@@ -239,7 +239,7 @@ export default function Planner({ auth }) {
                     itemProps: {
                         className: "weekend",
                         style: {
-                            background: "gray",
+                            background: "beige",
                             zIndex: 49,
                         },
                     },
@@ -268,7 +268,7 @@ export default function Planner({ auth }) {
                     itemProps: {
                         className: "weekend",
                         style: {
-                            background: "purple",
+                            background: "gray",
                             zIndex: 49,
                         },
                     },
