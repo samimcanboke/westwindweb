@@ -492,6 +492,9 @@ export default function Planner({ auth }) {
                             Lokomotive Nr : {editingJob.locomotive_nummer}
                             <br />
                             Tour Name : {editingJob.tour_name}
+                            <br />
+                            Von - Bis : {editingJob.from} - {editingJob.to}
+                            
                         </p>
                     </div>
                 </Modal.Body>
