@@ -845,7 +845,7 @@ export default function Planner({ auth }) {
             </Modal>
             <Head title="Planner" />
 
-            <div className="py-12">
+            <div className="py-12" style={window.innerWidth > 3000 ? {display: "none"} : {}}>
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="relative overflow-x-auto">
@@ -989,8 +989,8 @@ export default function Planner({ auth }) {
                 </div>
             </div>
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div className={window.innerWidth > 3000 ? "" : "py-12" }>
+                <div className={window.innerWidth > 3000 ? "w-full mx-auto sm:px-6 lg:px-8" : "max-w-7xl mx-auto sm:px-6 lg:px-8"}>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         {userJobs &&
                             users &&
