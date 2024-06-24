@@ -23,7 +23,6 @@ const validationSchema = Yup.object().shape({
     tour_name: Yup.string().required("Required"),
     from: Yup.string().required("Required"),
     to: Yup.string().required("Required"),
-    description: Yup.string(),
 });
 
 export default function EditUser({ auth, id }) {
