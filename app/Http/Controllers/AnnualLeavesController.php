@@ -37,4 +37,10 @@ class AnnualLeavesController extends Controller
         $annualLeaves->save();
         return response()->json(['message' => 'Annual leave created successfully', 'annualLeaves' => $annualLeaves]);
     }
+    public function destroy($id)
+    {
+        $annualLeave = AnnualLeaves::find($id);
+        $annualLeave->delete();
+        return response()->json(['annualLeave' => $annualLeave]);
+    }
 }

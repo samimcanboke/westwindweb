@@ -139,9 +139,11 @@ Route::delete('/sick-leaves/{id}', [SickLeavesController::class, 'destroy'])->mi
 
 Route::get('/annual-leaves', [AnnualLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('annual-leaves');
 Route::post('/annual-leaves', [AnnualLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('annual-leaves-store');
+Route::delete('/annual-leaves/{id}', [AnnualLeavesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('annual-leaves-destroy');
 
 Route::get('/admin-extras', [AdminExtraController::class, 'index'])->middleware(['auth', 'verified'])->name('admin-extras');
 Route::post('/admin-extras', [AdminExtraController::class, 'store'])->middleware(['auth', 'verified'])->name('admin-extras-store');
+Route::delete('/admin-extras/{id}', [AdminExtraController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin-extras-destroy');
 
 Route::get('/user-confirmed-jobs', [FinalizedJobsController::class, 'user_confirmed_jobs'])->middleware(['auth', 'verified'])->name('user-confirmed-jobs');
 

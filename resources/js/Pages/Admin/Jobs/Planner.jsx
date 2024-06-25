@@ -268,10 +268,48 @@ export default function Planner({ auth }) {
                         hour: annualLeave.end_time.split(":")[0],
                         minute: annualLeave.end_time.split(":")[1],
                     }),
-                    title: annualLeave.user.name,
+                    title: annualLeave.user.name + "|" + annualLeave.id,
                     canMove: false,
                     canResize: false,
                     itemProps: {
+                        onContextMenu: async (itemId) => {
+                            try {
+                                let item =
+                                    itemId.target.parentElement.getAttribute(
+                                        "title"
+                                    );
+
+                                let id = item.split("|")[1];
+                                Swal.fire({
+                                    title: "Eminmisin?",
+                                    text: "Silmek istediğinize eminmisiniz?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    cancelButtonText: "İptal",
+                                    showConfirmButton: true,
+                                    confirmButtonText: "Sil",
+                                    dangerMode: true,
+                                }).then(async (willDelete) => {
+                                    if (willDelete.isConfirmed) {
+                                        await axios.delete(
+                                            "/annual-leaves/" + id
+                                        );
+                                        getPlans();
+                                        getPlansWithoutUser();
+                                        getUsersJobs();
+                                        Swal.fire({
+                                            title: "Tamam!",
+                                            text: "Kayıt Silindi",
+                                            icon: "success",
+                                            timer: 1000,
+                                            button: false,
+                                        });
+                                    }
+                                });
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
                         className: "weekend",
                         style: {
                             background: "blue",
@@ -296,10 +334,48 @@ export default function Planner({ auth }) {
                         hour: adminExtra.end_time.split(":")[0],
                         minute: adminExtra.end_time.split(":")[1],
                     }),
-                    title: adminExtra.user.name,
+                    title: adminExtra.user.name + "|" + adminExtra.id,
                     canMove: false,
                     canResize: false,
                     itemProps: {
+                        onContextMenu: async (itemId) => {
+                            try {
+                                let item =
+                                    itemId.target.parentElement.getAttribute(
+                                        "title"
+                                    );
+
+                                let id = item.split("|")[1];
+                                Swal.fire({
+                                    title: "Eminmisin?",
+                                    text: "Silmek istediğinize eminmisiniz?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    cancelButtonText: "İptal",
+                                    showConfirmButton: true,
+                                    confirmButtonText: "Sil",
+                                    dangerMode: true,
+                                }).then(async (willDelete) => {
+                                    if (willDelete.isConfirmed) {
+                                        await axios.delete(
+                                            "/admin-extras/" + id
+                                        );
+                                        getPlans();
+                                        getPlansWithoutUser();
+                                        getUsersJobs();
+                                        Swal.fire({
+                                            title: "Tamam!",
+                                            text: "Kayıt Silindi",
+                                            icon: "success",
+                                            timer: 1000,
+                                            button: false,
+                                        });
+                                    }
+                                });
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
                         className: "weekend",
                         style: {
                             background: "purple",

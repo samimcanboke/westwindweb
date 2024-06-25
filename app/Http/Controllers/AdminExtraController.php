@@ -37,4 +37,11 @@ class AdminExtraController extends Controller
         $adminExtra->save();
         return response()->json(['message' => 'Admin extra created successfully', 'adminExtra' => $adminExtra]);
     }
+
+    public function destroy($id)
+    {
+        $adminExtra = AdminExtras::find($id);
+        $adminExtra->delete();
+        return response()->json(['adminExtra' => $adminExtra]);
+    }
 }
