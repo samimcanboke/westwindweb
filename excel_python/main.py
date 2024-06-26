@@ -15,7 +15,7 @@ def main_excel():
     if (content_type == 'application/json'):
         used_data = json.loads(request.json)
         app.logger.info(used_data)
-        wb = load_workbook(filename='./test.xlsx')
+        wb = load_workbook(filename='./test.ods')
         ws = wb.active
         ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
         ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
