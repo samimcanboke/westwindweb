@@ -174,6 +174,46 @@ export default function Authenticated({ user, header, children }) {
                         </ResponsiveNavLink>
                     </div>
 
+                    <div className="pt-2 pb-3 space-y-1">
+                    {user.is_admin && (
+                                
+                                <div className="">
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                        <button
+                                                    type="button"
+                                                    className="inline-flex mt-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                >
+                                                    Admin-Menü
+
+                                                    <svg
+                                                        className="ms-2 -me-0.5 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                        </Dropdown.Trigger>
+                                        <Dropdown.Content className="mt-2 l-0 w-full">
+                                            <ResponsiveNavLink href={route('users.index')}>Benutzer</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('clients-index')}>Kunden</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte Berichte</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('admin-planner')}>Planung</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('clients.new-job')}>Kundenaufträge</ResponsiveNavLink>
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
+                            )}
+
+                    </div>
+
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
                             <div className="font-medium text-base text-gray-800">{user.name}</div>
