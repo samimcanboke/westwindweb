@@ -1,10 +1,11 @@
-from openpyxl import load_workbook
+from openpyxl import load_workbook, drawing
 from openpyxl.styles import PatternFill, NamedStyle,Border, Side, Alignment, Font
 from flask import Flask, request, jsonify, send_file
 import subprocess
 import os
 import json
 import logging
+from PIL import Image
 
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ def main_excel():
     if (content_type == 'application/json'):
         used_data = json.loads(request.json)
         app.logger.info(used_data)
-        wb = load_workbook(filename='./test.ods')
+        wb = load_workbook(filename='./test.xlsx')
         ws = wb.active
         ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
         ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
@@ -30,6 +31,12 @@ def main_excel():
                             )
         ws = add_lines(ws, used_data)
         ws = sum_lines(ws, used_data)
+        #img = drawing.image.Image('./logo.jpg')
+        #img.anchor = 'N1'
+        #ws.add_image(img)
+        #img2 = drawing.image.Image('./logo.jpg')
+        #img2.anchor = 'N39'
+        #ws.add_image(img2)
         wb.save("/tmp/result.xlsx")
         subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result.xlsx"],
                        shell=True,
@@ -48,9 +55,13 @@ def add_header(ws, year, month, name, id, mail, phone):
     ws['C2'] = year
     ws['D2'] = month
     ws['D3'] = name
+    ws['D3'].alignment = Alignment(horizontal='left')
     ws['D4'] = id
+    ws['D4'].alignment = Alignment(horizontal='left')
     ws['D5'] = mail
+    ws['D5'].alignment = Alignment(horizontal='left')
     ws['D6'] = phone
+    ws['D6'].alignment = Alignment(horizontal='left')
     return ws
 
 
