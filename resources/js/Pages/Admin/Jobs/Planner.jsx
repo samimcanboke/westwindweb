@@ -10,9 +10,11 @@ import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, Modal, Select, Datepicker } from "flowbite-react";
+import { Button, Modal, Select, Datepicker, ToggleSwitch } from "flowbite-react";
 import Swal from "sweetalert2";
 import interact from "interactjs";
+import { MultiSelect } from "react-multi-select-component";
+
 
 export default function Planner({ auth }) {
     const [jobs, setJobs] = useState([]);
@@ -43,17 +45,21 @@ export default function Planner({ auth }) {
     const [adminExtraEndDate, setAdminExtraEndDate] = useState("");
     const [adminExtraEndTime, setAdminExtraEndTime] = useState("");
     const [adminExtraDriver, setAdminExtraDriver] = useState(0);
+    const [selectedUsersForTime, setSelectedUsersForTime] = useState([]);
+    const [usersForTime, setUsersForTime] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [visibleTimeStart, setVisibleTimeStart] = useState(null);
+    const [visibleTimeEnd, setVisibleTimeEnd] = useState(null);
+    const [thisWeek, setThisWeek] = useState(false);
 
     const deleteFromuser = async (id) => {
-        let job = jobs.find((job) => job.id === id);
-        console.log(job);
+        let oldJob = jobs.find((job) => job.id === id);
         await axios
             .put(route("planner-jobs-leave", { id: id }), {
-                ...job,
+                ...oldJob,
                 user_id: null,
             })
             .then((response) => {
-                console.log(response.data);
                 getPlans();
                 getPlansWithoutUser();
                 getUsersJobs();
@@ -69,6 +75,11 @@ export default function Planner({ auth }) {
         });
     };
 
+    const showCurrentWeek = () => {
+        setVisibleTimeStart(moment().startOf('week'));
+        setVisibleTimeEnd(moment().endOf('week'));
+    };
+
     const getPlansWithoutUser = async () => {
         await axios.get("/planner/jobs/without-user").then((response) => {
             setWithoutUserJobs(response.data);
@@ -76,7 +87,6 @@ export default function Planner({ auth }) {
     };
 
     const showModal = (type) => {
-        console.log(type);
         switch (type) {
             case "sick":
                 setOpenSickModal(true);
@@ -102,89 +112,88 @@ export default function Planner({ auth }) {
             .get("/planner/jobs/get-users-jobs")
             .then(async (response) => {
                 for (const job of response.data) {
-                    let newJobs = {
-                        id: "j" + job.id,
-                        group: job.user_id,
-                        start_time: moment(
-                            job.start_date + " " + job.start_time
-                        ),
-                        end_time: moment(job.end_date + " " + job.end_time),
-                        title: job.from + " - " + job.to + "|" + job.id,
-                        canMove: false,
-                        canResize: false,
-                        itemProps: {
-                            "data-custom-attribute": "Random content",
-                            "aria-hidden": true,
-                            onContextMenu: async (itemId) => {
-                                try {
-                                    let item =
-                                        itemId.target.parentElement.getAttribute(
-                                            "title"
+                    if (job.user_id !== null) {
+                        let newJobs = {
+                            id: "j" + job.id,
+                            group: job.user_id,
+                            start_time: moment(
+                                job.start_date + " " + job.start_time
+                            ),
+                            end_time: moment(job.end_date + " " + job.end_time),
+                            title: job.from + " - " + job.to + "|" + job.id,
+                            canMove: false,
+                            canResize: false,
+                            itemProps: {
+                                "data-custom-attribute": "Random content",
+                                "aria-hidden": true,
+                                onContextMenu: async (itemId) => {
+                                    try {
+                                        let item =
+                                            itemId.target.parentElement.getAttribute(
+                                                "title"
+                                            );
+
+                                        let id = item.split("|")[1];
+                                        let job = await axios.get(
+                                            "/planner/jobs/show/" + id
+                                        );
+                                        if (job.status === 200) {
+                                            setOpenDetailModal(true);
+                                            setEditingJob(job.data);
+                                        }
+                                    } catch (e) {
+                                        console.log(e);
+                                    }
+                                },
+                                onClick: async (itemId) => {
+                                    try {
+                                        let item =
+                                            itemId.target.parentElement.getAttribute(
+                                                "title"
+                                            );
+
+                                        let id = item.split("|")[1];
+                                        let job = await axios.get(
+                                            "/planner/jobs/show/" + id
                                         );
 
-                                    let id = item.split("|")[1];
-                                    let job = await axios.get(
-                                        "/planner/jobs/show/" + id
-                                    );
-                                    console.log(job.data);
-                                    if (job.status === 200) {
-                                        setOpenDetailModal(true);
-                                        setEditingJob(job.data);
+                                        if (job.status === 200) {
+                                            setOpenDetailModal(true);
+                                            setEditingJob(job.data);
+                                        }
+                                    } catch (e) {
+                                        console.log(e);
                                     }
-                                } catch (e) {
-                                    console.log(e);
-                                }
-                            },
-                            onClick: async (itemId) => {
-                                try {
-                                    let item =
-                                        itemId.target.parentElement.getAttribute(
-                                            "title"
+                                },
+                                onDoubleClick: async (itemId) => {
+                                    try {
+                                        let item =
+                                            itemId.target.parentElement.getAttribute(
+                                                "title"
+                                            );
+                                        let id = item.split("|")[1];
+                                        let job = await axios.get(
+                                            "/planner/jobs/show/" + id
                                         );
-                                    console.log(item);
-                                    let id = item.split("|")[1];
-                                    let job = await axios.get(
-                                        "/planner/jobs/show/" + id
-                                    );
-                                    console.log(job.data);
-                                    if (job.status === 200) {
-                                        setOpenDetailModal(true);
-                                        setEditingJob(job.data);
+                                        if (job.status === 200) {
+                                            setOpenDetailModal(true);
+                                            setEditingJob(job.data);
+                                        }
+                                    } catch (e) {
+                                        console.log(e);
                                     }
-                                } catch (e) {
-                                    console.log(e);
-                                }
+                                },
+                                className: "weekend",
+                                style: {
+                                    background: "green",
+                                    zIndex: 49,
+                                },
+                                itemIdKey: "id",
+                                itemTitleKey: "title",
                             },
-                            onDoubleClick: async (itemId) => {
-                                try {
-                                    let item =
-                                        itemId.target.parentElement.getAttribute(
-                                            "title"
-                                        );
-                                    console.log(item);
-                                    let id = item.split("|")[1];
-                                    let job = await axios.get(
-                                        "/planner/jobs/show/" + id
-                                    );
-                                    console.log(job.data);
-                                    if (job.status === 200) {
-                                        setOpenDetailModal(true);
-                                        setEditingJob(job.data);
-                                    }
-                                } catch (e) {
-                                    console.log(e);
-                                }
-                            },
-                            className: "weekend",
-                            style: {
-                                background: "green",
-                                zIndex: 49,
-                            },
-                            itemIdKey: "id",
-                            itemTitleKey: "title",
-                        },
-                    };
-                    newJobList.push(newJobs);
+                        };
+                        newJobList.push(newJobs);
+                    }
                 }
             });
 
@@ -434,10 +443,13 @@ export default function Planner({ auth }) {
     const getUsers = async () => {
         await axios.get(route("users.show")).then((response) => {
             let newUserList = [];
+            let newUserListForTime = [];
             response.data.map((user) => {
-                newUserList.push({ id: user.id, title: user.name });
+                newUserList.push({ id: user.id, title: user.name, height: 50 });
+                newUserListForTime.push({ value: user.id, label: user.name, height: 50 });
             });
             setUsers(newUserList);
+            setUsersForTime(newUserListForTime);
         });
     };
 
@@ -452,7 +464,6 @@ export default function Planner({ auth }) {
                 user_id: driver,
             })
             .then((response) => {
-                console.log(response);
                 getPlans();
                 getPlansWithoutUser();
                 getUsersJobs();
@@ -460,11 +471,6 @@ export default function Planner({ auth }) {
             });
     };
     const setSick = async () => {
-        console.log(sickStartDate);
-        console.log(sickStartTime);
-        console.log(sickEndDate);
-        console.log(sickEndTime);
-        console.log(sickDriver);
         await axios
             .post("/sick-leaves", {
                 start_date: sickStartDate,
@@ -592,11 +598,13 @@ export default function Planner({ auth }) {
             getPlans();
             getPlansWithoutUser();
             getUsersJobs();
-        }, 1000);
+        }, 25000);
         return () => clearInterval(id);
     }, []);
 
     return (
+
+        
         <AuthenticatedLayout
             user={auth.user}
             header={
@@ -605,6 +613,16 @@ export default function Planner({ auth }) {
                 </h2>
             }
         >
+            <Head>
+    <style>
+    {`
+    #\\:ra\\:-flowbite-toggleswitch > div:after {
+        top: 11px;
+    }
+    `}
+    </style>
+</Head>
+
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
                 <Modal.Header>Makinist Seç</Modal.Header>
                 <Modal.Body>
@@ -669,7 +687,7 @@ export default function Planner({ auth }) {
                     </Button>
                     <Button
                         color="red"
-                        onClick={() => deleteFromuser(editingJob.user_id)}
+                        onClick={() => deleteFromuser(editingJob.id)}
                     >
                         İşten Çıkar
                     </Button>
@@ -1187,7 +1205,7 @@ export default function Planner({ auth }) {
                             : "max-w-7xl mx-auto sm:px-6 lg:px-8"
                     }
                 >
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg " style={{minHeight: '40rem'}}>
                         {userJobs &&
                             users &&
                             userJobs.length > 0 &&
@@ -1216,11 +1234,48 @@ export default function Planner({ auth }) {
                                         >
                                             Dinlenme
                                         </Button>
+                                        <ToggleSwitch
+                                            label="Bu Haftayı Göster"
+                                            checked={thisWeek}
+                                            onChange={(e) => {
+                                                setThisWeek(e);
+                                                if(e){
+                                                    setVisibleTimeStart(moment().startOf('week'));
+                                                    setVisibleTimeEnd(moment().endOf('week'));
+                                                } else {
+                                                    setVisibleTimeStart(null);
+                                                    setVisibleTimeEnd(null);
+                                                }
+                                            }}
+                                        /> 
                                     </div>
+
+                                    <div className="relative">
+                                        <div className="absolute" style={{left: 20,top:10}}>
+                                        <MultiSelect
+                                            options={usersForTime}
+                                            value={selectedUsersForTime}
+                                            onChange={(e) => {
+                                                let newUserList = users.filter((user) => {
+                                                    if (e.some(selectedUser => selectedUser.value === user.id)) {
+                                                        return user;
+                                                    }
+                                                })
+                                                setSelectedUsers(newUserList);
+                                                setSelectedUsersForTime(e)
+                                            } }
+                                            labelledBy="Select"
+                                            style={{ width: '15%',position: 'absolute', zIndex: 1000, }}
+                                        />
+                                        </div>
+                                        
+                                    </div>
+
                                     <Timeline
-                                        groups={users}
+                                        groups={selectedUsers.length > 0 ? selectedUsers : users}
                                         items={userJobs}
                                         language="de-DE"
+                                        unit="week"
                                         defaultTimeStart={moment().add(
                                             -256,
                                             "hour"
@@ -1229,11 +1284,11 @@ export default function Planner({ auth }) {
                                             256,
                                             "hour"
                                         )}
+                                        visibleTimeStart={visibleTimeStart}
+                                        visibleTimeEnd={visibleTimeEnd}
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
                                     />
-                                  
-                                    
                                 </>
                             )}
                     </div>

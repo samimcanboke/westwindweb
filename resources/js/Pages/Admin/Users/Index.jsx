@@ -1,15 +1,22 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import { Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 
 export default function Dashboard({ auth }) {
     const [users, setUsers] = useState([]);
-    useEffect(() => {
+
+    const getUsers = () => {
         axios.get(route('users.show')).then((res) => {
-            
-            setUsers(res.data);
+            let usersUnsorted = res.data;
+            let usersSorted = usersUnsorted.sort((a, b) => {
+                return a.driver_id.localeCompare(b.driver_id);
+            });
+            setUsers(usersSorted);
         });
-        //console.log(users);
+    }
+    useEffect(() => {
+        getUsers();
     },[]);
     return (
         <AuthenticatedLayout
@@ -59,12 +66,17 @@ export default function Dashboard({ auth }) {
                                 <th scope="col" className="px-6 py-3">
                                     Telefon
                                 </th>
-                              
+                                <th scope="col" className="px-6 py-3">
+                                    İşe Giriş Tarihi
+                                </th>
                                 <th scope="col" className="px-6 py-3">
                                     Is Admin
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     <span className="sr-only">Bearbeiten</span>
+                                </th>
+                                 <th scope="col" className="px-6 py-3">
+                                    <span className="sr-only">Leave Jobs</span>
                                 </th>
                             </tr>
                         </thead>
@@ -80,6 +92,7 @@ export default function Dashboard({ auth }) {
                                 <td className="px-6 py-4">{user.name}</td>
                                 <td className="px-6 py-4">{user.email}</td>
                                 <td className="px-6 py-4">{user.phone}</td>
+                                <td className="px-6 py-4">{new Date(user.start_working_date).toDateString()}</td>
                                 <td className="px-6 py-4">{user.is_admin == 1 ? "Yes" : "No"}</td>
                                 <td className="px-6 py-4 text-right">
                                     <a
@@ -88,6 +101,17 @@ export default function Dashboard({ auth }) {
                                     >
                                         Bearbeiten
                                     </a>
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <Button
+                                        onClick={()=>{
+                                            axios.post(route("user-leave-jobs"),{id:user.id});
+                                            getUsers();
+                                        }}
+                                        className="font-medium text-red-6000 dark:text-red-500 hover:underline"
+                                    >
+                                        Leave Jobs
+                                    </Button>
                                 </td>
                             </tr>
                             ))}

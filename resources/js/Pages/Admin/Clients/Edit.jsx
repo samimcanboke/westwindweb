@@ -6,16 +6,14 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 
-export default function CreateUsers({ auth }) {
+export default function EditClient({ auth,client_id }) {
+    const [client, setClient] = useState(null);
     useEffect(() => {
-        console.log(auth);
+        axios.get(`/admin/clients/${client_id}`).then((res) => {
+            console.log(res.data);
+            setClient(res.data);
+        });
     }, []);
-    
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(e);
-    };
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -28,8 +26,9 @@ export default function CreateUsers({ auth }) {
             <Head title="User List" />
 
             <div className="container mx-auto mt-10">
+                {client && (
                 <Formik
-                    initialValues={{ name: ""}}
+                    initialValues={{ name: client.name }}
                     validate={(values) => {
                         const errors = {};
                         if (!values.name) {
@@ -38,7 +37,7 @@ export default function CreateUsers({ auth }) {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        axios.post('/admin/clients', values)
+                        axios.put(`/admin/clients/${client_id}`, values)
                         .then(res => {
                             if (res.data.success) {
                                 resetForm();
@@ -47,6 +46,7 @@ export default function CreateUsers({ auth }) {
                                     title: 'Erfolgreich',
                                     text: 'Kunde erfolgreich gespeichert!',
                                 });
+                                window.location.href = route('clients-index');
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -60,7 +60,7 @@ export default function CreateUsers({ auth }) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: error.message || 'Ein Fehler ist aufgetreten!',
+                                text: error.response.data.message || 'Ein Fehler ist aufgetreten!',
                             });
                             setSubmitting(false);
                         });
@@ -79,8 +79,9 @@ export default function CreateUsers({ auth }) {
                                 </button>
                             </div>
                         </Form>
-                    )}
-                </Formik>
+                        )}
+                    </Formik>
+                )}
             </div>
         </AuthenticatedLayout>
     );

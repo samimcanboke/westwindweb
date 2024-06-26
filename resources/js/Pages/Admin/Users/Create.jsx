@@ -3,9 +3,11 @@ import { Head,usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Datepicker, ToggleSwitch } from "flowbite-react";
+import moment from "moment";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { values } from "pdf-lib";
+import * as yup from "yup";
 
 
 export default function CreateUsers({ auth }) {
@@ -54,6 +56,7 @@ export default function CreateUsers({ auth }) {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting, resetForm  }) => {
+                   
                         axios.post(route('register.inside'), values)
                         .then(res => {
                             if (res.data.success) {
@@ -183,8 +186,8 @@ export default function CreateUsers({ auth }) {
                                 </div>
                             </div>
                             <div className="mb-4 mx-4">
-                                    <label htmlFor="start_working_date" className="block text-sm font-medium text-gray-700">İşe Başlama Tarihi</label>
-                                    <Datepicker name="start_working_date" id="start_working_date" className="mt-1 block w-full" />
+                                    <label htmlFor="start_working_date" className="block text-sm font-medium text-gray-7000">İşe Başlama Tarihi</label>
+                                    <Datepicker name="start_working_date" id="start_working_date" className="mt-1 block w-full"  onSelectedDateChanged={(e)=>{setFieldValue('start_working_date',new Date(e).toDateString())}} value={values.start_working_date}/>
                                     {errors.start_working_date && touched.start_working_date && (
                                         <p className="text-red-500">
                                             *{errors.start_working_date}

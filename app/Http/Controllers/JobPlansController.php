@@ -108,6 +108,7 @@ class JobPlansController extends Controller
         $jobPlan->to = $request->to;
         $jobPlan->from = $request->from;
         $jobPlan->client_id = $request->client_id;
+        $jobPlan->user_id = $request->user_id;
         $jobPlan->save();
         if($jobPlan->user_id != null){
             Mail::to($jobPlan->user->email)->send(new JobPlanChangeMail($jobPlan, $oldJobPlane));
@@ -117,14 +118,13 @@ class JobPlansController extends Controller
 
 
     public function leave_job(Request $request){
-        $jobPlan = JobPlans::where('id',$request->id)->first();       
+        $jobPlan = JobPlans::where('id',$request->id)->first();      
         if($request->user_id == null){
             if($jobPlan->user_id != null){
                 Mail::to($jobPlan->user->email)->send(new JobPlanDeleteMail($jobPlan));
             }
             $jobPlan->user_id = null;
         }else{
-            
             $jobPlan->user_id = $request->user_id;
             Mail::to($jobPlan->user->email)->send(new JobPlanMail($jobPlan));
         }

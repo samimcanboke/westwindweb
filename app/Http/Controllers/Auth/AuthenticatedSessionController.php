@@ -30,6 +30,9 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        if(Auth::user()->is_active == 0){
+            return redirect()->back()->with('error', 'You are not active');
+        }
 
         $request->session()->regenerate();
 

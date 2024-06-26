@@ -58,6 +58,11 @@ Route::get('/clients/create', function () {
     return Inertia::render('Admin/Clients/Create');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('clients.create');
 
+
+Route::get('/clients/edit/{client_id}', function ($client_id) {
+    return Inertia::render('Admin/Clients/Edit', ['client_id' => $client_id]);
+})->middleware(['auth', 'verified', IsAdmin::class])->name('clients.edit');
+
 Route::get('/confirmed-jobs', function () {
     return Inertia::render('Admin/Jobs/Confirmed');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('confirmed-jobs');
@@ -146,8 +151,14 @@ Route::post('/admin-extras', [AdminExtraController::class, 'store'])->middleware
 Route::delete('/admin-extras/{id}', [AdminExtraController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin-extras-destroy');
 
 Route::get('/user-confirmed-jobs', [FinalizedJobsController::class, 'user_confirmed_jobs'])->middleware(['auth', 'verified'])->name('user-confirmed-jobs');
-
+Route::post('/user-leave-jobs', [RegisteredUserController::class, 'leave_jobs'])->middleware(['auth', 'verified'])->name('user-leave-jobs');
 //Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
+
+Route::get('/admin/clients', [ClientController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients');
+Route::post('/admin/clients', [ClientController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients-store');
+Route::delete('/admin/clients/{id}', [ClientController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients-destroy');
+Route::get('/admin/clients/{id}', [ClientController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients-show');
+Route::put('/admin/clients/{id}', [ClientController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients-update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->withoutMiddleware([IsAdmin::class])->name('profile.edit');

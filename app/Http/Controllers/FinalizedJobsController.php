@@ -391,7 +391,7 @@ class FinalizedJobsController extends Controller
         $finalized_jobs = $query->orderBy('initial_date','asc')->get();
 
         $data['totals']['dates'] = $finalized_jobs->count();
-        $public_holidays = ["19/06/2024", "29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
+        $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
         $total_public_holiday_hours = new DateInterval('PT0H0M');
         $total_work_sum = new DateInterval('PT0H0M');
         $total_guest_sum = new DateInterval('PT0H0M');

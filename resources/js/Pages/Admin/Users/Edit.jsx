@@ -5,6 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Datepicker, ToggleSwitch } from "flowbite-react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import moment from "moment";
 
 
 export default function EditUser({ auth,user_id }) {
@@ -14,7 +15,7 @@ export default function EditUser({ auth,user_id }) {
     useEffect(() => {
         axios.post(route('user.show',user_id))
         .then(res => {
-            res.data.start_working_date = new Date(res.data.start_working_date).toISOString().split('T')[0];
+            res.data.start_working_date = moment(res.data.start_working_date).format('YYYY-MM-DD');
             setUser(res.data);
         })
         .catch(err => {
@@ -198,7 +199,7 @@ export default function EditUser({ auth,user_id }) {
                             </div>
                             <div className="mb-4 mx-4">
                                     <label htmlFor="start_working_date" className="block text-sm font-medium text-gray-7000">İşe Başlama Tarihi</label>
-                                    <Field type="date" name="start_working_date" id="start_working_date" className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
+                                    <Datepicker  name="start_working_date" id="start_working_date" onSelectedDateChanged={(e)=>{setFieldValue('start_working_date',new Date(e).toDateString())}} value={values.start_working_date} className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-5000 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
                                     {errors.start_working_date && touched.start_working_date && (
                                         <p className="text-red-500">
                                             *{errors.start_working_date}

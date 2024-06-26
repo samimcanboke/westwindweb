@@ -27,7 +27,7 @@ class RegisteredUserController extends Controller
 
     public function show()
     {
-        $users = User::all();
+        $users = User::where('is_active', 1)->get();
         return response()->json($users);
     }
 
@@ -108,7 +108,19 @@ class RegisteredUserController extends Controller
         } else{
             $request->merge(['password' => $user->password]);
         }
+        $start = Carbon::createFromDate($request->start_working_date);
+        $data['start_working_date'] = $start->format('Y-m-d');
+        $request->merge($data);
         $user->update($request->all());
         return response()->json(['success'=>true, 'message' => 'User updated successfully']);
+    }
+
+    public function leave_jobs(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+        $user->leave_working_date = Carbon::now()->format('Y-m-d');
+        $user->is_active = 0;
+        $user->save();
+        return response()->json(['success'=>true, 'message' => 'User left the job successfully']);
     }
 }

@@ -29,15 +29,23 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'name' => 'required|string|max:255|unique:clients,name',
+        ]);
+        $client = new Client();
+        $client->name = $request->name;
+        $client->save();
+        return response()->json(['success'=>true, 'message' => 'Client created successfully']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show(Request $request, Client $client)
     {
-        //
+        $client = Client::where('id', $request->id)->first();
+        return response()->json($client);
     }
 
     /**
@@ -53,14 +61,22 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:clients,name,' . $request->id,
+        ]);
+        $client = Client::where('id', $request->id)->first();
+        $client->name = $request->name;
+        $client->save();
+        return response()->json(['success'=>true, 'message' => 'Client updated successfully']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(Request $request, Client $client)
     {
-        //
+        $client = Client::where('id', $request->id)->first();
+        $client->delete();
+        return response()->json(['success'=>true, 'message' => 'Client deleted successfully']);
     }
 }
