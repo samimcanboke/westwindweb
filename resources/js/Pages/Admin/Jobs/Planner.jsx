@@ -444,6 +444,7 @@ export default function Planner({ auth }) {
         await axios.get(route("users.show")).then((response) => {
             let newUserList = [];
             let newUserListForTime = [];
+            response.data.sort((a, b) => a.driver_id.localeCompare(b.driver_id));
             response.data.map((user) => {
                 newUserList.push({ id: user.id, title: user.name, height: 50 });
                 newUserListForTime.push({ value: user.id, label: user.name, height: 50 });
