@@ -46,7 +46,7 @@ export default function Dashboard({ auth }) {
 
     const filterAction = () => {
         setFilterView(false);
-        axios.post("/finalized-jobs/export",{filter}).then(res => {
+        axios.post("/finalized-jobs/export",{user_id: filter.user,client_id: filter.client,month: filter.month,year: filter.year}).then(res => {
             if(res.data.status){
                 let url = "/download-pdf/" + res.data.file + ".pdf";
                 window.open(url, "_blank", "noreferrer");

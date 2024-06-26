@@ -296,6 +296,8 @@ class FinalizedJobsController extends Controller
         return $total_night_shift;
     }
 
+    
+
 
 
     public function get_finalized(Request $request)
@@ -387,7 +389,13 @@ class FinalizedJobsController extends Controller
         $data['mail'] = $user->email ?? "";
         $data['phone'] = $user->phone ?? "";
 
-        $query = FinalizedJobs::where('user_id', $user->id)->where('confirmation', 1)->whereBetween('created_at', [$startDate->toDateString(), $endDate->toDateString()]);
+
+        $query = FinalizedJobs::where('user_id', $user->id);
+        if($request->client_id){
+            $query->where('client_id', $request->client_id);
+        }
+        $query->where('confirmation', 1)->whereBetween('created_at', [$startDate->toDateString(), $endDate->toDateString()]);
+
         $finalized_jobs = $query->orderBy('initial_date','asc')->get();
 
         $data['totals']['dates'] = $finalized_jobs->count();
