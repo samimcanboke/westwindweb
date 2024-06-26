@@ -108,9 +108,9 @@ export default function Dashboard({ auth }) {
                                             axios.post(route("user-leave-jobs"),{id:user.id});
                                             getUsers();
                                         }}
-                                        className="font-medium text-red-6000 dark:text-red-500 hover:underline"
+                                        className="font-medium text-white bg-red-600 dark:text-red-500 hover:underline"
                                     >
-                                        Leave Jobs
+                                        Jobs Verlassen
                                     </Button>
                                 </td>
                             </tr>
