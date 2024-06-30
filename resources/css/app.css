@@ -3,14 +3,3 @@
 @tailwind utilities;
 
 
-.admin_extra {
-    position: absolute;
-    top: 4px !important;
-    text-align: center;
-}
-
-.new_plans {
-    position: absolute !important;
-    top: 4px !important;
-    min-height: 42px;
-}
