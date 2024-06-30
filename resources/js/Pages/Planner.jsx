@@ -9,10 +9,19 @@ export default function Planner({ auth }) {
     const [jobs, setJobs] = useState([]);
     const getJobs = async () => {
         await axios.get(route("get-user-job-plans")).then((response) => {
-            response.data.sort((a, b) => {
-                return new Date(a.start_date + " " + a.start_time) - new Date(b.start_date + " " + b.start_time);
-            });
-            setJobs(response.data);
+            try {
+                if(response.data.length > 0) {
+                    response.data.sort((a, b) => {
+                        return new Date(a.start_date + " " + a.start_time) - new Date(b.start_date + " " + b.start_time);
+                });
+                setJobs(response.data);
+                } 
+            } catch (error) {
+                console.log(error);
+            }
+            
+        }).catch((error) => {
+            console.log(error);
         });
     };
     useEffect(() => {
