@@ -1427,13 +1427,7 @@ export default function Planner({ auth }) {
                                         visibleTimeEnd={visibleTimeEnd}
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
-                                    >
-                                        <TimelineHeaders>
-                                            <DateHeader unit="primaryHeader" />
-                                            <DateHeader  labelFormat="dddd DD.MM" />
-                                            
-                                        </TimelineHeaders>
-                                    </Timeline>
+                                    />
                                 </>
                             )}
                     </div>
