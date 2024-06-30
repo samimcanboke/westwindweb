@@ -394,9 +394,9 @@ class FinalizedJobsController extends Controller
         if($request->client_id){
             $query->where('client_id', $request->client_id);
         }
-        $query->where('confirmation', 1)->whereBetween('created_at', [$startDate->toDateString(), $endDate->toDateString()]);
+        $query->where('confirmation', 1)->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
 
-        $finalized_jobs = $query->orderBy('initial_date','asc')->get();
+        $finalized_jobs = $query->orderBy('initial_date','asc')->toSql();
 
         dd($finalized_jobs,$user);
 
