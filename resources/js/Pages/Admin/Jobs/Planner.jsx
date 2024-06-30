@@ -1329,7 +1329,7 @@ export default function Planner({ auth }) {
                                         )}
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
-                                        rightSidebarWidth={100}
+                                        rightSidebarWidth={250}
                                         rightSidebarContent={<div>
                                             <p>{selectedUsers.length > 0 ? selectedUsers : users}</p>
                                         </div>}
