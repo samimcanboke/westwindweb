@@ -51,6 +51,7 @@ export default function Planner({ auth }) {
     const [visibleTimeStart, setVisibleTimeStart] = useState(null);
     const [visibleTimeEnd, setVisibleTimeEnd] = useState(null);
     const [thisWeek, setThisWeek] = useState(false);
+    const [nextWeek, setNextWeek] = useState(false);
 
     const deleteFromuser = async (id) => {
         let oldJob = jobs.find((job) => job.id === id);
@@ -1278,13 +1279,29 @@ export default function Planner({ auth }) {
                                             Dinlenme
                                         </Button>
                                         <ToggleSwitch
-                                            label="Bu Haftayı Göster"
+                                            label="Diese Woche anzeigen"
                                             checked={thisWeek}
                                             onChange={(e) => {
                                                 setThisWeek(e);
                                                 if(e){
+                                                    setNextWeek(false);
                                                     setVisibleTimeStart(moment().startOf('week'));
                                                     setVisibleTimeEnd(moment().endOf('week'));
+                                                } else {
+                                                    setVisibleTimeStart(null);
+                                                    setVisibleTimeEnd(null);
+                                                }
+                                            }}
+                                        /> 
+                                        <ToggleSwitch
+                                            label="Nächste Woche anzeigen"
+                                            checked={nextWeek}
+                                            onChange={(e) => {
+                                                setNextWeek(e);
+                                                if(e){
+                                                    setThisWeek(false);
+                                                    setVisibleTimeStart(moment().add(7, 'day').startOf('week'));
+                                                    setVisibleTimeEnd(moment().add(7, 'day').endOf('week'));
                                                 } else {
                                                     setVisibleTimeStart(null);
                                                     setVisibleTimeEnd(null);
