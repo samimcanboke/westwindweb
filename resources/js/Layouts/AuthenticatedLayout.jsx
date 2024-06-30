@@ -97,7 +97,7 @@ export default function Authenticated({ user, header, children }) {
 
                         </div>
 
-                        <div className="hidden lg:flex sm:items-center sm:ms-6">
+                        <div className="hidden xl:flex xl:items-center xl:ms-6">
                             <div className="ms-3 relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
