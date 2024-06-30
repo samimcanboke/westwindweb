@@ -1294,7 +1294,7 @@ export default function Planner({ auth }) {
                                     </div>
 
                                     <div className="relative">
-                                        <div className="absolute" style={{left: 20,top:10}}>
+                                        <div className="absolute" style={{left: 20,top:10, minWidth: 220}}>
                                         <MultiSelect
                                             options={usersForTime}
                                             value={selectedUsersForTime}
@@ -1327,6 +1327,8 @@ export default function Planner({ auth }) {
                                             256,
                                             "hour"
                                         )}
+                                        sidebarWidth={250}
+                                        
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
                                         //visibleTimeStart={moment().add(-7,"day").for}
