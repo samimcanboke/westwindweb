@@ -654,17 +654,17 @@ export default function Planner({ auth }) {
             </Head>
 
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
-                <Modal.Header>Makinist Seç</Modal.Header>
+                <Modal.Header>Lokführer Wählen</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Müsait Makinistler
+                            Verfügbare Lokführer
                         </p>
                         <Select
                             className="w-full"
                             onChange={(e) => setDriver(e.target.value)}
                         >
-                            <option>Seçiniz</option>
+                            <option>Wählen</option>
                             {drivers &&
                                 drivers.map((driver) => (
                                     <option key={driver.id} value={driver.id}>
@@ -675,9 +675,9 @@ export default function Planner({ auth }) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setMachinist}>Atama Yap</Button>
+                    <Button onClick={setMachinist}>Zuweisen</Button>
                     <Button color="gray" onClick={() => setOpenModal(false)}>
-                        İptal
+                        Abbrechen
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -690,19 +690,19 @@ export default function Planner({ auth }) {
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Start Date : {editingJob.start_date}
+                            Startdatum : {editingJob.start_date}
                             <br />
-                            Start Time : {editingJob.start_time}
+                            Startzeit : {editingJob.start_time}
                             <br />
-                            End Date : {editingJob.end_date}
+                            Enddatum : {editingJob.end_date}
                             <br />
-                            End Time : {editingJob.end_time}
+                            Endzeit : {editingJob.end_time}
                             <br />
                             Zug Nr : {editingJob.zug_nummer}
                             <br />
                             Lokomotive Nr : {editingJob.locomotive_nummer}
                             <br />
-                            Tour Name : {editingJob.tour_name}
+                            Tourname : {editingJob.tour_name}
                             <br />
                             Von - Bis : {editingJob.from} - {editingJob.to}
                         </p>
@@ -713,19 +713,19 @@ export default function Planner({ auth }) {
                         color="green"
                         onClick={() => routeToEdit(editingJob.id)}
                     >
-                        Düzenle
+                        Bearbeiten
                     </Button>
                     <Button
                         color="red"
                         onClick={() => deleteFromuser(editingJob.id)}
                     >
-                        İşten Çıkar
+                        Entlassen
                     </Button>
                     <Button
                         color="gray"
                         onClick={() => setOpenDetailModal(false)}
                     >
-                        İptal
+                        Abbrechen
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -735,11 +735,11 @@ export default function Planner({ auth }) {
                 size={"5xl"}
                 onClose={() => setOpenSickModal(false)}
             >
-                <Modal.Header>Hastalık İzni Ekle</Modal.Header>
+                <Modal.Header>Krankheitsurlaub Hinzufügen</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Tarih
+                            Datum
                         </p>
                         <div className="flex justify-between">
                             <Datepicker
@@ -814,14 +814,14 @@ export default function Planner({ auth }) {
                         </div>
                         <br />
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Makinist
+                            Lokführer
                         </p>
                         <Select
                             className="w-full mb-10"
                             onChange={(e) => setSickDriver(e.target.value)}
                             value={sickDriver}
                         >
-                            <option>Seçiniz</option>
+                            <option>Wählen Sie</option>
                             {drivers &&
                                 drivers.map((driver) => (
                                     <option key={driver.id} value={driver.id}>
@@ -832,12 +832,12 @@ export default function Planner({ auth }) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setSick}>Hastalık İzni Ekle</Button>
+                    <Button onClick={setSick}>Krankheitsurlaub Hinzufügen</Button>
                     <Button
                         color="gray"
                         onClick={() => setOpenSickModal(false)}
                     >
-                        İptal
+                        Abbrechen
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -847,11 +847,11 @@ export default function Planner({ auth }) {
                 size={"5xl"}
                 onClose={() => setOpenAdminExtraModal(false)}
             >
-                <Modal.Header>Admin İzni Ekle</Modal.Header>
+                <Modal.Header>Ruhe Tag</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Tarih
+                            Datum
                         </p>
                         <div className="flex justify-between">
                             <Datepicker
@@ -930,7 +930,7 @@ export default function Planner({ auth }) {
                         </div>
                         <br />
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Makinist
+                            Lokführer
                         </p>
                         <Select
                             className="w-full mb-10"
@@ -939,7 +939,7 @@ export default function Planner({ auth }) {
                             }
                             value={adminExtraDriver}
                         >
-                            <option>Seçiniz</option>
+                            <option>Wählen Sie</option>
                             {drivers &&
                                 drivers.map((driver) => (
                                     <option key={driver.id} value={driver.id}>
@@ -950,12 +950,12 @@ export default function Planner({ auth }) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setAdminExtra}>Admin İzni Ekle</Button>
+                    <Button onClick={setAdminExtra}>Ruhe Tag Hinzufügen</Button>
                     <Button
                         color="gray"
                         onClick={() => setOpenAdminExtraModal(false)}
                     >
-                        İptal
+                        Abbrechen
                     </Button>
                 </Modal.Footer>
             </Modal>
