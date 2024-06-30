@@ -10,6 +10,7 @@ export default function Planner({ auth }) {
     const getJobs = async () => {
         await axios.get(route("get-user-job-plans")).then((response) => {
             try {
+                console.log(response.data);
                 if(response.data.length > 0) {
                     response.data.sort((a, b) => {
                         return new Date(a.start_date + " " + a.start_time) - new Date(b.start_date + " " + b.start_time);
