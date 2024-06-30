@@ -1302,7 +1302,7 @@ export default function Planner({ auth }) {
                                             className="bg-red-500"
                                             onClick={() => showModal("sick")}
                                         >
-                                            Hastalık
+                                            Krank
                                         </Button>
                                         <Button
                                             className="bg-blue-500"
@@ -1310,7 +1310,7 @@ export default function Planner({ auth }) {
                                                 showModal("annualLeave")
                                             }
                                         >
-                                            Yıllık İzni
+                                            Urlaub
                                         </Button>
                                         <Button
                                             className="bg-purple-500"
@@ -1318,7 +1318,7 @@ export default function Planner({ auth }) {
                                                 showModal("adminExtra")
                                             }
                                         >
-                                            Dinlenme
+                                            Ruhe Tag
                                         </Button>
                                         <ToggleSwitch
                                             label="Diese Woche anzeigen"
