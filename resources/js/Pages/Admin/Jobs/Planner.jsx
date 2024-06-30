@@ -444,13 +444,18 @@ export default function Planner({ auth }) {
             }
         });
 
-        setUserJobs([
-            ...newJobList,
+        let plan = [...newJobList,
             ...newSickList,
             ...newAnnualLeaveList,
             ...newAdminExtraList,
-            ...userFinalizedJobs,
-        ]);
+            ...userFinalizedJobs]
+
+
+        //TODO: Araya Çizgi çekerek kaç saat ve kaç dakika olduğunu yaz. 
+
+
+
+        setUserJobs(plan);
     };
 
     const getUsers = async () => {
@@ -608,7 +613,6 @@ export default function Planner({ auth }) {
         getUsers();
         getUsersJobs();
         moment.locale('de')
-        console.log(moment.locale())
 
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);

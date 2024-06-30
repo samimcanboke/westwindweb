@@ -86,7 +86,7 @@ export default function Authenticated({ user, header, children }) {
                                             
                                             <Dropdown.Link href={route('users.index')}>Benutzer</Dropdown.Link>
                                             <Dropdown.Link href={route('clients-index')}>Kunden</Dropdown.Link>
-                                            <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Berichte</Dropdown.Link>
+                                            <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Ma Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('admin-planner')}>Planung</Dropdown.Link>
                                             <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
@@ -203,7 +203,7 @@ export default function Authenticated({ user, header, children }) {
                                         <Dropdown.Content className="mt-2 l-0 w-full">
                                             <ResponsiveNavLink href={route('users.index')}>Benutzer</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('clients-index')}>Kunden</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte Berichte</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte MA Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('admin-planner')}>Planung</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('clients.new-job')}>Kundenaufträge</ResponsiveNavLink>
