@@ -5,15 +5,26 @@ import Timeline, {
     CustomMarker,
     TodayMarker,
     CursorMarker,
+    TimelineHeaders,
+    SidebarHeader,
+    DateHeader,
 } from "react-calendar-timeline";
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, Modal, Select, Datepicker, ToggleSwitch } from "flowbite-react";
+import {
+    Button,
+    Modal,
+    Select,
+    Datepicker,
+    ToggleSwitch,
+} from "flowbite-react";
 import Swal from "sweetalert2";
 import interact from "interactjs";
 import { MultiSelect } from "react-multi-select-component";
+import 'moment/locale/de';
+
 
 
 export default function Planner({ auth }) {
@@ -77,8 +88,8 @@ export default function Planner({ auth }) {
     };
 
     const showCurrentWeek = () => {
-        setVisibleTimeStart(moment().startOf('week'));
-        setVisibleTimeEnd(moment().endOf('week'));
+        setVisibleTimeStart(moment().startOf("week"));
+        setVisibleTimeEnd(moment().endOf("week"));
     };
 
     const getPlansWithoutUser = async () => {
@@ -446,10 +457,16 @@ export default function Planner({ auth }) {
         await axios.get(route("users.show")).then((response) => {
             let newUserList = [];
             let newUserListForTime = [];
-            response.data.sort((a, b) => a.driver_id.localeCompare(b.driver_id));
+            response.data.sort((a, b) =>
+                a.driver_id.localeCompare(b.driver_id)
+            );
             response.data.map((user) => {
                 newUserList.push({ id: user.id, title: user.name, height: 50 });
-                newUserListForTime.push({ value: user.id, label: user.name, height: 50 });
+                newUserListForTime.push({
+                    value: user.id,
+                    label: user.name,
+                    height: 50,
+                });
             });
             setUsers(newUserList);
             setUsersForTime(newUserListForTime);
@@ -590,6 +607,8 @@ export default function Planner({ auth }) {
         getPlansWithoutUser();
         getUsers();
         getUsersJobs();
+        moment.locale('de')
+        console.log(moment.locale())
 
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);
@@ -606,8 +625,6 @@ export default function Planner({ auth }) {
     }, []);
 
     return (
-
-        
         <AuthenticatedLayout
             user={auth.user}
             header={
@@ -617,8 +634,8 @@ export default function Planner({ auth }) {
             }
         >
             <Head>
-    <style>
-    {`
+                <style>
+                    {`
     #\\:ra\\:-flowbite-toggleswitch > div:after {
         top: 11px;
     }
@@ -629,8 +646,8 @@ export default function Planner({ auth }) {
         top: 11px;
     }
     `}
-    </style>
-</Head>
+                </style>
+            </Head>
 
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
                 <Modal.Header>Makinist Seç</Modal.Header>
@@ -1195,30 +1212,42 @@ export default function Planner({ auth }) {
                                                                 text: "Wenn Sie diesen Job löschen, können Sie ihn nicht wiederherstellen.",
                                                                 icon: "warning",
                                                                 showCancelButton: true,
-                                                                cancelButtonText: "Abbrechen",
+                                                                cancelButtonText:
+                                                                    "Abbrechen",
                                                                 showConfirmButton: true,
-                                                                confirmButtonText: "Löschen",
+                                                                confirmButtonText:
+                                                                    "Löschen",
                                                                 dangerMode: true,
-                                                            }).then(async (willDelete) => {
-                                                                if (willDelete.isConfirmed) {
-                                                                    await axios.delete(route(
-                                                                        "planner-jobs-delete",
-                                                                        {
-                                                                            id: job.id,
-                                                                        }
-                                                                    ));
-                                                                    getPlans();
-                                                                    getPlansWithoutUser();
-                                                                    getUsersJobs();
-                                                                    Swal.fire({
-                                                                        title: "Fertig!",
-                                                                        text: "Eintrag gelöscht",
-                                                                        icon: "success",
-                                                                        timer: 1000,
-                                                                        button: false,
-                                                                    });
+                                                            }).then(
+                                                                async (
+                                                                    willDelete
+                                                                ) => {
+                                                                    if (
+                                                                        willDelete.isConfirmed
+                                                                    ) {
+                                                                        await axios.delete(
+                                                                            route(
+                                                                                "planner-jobs-delete",
+                                                                                {
+                                                                                    id: job.id,
+                                                                                }
+                                                                            )
+                                                                        );
+                                                                        getPlans();
+                                                                        getPlansWithoutUser();
+                                                                        getUsersJobs();
+                                                                        Swal.fire(
+                                                                            {
+                                                                                title: "Fertig!",
+                                                                                text: "Eintrag gelöscht",
+                                                                                icon: "success",
+                                                                                timer: 1000,
+                                                                                button: false,
+                                                                            }
+                                                                        );
+                                                                    }
                                                                 }
-                                                            }); 
+                                                            );
                                                         }}
                                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline text-center"
                                                     >
@@ -1255,7 +1284,10 @@ export default function Planner({ auth }) {
                             : "max-w-7xl mx-auto sm:px-6 lg:px-8"
                     }
                 >
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg " style={{minHeight: '40rem'}}>
+                    <div
+                        className="bg-white overflow-hidden shadow-sm sm:rounded-lg "
+                        style={{ minHeight: "40rem" }}
+                    >
                         {userJobs &&
                             users &&
                             userJobs.length > 0 &&
@@ -1289,58 +1321,98 @@ export default function Planner({ auth }) {
                                             checked={thisWeek}
                                             onChange={(e) => {
                                                 setThisWeek(e);
-                                                if(e){
+                                                if (e) {
                                                     setNextWeek(false);
-                                                    setVisibleTimeStart(moment().startOf('week'));
-                                                    setVisibleTimeEnd(moment().endOf('week'));
+                                                    setVisibleTimeStart(
+                                                        moment().startOf("week").add(1,'day')
+                                                    );
+                                                    setVisibleTimeEnd(
+                                                        moment().endOf("week").add(1,'day')
+                                                    );
                                                 } else {
                                                     setVisibleTimeStart(null);
                                                     setVisibleTimeEnd(null);
                                                 }
                                             }}
-                                        /> 
+                                        />
                                         <ToggleSwitch
                                             label="Nächste Woche anzeigen"
                                             checked={nextWeek}
                                             onChange={(e) => {
                                                 setNextWeek(e);
-                                                if(e){
+                                                if (e) {
                                                     setThisWeek(false);
-                                                    setVisibleTimeStart(moment().add(7, 'day').startOf('week'));
-                                                    setVisibleTimeEnd(moment().add(7, 'day').endOf('week'));
+                                                    setVisibleTimeStart(
+                                                        moment()
+                                                            .add(7, "day")
+                                                            .startOf("week")
+                                                            .add(1,'day')
+                                                    );
+                                                    setVisibleTimeEnd(
+                                                        moment()
+                                                            .add(7, "day")
+                                                            .endOf("week")
+                                                            .add(1,'day')
+                                                    );
                                                 } else {
                                                     setVisibleTimeStart(null);
                                                     setVisibleTimeEnd(null);
                                                 }
                                             }}
-                                        /> 
+                                        />
                                     </div>
 
                                     <div className="relative">
-                                        <div className="absolute" style={{left: 20,top:10, minWidth: 220, maxWidth: 220}}>
-                                        <MultiSelect
-                                            options={usersForTime}
-                                            value={selectedUsersForTime}
-                                            onChange={(e) => {
-                                                let newUserList = users.filter((user) => {
-                                                    if (e.some(selectedUser => selectedUser.value === user.id)) {
-                                                        return user;
-                                                    }
-                                                })
-                                                setSelectedUsers(newUserList);
-                                                setSelectedUsersForTime(e)
-                                            } }
-                                            labelledBy="Auswählen"
-                                            style={{ width: '15%',position: 'absolute', zIndex: 1000, maxWidth: 220 }}
-                                        />
+                                        <div
+                                            className="absolute"
+                                            style={{
+                                                left: 20,
+                                                top: 10,
+                                                minWidth: 220,
+                                                maxWidth: 220,
+                                            }}
+                                        >
+                                            <MultiSelect
+                                                options={usersForTime}
+                                                value={selectedUsersForTime}
+                                                onChange={(e) => {
+                                                    let newUserList =
+                                                        users.filter((user) => {
+                                                            if (
+                                                                e.some(
+                                                                    (
+                                                                        selectedUser
+                                                                    ) =>
+                                                                        selectedUser.value ===
+                                                                        user.id
+                                                                )
+                                                            ) {
+                                                                return user;
+                                                            }
+                                                        });
+                                                    setSelectedUsers(
+                                                        newUserList
+                                                    );
+                                                    setSelectedUsersForTime(e);
+                                                }}
+                                                labelledBy="Auswählen"
+                                                style={{
+                                                    width: "15%",
+                                                    position: "absolute",
+                                                    zIndex: 1000,
+                                                    maxWidth: 220,
+                                                }}
+                                            />
                                         </div>
-                                        
                                     </div>
 
                                     <Timeline
-                                        groups={selectedUsers.length > 0 ? selectedUsers : users}
+                                        groups={
+                                            selectedUsers.length > 0
+                                                ? selectedUsers
+                                                : users
+                                        }
                                         items={userJobs}
-                                        language="de-DE"
                                         unit="week"
                                         defaultTimeStart={moment().add(
                                             -256,
@@ -1351,12 +1423,17 @@ export default function Planner({ auth }) {
                                             "hour"
                                         )}
                                         sidebarWidth={250}
-                                        
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
-                                    />
+                                    >
+                                        <TimelineHeaders>
+                                            <DateHeader unit="primaryHeader" />
+                                            <DateHeader  labelFormat="dddd DD.MM" />
+                                            
+                                        </TimelineHeaders>
+                                    </Timeline>
                                 </>
                             )}
                     </div>
