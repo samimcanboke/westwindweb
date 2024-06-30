@@ -622,6 +622,9 @@ export default function Planner({ auth }) {
     #\\:ra\\:-flowbite-toggleswitch > div:after {
         top: 11px;
     }
+    #\:rb\:-flowbite-toggleswitch > div:after {
+        top: 11px;
+    }
     #\:rm\:-flowbite-toggleswitch > div:after {
         top: 11px;
     }
