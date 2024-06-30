@@ -1294,7 +1294,7 @@ export default function Planner({ auth }) {
                                     </div>
 
                                     <div className="relative">
-                                        <div className="absolute" style={{left: 20,top:10, minWidth: 220}}>
+                                        <div className="absolute" style={{left: 20,top:10, minWidth: 220, maxWidth: 220}}>
                                         <MultiSelect
                                             options={usersForTime}
                                             value={selectedUsersForTime}
@@ -1307,8 +1307,8 @@ export default function Planner({ auth }) {
                                                 setSelectedUsers(newUserList);
                                                 setSelectedUsersForTime(e)
                                             } }
-                                            labelledBy="Select"
-                                            style={{ width: '15%',position: 'absolute', zIndex: 1000, }}
+                                            labelledBy="Auswählen"
+                                            style={{ width: '15%',position: 'absolute', zIndex: 1000, maxWidth: 220 }}
                                         />
                                         </div>
                                         
