@@ -686,17 +686,17 @@ export default function Planner({ auth }) {
                 show={openDetailModal}
                 onClose={() => setOpenDetailModal(false)}
             >
-                <Modal.Header>İş Detayları</Modal.Header>
+                <Modal.Header>Details</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Startdatum : {editingJob.start_date}
+                            Startdatum : {moment(editingJob.start_date).format("DD.MM.YYYY")}
                             <br />
-                            Startzeit : {editingJob.start_time}
+                            Startzeit : {moment(editingJob.start_time).format("HH:mm")}
                             <br />
-                            Enddatum : {editingJob.end_date}
+                            Enddatum : {moment(editingJob.end_date).format("DD.MM.YYYY")}
                             <br />
-                            Endzeit : {editingJob.end_time}
+                            Endzeit : {moment(editingJob.end_time).format("HH:mm")}
                             <br />
                             Zug Nr : {editingJob.zug_nummer}
                             <br />
