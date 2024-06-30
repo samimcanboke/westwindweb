@@ -183,11 +183,10 @@ export default function Planner({ auth }) {
                                         console.log(e);
                                     }
                                 },
-                                className: "weekend",
+                                className: "new_plans",
                                 style: {
                                     background: "green",
                                     zIndex: 50,
-                                    minHeight: 40,
                                 },
                                 itemIdKey: "id",
                                 itemTitleKey: "title",
@@ -257,6 +256,7 @@ export default function Planner({ auth }) {
                         style: {
                             background: "red",
                             zIndex: 49,
+                            
                         },
                         itemIdKey: "id",
                         itemTitleKey: "title",
@@ -324,6 +324,7 @@ export default function Planner({ auth }) {
                         style: {
                             background: "blue",
                             zIndex: 49,
+                            he
                         },
                     },
                 };
@@ -386,10 +387,11 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
-                        className: "weekend",
+                        className: "admin_extra",
                         style: {
                             background: "purple",
                             zIndex: 49,
+                            
                         },
                     },
                 };
@@ -425,6 +427,8 @@ export default function Planner({ auth }) {
                         style: {
                             background: "gray",
                             zIndex: 49,
+                            top:5,
+                            
                         },
                     },
                 };
@@ -1329,10 +1333,7 @@ export default function Planner({ auth }) {
                                         )}
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
-                                        rightSidebarWidth={250}
-                                        rightSidebarContent={<div>
-                                            <p>{selectedUsers.length > 0 ? selectedUsers : users}</p>
-                                        </div>}
+                                        
                                   
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
