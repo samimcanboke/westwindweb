@@ -692,11 +692,11 @@ export default function Planner({ auth }) {
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
                             Startdatum : {moment(editingJob.start_date).format("DD.MM.YYYY")}
                             <br />
-                            Startzeit : {moment(editingJob.start_time).format("HH:mm")}
+                            Startzeit : {editingJob.start_time}
                             <br />
                             Enddatum : {moment(editingJob.end_date).format("DD.MM.YYYY")}
                             <br />
-                            Endzeit : {moment(editingJob.end_time).format("HH:mm")}
+                            Endzeit : {editingJob.end_time}
                             <br />
                             Zug Nr : {editingJob.zug_nummer}
                             <br />
@@ -719,7 +719,7 @@ export default function Planner({ auth }) {
                         color="red"
                         onClick={() => deleteFromuser(editingJob.id)}
                     >
-                        Entlassen
+                        Löschen
                     </Button>
                     <Button
                         color="gray"
