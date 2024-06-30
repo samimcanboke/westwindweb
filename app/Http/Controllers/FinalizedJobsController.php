@@ -341,6 +341,7 @@ class FinalizedJobsController extends Controller
         $user_id = $request->user_id;
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth();
+        
         $data['year'] = $year;
         switch($month){
             case 1:
@@ -396,9 +397,9 @@ class FinalizedJobsController extends Controller
         }
         $query->where('confirmation', 1)->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
 
-        $finalized_jobs = $query->orderBy('initial_date','asc')->toSql();
+        $finalized_jobs = $query->orderBy('initial_date','asc')->get();
 
-        dd($finalized_jobs,$user);
+        dd($finalized_jobs,$user,$startDate,$endDate);
 
         $data['totals']['dates'] = $finalized_jobs->count();
         $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
