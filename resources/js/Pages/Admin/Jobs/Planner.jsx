@@ -186,7 +186,8 @@ export default function Planner({ auth }) {
                                 className: "weekend",
                                 style: {
                                     background: "green",
-                                    zIndex: 49,
+                                    zIndex: 50,
+                                    minHeight: 40,
                                 },
                                 itemIdKey: "id",
                                 itemTitleKey: "title",
@@ -446,8 +447,8 @@ export default function Planner({ auth }) {
             let newUserListForTime = [];
             response.data.sort((a, b) => a.driver_id.localeCompare(b.driver_id));
             response.data.map((user) => {
-                newUserList.push({ id: user.id, title: user.name, height: 50 });
-                newUserListForTime.push({ value: user.id, label: user.name, height: 50 });
+                newUserList.push({ id: user.id, title: user.name, height: 50,rightTitle: user.name, stackItems: true });
+                newUserListForTime.push({ value: user.id, label: user.name, height: 50,rightTitle: user.name, stackItems: true });
             });
             setUsers(newUserList);
             setUsersForTime(newUserListForTime);
@@ -1094,13 +1095,16 @@ export default function Planner({ auth }) {
                                             Lokomotive Nr - Zug Nr - Tour Name
                                         </th>
                                         <th scope="col" className="px-6 py-3">
-                                            Makinist
+                                            Lokführer
                                         </th>
                                         <th scope="col" className="px-6 py-3">
                                             Zuweisung
                                         </th>
                                         <th scope="col" className="px-6 py-3">
-                                            Edit
+                                            Bearbeiten
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Löschen
                                         </th>
                                     </tr>
                                 </thead>
@@ -1156,7 +1160,7 @@ export default function Planner({ auth }) {
                                                             }}
                                                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                                         >
-                                                            Leave
+                                                            Verlassen
                                                         </button>
                                                     )}
                                                 </td>
@@ -1173,7 +1177,45 @@ export default function Planner({ auth }) {
                                                         }}
                                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline text-center"
                                                     >
-                                                        Edit
+                                                        Bearbeiten
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        onClick={() => {
+                                                            Swal.fire({
+                                                                title: "Wirklich löschen?",
+                                                                text: "Wenn Sie diesen Job löschen, können Sie ihn nicht wiederherstellen.",
+                                                                icon: "warning",
+                                                                showCancelButton: true,
+                                                                cancelButtonText: "Abbrechen",
+                                                                showConfirmButton: true,
+                                                                confirmButtonText: "Löschen",
+                                                                dangerMode: true,
+                                                            }).then(async (willDelete) => {
+                                                                if (willDelete.isConfirmed) {
+                                                                    await axios.delete(route(
+                                                                        "planner-jobs-delete",
+                                                                        {
+                                                                            id: job.id,
+                                                                        }
+                                                                    ));
+                                                                    getPlans();
+                                                                    getPlansWithoutUser();
+                                                                    getUsersJobs();
+                                                                    Swal.fire({
+                                                                        title: "Fertig!",
+                                                                        text: "Eintrag gelöscht",
+                                                                        icon: "success",
+                                                                        timer: 1000,
+                                                                        button: false,
+                                                                    });
+                                                                }
+                                                            }); 
+                                                        }}
+                                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline text-center"
+                                                    >
+                                                        Löschen
                                                     </button>
                                                 </td>
                                             </tr>
@@ -1287,6 +1329,11 @@ export default function Planner({ auth }) {
                                         )}
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
+                                        rightSidebarWidth={100}
+                                        rightSidebarContent={<div>
+                                            <p>{selectedUsers.length > 0 ? selectedUsers : users}</p>
+                                        </div>}
+                                  
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
                                     />

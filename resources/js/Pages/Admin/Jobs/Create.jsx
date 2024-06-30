@@ -11,6 +11,7 @@ import {
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
+import moment from "moment";
 
 const initialValues = {
     start_date: "",
@@ -30,10 +31,12 @@ const validationSchema = Yup.object().shape({
     client: Yup.number().required("Required"),
     start_date: Yup.date().required("Required"),
     start_time: Yup.string().required("Required"),
-    end_date: Yup.date().required("Required"),
+    end_date: Yup.date().required("Required").when(
+        "start_date", 
+        (eventStartDate, schema) => eventStartDate && schema.min(eventStartDate, "Enddatum muss grßer als Startdatum sein")),
     end_time: Yup.string().required("Required"),
-    zug_nummer: Yup.string().required("Required"),
-    locomotive_nummer: Yup.string().required("Required"),
+    zug_nummer: Yup.string(),
+    locomotive_nummer: Yup.string(),
     tour_name: Yup.string().required("Required"),
     from: Yup.string().required("Required"),
     to: Yup.string().required("Required"),
@@ -114,9 +117,11 @@ export default function Dashboard({ auth }) {
                                         setFieldValue("start_date", datenew.reverse().join('-'));
                                     }}
                                 />
+                                <p className="text-red-500">
                                 {errors.start_date &&
                                     touched.start_date &&
                                     errors.start_date}
+                                    </p>
                             </div>
                             <span className="mx-4 mt-9 text-gray-500">bis</span>
                             <div className="">
@@ -139,9 +144,11 @@ export default function Dashboard({ auth }) {
                                         setFieldValue("end_date", datenew.reverse().join('-'));
                                     }}
                                 />
+                                <p className="text-red-500">
                                 {errors.end_date &&
                                     touched.end_date &&
                                     errors.end_date}
+                                </p>
                             </div>
                         </div>
 
@@ -179,9 +186,11 @@ export default function Dashboard({ auth }) {
                                         </svg>
                                     </span>
                                 </div>
+                                <p className="text-red-500">
                                 {errors.start_time &&
                                     touched.start_time &&
                                     errors.start_time}
+                                </p>    
                             </div>
                             <span className="mx-4 mt-9 text-gray-500">bis</span>
                             <div className="">

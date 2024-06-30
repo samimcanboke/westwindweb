@@ -9,14 +9,16 @@ export default function Planner({ auth }) {
     const [jobs, setJobs] = useState([]);
     const getJobs = async () => {
         await axios.get(route("get-user-job-plans")).then((response) => {
-            console.log(response.data);
+            response.data.sort((a, b) => {
+                return new Date(a.start_date + " " + a.start_time) - new Date(b.start_date + " " + b.start_time);
+            });
             setJobs(response.data);
         });
     };
     useEffect(() => {
         let id = setInterval(() => {
             getJobs();
-        }, 50000);
+        }, 5000);
         getJobs();
         return () => clearInterval(id);
     }, []);
@@ -33,7 +35,7 @@ export default function Planner({ auth }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg px-4 py-4">
                         {/*<Timeline
                             groups={groups}
                             items={items}
@@ -41,30 +43,30 @@ export default function Planner({ auth }) {
                             defaultTimeEnd={moment().add(256, "hour")}
         />*/}           
                         { jobs && jobs.map((job) => (
-                            <div key={job.id}>
+                            <div key={job.id} style={{marginTop: "1rem", marginBottom: "1rem"}}>
                                                         <Accordion>
                                                             <AccordionPanel></AccordionPanel>
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle>
-                                {moment(job.start_date + " " + job.start_time).format("DD-MM-YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("HH:mm")} : {job.from} - {job.to}
+                                {moment(job.start_date + " " + job.start_time).format("DD.MM.YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("HH:mm")} : {job.from} - {job.to}
                                 </AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Dates : </Label>
-                                    {moment(job.start_date + " " + job.start_time).format("DD-MM-YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("DD-MM-YYYY HH:mm")}
+                                    <Label>Datum : </Label>
+                                    {moment(job.start_date + " " + job.start_time).format("DD.MM.YYYY HH:mm")} - {moment(job.end_date + " " + job.end_time).format("DD.MM.YYYY HH:mm")}
                                     <br/>
                                     <Label>Route : </Label>
                                     {job.from} - {job.to}
                                     <br/>
-                                    <Label>Locomotive : </Label>
+                                    <Label>Loknummer : </Label>
                                     {job.locomotive_nummer}
                                     <br/>
                                     <Label>Tour : </Label>
                                     {job.tour_name}
                                     <br/>
-                                    <Label>Zug : </Label>
+                                    <Label>Zugnummer : </Label>
                                     {job.zug_nummer}
                                     <br/>
-                                    <Label>Comment : </Label>
+                                    <Label>Kommentar : </Label>
                                     {job.description}
                                 </AccordionContent>
                             </AccordionPanel>

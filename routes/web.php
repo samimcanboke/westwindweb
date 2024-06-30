@@ -138,6 +138,8 @@ Route::get('/planner/jobs/edit/{id}', function ($id) {
     return Inertia::render('Admin/Jobs/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('planner-jobs-edit');
 
+Route::delete('/planner/jobs/delete/{id}', [JobPlansController::class, 'destroy'])->middleware(['auth', 'verified'])->name('planner-jobs-delete');
+
 Route::get('/sick-leaves', [SickLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('sick-leaves');
 Route::post('/sick-leaves', [SickLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('sick-leaves-store');
 Route::delete('/sick-leaves/{id}', [SickLeavesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('sick-leaves-destroy');
