@@ -10,9 +10,10 @@ export default function FinalizedJobs({ auth }) {
     const [month, setMonth] = useState("");
     const [file, setFile] = useState("");
     const [showFile, setShowFile] = useState(false);
-    const [url, setUrl] = useState("");
+    const [requesting, setRequesting] = useState(false);
 
     const handleFilter = () => {
+        setRequesting(true);
         axios
             .post("/finalized-jobs/export", { year, month, user_id: auth.user.id })
             .then((response) => {
@@ -26,6 +27,7 @@ export default function FinalizedJobs({ auth }) {
                         text: "Onaylanan İş Bulunamadı",
                     });
                 }
+                setRequesting(false);
             })
             .catch((error) => {
                 console.error("There was an error filtering the jobs!", error);
@@ -112,21 +114,12 @@ export default function FinalizedJobs({ auth }) {
                                         onClick={handleFilter}
                                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        Filtern
+                                        {requesting ? "Lade..." : "Filtern"}
                                     </button>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            {showFile && (
-                <div className="py-12">
-                    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div className="p-6 bg-white border-b border-gray-200">
-                                    <div style={{ minWidth: "100vw", height: "750px" }}>
+                                {showFile && (
+                                    <div className="flex justify-end items-center">
                                         <button
                                             onClick={() => handleDownload(file)}
                                             className="bg-red-500 text-white px-4 py-2 rounded-md mx-5"
@@ -134,12 +127,16 @@ export default function FinalizedJobs({ auth }) {
                                             Anzeigen
                                         </button>
                                     </div>
-                             
+            
+                                )}
+
                             </div>
                         </div>
                     </div>
                 </div>
-            )}
+            </div>
+
+           
         </AuthenticatedLayout>
     );
 }
