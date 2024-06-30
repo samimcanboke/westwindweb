@@ -183,10 +183,11 @@ export default function Planner({ auth }) {
                                         console.log(e);
                                     }
                                 },
-                                className: "new_plans",
+                                className: "weekend",
                                 style: {
                                     background: "green",
                                     zIndex: 50,
+                                    minHeight: 40,
                                 },
                                 itemIdKey: "id",
                                 itemTitleKey: "title",
@@ -256,7 +257,6 @@ export default function Planner({ auth }) {
                         style: {
                             background: "red",
                             zIndex: 49,
-                            
                         },
                         itemIdKey: "id",
                         itemTitleKey: "title",
@@ -324,7 +324,6 @@ export default function Planner({ auth }) {
                         style: {
                             background: "blue",
                             zIndex: 49,
-                            he
                         },
                     },
                 };
@@ -387,11 +386,10 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
-                        className: "admin_extra",
+                        className: "weekend",
                         style: {
                             background: "purple",
                             zIndex: 49,
-                            
                         },
                     },
                 };
@@ -427,8 +425,6 @@ export default function Planner({ auth }) {
                         style: {
                             background: "gray",
                             zIndex: 49,
-                            top:5,
-                            
                         },
                     },
                 };
@@ -451,8 +447,8 @@ export default function Planner({ auth }) {
             let newUserListForTime = [];
             response.data.sort((a, b) => a.driver_id.localeCompare(b.driver_id));
             response.data.map((user) => {
-                newUserList.push({ id: user.id, title: user.name, height: 50,rightTitle: user.name, stackItems: true });
-                newUserListForTime.push({ value: user.id, label: user.name, height: 50,rightTitle: user.name, stackItems: true });
+                newUserList.push({ id: user.id, title: user.name, height: 50 });
+                newUserListForTime.push({ value: user.id, label: user.name, height: 50 });
             });
             setUsers(newUserList);
             setUsersForTime(newUserListForTime);
@@ -1333,8 +1329,6 @@ export default function Planner({ auth }) {
                                         )}
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
-                                        
-                                  
                                         //visibleTimeStart={moment().add(-7,"day").for}
                                         //visibleTimeEnd={moment().add(+7,"day")}
                                     />
