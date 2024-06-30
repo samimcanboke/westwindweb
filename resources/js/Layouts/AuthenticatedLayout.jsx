@@ -23,43 +23,43 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('new-jobs')} active={route().current('new-jobs')}>
                                 Neue Berichte 
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('draft-jobs')} active={route().current('draft-jobs')}>
                                 Bericht Entwrfe
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('finalized-jobs')} active={route().current('finalized-jobs')}>
                                     Eingereichte Berichte 
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('planner')} active={route().current('planner')}>
                                     Planung
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('sick-leaves')} active={route().current('sick-leaves')}>
                                     Krankmeldungen
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('annual-leaves')} active={route().current('annual-leaves')}>
                                 Urlaubsanträge
                                 </NavLink>
                             </div>
                             {user.is_admin && (
-                                <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                     <Dropdown>
                                         <Dropdown.Trigger>
                                         <button
@@ -86,7 +86,7 @@ export default function Authenticated({ user, header, children }) {
                                             
                                             <Dropdown.Link href={route('users.index')}>Benutzer</Dropdown.Link>
                                             <Dropdown.Link href={route('clients-index')}>Kunden</Dropdown.Link>
-                                            <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Ma Berichte</Dropdown.Link>
+                                            <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('admin-planner')}>Planung</Dropdown.Link>
                                             <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
@@ -97,7 +97,7 @@ export default function Authenticated({ user, header, children }) {
 
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
+                        <div className="hidden lg:flex sm:items-center sm:ms-6">
                             <div className="ms-3 relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -141,7 +141,7 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                         </div>
 
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="-me-2 flex items-center xl:hidden">
                             <button
                                 onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -167,7 +167,7 @@ export default function Authenticated({ user, header, children }) {
                     </div>
                 </div>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
+                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' xl:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
@@ -203,7 +203,7 @@ export default function Authenticated({ user, header, children }) {
                                         <Dropdown.Content className="mt-2 l-0 w-full">
                                             <ResponsiveNavLink href={route('users.index')}>Benutzer</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('clients-index')}>Kunden</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte MA Berichte</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('admin-planner')}>Planung</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('clients.new-job')}>Kundenaufträge</ResponsiveNavLink>
