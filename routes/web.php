@@ -131,7 +131,6 @@ Route::post('/planner/jobs', [JobPlansController::class, 'store'])->middleware([
 Route::put('/planner/jobs/update/{job}', [JobPlansController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-update');
 Route::put('/planner/jobs/{id}', [JobPlansController::class, 'leave_job'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-leave');
 Route::delete('/planner/jobs', [JobPlansController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-destroy');
-Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
 Route::get('/planner/jobs/get-users-jobs', [JobPlansController::class, 'get_users_jobs'])->middleware(['auth', 'verified'])->name('get-users-jobs');
 
 Route::get('/planner/jobs/edit/{id}', function ($id) {
@@ -169,6 +168,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients', [ClientController::class, 'index'])->withoutMiddleware([IsAdmin::class])->name('clients.index');
     Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->withoutMiddleware([IsAdmin::class])->name('get-finalized');
     Route::get('/download-pdf/{filename}', [PdfController::class, 'downloadPdf'])->withoutMiddleware([IsAdmin::class])->name('download.pdf');
+    Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->withoutMiddleware([IsAdmin::class])->name('get-user-job-plans');
+
 });
 
 
