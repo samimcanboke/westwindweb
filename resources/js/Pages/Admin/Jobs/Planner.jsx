@@ -500,51 +500,59 @@ export default function Planner({ auth }) {
             let filledPlan = plan.filter((item) => {
                 return item.id.startsWith('j');
                 });
-            filledPlan.sort((a, b) => {
-                if (a.group === b.group) {
-                    return a.end_time - b.start_time;
+            let groupedPlans = {};
+
+            filledPlan.forEach((item) => {
+                if (!groupedPlans[item.group]) {
+                    groupedPlans[item.group] = [];
                 }
-                return a.group - b.group;
+                groupedPlans[item.group].push(item);
             });
+
             let newFilledPlan = [];
-            
-            for(let i = 0; i < filledPlan.length - 1; i++){
-                if (filledPlan[i + 1]) {
-                    let newPlan =  {
-                        id: i,
-                        group: filledPlan[i].group,
-                        start_time: filledPlan[i].end_time,
-                        end_time: filledPlan[i + 1].start_time,
-                        title: moment.duration(filledPlan[i + 1].start_time.diff(filledPlan[i].end_time)).hours() + " h " + moment.duration(filledPlan[i + 1].start_time.diff(filledPlan[i].end_time)).minutes() + " m",
-                        canMove: false,
-                        canResize: false,
-                        itemProps: {
-                            className: "relaxing",
-                            style: {
-                                background: "transparent",
-                                color: "black",
-                                fontSize: "12px",
-                                borderTop  : "none",
-                                borderBottom: "1px solid black",
-                                textAlign:"center",
-                                zIndex: 49,
-                              
-                                
-                                
+
+            Object.keys(groupedPlans).forEach((group) => {
+                groupedPlans[group].sort((a, b) => a.end_time - b.end_time);
+
+                for (let i = 0; i < groupedPlans[group].length - 1; i++) {
+                    if (groupedPlans[group][i + 1]) {
+                        let newPlan = {
+                            id: `${group}-${i}`,
+                            group: groupedPlans[group][i].group,
+                            start_time: groupedPlans[group][i].end_time,
+                            end_time: groupedPlans[group][i + 1].start_time,
+                            title: moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() + " h " + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).minutes() + " m",
+                            canMove: false,
+                            canResize: false,
+                            itemProps: {
+                                className: "relaxing",
+                                style: {
+                                    background: "transparent",
+                                    color: "black",
+                                    fontSize: "12px",
+                                    borderTop: "none",
+                                    borderBottom: "1px solid black",
+                                    textAlign: "center",
+                                    zIndex: 49,
+                                },
                             },
+                        };
+                        if (moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() > 0) {
+                            newFilledPlan.push(newPlan);
                         }
-                    }; 
-                    newFilledPlan.push(newPlan);
+                    }
                 }
-            }
-            let lastPLan = [...newJobList,
+            });
+
+            let lastPlan = [
+                ...newJobList,
                 ...newSickList,
                 ...newAnnualLeaveList,
                 ...newAdminExtraList,
                 ...userFinalizedJobs,
-                ...newFilledPlan];
-                console.log(lastPLan);
-            setUserJobs(lastPLan);
+                ...newFilledPlan,
+            ];
+            setUserJobs(lastPlan);
         } else {
             setUserJobs([]);
         }
@@ -1512,7 +1520,7 @@ export default function Planner({ auth }) {
                                             />
                                         </div>
                                     </div>
-
+                                    { userJobs &&
                                     <Timeline
                                         groups={
                                             selectedUsers.length > 0
@@ -1809,8 +1817,11 @@ export default function Planner({ auth }) {
                                                 }}
                                             </CustomHeader>
                                         </TimelineHeaders>
-                                    </Timeline>
+                                    </Timeline>}
                                 </>
+                            )}
+                            {!userJobs || userJobs.length === 0 && (
+                                <div className="text-center">No jobs found</div>
                             )}
                     </div>
                 </div>
