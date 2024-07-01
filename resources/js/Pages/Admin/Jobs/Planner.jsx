@@ -496,9 +496,56 @@ export default function Planner({ auth }) {
             ...userFinalizedJobs,
         ];
 
-        //TODO: Araya Çizgi çekerek kaç saat ve kaç dakika olduğunu yaz.
+        if(plan){
+            let filledPlan = plan.filter((item) => {
+                return item.id.startsWith('j');
+                });
+            filledPlan.sort((a, b) => a.end_time - b.start_time);
+            let newFilledPlan = [];
+            
+            for(let i = 0; i < filledPlan.length - 1; i++){
+                if (filledPlan[i + 1]) {
+                    let newPlan =  {
+                        id: i,
+                        group: filledPlan[i].group,
+                        start_time: filledPlan[i].end_time,
+                        end_time: filledPlan[i + 1].start_time,
+                        title: moment.duration(filledPlan[i + 1].start_time.diff(filledPlan[i].end_time)).hours() + " h " + moment.duration(filledPlan[i + 1].start_time.diff(filledPlan[i].end_time)).minutes() + " m",
+                        canMove: false,
+                        canResize: false,
+                        itemProps: {
+                            className: "relaxing",
+                            style: {
+                                background: "transparent",
+                                color: "black",
+                                fontSize: "12px",
+                                borderTop  : "none",
+                                borderBottom: "1px solid black",
+                                textAlign:"center",
+                                zIndex: 49,
+                              
+                                
+                                
+                            },
+                        }
+                    }; 
+                    newFilledPlan.push(newPlan);
+                }
+            }
+            let lastPLan = [...newJobList,
+                ...newSickList,
+                ...newAnnualLeaveList,
+                ...newAdminExtraList,
+                ...userFinalizedJobs,
+                ...newFilledPlan];
+                console.log(lastPLan);
+            setUserJobs(lastPLan);
+        } else {
+            setUserJobs([]);
+        }
+        
 
-        setUserJobs(plan);
+        
     };
 
     const getUsers = async () => {
@@ -1502,7 +1549,7 @@ export default function Planner({ auth }) {
                                                     showPeriod,
                                                     data,
                                                 }) => {
-                                                    console.log(intervals)
+                                                    
                                                     return (
                                                         <div
                                                             {...getRootProps()}
@@ -1566,7 +1613,7 @@ export default function Planner({ auth }) {
                                                     showPeriod,
                                                     data,
                                                 }) => {
-                                                    console.log(intervals)
+                                                    
                                                     return (
                                                         <div
                                                             {...getRootProps()}
@@ -1636,7 +1683,7 @@ export default function Planner({ auth }) {
                                                     showPeriod,
                                                     data,
                                                 }) => {
-                                                    console.log(intervals)
+                                                    
                                                     return (
                                                         <div
                                                             {...getRootProps()}
@@ -1702,7 +1749,7 @@ export default function Planner({ auth }) {
                                                     showPeriod,
                                                     data,
                                                 }) => {
-                                                    console.log(intervals)
+                                                    
                                                     return (
                                                         <div
                                                             {...getRootProps()}
