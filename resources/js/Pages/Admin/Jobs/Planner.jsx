@@ -25,6 +25,7 @@ import Swal from "sweetalert2";
 import interact from "interactjs";
 import { MultiSelect } from "react-multi-select-component";
 import "moment/locale/de";
+import BorderStyle from "pdf-lib/cjs/core/annotation/BorderStyle";
 
 export default function Planner({ auth }) {
     const [jobs, setJobs] = useState([]);
@@ -452,7 +453,6 @@ export default function Planner({ auth }) {
                 newAdminExtraList.push(newAdminExtra);
             }
         });
-
         await axios.get("/user-confirmed-jobs").then(async (response) => {
             for (const job of response.data) {
                 let workStartTime = job.work_start_time.split(":");
@@ -496,10 +496,10 @@ export default function Planner({ auth }) {
             ...userFinalizedJobs,
         ];
 
-        if(plan){
+        if (plan) {
             let filledPlan = plan.filter((item) => {
-                return item.id.startsWith('j');
-                });
+                return item.id.startsWith("j");
+            });
             let groupedPlans = {};
 
             filledPlan.forEach((item) => {
@@ -516,7 +516,66 @@ export default function Planner({ auth }) {
 
                 for (let i = 0; i < groupedPlans[group].length - 1; i++) {
                     if (groupedPlans[group][i + 1]) {
-                        let title = moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).days() > 0 ? (moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).days() * 24) + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() +":" + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).minutes() : moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() +":" + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).minutes();
+                        let title =
+                            moment
+                                .duration(
+                                    groupedPlans[group][i + 1].start_time.diff(
+                                        groupedPlans[group][i].end_time
+                                    )
+                                )
+                                .days() > 0
+                                ? moment
+                                      .duration(
+                                          groupedPlans[group][
+                                              i + 1
+                                          ].start_time.diff(
+                                              groupedPlans[group][i].end_time
+                                          )
+                                      )
+                                      .days() *
+                                      24 +
+                                  moment
+                                      .duration(
+                                          groupedPlans[group][
+                                              i + 1
+                                          ].start_time.diff(
+                                              groupedPlans[group][i].end_time
+                                          )
+                                      )
+                                      .hours() +
+                                  ":" +
+                                  moment
+                                      .duration(
+                                          groupedPlans[group][
+                                              i + 1
+                                          ].start_time.diff(
+                                              groupedPlans[group][i].end_time
+                                          )
+                                      )
+                                      .minutes()
+                                      .toString()
+                                      .padStart(2, "0")
+                                : moment
+                                      .duration(
+                                          groupedPlans[group][
+                                              i + 1
+                                          ].start_time.diff(
+                                              groupedPlans[group][i].end_time
+                                          )
+                                      )
+                                      .hours() +
+                                  ":" +
+                                  moment
+                                      .duration(
+                                          groupedPlans[group][
+                                              i + 1
+                                          ].start_time.diff(
+                                              groupedPlans[group][i].end_time
+                                          )
+                                      )
+                                      .minutes()
+                                      .toString()
+                                      .padStart(2, "0");
                         let newPlan = {
                             id: `${group}-${i}`,
                             group: groupedPlans[group][i].group,
@@ -525,20 +584,55 @@ export default function Planner({ auth }) {
                             title: title,
                             canMove: false,
                             canResize: false,
+                            onClick: (e) => {
+                                console.log(e);
+                                return null;
+                            },
+                            onItemSelect: (e) => {
+                                console.log(e);
+                            },
                             itemProps: {
                                 className: "relaxing",
                                 style: {
                                     background: "transparent",
                                     color: "black",
                                     fontSize: "12px",
-                                    borderTop: "none",
-                                    borderBottom: "1px solid black",
+                                    borderTopWidth: "0",
+                                    borderRightWidth: "0",
+                                    borderBottomWidth: "1px",
+                                    borderLeftWidth: "0",
+                                    borderTopStyle: "none",
+                                    borderRightStyle: "none",
+                                    borderBottomStyle: "solid",
+                                    borderLeftStyle: "none",
+                                    borderTopColor: "none",
+                                    borderRightColor: "none",
+                                    borderBottomColor: "black",
+                                    borderLeftColor: "none",
+                                    borderImageSource: "initial",
+                                    borderImageSlice: "initial",
+                                    borderImageWidth: "initial",
+                                    borderImageOutset: "initial",
+                                    borderImageRepeat: "initial",
                                     textAlign: "center",
                                     zIndex: 49,
-                                },
+                                    fontWeight: "bolder",
+                                    fontSize: "14px",
+                                    cursor: "pointer",
+                                    pointerEvents: "none", // Seçilemez hale getirmek için
+                                }
+                                
                             },
                         };
-                        if (moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() > 0) {
+                        if (
+                            moment
+                                .duration(
+                                    groupedPlans[group][i + 1].start_time.diff(
+                                        groupedPlans[group][i].end_time
+                                    )
+                                )
+                                .hours() > 0
+                        ) {
                             newFilledPlan.push(newPlan);
                         }
                     }
@@ -557,9 +651,6 @@ export default function Planner({ auth }) {
         } else {
             setUserJobs([]);
         }
-        
-
-        
     };
 
     const getUsers = async () => {
@@ -1521,309 +1612,332 @@ export default function Planner({ auth }) {
                                             />
                                         </div>
                                     </div>
-                                    { userJobs &&
-                                    <Timeline
-                                        groups={
-                                            selectedUsers.length > 0
-                                                ? selectedUsers
-                                                : users
-                                        }
-                                        items={userJobs}
-                                        unit="day"
-                                        defaultTimeStart={moment().add(
-                                            -256,
-                                            "hour"
-                                        )}
-                                        defaultTimeEnd={moment().add(
-                                            256,
-                                            "hour"
-                                        )}
-                                        maxZoom={3000000000}
-                                        traditionalZoom={true}
-                                        sidebarWidth={250}
-                                        visibleTimeStart={visibleTimeStart}
-                                        visibleTimeEnd={visibleTimeEnd}
-                                        timeSteps={{
-                                            second: 60,
-                                            minute: 60,
-                                            hour: 1,
-                                            day: 1,
-                                            month: 1,
-                                            year: 1,
-                                        }}
-                                    >
-                                        <TimelineHeaders>
-                                            <CustomHeader unit="month" > 
-                                            {({
-                                                    headerContext: {
-                                                        intervals,
-                                                    },
-                                                    getRootProps,
-                                                    getIntervalProps,
-                                                    showPeriod,
-                                                    data,
-                                                }) => {
-                                                    
-                                                    return (
-                                                        <div
-                                                            {...getRootProps()}
-                                                        >
-                                                            {intervals.map(
-                                                                (interval) => {
-                                                                    const displayNone = {
-                                                                        display: "none",
-                                                                        height: "0px"
+                                    {userJobs && (
+                                        <Timeline
+                                            groups={
+                                                selectedUsers.length > 0
+                                                    ? selectedUsers
+                                                    : users
+                                            }
+                                            items={userJobs}
+                                            unit="day"
+                                            defaultTimeStart={moment().add(
+                                                -256,
+                                                "hour"
+                                            )}
+                                            defaultTimeEnd={moment().add(
+                                                256,
+                                                "hour"
+                                            )}
+                                            maxZoom={3000000000}
+                                            traditionalZoom={true}
+                                            sidebarWidth={250}
+                                            visibleTimeStart={visibleTimeStart}
+                                            visibleTimeEnd={visibleTimeEnd}
+                                            timeSteps={{
+                                                second: 60,
+                                                minute: 60,
+                                                hour: 1,
+                                                day: 1,
+                                                month: 1,
+                                                year: 1,
+                                            }}
+                                        >
+                                            <TimelineHeaders>
+                                                <CustomHeader unit="month">
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const displayNone =
+                                                                            {
+                                                                                display:
+                                                                                    "none",
+                                                                                height: "0px",
+                                                                            };
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    "#c51f21",
+                                                                                color: "white",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style:
+                                                                                            interval.labelWidth <=
+                                                                                            19
+                                                                                                ? displayNone
+                                                                                                : intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div className="sticky">
+                                                                                    {interval.startTime.format(
+                                                                                        "MMMM"
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        );
                                                                     }
-                                                                    const intervalStyle =
-                                                                        {
-                                                                            lineHeight:
-                                                                                "30px",
-                                                                            textAlign:
-                                                                                "center",
-                                                                            borderLeft:
-                                                                                "1px solid black",
-                                                                            cursor: "pointer",
-                                                                            backgroundColor:
-                                                                                "#c51f21",
-                                                                            color: "white",
-                                                                            border: "1px solid #bababa"
-                                                                        };
-                                                                    return (
-                                                                        <div
-                                                                            onClick={() => {
-                                                                                showPeriod(
-                                                                                    interval.startTime,
-                                                                                    interval.endTime
-                                                                                );
-                                                                            }}
-                                                                            {...getIntervalProps(
-                                                                                {
-                                                                                    interval,
-                                                                                    style: interval.labelWidth <= 19 ? displayNone : intervalStyle,
-                                                                                }
-                                                                            )}
-                                                                        >
-                                                                            <div className="sticky">
-                                                                                
-                                                                            {interval.startTime.format("MMMM")}
-                                                                             
-                                                                                    
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                                <CustomHeader unit="week">
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const displayNone =
+                                                                            {
+                                                                                display:
+                                                                                    "none",
+                                                                                height: "0px",
+                                                                            };
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    "#c51f21",
+                                                                                color: "white",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style:
+                                                                                            interval.labelWidth <=
+                                                                                            19
+                                                                                                ? displayNone
+                                                                                                : intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div className="sticky">
+                                                                                    {interval.startTime.format(
+                                                                                        "w"
+                                                                                    )}
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </div>
-                                                    );
-                                                }}
-                                            </CustomHeader>
-                                            <CustomHeader unit="week" > 
-                                            {({
-                                                    headerContext: {
-                                                        intervals,
-                                                    },
-                                                    getRootProps,
-                                                    getIntervalProps,
-                                                    showPeriod,
-                                                    data,
-                                                }) => {
-                                                    
-                                                    return (
-                                                        <div
-                                                            {...getRootProps()}
-                                                        >
-                                                            {intervals.map(
-                                                                (interval) => {
-                                                                    const displayNone = {
-                                                                        display: "none",
-                                                                        height: "0px"
+                                                                        );
                                                                     }
-                                                                    const intervalStyle =
-                                                                        {
-                                                                            lineHeight:
-                                                                                "30px",
-                                                                            textAlign:
-                                                                                "center",
-                                                                            borderLeft:
-                                                                                "1px solid black",
-                                                                            cursor: "pointer",
-                                                                            backgroundColor:
-                                                                                "#c51f21",
-                                                                            color: "white",
-                                                                            border: "1px solid #bababa"
-                                                                        };
-                                                                    return (
-                                                                        <div
-                                                                            onClick={() => {
-                                                                                showPeriod(
-                                                                                    interval.startTime,
-                                                                                    interval.endTime
-                                                                                );
-                                                                            }}
-                                                                            {...getIntervalProps(
-                                                                                {
-                                                                                    interval,
-                                                                                    style: interval.labelWidth <= 19 ? displayNone : intervalStyle,
-                                                                                }
-                                                                            )}
-                                                                        >
-                                                                            <div className="sticky">
-                                                                                
-                                                                            {interval.startTime.format("w")}
-                                                                             
-                                                                                    
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                                <CustomHeader
+                                                    height={30}
+                                                    headerData={{
+                                                        someData: "data",
+                                                    }}
+                                                    unit="day"
+                                                >
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    "#c51f21",
+                                                                                color: "white",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style: intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div className="sticky">
+                                                                                    {interval.startTime.format(
+                                                                                        interval.labelWidth <
+                                                                                            150
+                                                                                            ? "DD"
+                                                                                            : "dddd DD.MM"
+                                                                                    )}
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </div>
-                                                    );
-                                                }}
-                                            </CustomHeader>
-                                            <CustomHeader
-                                                height={30}
-                                                headerData={{
-                                                    someData: "data",
-                                                }}
-                                                unit="day"
-                                            >
-                                                {({
-                                                    headerContext: {
-                                                        intervals,
-                                                    },
-                                                    getRootProps,
-                                                    getIntervalProps,
-                                                    showPeriod,
-                                                    data,
-                                                }) => {
-                                                    
-                                                    return (
-                                                        <div
-                                                            {...getRootProps()}
-                                                        >
-                                                            {intervals.map(
-                                                                (interval) => {
-                                                                    const intervalStyle =
-                                                                        {
-                                                                            lineHeight:
-                                                                                "30px",
-                                                                            textAlign:
-                                                                                "center",
-                                                                            borderLeft:
-                                                                                "1px solid black",
-                                                                            cursor: "pointer",
-                                                                            backgroundColor:
-                                                                                "#c51f21",
-                                                                            color: "white",
-                                                                            border: "1px solid #bababa"
-                                                                        };
-                                                                    return (
-                                                                        <div
-                                                                            onClick={() => {
-                                                                                showPeriod(
-                                                                                    interval.startTime,
-                                                                                    interval.endTime
-                                                                                );
-                                                                            }}
-                                                                            {...getIntervalProps(
-                                                                                {
-                                                                                    interval,
-                                                                                    style: intervalStyle,
-                                                                                }
-                                                                            )}
-                                                                        >
-                                                                            <div className="sticky">
-                                                                                
-                                                                            {interval.startTime.format(interval.labelWidth < 150 ? 'DD' : 'dddd DD.MM')}
-                                                                             
-                                                                                    
-                                                                            </div>
-                                                                        </div>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </div>
-                                                    );
-                                                }}
-                                            </CustomHeader>
-                                            <CustomHeader
-                                                height={30}
-                                                headerData={{
-                                                    someData: "data",
-                                                }}
-                                                unit="hour"
-                                            >
-                                                {({
-                                                    headerContext: {
-                                                        intervals,
-                                                    },
-                                                    getRootProps,
-                                                    getIntervalProps,
-                                                    showPeriod,
-                                                    data,
-                                                }) => {
-                                                    
-                                                    return (
-                                                        <div
-                                                            {...getRootProps()}
-                                                        >
-                                                            {intervals.map(
-                                                                (interval) => {
-                                                                    const displayNone = {
-                                                                        display: "none",
-                                                                        height: "0px"
+                                                                        );
                                                                     }
-                                                                    const intervalStyle =
-                                                                        {
-                                                                            lineHeight:
-                                                                                "30px",
-                                                                            textAlign:
-                                                                                "center",
-                                                                            borderLeft:
-                                                                                "1px solid black",
-                                                                            cursor: "pointer",
-                                                                            backgroundColor:
-                                                                                "#c51f21",
-                                                                            color: "white",
-                                                                            border: "1px solid #bababa"
-                                                                        };
-                                                                    return (
-                                                                        <div
-                                                                            onClick={() => {
-                                                                                showPeriod(
-                                                                                    interval.startTime,
-                                                                                    interval.endTime
-                                                                                );
-                                                                            }}
-                                                                            {...getIntervalProps(
-                                                                                {
-                                                                                    interval,
-                                                                                    style: interval.labelWidth <= 19 ? displayNone : intervalStyle,
-                                                                                }
-                                                                            )}
-                                                                        >
-                                                                            <div className="sticky">
-                                                                                
-                                                                            {interval.startTime.format("HH")}
-                                                                             
-                                                                                    
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                                <CustomHeader
+                                                    height={30}
+                                                    headerData={{
+                                                        someData: "data",
+                                                    }}
+                                                    unit="hour"
+                                                >
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const displayNone =
+                                                                            {
+                                                                                display:
+                                                                                    "none",
+                                                                                height: "0px",
+                                                                            };
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    "#c51f21",
+                                                                                color: "white",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style:
+                                                                                            interval.labelWidth <=
+                                                                                            19
+                                                                                                ? displayNone
+                                                                                                : intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div className="sticky">
+                                                                                    {interval.startTime.format(
+                                                                                        "HH"
+                                                                                    )}
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </div>
-                                                    );
-                                                }}
-                                            </CustomHeader>
-                                        </TimelineHeaders>
-                                    </Timeline>}
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                            </TimelineHeaders>
+                                        </Timeline>
+                                    )}
                                 </>
                             )}
-                            {!userJobs || userJobs.length === 0 && (
+                        {!userJobs ||
+                            (userJobs.length === 0 && (
                                 <div className="text-center">No jobs found</div>
-                            )}
+                            ))}
                     </div>
                 </div>
             </div>
