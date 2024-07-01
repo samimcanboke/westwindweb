@@ -500,7 +500,12 @@ export default function Planner({ auth }) {
             let filledPlan = plan.filter((item) => {
                 return item.id.startsWith('j');
                 });
-            filledPlan.sort((a, b) => a.end_time - b.start_time);
+            filledPlan.sort((a, b) => {
+                if (a.group === b.group) {
+                    return a.end_time - b.start_time;
+                }
+                return a.group - b.group;
+            });
             let newFilledPlan = [];
             
             for(let i = 0; i < filledPlan.length - 1; i++){
