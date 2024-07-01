@@ -23,9 +23,7 @@ import {
 import Swal from "sweetalert2";
 import interact from "interactjs";
 import { MultiSelect } from "react-multi-select-component";
-import 'moment/locale/de';
-
-
+import "moment/locale/de";
 
 export default function Planner({ auth }) {
     const [jobs, setJobs] = useState([]);
@@ -63,6 +61,54 @@ export default function Planner({ auth }) {
     const [visibleTimeEnd, setVisibleTimeEnd] = useState(null);
     const [thisWeek, setThisWeek] = useState(false);
     const [nextWeek, setNextWeek] = useState(false);
+
+    const format = {
+        year: {
+          long: '',
+          mediumLong: '',
+          medium: '',
+          short: ''
+        },
+        month: {
+          long: 'MMMM',
+          mediumLong: 'MMMM',
+          medium: 'MMMM',
+          short: 'MM'
+        },
+        week: {
+          long: 'w',
+          mediumLong: 'w',
+          medium: 'w',
+          short: 'w'
+        },
+        day: {
+          long: 'dddd, LL',
+          mediumLong: 'dddd, LL',
+          medium: 'dd D',
+          short: 'D'
+        },
+        hour: {
+          long: 'dddd, LL, HH:00',
+          mediumLong: 'L, HH:00',
+          medium: 'HH:00',
+          short: 'HH'
+        },
+        minute: {
+          long: 'HH:mm',
+          mediumLong: 'HH:mm',
+          medium: 'HH:mm',
+          short: 'mm',
+        },
+        second: {
+          "long": 'mm:ss',
+          mediumLong: 'mm:ss',
+          medium: 'mm:ss',
+          "short": 'ss'
+        }  
+    }
+
+
+
 
     const deleteFromuser = async (id) => {
         let oldJob = jobs.find((job) => job.id === id);
@@ -444,16 +490,15 @@ export default function Planner({ auth }) {
             }
         });
 
-        let plan = [...newJobList,
+        let plan = [
+            ...newJobList,
             ...newSickList,
             ...newAnnualLeaveList,
             ...newAdminExtraList,
-            ...userFinalizedJobs]
+            ...userFinalizedJobs,
+        ];
 
-
-        //TODO: Araya Çizgi çekerek kaç saat ve kaç dakika olduğunu yaz. 
-
-
+        //TODO: Araya Çizgi çekerek kaç saat ve kaç dakika olduğunu yaz.
 
         setUserJobs(plan);
     };
@@ -612,7 +657,7 @@ export default function Planner({ auth }) {
         getPlansWithoutUser();
         getUsers();
         getUsersJobs();
-        moment.locale('de')
+        moment.locale("de");
 
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);
@@ -690,11 +735,13 @@ export default function Planner({ auth }) {
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Startdatum : {moment(editingJob.start_date).format("DD.MM.YYYY")}
+                            Startdatum :{" "}
+                            {moment(editingJob.start_date).format("DD.MM.YYYY")}
                             <br />
                             Startzeit : {editingJob.start_time}
                             <br />
-                            Enddatum : {moment(editingJob.end_date).format("DD.MM.YYYY")}
+                            Enddatum :{" "}
+                            {moment(editingJob.end_date).format("DD.MM.YYYY")}
                             <br />
                             Endzeit : {editingJob.end_time}
                             <br />
@@ -832,7 +879,9 @@ export default function Planner({ auth }) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setSick}>Krankheitsurlaub Hinzufügen</Button>
+                    <Button onClick={setSick}>
+                        Krankheitsurlaub Hinzufügen
+                    </Button>
                     <Button
                         color="gray"
                         onClick={() => setOpenSickModal(false)}
@@ -1328,10 +1377,14 @@ export default function Planner({ auth }) {
                                                 if (e) {
                                                     setNextWeek(false);
                                                     setVisibleTimeStart(
-                                                        moment().startOf("week").add(1,'day')
+                                                        moment()
+                                                            .startOf("week")
+                                                            .add(1, "day")
                                                     );
                                                     setVisibleTimeEnd(
-                                                        moment().endOf("week").add(1,'day')
+                                                        moment()
+                                                            .endOf("week")
+                                                            .add(1, "day")
                                                     );
                                                 } else {
                                                     setVisibleTimeStart(null);
@@ -1350,13 +1403,13 @@ export default function Planner({ auth }) {
                                                         moment()
                                                             .add(7, "day")
                                                             .startOf("week")
-                                                            .add(1,'day')
+                                                            .add(1, "day")
                                                     );
                                                     setVisibleTimeEnd(
                                                         moment()
                                                             .add(7, "day")
                                                             .endOf("week")
-                                                            .add(1,'day')
+                                                            .add(1, "day")
                                                     );
                                                 } else {
                                                     setVisibleTimeStart(null);
@@ -1417,7 +1470,7 @@ export default function Planner({ auth }) {
                                                 : users
                                         }
                                         items={userJobs}
-                                        unit="week"
+                                        unit="day"
                                         defaultTimeStart={moment().add(
                                             -256,
                                             "hour"
@@ -1426,12 +1479,28 @@ export default function Planner({ auth }) {
                                             256,
                                             "hour"
                                         )}
+                                        maxZoom={3000000000}
+                                        traditionalZoom={true}
                                         sidebarWidth={250}
                                         visibleTimeStart={visibleTimeStart}
                                         visibleTimeEnd={visibleTimeEnd}
-                                        //visibleTimeStart={moment().add(-7,"day").for}
-                                        //visibleTimeEnd={moment().add(+7,"day")}
-                                    />
+                                        timeSteps={{
+                                            second: 60,
+                                            minute: 60,
+                                            hour: 1,
+                                            day: 1,
+                                            month: 1,
+                                            year: 1,
+                                        }}
+                                    >
+
+                                        <TimelineHeaders>
+
+                                        <DateHeader unit="month"  />
+                                        <DateHeader unit="week"   />
+                                        <DateHeader />
+                                        </TimelineHeaders>
+                                    </Timeline>
                                 </>
                             )}
                     </div>
