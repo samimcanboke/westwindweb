@@ -516,12 +516,13 @@ export default function Planner({ auth }) {
 
                 for (let i = 0; i < groupedPlans[group].length - 1; i++) {
                     if (groupedPlans[group][i + 1]) {
+                        let title = moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).days() > 0 ? (moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).days() * 24) + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() +":" + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).minutes() : moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() +":" + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).minutes();
                         let newPlan = {
                             id: `${group}-${i}`,
                             group: groupedPlans[group][i].group,
                             start_time: groupedPlans[group][i].end_time,
                             end_time: groupedPlans[group][i + 1].start_time,
-                            title: moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).hours() + " h " + moment.duration(groupedPlans[group][i + 1].start_time.diff(groupedPlans[group][i].end_time)).minutes() + " m",
+                            title: title,
                             canMove: false,
                             canResize: false,
                             itemProps: {
