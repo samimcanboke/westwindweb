@@ -172,6 +172,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients', [ClientController::class, 'index'])->withoutMiddleware([IsAdmin::class])->name('clients.index');
     Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->withoutMiddleware([IsAdmin::class])->name('get-finalized');
     Route::post('/finalized-jobs/export-client', [FinalizedJobsController::class, 'get_finalized_client'])->withoutMiddleware([IsAdmin::class])->name('get-finalized-client');
+    Route::post('/finalized-jobs/export-client-pdf', [FinalizedJobsController::class, 'get_finalized_client_pdf'])->withoutMiddleware([IsAdmin::class])->name('get-finalized-client-pdf');
     Route::get('/download-pdf/{filename}', [PdfController::class, 'downloadPdf'])->withoutMiddleware([IsAdmin::class])->name('download.pdf');
     Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->withoutMiddleware([IsAdmin::class])->name('get-user-job-plans');
 

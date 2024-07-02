@@ -346,6 +346,38 @@ def add_lines_client_multiple_user(ws, rows):
 
 
 
+@app.route('/create-excel-client-multiple-pdf', methods=['POST'])
+
+def main_excel_client_pdf():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        used_data = json.loads(request.json)
+        app.logger.info(used_data)
+        wb = load_workbook(filename='./test_musteri.xlsx')
+        ws = wb.active
+        ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+        ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
+        ws.page_setup.fitToHeight = 0
+        ws.page_setup.fitToWidth = 1
+        ws = add_header_client_multiple_user(ws, used_data["year"],
+                            used_data["month"], 
+                            used_data["client"]
+                            )
+        ws = add_lines_client_multiple_user(ws, used_data)
+        wb.save("/tmp/result_client.xlsx")
+        subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_client.xlsx"],
+                       shell=True,
+                       capture_output=True, text=True)
+        try:
+            return send_file('/tmp/result_client.pdf', as_attachment=True)
+        finally:
+            if os.path.exists('/tmp/result_client.pdf'):
+                os.remove('/tmp/result_client.pdf')
+                os.remove('/tmp/result_client.xlsx')
+    else:
+        return "Content type is not supported."
+
+
 
 
 if __name__ == "__main__":

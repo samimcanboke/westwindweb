@@ -20,6 +20,13 @@ export default function ConfirmedToClient({ auth }) {
     });
     const [excelUrl, setExcelUrl] = useState("");
     const [errors,setErrors] = useState({});
+
+    const convertPDF = async () => {
+        axios.post("/finalized-jobs/export-client-pdf",{user_id: filter.user,client_id: filter.client,week: filter.week,month: filter.month,year: filter.year})
+        .then(res => {
+            window.open("/download-pdf/" + res.data.file + ".pdf", '_blank');
+        })
+    }
     
     useEffect(()=>{
         axios.get("finalized-filter").then((res)=>{
@@ -184,9 +191,9 @@ export default function ConfirmedToClient({ auth }) {
                         </a>
                     </div>
                     <div className='flex justify-center p-5'>
-                        <a  href={excelUrl} target="_blank">
-                            <Button className='bg-green-500'>PDF Download</Button>
-                        </a>
+                 
+                        <Button className='bg-green-500' onClick={convertPDF}>PDF Download</Button>
+                        
                     </div>
                 </div>
             )}

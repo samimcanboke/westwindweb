@@ -297,6 +297,137 @@ class FinalizedJobsController extends Controller
         return $total_night_shift;
     }
 
+    public function get_finalized_client_pdf(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'nullable',
+            'client_id' => 'required',
+            'week' => 'required_without:month',
+            'month' => 'required_without:week',
+            'year' => 'required',
+        ]);
+
+        $data = [
+            "driver" => "",
+            "year" => "",
+            "client" => "",
+            "month" => "",
+            "rows" => [],
+            "totals" => [
+                "total_day" => "",
+                "work_total" => "",
+                "guest_total" => "",
+                "guest_back_total" => "",
+            ],
+        ];
+
+        $user_query = false;
+        $weekly_query = false;
+
+        if ($request->month && $request->month != "Suchen...") {
+            if ($request->user_id) {
+                $data['month'] = $request->month;
+                $user_query = true;
+            } else {
+                $data['month'] = $request->month;
+            }
+        } else {
+            if ($request->user_id) {
+                $user_query = true;
+                $weekly_query = true;
+            } else {
+                $weekly_query = true;
+                $data['month'] = $request->week . ". Woche";
+            }
+        }
+
+        $data['year'] = $request->year;
+        $data['client'] = Client::where('id',$request->client_id)->first()->name;
+       
+        if($weekly_query){
+            $startDate = Carbon::now()->setISODate($request->year, $request->week)->startOfWeek();
+            $endDate = Carbon::now()->setISODate($request->year, $request->week)->endOfWeek()->addMinute(); 
+        } else {
+            $startDate = Carbon::create($request->year, $request->month, 1)->startOfMonth();
+            $endDate = Carbon::create($request->year, $request->month, 1)->endOfMonth()->addMinute();
+        }
+        $query = FinalizedJobs::where('confirmation', 1);
+        if ($request->client_id) {
+            $query->where('client_id', $request->client_id);
+        }
+        if($user_query){
+            $query->where('user_id', $request->user_id);
+        }
+        $query->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
+
+        $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
+
+        if($user_query){
+            $data['driver'] = $finalized_jobs->first()->user->name;
+        }
+        $data['totals']['total_day'] = $finalized_jobs->count();
+        $data['totals']['work_total'] = "00:00";
+        $data['totals']['guest_total'] = "00:00";
+        $data['totals']['guest_back_total'] = "00:00";
+        foreach($finalized_jobs as $finalized_job){
+            try{
+                $initial_date = $finalized_job->initial_date;
+                $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                if($finalized_job->guest_start_time && $finalized_job->guest_start_end_time){
+                    $guest_start_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_end_time));     
+                } else {
+                    $guest_start_sum = "00:00";
+                }
+                
+                if($finalized_job->guest_end_time && $finalized_job->guest_end_end_time){
+                    $guest_back_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_end_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_end_end_time));
+                } else {
+                    $guest_back_sum = "00:00";
+                }
+                $data['rows'][] = [
+                    "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
+                    "driver" => $finalized_job->user->name,
+                    "work_start_end_time" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
+                    "work_total" => $work_sum,
+                    "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
+                    "guest_total_time" => $guest_start_sum,
+                    "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
+                    "guest_back_total_time" => $guest_back_sum,
+                    "accomodation" => $finalized_job->feeding_fee == 32 ? "X" : "",
+                    "extra" => 0,
+                    "train_number" => $finalized_job->zug_nummer,
+                    "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
+                    "client" => $finalized_job->client->name,
+                ];
+                
+                $work_sum_total = gettype($work_sum) == "object" ? sprintf('%02d:%02d', $work_sum->h, $work_sum->i) : $work_sum;
+                $last_work_sum = gettype($data['totals']['work_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['work_total']->h, $data['totals']['work_total']->i) : $data['totals']['work_total'];
+                $guest_start_sum_total = gettype($data['totals']['guest_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['guest_total']->h, $data['totals']['guest_total']->i) : $data['totals']['guest_total'];
+                $guest_back_sum_total = gettype($data['totals']['guest_back_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['guest_back_total']->h, $data['totals']['guest_back_total']->i) : $data['totals']['guest_back_total'];
+                $data['totals']['work_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($last_work_sum,$work_sum_total)->h, $this->calculateTotalTimesSum($last_work_sum,$work_sum_total)->i);
+                $data['totals']['guest_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_start_sum_total,$guest_start_sum)->h, $this->calculateTotalTimesSum($guest_start_sum_total,$guest_start_sum)->i);
+                $data['totals']['guest_back_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum( $guest_back_sum_total,$guest_back_sum)->h, $this->calculateTotalTimesSum( $guest_back_sum_total,$guest_back_sum)->i);
+            } catch (\Throwable $th) {
+                dd($th);
+            }
+        }
+        if ($data && $finalized_jobs->count() > 0) {
+            try {
+                $file_req = Http::withHeaders([
+                    'Content-Type' => 'application/json'
+                ])->post('http://excel:8000/create-excel-client-multiple-pdf', json_encode($data));
+            } catch (\Exception $ex) {
+                dd($ex);
+            }
+            $uniq_id = uniqid();
+            $filePath = 'pdfs/' . $uniq_id . '.pdf'; 
+            Storage::put($filePath, $file_req->body());
+            return response()->json(["status" => true, "file" => $uniq_id]);
+        } else {
+            return response()->json(["status" => false]);
+        }
+    }
+
 
     public function get_finalized_client(Request $request)
     {
