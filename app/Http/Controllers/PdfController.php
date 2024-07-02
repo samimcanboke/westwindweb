@@ -8,11 +8,20 @@ class PdfController extends Controller
 {
     public function downloadPdf($filename)
     {
-        $filePath = storage_path('app/pdfs/' . $filename);
-        if (Storage::exists('pdfs/' . $filename)) {
-            return response()->file($filePath);
+        if(str_contains($filename, "pdf")){
+            $filePath = storage_path('app/pdfs/' . $filename);
+            if (Storage::exists('pdfs/' . $filename)) {
+                return response()->file($filePath);
+            } else {
+                abort(404);
+            }
         } else {
-            abort(404);
+            $filePath = storage_path('app/excels/' . $filename);
+            if (Storage::exists('excels/' . $filename)) {
+                return response()->file($filePath);
+            } else {
+                abort(404);
+            }
         }
     }
 }

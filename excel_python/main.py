@@ -226,5 +226,127 @@ def sum_lines(ws,used_data):
         ws['O37'].value = ' - '
     return ws
 
+
+@app.route('/create-excel-client-multiple', methods=['POST'])
+
+def main_excel_client():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        used_data = json.loads(request.json)
+        app.logger.info(used_data)
+        wb = load_workbook(filename='./test_musteri.xlsx')
+        ws = wb.active
+        ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+        ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
+        ws.page_setup.fitToHeight = 0
+        ws.page_setup.fitToWidth = 1
+        ws = add_header_client_multiple_user(ws, used_data["year"],
+                            used_data["month"], 
+                            used_data["client"]
+                            )
+        ws = add_lines_client_multiple_user(ws, used_data)
+        wb.save("/tmp/result_client.xlsx")
+        try:
+            return send_file('/tmp/result_client.xlsx', as_attachment=True)
+        finally:
+            if os.path.exists('/tmp/result_client.xlsx'):
+                os.remove('/tmp/result_client.xlsx')
+    else:
+        return "Content type is not supported."
+
+def add_header_client_multiple_user(ws, year, month, client):
+    ws['C3'] = year
+    ws['D3'] = month
+    ws['D4'] = client
+    ws['D3'].alignment = Alignment(horizontal='left', vertical='center')
+    ws['D4'].alignment = Alignment(horizontal='center', vertical='center')
+    return ws
+
+def add_lines_client_multiple_user(ws, rows):
+    count = len(rows['rows'])
+    empty_border = Border()
+    full_border = Border(
+        top=Side(style='thin'),
+        bottom=Side(style='thin'),
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+    )
+    left_right_thick = Border(
+        left=Side(style='thick'),
+        top=Side(style='thin'),
+        right=Side(style='thick'),
+        bottom=Side(style='thin')
+    )
+    only_left_thick_border = Border(
+        left=Side(style='thick'),
+        top=Side(style='thin'),
+        right=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
+    up_down_border = Border(
+        top=Side(style='thin'),  # Sadece st kenarlık
+        bottom=Side(style='thin')  # Sadece alt kenarlık
+    )
+    left_up_down_border = Border(
+        top=Side(style='thin'),  # Sadece üst kenarlık
+        bottom=Side(style='thin'),  # Sadece alt kenarlık
+        left=Side(style='thin')
+    )
+    right_up_down_border = Border(
+        top=Side(style='thin'),  # Sadece üst kenarlık
+        bottom=Side(style='thin'),  # Sadece alt kenarlık
+        right=Side(style='thin')
+    )
+    for row in range(8, count + 8):
+        ws.insert_rows(row)
+        for col in range(2, 15):
+            cell = ws.cell(row=row, column=col,value=None)
+            cell.border = empty_border
+            cell.value = None
+            cell.fill = PatternFill(start_color="FFFFFFFF", end_color="FFFFFFFF", fill_type="solid")
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+    start = 8
+    for index, row in enumerate(rows['rows']):
+        row_values = list(row.values())
+        for col in range(2, 15):
+            cell = ws.cell(row=start + index, column=col)
+            if col == 2 or col == 4 or col == 6 or col == 8  or col == 10 or col == 11 or col == 13 or col == 14:
+                cell.border = left_right_thick
+            elif col == 3 or col == 5 or col == 7 or col == 9  or col == 12:
+                cell.border = only_left_thick_border
+            else:
+                cell.border = full_border
+
+            if col != 5 and col != 7 and col != 9:
+                cell.value = row_values[col - 2]
+            else:
+                cell.value = row_values[col - 2] + " St"
+            cell.alignment = Alignment(horizontal='center')
+            ws.column_dimensions[cell.column_letter].auto_size = True
+    total_row = count + start
+    for col in range(2, 15):
+        cell = ws.cell(row=total_row, column=col)
+        if col == 2:
+            cell.value = str(rows['totals']['total_day']) + " Tage"
+            cell.fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+        elif col == 5:
+            cell.value = str(rows['totals']['work_total']) + " St"
+            cell.fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+        elif col == 7:
+            cell.value = str(rows['totals']['guest_total']) + " St"
+            cell.fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+        elif col == 9:
+            cell.value = str(rows['totals']['guest_back_total']) + " St"
+            cell.fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+    return ws
+
+
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0",port=8000, debug=True)

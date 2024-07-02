@@ -67,6 +67,10 @@ Route::get('/confirmed-jobs', function () {
     return Inertia::render('Admin/Jobs/Confirmed');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('confirmed-jobs');
 
+Route::get('/confirmed-jobs-to-client', function () {
+    return Inertia::render('Admin/Jobs/ConfirmedToClient');
+})->middleware(['auth', 'verified', IsAdmin::class])->name('confirmed-jobs-to-client');
+
 Route::get('/wait-confirmation-jobs', function () {
     return Inertia::render('Admin/Jobs/WaitingConfirmed');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('wait-confirmed-jobs');
@@ -167,6 +171,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware([IsAdmin::class])->name('profile.destroy');
     Route::get('/clients', [ClientController::class, 'index'])->withoutMiddleware([IsAdmin::class])->name('clients.index');
     Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->withoutMiddleware([IsAdmin::class])->name('get-finalized');
+    Route::post('/finalized-jobs/export-client', [FinalizedJobsController::class, 'get_finalized_client'])->withoutMiddleware([IsAdmin::class])->name('get-finalized-client');
     Route::get('/download-pdf/{filename}', [PdfController::class, 'downloadPdf'])->withoutMiddleware([IsAdmin::class])->name('download.pdf');
     Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->withoutMiddleware([IsAdmin::class])->name('get-user-job-plans');
 

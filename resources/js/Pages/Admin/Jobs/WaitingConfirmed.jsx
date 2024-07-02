@@ -61,17 +61,24 @@ export default function WaitingConfirmed({ auth }) {
 
     const edit = async (finalized) => {
         let editingDraft =  finalized;
-        editingDraft.breaks = await JSON.parse(finalized.breaks);
-        setValues(await camelCase(await   editingDraft));
+        try{
+            editingDraft.breaks = JSON.parse(finalized.breaks);
+        }catch(e){
+            console.log(e);
+        }
+        setValues(camelCase(editingDraft));
         setShowEdit(true);
+    };
+    const getUnconfirmed = async () => {
+        axios.get("/data-unconfirmed-jobs").then((res) => {
+            setData(res.data);
+            setLoading(false);
+        });
     };
 
     useEffect(() => {
-        axios.get("/data-unconfirmed-jobs").then((res) => {
-            setData(res.data);
-            //console.log(res.data);
-            setLoading(false);
-        });
+        getUnconfirmed();
+  
 
         axios.get(route("users.show")).then((res) => {
             setDrivers(res.data);
@@ -87,11 +94,8 @@ export default function WaitingConfirmed({ auth }) {
         e.preventDefault();
         setLoading(true);
         axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
-            axios.get("/data-unconfirmed-jobs").then((res) => {
-                setData(res.data);
-                setLoading(false);
-                setShowEdit(false);
-            });
+            getUnconfirmed();
+            setShowEdit(false);
         });
     }
 
@@ -229,6 +233,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <Label>
                                                             Startdatum
                                                         </Label>
+                                                        <input type="hidden" name="user_id" value={values.userId}></input>
                                                         <Datepicker
                                                             language="de-DE"
                                                             labelTodayButton="Heute"
@@ -462,7 +467,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     e
                                                                 ) => {
                                                                     setFieldValue(
-                                                                        "client",
+                                                                        "clientId",
                                                                         e.target
                                                                             .value
                                                                     );
