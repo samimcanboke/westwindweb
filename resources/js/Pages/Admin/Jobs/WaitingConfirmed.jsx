@@ -70,8 +70,9 @@ export default function WaitingConfirmed({ auth }) {
         setShowEdit(true);
     };
     const getUnconfirmed = async () => {
-        axios.get("/data-unconfirmed-jobs").then((res) => {
+        await axios.get("/data-unconfirmed-jobs").then((res) => {
             setData(res.data);
+            console.log(res.data);
             setLoading(false);
         });
     };
@@ -95,7 +96,9 @@ export default function WaitingConfirmed({ auth }) {
         setLoading(true);
         axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
             getUnconfirmed();
+            
             setShowEdit(false);
+            setLoading(false);
         });
     }
 
@@ -207,6 +210,7 @@ export default function WaitingConfirmed({ auth }) {
                                         .then((res) => {
                                             if (res.status) {
                                                 setLoading(false);
+                                                getUnconfirmed();
                                                 setShowEdit(false);
                                                 setSubmitting(false);
                                             }

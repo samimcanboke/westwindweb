@@ -596,7 +596,6 @@ export default function Planner({ auth }) {
                                 style: {
                                     background: "transparent",
                                     color: "black",
-                                    fontSize: "12px",
                                     borderTopWidth: "0",
                                     borderRightWidth: "0",
                                     borderBottomWidth: "1px",
