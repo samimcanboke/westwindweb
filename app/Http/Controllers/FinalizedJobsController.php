@@ -330,7 +330,6 @@ class FinalizedJobsController extends Controller
             if ($request->user_id) {
                 $data['month'] = $request->month;
                 $user_query = true;
-                dd("tek kullanıcı aylik");
             } else {
                 $data['month'] = $request->month;
             }
@@ -338,7 +337,6 @@ class FinalizedJobsController extends Controller
             if ($request->user_id) {
                 $user_query = true;
                 $weekly_query = true;
-                dd("tek kullanıcı haftalık");
             } else {
                 $weekly_query = true;
                 $data['month'] = $request->week . ". Woche";
