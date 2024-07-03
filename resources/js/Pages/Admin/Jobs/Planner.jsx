@@ -1920,7 +1920,7 @@ export default function Planner({ auth }) {
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
                                                                                     moment(interval.startTime).hour() % 2 > 0 ? "black" : "white",
-                                                                                color: "white",
+                                                                                color:  moment(interval.startTime).hour() % 2 > 0 ? "white" : "black",
                                                                                 border: "1px solid #bababa",
                                                                             };
                                                                         return (
