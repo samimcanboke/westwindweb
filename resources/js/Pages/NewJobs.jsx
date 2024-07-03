@@ -103,7 +103,7 @@ export default function NewJobs({ auth }) {
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true);
-                    console.log(moment(values.initialDate).utcOffset(0).toDate())
+                    
                     values.initialDate = moment(values.initialDate).utcOffset(0).toDate();
 
                     if (
@@ -143,7 +143,6 @@ export default function NewJobs({ auth }) {
                             setSubmitting(false);
                         }
                     });
-                    setSubmitting(false);
                 }}
             >
                 {({
@@ -395,7 +394,6 @@ export default function NewJobs({ auth }) {
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
-
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
@@ -541,7 +539,6 @@ export default function NewJobs({ auth }) {
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
-
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
@@ -616,7 +613,6 @@ export default function NewJobs({ auth }) {
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
-
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
@@ -759,7 +755,6 @@ export default function NewJobs({ auth }) {
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
-
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
