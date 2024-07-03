@@ -209,6 +209,7 @@ def sum_lines(ws,used_data):
     ws['E41'].value = str(used_data['totals']['sunday_holidays']) + " St"
     ws['E42'].value = str(used_data['totals']['public_holidays']) + " St"
     ws['E43'].value = str(used_data['totals']['guests']) + " St"
+    ws['E44'].value = str(used_data['totals']['total_work_day_amount']) + " €"
     ws['K35'].value = str(used_data['admin_extra'])
     ws['K36'].value = str(used_data['left_admin_extra'])
     ws['K38'].value = str(used_data['current_sick'])
@@ -228,7 +229,6 @@ def sum_lines(ws,used_data):
 
 
 @app.route('/create-excel-client-multiple', methods=['POST'])
-
 def main_excel_client():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
@@ -344,10 +344,7 @@ def add_lines_client_multiple_user(ws, rows):
             cell.alignment = Alignment(horizontal='center', vertical='center')
     return ws
 
-
-
 @app.route('/create-excel-client-multiple-pdf', methods=['POST'])
-
 def main_excel_client_pdf():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
@@ -376,8 +373,6 @@ def main_excel_client_pdf():
                 os.remove('/tmp/result_client.xlsx')
     else:
         return "Content type is not supported."
-
-
 
 
 if __name__ == "__main__":
