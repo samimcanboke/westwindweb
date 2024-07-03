@@ -131,12 +131,8 @@ class FinalizedJobsController extends Controller
     {
         $nightStart = $this->convertTimeToDatetime($initial_date, "04:00");
         $nightEnd = $this->convertTimeToDatetime($initial_date, "06:00");
-        $nightStart->modify('+1 day');
-        $nightEnd->modify('+1 day');
         $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);
-
-
         if ($work_end_time < $work_start_time) {
             $endTime->modify('+1 day');
         }
@@ -768,7 +764,7 @@ class FinalizedJobsController extends Controller
                         $total_midnight_shift = $this->calculateTotalSum("00:00", $total_midnight_shift);
                         $midnight_hours = "00:00";
                     }
-
+                    
                     $night_hours = $this->calculateNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
                     if ($night_hours != 0) {
                         $total_night_shift = $this->calculateTotalSum($night_hours, $total_night_shift);
@@ -776,8 +772,7 @@ class FinalizedJobsController extends Controller
                         $total_night_shift = $this->calculateTotalSum("00:00", $total_night_shift);
                         $night_hours = "00:00";
                     }
-
-
+                    
                     $deep_morning_hours = $this->calculateDeepMorningHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
 
                     if ($deep_morning_hours != 0) {
@@ -786,7 +781,7 @@ class FinalizedJobsController extends Controller
                         $total_deep_morning_shift = $this->calculateTotalSum("00:00", $total_deep_morning_shift);
                         $deep_morning_hours = "00:00";
                     }
-
+                 
                     $sunday_hours = $this->calculateSundayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $initial_date);
 
                     $total_sunday_holiday_hours = $this->calculateTotalSum($sunday_hours, $total_sunday_holiday_hours);

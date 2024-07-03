@@ -178,7 +178,7 @@ export default function Planner({ auth }) {
                             ),
                             end_time: moment(job.end_date + " " + job.end_time),
                             title: job.from + " - " + job.to,
-                            canMove: false,
+                            canMove: true,
                             canResize: false,
                             itemProps: {
                                 type: "job",
@@ -236,6 +236,13 @@ export default function Planner({ auth }) {
                                     } catch (e) {
                                         console.log(e);
                                     }
+                                
+                                },
+                                onItemMove: async (itemId, newStart, newEnd) => {
+                                    console.log(itemId, newStart, newEnd);
+                                },
+                                onItemDrag: async (itemId, newStart, newEnd) => {
+                                    console.log(itemId, newStart, newEnd);
                                 },
                                 className: "jobs",
                                 style: {
@@ -386,7 +393,6 @@ export default function Planner({ auth }) {
                 newAnnualLeaveList.push(newAnnualLeave);
             }
         });
-
         await axios.get("/admin-extras").then(async (response) => {
             for (const adminExtra of response.data.adminExtras) {
                 let newAdminExtra = {
