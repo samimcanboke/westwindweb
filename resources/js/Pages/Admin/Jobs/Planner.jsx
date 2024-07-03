@@ -1528,12 +1528,11 @@ export default function Planner({ auth }) {
                                                     setVisibleTimeStart(
                                                         moment()
                                                             .startOf("week")
-                                                            .add(1, "day")
+
                                                     );
                                                     setVisibleTimeEnd(
                                                         moment()
                                                             .endOf("week")
-                                                            .add(1, "day")
                                                     );
                                                 } else {
                                                     setVisibleTimeStart(null);
@@ -1552,13 +1551,11 @@ export default function Planner({ auth }) {
                                                         moment()
                                                             .add(7, "day")
                                                             .startOf("week")
-                                                            .add(1, "day")
                                                     );
                                                     setVisibleTimeEnd(
                                                         moment()
                                                             .add(7, "day")
-                                                            .endOf("week")
-                                                            .add(1, "day")
+                                                            .endOf("week") 
                                                     );
                                                 } else {
                                                     setVisibleTimeStart(null);
