@@ -16,6 +16,7 @@ import {
 } from "flowbite-react";
 import { Formik, Field, FieldArray, Form } from "formik";
 import * as Yup from "yup";
+import moment from "moment";
 
 const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
@@ -72,8 +73,8 @@ export default function WaitingConfirmed({ auth }) {
     const getUnconfirmed = async () => {
         await axios.get("/data-unconfirmed-jobs").then((res) => {
             setData(res.data);
-            console.log(res.data);
             setLoading(false);
+            console.log(res.data);
         });
     };
 
@@ -141,9 +142,9 @@ export default function WaitingConfirmed({ auth }) {
                                             className="bg-white dark:border-gray-700 dark:bg-gray-800"
                                         >
                                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                                {new Date(
+                                                {moment.utc(
                                                     draft.initial_date
-                                                ).toDateString()}
+                                                ).startOf("00:00").format("DD.MM.YYYY")}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.tour_name}
@@ -245,18 +246,15 @@ export default function WaitingConfirmed({ auth }) {
                                                             id="initialDate"
                                                             name="initialDate"
                                                             value={
-                                                                values.initialDate
-                                                                    ? new Date(
-                                                                          values.initialDate
-                                                                      ).toDateString()
-                                                                    : new Date().toDateString()
-                                                            }
+                                                                moment(values.initialDate).utc().startOf("00:00").format("DD.MM.YYYY")
+                                                            }   
                                                             onSelectedDateChanged={(
                                                                 date
                                                             ) => {
+                                                                console.log(date);
                                                                 setFieldValue(
                                                                     "initialDate",
-                                                                    date
+                                                                    moment.utc(date).subtract(1, 'days').startOf("00:00").format()
                                                                 );
                                                             }}
                                                         />
@@ -428,7 +426,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             name="comment"
                                                             placeholder="Hinterlassen Sie einen Kommentar..."
                                                             value={
-                                                                values.comment
+                                                                values.comment ?? undefined
                                                             }
                                                             rows={4}
                                                             className={
@@ -477,13 +475,13 @@ export default function WaitingConfirmed({ auth }) {
                                                                     );
                                                                 }}
                                                                 value={
-                                                                    values.clientId
+                                                                    values.clientId ?? ""
                                                                 }
                                                             >
                                                                 <option>
                                                                     Wählen Sie...
                                                                 </option>
-                                                                {clients.map(
+                                                                {clients && clients.map(
                                                                     (
                                                                         client
                                                                     ) => (
@@ -536,7 +534,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 }}
                                                                 required
                                                                 value={
-                                                                    values.feedingFee
+                                                                    values.feedingFee ?? ""
                                                                 }
                                                             >
                                                                 <option
@@ -589,7 +587,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestStartPlace
+                                                                values.guestStartPlace ?? undefined
                                                             }
                                                         />
 
@@ -620,7 +618,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestStartTime
+                                                                    values.guestStartTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -676,7 +674,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestStartEndPlace
+                                                                values.guestStartEndPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.guestStartEndPlace &&
@@ -706,7 +704,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestStartEndTime
+                                                                    values.guestStartEndTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -773,7 +771,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.workStartPlace
+                                                                values.workStartPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.workStartPlace &&
@@ -802,7 +800,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.workStartTime
+                                                                    values.workStartTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -868,7 +866,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.trainStartPlace
+                                                                values.trainStartPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.trainStartPlace &&
@@ -897,7 +895,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.trainStartTime
+                                                                    values.trainStartTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -952,7 +950,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.trainEndPlace
+                                                                values.trainEndPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.trainEndPlace &&
@@ -981,7 +979,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.trainEndTime
+                                                                    values.trainEndTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1122,7 +1120,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             name={`breaks.${index}.start`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                                            value={breakItem.start}
+                                                                                            value={breakItem.start ?? undefined}
                                                                                             onChange={(
                                                                                                 e
                                                                                             ) => {
@@ -1144,7 +1142,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             name={`breaks.${index}.end`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                                            value={breakItem.end}
+                                                                                            value={breakItem.end ?? undefined}
                                                                                             onChange={(
                                                                                                 e
                                                                                             ) => {
@@ -1221,7 +1219,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.workEndPlace
+                                                                values.workEndPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.workEndPlace &&
@@ -1249,7 +1247,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.workEndTime
+                                                                    values.workEndTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1313,7 +1311,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestEndPlace
+                                                                values.guestEndPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.guestEndPlace &&
@@ -1341,7 +1339,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestEndTime
+                                                                    values.guestEndTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1396,7 +1394,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestEndEndPlace
+                                                                values.guestEndEndPlace ?? undefined
                                                             }
                                                         />
                                                         {errors.guestEndEndPlace &&
@@ -1424,7 +1422,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestEndEndTime
+                                                                    values.guestEndEndTime ?? undefined
                                                                 }
                                                                 onChange={(
                                                                     e

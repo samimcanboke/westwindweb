@@ -67,7 +67,6 @@ export default function NewJobs({ auth }) {
     useEffect(() => {
         axios.get("/clients").then((res) => {
             if (res.status == 200) {
-                console.log(res.data);
                 setClient(res.data);
             }
         });
@@ -104,10 +103,8 @@ export default function NewJobs({ auth }) {
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true);
-
-                    values.initialDate = moment(values.initialDate)
-                        .add(1, "days")
-                        .toDate();
+                    console.log(moment(values.initialDate).utcOffset(0).toDate())
+                    values.initialDate = moment(values.initialDate).utcOffset(0).toDate();
 
                     if (
                         values.breaks &&
@@ -176,11 +173,12 @@ export default function NewJobs({ auth }) {
                                             values.initialDate
                                                 ? moment(
                                                       values.initialDate
-                                                  ).format("DD-MM-YYYY")
+                                                  ).utc().startOf("day").format("DD-MM-YYYY")
                                                 : ""
                                         }
                                         onSelectedDateChanged={(date) => {
-                                            setFieldValue("initialDate", date);
+                                            console.log(date);
+                                            setFieldValue("initialDate", moment(date).utc().startOf("day").add(1, 'days').format());
                                         }}
                                     />
                                     {errors.initialDate &&

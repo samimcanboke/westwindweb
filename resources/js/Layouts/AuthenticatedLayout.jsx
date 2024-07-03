@@ -9,8 +9,6 @@ export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [waitConfirmedCount, setWaitConfirmedCount] = useState(0);
 
-
-
     const getWaitConfirmedCount = async () => {
         const response = await axios.get(route('wait-confirmed-jobs-count'));
         setWaitConfirmedCount(response.data.count);
@@ -18,7 +16,7 @@ export default function Authenticated({ user, header, children }) {
 
     useEffect(()=>{
         getWaitConfirmedCount();
-        let id = setInterval(getWaitConfirmedCount, 1000);
+        let id = setInterval(getWaitConfirmedCount, 5000);
         return () => clearInterval(id);
     },[])
 
