@@ -1772,7 +1772,7 @@ export default function Planner({ auth }) {
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
                                                                                 moment(interval.startTime).week() % 2 > 0? "blue" : "pink",
-                                                                                color: "white",
+                                                                                color: moment(interval.startTime).week() % 2 > 0? "pink" : "blue",
                                                                                 border: "1px solid #bababa",
                                                                             };
                                                                         return (
@@ -1841,8 +1841,17 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                    moment(interval.startTime).day() % 2 > 0 ? "green" : "red",
-                                                                                color: "white",
+                                                                                moment(interval.startTime).day() === 0 ? "yellow": 
+                                                                                moment(interval.startTime).day() === 1 ? "red": 
+                                                                                moment(interval.startTime).day() === 2 ? "green": 
+                                                                                moment(interval.startTime).day() === 3 ? "red": 
+                                                                                moment(interval.startTime).day() === 4 ? "green": 
+                                                                                moment(interval.startTime).day() === 5 ? "red": 
+                                                                                moment(interval.startTime).day() === 6 ? "green": 
+                                                                                "black",
+                                                                                
+                                                                              
+                                                                                color: moment(interval.startTime).day() === 0 ? "black" : "white",
                                                                                 border: "1px solid #bababa",
                                                                             };
                                                                         return (
