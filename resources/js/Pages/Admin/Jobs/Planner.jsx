@@ -1849,8 +1849,6 @@ export default function Planner({ auth }) {
                                                                                 moment(interval.startTime).day() === 5 ? "red": 
                                                                                 moment(interval.startTime).day() === 6 ? "green": 
                                                                                 "black",
-                                                                                
-                                                                              
                                                                                 color: moment(interval.startTime).day() === 0 ? "black" : "white",
                                                                                 border: "1px solid #bababa",
                                                                             };
