@@ -37,43 +37,43 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                            <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                            <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('new-jobs')} active={route().current('new-jobs')}>
                                 Neue Berichte 
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('draft-jobs')} active={route().current('draft-jobs')}>
                                 Bericht Entwrfe
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('finalized-jobs')} active={route().current('finalized-jobs')}>
                                     Eingereichte Berichte 
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('planner')} active={route().current('planner')}>
                                     Planung
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('sick-leaves')} active={route().current('sick-leaves')}>
                                     Krankmeldungen
                                 </NavLink>
                             </div>
-                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                            <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                 <NavLink href={route('annual-leaves')} active={route().current('annual-leaves')}>
                                 Urlaubsanträge
                                 </NavLink>
                             </div>
                             {user.is_admin && (
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
                                     <Dropdown>
                                         <Dropdown.Trigger>
                                         <button
@@ -202,7 +202,7 @@ export default function Authenticated({ user, header, children }) {
                                                     className="inline-flex mt-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                                 >
                                                     Admin-Menü
-
+                                                    <span className="absolute bg-red-600 text-red-100 px-2 py-1 text-xs font-bold rounded-full top-2 right-2">{waitConfirmedCount}</span>
                                                     <svg
                                                         className="ms-2 -me-0.5 h-4 w-4"
                                                         xmlns="http://www.w3.org/2000/svg"
