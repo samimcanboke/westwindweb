@@ -1841,7 +1841,7 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                moment(interval.startTime).day() === 0 ? "yellow": 
+                                                                                moment(interval.startTime).day() === 0 ? "gray": 
                                                                                 moment(interval.startTime).day() === 1 ? "red": 
                                                                                 moment(interval.startTime).day() === 2 ? "green": 
                                                                                 moment(interval.startTime).day() === 3 ? "red": 
