@@ -28,7 +28,7 @@ export default function Authenticated({ user, header, children }) {
         
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
@@ -37,43 +37,43 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('new-jobs')} active={route().current('new-jobs')}>
                                 Neue Berichte 
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('draft-jobs')} active={route().current('draft-jobs')}>
                                 Bericht Entwrfe
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('finalized-jobs')} active={route().current('finalized-jobs')}>
                                     Eingereichte Berichte 
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('planner')} active={route().current('planner')}>
                                     Planung
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('sick-leaves')} active={route().current('sick-leaves')}>
                                     Krankmeldungen
                                 </NavLink>
                             </div>
-                            <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('annual-leaves')} active={route().current('annual-leaves')}>
                                 Urlaubsanträge
                                 </NavLink>
                             </div>
                             {user.is_admin && (
-                                <div className="hidden xl:flex space-x-3 sm:-my-px sm:ms-10">
+                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                     <Dropdown>
                                         <Dropdown.Trigger>
                                         <button
