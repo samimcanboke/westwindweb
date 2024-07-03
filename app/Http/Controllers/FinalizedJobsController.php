@@ -108,7 +108,7 @@ class FinalizedJobsController extends Controller
     private function calculateNightHours($work_start_time, $work_end_time, $initial_date)
     {
         //TODO => Bu kısmı admin panelden saat olarak al. 
-        $nightStart = $this->convertTimeToDatetime($initial_date, "22:00");
+        $nightStart = $this->convertTimeToDatetime($initial_date, "20:00");
         $nightEnd = $this->convertTimeToDatetime($initial_date, "00:00");
         $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);

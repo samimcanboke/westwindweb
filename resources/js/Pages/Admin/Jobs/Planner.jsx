@@ -1697,7 +1697,7 @@ export default function Planner({ auth }) {
                                                                                 lineHeight:
                                                                                     "30px",
                                                                                 textAlign:
-                                                                                    "center",
+                                                                                "center",
                                                                                 borderLeft:
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
@@ -1705,6 +1705,7 @@ export default function Planner({ auth }) {
                                                                                     "#c51f21",
                                                                                 color: "white",
                                                                                 border: "1px solid #bababa",
+                                                                                
                                                                             };
                                                                         return (
                                                                             <div
@@ -1756,6 +1757,7 @@ export default function Planner({ auth }) {
                                                                     (
                                                                         interval
                                                                     ) => {
+                                                                        
                                                                         const displayNone =
                                                                             {
                                                                                 display:
@@ -1772,7 +1774,7 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                    "#c51f21",
+                                                                                moment(interval.startTime).week() % 2 > 0? "blue" : "yellow",
                                                                                 color: "white",
                                                                                 border: "1px solid #bababa",
                                                                             };
@@ -1842,7 +1844,7 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                    "#c51f21",
+                                                                                    moment(interval.startTime).day() % 2 > 0 ? "green" : "red",
                                                                                 color: "white",
                                                                                 border: "1px solid #bababa",
                                                                             };
@@ -1917,7 +1919,7 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                    "#c51f21",
+                                                                                    moment(interval.startTime).hour() % 2 > 0 ? "black" : "white",
                                                                                 color: "white",
                                                                                 border: "1px solid #bababa",
                                                                             };
