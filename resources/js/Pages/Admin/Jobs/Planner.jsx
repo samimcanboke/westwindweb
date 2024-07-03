@@ -171,26 +171,25 @@ export default function Planner({ auth }) {
                 for (const job of response.data) {
                     if (job.user_id !== null) {
                         let newJobs = {
-                            id: "j" + job.id,
+                            id: job.id,
                             group: job.user_id,
                             start_time: moment(
                                 job.start_date + " " + job.start_time
                             ),
                             end_time: moment(job.end_date + " " + job.end_time),
-                            title: job.from + " - " + job.to + "|" + job.id,
+                            title: job.from + " - " + job.to,
                             canMove: false,
                             canResize: false,
                             itemProps: {
-                                "data-custom-attribute": "Random content",
+                                type: "job",
+                                dataId: job.id,
                                 "aria-hidden": true,
                                 onContextMenu: async (itemId) => {
                                     try {
-                                        let item =
+                                        let id =
                                             itemId.target.parentElement.getAttribute(
-                                                "title"
-                                            );
-
-                                        let id = item.split("|")[1];
+                                                "dataitemid"
+                                            );                                        
                                         let job = await axios.get(
                                             "/planner/jobs/show/" + id
                                         );
@@ -204,12 +203,11 @@ export default function Planner({ auth }) {
                                 },
                                 onClick: async (itemId) => {
                                     try {
-                                        let item =
+                                        let id =
                                             itemId.target.parentElement.getAttribute(
-                                                "title"
+                                                "dataitemid"
                                             );
 
-                                        let id = item.split("|")[1];
                                         let job = await axios.get(
                                             "/planner/jobs/show/" + id
                                         );
@@ -224,11 +222,10 @@ export default function Planner({ auth }) {
                                 },
                                 onDoubleClick: async (itemId) => {
                                     try {
-                                        let item =
+                                        let id =
                                             itemId.target.parentElement.getAttribute(
-                                                "title"
+                                                "dataitemid"
                                             );
-                                        let id = item.split("|")[1];
                                         let job = await axios.get(
                                             "/planner/jobs/show/" + id
                                         );
@@ -240,14 +237,16 @@ export default function Planner({ auth }) {
                                         console.log(e);
                                     }
                                 },
-                                className: "weekend",
+                                className: "jobs",
                                 style: {
                                     background: "green",
                                     zIndex: 50,
                                     minHeight: 40,
                                 },
                                 itemIdKey: "id",
+                                itemDivIdKey: "id",
                                 itemTitleKey: "title",
+                                itemDivTitleKey: "id",
                             },
                         };
                         newJobList.push(newJobs);
@@ -268,18 +267,17 @@ export default function Planner({ auth }) {
                         hour: sick.end_time.split(":")[0],
                         minute: sick.end_time.split(":")[1],
                     }),
-                    title: sick.user.name + "|" + sick.id,
+                    title: sick.user.name,
                     canMove: false,
                     canResize: false,
                     itemProps: {
                         onContextMenu: async (itemId) => {
                             try {
-                                let item =
+                                let id =
                                     itemId.target.parentElement.getAttribute(
-                                        "title"
+                                        "dataitemid"
                                     );
 
-                                let id = item.split("|")[1];
                                 Swal.fire({
                                     title: "Eminmisin?",
                                     text: "Silmek istediğinize eminmisiniz?",
@@ -310,6 +308,7 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
+                        type: "sick",
                         className: "weekend",
                         style: {
                             background: "red",
@@ -335,18 +334,17 @@ export default function Planner({ auth }) {
                         hour: annualLeave.end_time.split(":")[0],
                         minute: annualLeave.end_time.split(":")[1],
                     }),
-                    title: annualLeave.user.name + "|" + annualLeave.id,
+                    title: annualLeave.user.name,
                     canMove: false,
                     canResize: false,
                     itemProps: {
                         onContextMenu: async (itemId) => {
                             try {
-                                let item =
+                                let id =
                                     itemId.target.parentElement.getAttribute(
-                                        "title"
+                                        "dataitemid"
                                     );
 
-                                let id = item.split("|")[1];
                                 Swal.fire({
                                     title: "Eminmisin?",
                                     text: "Silmek istediğinize eminmisiniz?",
@@ -377,6 +375,7 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
+                        type: "annualLeave",
                         className: "weekend",
                         style: {
                             background: "blue",
@@ -401,18 +400,17 @@ export default function Planner({ auth }) {
                         hour: adminExtra.end_time.split(":")[0],
                         minute: adminExtra.end_time.split(":")[1],
                     }),
-                    title: adminExtra.user.name + "|" + adminExtra.id,
+                    title: adminExtra.user.name,
                     canMove: false,
                     canResize: false,
                     itemProps: {
                         onContextMenu: async (itemId) => {
                             try {
-                                let item =
+                                let id =
                                     itemId.target.parentElement.getAttribute(
-                                        "title"
+                                        "dataitemid"
                                     );
 
-                                let id = item.split("|")[1];
                                 Swal.fire({
                                     title: "Eminmisin?",
                                     text: "Silmek istediğinize eminmisiniz?",
@@ -443,6 +441,7 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
+                        type: "adminExtra",
                         className: "weekend",
                         style: {
                             background: "purple",
@@ -477,6 +476,7 @@ export default function Planner({ auth }) {
                     canMove: false,
                     canResize: false,
                     itemProps: {
+                        type: "userFinalizedJob",
                         className: "weekend",
                         style: {
                             background: "gray",
@@ -498,7 +498,7 @@ export default function Planner({ auth }) {
 
         if (plan) {
             let filledPlan = plan.filter((item) => {
-                return item.id.startsWith("j");
+                return item.itemProps.type === "job";
             });
             let groupedPlans = {};
 
@@ -1619,6 +1619,31 @@ export default function Planner({ auth }) {
                                                     : users
                                             }
                                             items={userJobs}
+                                            itemRenderer={({
+                                                item,
+                                                itemContext,
+                                                getItemProps,
+                                                getResizeProps
+                                              }) => {
+                                                const { left: leftResizeProps, right: rightResizeProps } = getResizeProps()
+                                                
+
+                                                return (
+                                                  <div {...getItemProps(item.itemProps)} key={item.id} dataitemid={item.id} >
+                                                    {itemContext.useResizeHandle ? <div {...leftResizeProps} /> : ''}
+                                              
+                                                    <div
+                                                      className="rct-item-content"
+                                                      style={{ maxHeight: `${itemContext.dimensions.height}` }}
+                                                    >
+                                                      {itemContext.title}
+                                                    </div>
+                                              
+                                                    {itemContext.useResizeHandle ? <div {...rightResizeProps} /> : ''}
+                                                  </div>
+                                                )}
+                                              
+                                              }
                                             unit="day"
                                             defaultTimeStart={moment().add(
                                                 -256,

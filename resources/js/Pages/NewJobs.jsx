@@ -403,7 +403,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle>Gastfahrt</AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Gastfahrt Beginn</Label>
+                                    <Label>GF Standort Beginn</Label>
                                     <Field
                                         id="guestStartPlace"
                                         name="guestStartPlace"
@@ -433,7 +433,7 @@ export default function NewJobs({ auth }) {
 
                                     <br />
 
-                                    <Label>Gastfahrt Start</Label>
+                                    <Label>GF Start Uhrzeit</Label>
                                     <div className="flex">
                                         <input
                                             type="time"
@@ -472,7 +472,7 @@ export default function NewJobs({ auth }) {
                                             </p>
                                         )}
                                     <br />
-                                    <Label>Gastfahrt Ende</Label>
+                                    <Label>GF Standort Ende</Label>
                                     <input
                                         id="guestStartEndPlace"
                                         name="guestStartEndPlace"
@@ -501,7 +501,7 @@ export default function NewJobs({ auth }) {
 
                                     <br />
 
-                                    <Label>Gastfahrt Ende</Label>
+                                    <Label>GF Ende Uhrzeit</Label>
                                     <div className="flex">
                                         <input
                                             type="time"
