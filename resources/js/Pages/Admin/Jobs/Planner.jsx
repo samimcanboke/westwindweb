@@ -1774,7 +1774,7 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                moment(interval.startTime).week() % 2 > 0? "blue" : "yellow",
+                                                                                moment(interval.startTime).week() % 2 > 0? "blue" : "pink",
                                                                                 color: "white",
                                                                                 border: "1px solid #bababa",
                                                                             };
@@ -1798,7 +1798,7 @@ export default function Planner({ auth }) {
                                                                                 )}
                                                                             >
                                                                                 <div className="sticky">
-                                                                                    {interval.startTime.format(
+                                                                                    KW {interval.startTime.format(
                                                                                         "w"
                                                                                     )}
                                                                                 </div>
