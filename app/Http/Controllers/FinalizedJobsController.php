@@ -131,10 +131,14 @@ class FinalizedJobsController extends Controller
     {
         $nightStart = $this->convertTimeToDatetime($initial_date, "04:00");
         $nightEnd = $this->convertTimeToDatetime($initial_date, "06:00");
+       
         $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);
+
         if ($work_end_time < $work_start_time) {
             $endTime->modify('+1 day');
+            $nightStart->modify('+1 day');
+            $nightEnd->modify('+1 day');
         }
         $nightHours = 0;
         if ($startTime < $nightEnd) {
