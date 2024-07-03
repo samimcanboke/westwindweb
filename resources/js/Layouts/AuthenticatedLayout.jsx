@@ -7,9 +7,23 @@ import { Link } from '@inertiajs/react';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [waitConfirmedCount, setWaitConfirmedCount] = useState(0);
     useEffect(()=>{
         console.log(header);
     },[user])
+
+
+    const getWaitConfirmedCount = async () => {
+        const response = await axios.get(route('wait-confirmed-jobs-count'));
+        setWaitConfirmedCount(response.data.count);
+    }
+
+    useEffect(()=>{
+        getWaitConfirmedCount();
+        let id = setInterval(getWaitConfirmedCount, 1000);
+        return () => clearInterval(id);
+    },[])
+
     return (
         
         <div className="min-h-screen bg-gray-100">
@@ -67,6 +81,8 @@ export default function Authenticated({ user, header, children }) {
                                                     className="inline-flex mt-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                                 >
                                                     Admin-Menü
+
+                                                    <span className="absolute bg-red-600 text-red-100 px-2 py-1 text-xs font-bold rounded-full top-2 right-2">{waitConfirmedCount}</span>
 
                                                     <svg
                                                         className="ms-2 -me-0.5 h-4 w-4"

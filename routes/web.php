@@ -118,7 +118,7 @@ Route::get('/data-unconfirmed-jobs', [FinalizedJobsController::class, 'unconfirm
 Route::get('/data-confirmed-jobs', [FinalizedJobsController::class, 'confirmed_jobs'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('data-confirmed-jobs');
 Route::post('/jobs-editing', [FinalizedJobsController::class, 'edit'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-editing');
 Route::post('/jobs-confirmation', [FinalizedJobsController::class, 'confirm_jobs'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-confirmation');
-
+Route::get('/admin/wait-confirmed-jobs-count', [FinalizedJobsController::class, 'wait_confirmed_jobs'])->middleware(['auth', 'verified', IsAdmin::class])->name('wait-confirmed-jobs-count');
 Route::post('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
 
 

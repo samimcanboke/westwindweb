@@ -946,6 +946,12 @@ class FinalizedJobsController extends Controller
         //
     }
 
+    public function wait_confirmed_jobs()
+    {
+        $unconfirmeds = FinalizedJobs::where("confirmation", false)->get();
+        return response()->json(["count" => $unconfirmeds->count()]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
