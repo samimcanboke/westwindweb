@@ -58,7 +58,7 @@ export default function Authenticated({ user, header, children }) {
                                     Planung
                                 </NavLink>
                             </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
+                            {/*<div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('sick-leaves')} active={route().current('sick-leaves')}>
                                     Krankmeldungen
                                 </NavLink>
@@ -67,7 +67,7 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('annual-leaves')} active={route().current('annual-leaves')}>
                                 Urlaubsanträge
                                 </NavLink>
-                            </div>
+                            </div>*/}
                             {user.is_admin && (
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                     <Dropdown>
@@ -144,8 +144,8 @@ export default function Authenticated({ user, header, children }) {
                                         <Dropdown.Link href={route('draft-jobs')}>Bericht Entwürfe</Dropdown.Link>
                                         <Dropdown.Link href={route('finalized-jobs')}>Eingereichte Berichte </Dropdown.Link>
                                         <Dropdown.Link href={route('planner')}>Planung</Dropdown.Link>
-                                        <Dropdown.Link href={route('sick-leaves')}>Krankmeldungen</Dropdown.Link>
-                                        <Dropdown.Link href={route('annual-leaves')}>Urlaubsanträge</Dropdown.Link>
+                                        {/*<Dropdown.Link href={route('sick-leaves')}>Krankmeldungen</Dropdown.Link>
+                                        <Dropdown.Link href={route('annual-leaves')}>Urlaubsanträge</Dropdown.Link>*/}
                                         <Dropdown.Link href={route('profile.edit')}>Profil</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
                                             Abmelden
