@@ -807,6 +807,20 @@ export default function Planner({ auth }) {
             });
     };
 
+    const handleItemMove = (itemId, dragTime, newGroupOrder) => {
+        const item = userJobs.find((item) => item.id === itemId);
+        console.log(moment(dragTime).format("YYYY-MM-DD HH:mm:ss"), moment(item.start_date + " " + item.start_time).format("YYYY-MM-DD HH:mm:ss"), moment(item.end_date + " " + item.end_time).format("YYYY-MM-DD HH:mm:ss"));
+        /*
+        axios.put(route("planner-jobs-update", { id: itemId }), {
+            start_date: moment(dragTime),
+            start_time: moment(dragTime)
+            end_time: moment(dragTime).add(moment(item.start_date + " " + item.start_time).diff(moment(item.end_date + " " + item.end_time))),
+            user_id: newGroupOrder,
+        }).then((response) => {
+            console.log(response);
+        });*/
+    };
+
     useEffect(() => {
         getPlans();
         getPlansWithoutUser();
@@ -1669,8 +1683,9 @@ export default function Planner({ auth }) {
                                                 month: 1,
                                                 year: 1,
                                             }}
+                                            onItemMove={handleItemMove}
                                         >
-                                            <TimelineHeaders>
+                                            <TimelineHeaders className="sticky">
                                                 <CustomHeader unit="month">
                                                     {({
                                                         headerContext: {
