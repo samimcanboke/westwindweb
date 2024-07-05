@@ -18,6 +18,10 @@ export default function Login({ status, canResetPassword }) {
         return () => {
             reset('password');
         };
+        
+    }, []);
+    useEffect(() => {
+        console.log(route('login'));
     }, []);
 
     const submit = (e) => {

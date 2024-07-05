@@ -19,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        dd(config('app.url'));
-        \Inertia\Inertia::share('app_url', config('app.url'));
+        //
     }
 }
