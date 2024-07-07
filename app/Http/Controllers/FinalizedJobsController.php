@@ -601,7 +601,7 @@ class FinalizedJobsController extends Controller
 
         $month = $request->month;
         $year = $request->year;
-        $user_id = $request->user_id;
+        $user_id = $request->user_id && $request->user;
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
 
@@ -714,9 +714,6 @@ class FinalizedJobsController extends Controller
                 $breaks = json_decode($finalized_job->breaks);
                 if (gettype($breaks) == "string") {
                     $breaks = json_decode($breaks);
-                }
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    echo 'JSON decode error: ' . json_last_error_msg();
                 }
                 if ($breaks) {
                     foreach ($breaks as $break) {
@@ -891,8 +888,9 @@ class FinalizedJobsController extends Controller
             }
 
             $uniq_id = uniqid();
-            $filePath = 'pdfs/' . $uniq_id . '.pdf'; // Dosya yolunu ve adını belirleyin
+            $filePath = 'pdfs/' . $uniq_id . '.pdf'; 
             Storage::put($filePath, $file_req->body());
+            dd(["status" => true, "file" => $uniq_id]);
             return response()->json(["status" => true, "file" => $uniq_id]);
         } else {
             return response()->json(["status" => false]);
