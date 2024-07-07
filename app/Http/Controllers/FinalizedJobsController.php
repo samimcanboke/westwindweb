@@ -890,7 +890,6 @@ class FinalizedJobsController extends Controller
             $uniq_id = uniqid();
             $filePath = 'pdfs/' . $uniq_id . '.pdf'; 
             Storage::put($filePath, $file_req->body());
-            dd(["status" => true, "file" => $uniq_id]);
             return response()->json(["status" => true, "file" => $uniq_id]);
         } else {
             return response()->json(["status" => false]);
