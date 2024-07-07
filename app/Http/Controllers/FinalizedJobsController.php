@@ -750,7 +750,7 @@ class FinalizedJobsController extends Controller
             }
 
             $feeding_fee += $finalized_job->feeding_fee;
-            if (!$finalized_job->bereitschaft || !$finalized_job->learning) {
+            if (!$finalized_job->bereitschaft && !$finalized_job->learning) {
                 $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
                 $total_public_holiday_hours = $this->calculateTotalSum($public_holiday_hours, $total_public_holiday_hours);
 
@@ -844,6 +844,8 @@ class FinalizedJobsController extends Controller
                 $total_breaks = "00:00";
                 $finalized_job->feeding_fee = 0;
             }
+
+           
 
 
             $data['rows'][] = [
