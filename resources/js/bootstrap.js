@@ -5,6 +5,9 @@ window.axios = axios;
 
 
 
+window.axios.defaults.baseURL = 'https://westwindplanung.de';
+
+
 
 window.axios.interceptors.response.use(response => {
     return response;
