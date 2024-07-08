@@ -5,7 +5,7 @@ window.axios = axios;
 
 
 
-window.axios.defaults.baseURL = 'https://westwindplanung.de';
+//window.axios.defaults.baseURL = 'https://westwindplanung.de';
 
 
 

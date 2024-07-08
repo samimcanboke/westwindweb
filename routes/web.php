@@ -159,6 +159,7 @@ Route::delete('/admin-extras/{id}', [AdminExtraController::class, 'destroy'])->m
 Route::get('/user-confirmed-jobs', [FinalizedJobsController::class, 'user_confirmed_jobs'])->middleware(['auth', 'verified'])->name('user-confirmed-jobs');
 Route::post('/user-leave-jobs', [RegisteredUserController::class, 'leave_jobs'])->middleware(['auth', 'verified'])->name('user-leave-jobs');
 //Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->middleware(['auth', 'verified'])->name('get-user-job-plans');
+Route::delete('/jobs-unconfirmed', [FinalizedJobsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('jobs-unconfirmed-destroy');
 
 Route::get('/admin/clients', [ClientController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients');
 Route::post('/admin/clients', [ClientController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('admin-clients-store');

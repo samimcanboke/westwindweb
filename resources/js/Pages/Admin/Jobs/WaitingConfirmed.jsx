@@ -17,6 +17,7 @@ import {
 import { Formik, Field, FieldArray, Form } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
+import Swal from "sweetalert2";
 
 const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
@@ -59,6 +60,32 @@ export default function WaitingConfirmed({ auth }) {
         }
         return newObj;
     };
+
+    const deleteDraft = async (draft) => {  
+        Swal.fire({
+            title: 'Sind Sie sicher?',
+            text: 'Das Job wird gelscht',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Lschen',
+            cancelButtonText: 'Abbrechen',
+            
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(draft);
+                axios.delete(route("jobs-unconfirmed-destroy", {id: draft.id})).then((res) => {
+                    if(res.data.status){
+                        Swal.fire({
+                            title: 'Erfolgreich',
+                            text: 'Job wurde gelschen',
+                            icon: 'success',
+                        });
+                        getUnconfirmed();
+                    }
+                });
+            }
+        });        
+    }
 
     const edit = async (finalized) => {
         let editingDraft =  finalized;
@@ -132,6 +159,9 @@ export default function WaitingConfirmed({ auth }) {
                                 <Table.HeadCell>
                                     <span className="sr-only">Bearbeiten</span>
                                 </Table.HeadCell>
+                                 <Table.HeadCell>
+                                    <span className="sr-only">Löschen</span>
+                                </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
                                 {!showEdit &&
@@ -183,6 +213,17 @@ export default function WaitingConfirmed({ auth }) {
                                                     }}
                                                 >
                                                     Anzeigen
+                                                </a>
+                                            </Table.Cell>
+                                            <Table.Cell className=" text-center ">
+                                                <a
+                                                    href="#"
+                                                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                                                    onClick={() => {
+                                                        deleteDraft(draft);
+                                                    }}
+                                                >
+                                                    Löschen
                                                 </a>
                                             </Table.Cell>
                                         </Table.Row>

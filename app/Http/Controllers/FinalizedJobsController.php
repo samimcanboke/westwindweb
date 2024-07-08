@@ -527,10 +527,11 @@ class FinalizedJobsController extends Controller
                     "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
                     "guest_back_total_time" => $guest_back_sum,
                     "accomodation" => $finalized_job->feeding_fee == 32 ? "X" : "",
-                    "extra" => 0,
+                    "extra" => $finalized_job->extra,
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                     "client" => $finalized_job->client->name,
+                    "learning"  => $finalized_job->learning,
                 ];
                 
                 $work_sum_total = gettype($work_sum) == "object" ? sprintf('%02d:%02d', $work_sum->h, $work_sum->i) : $work_sum;
@@ -544,6 +545,7 @@ class FinalizedJobsController extends Controller
                 dd($th);
             }
         }
+        
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
@@ -1053,8 +1055,12 @@ class FinalizedJobsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FinalizedJobs $finalizedJobs)
+    public function destroy(Request $request)
     {
-        //
+
+        
+        $finalized_job = FinalizedJobs::where("id", $request->id)->first();
+        $finalized_job->delete();
+        return response()->json(["status" => true]);
     }
 }
