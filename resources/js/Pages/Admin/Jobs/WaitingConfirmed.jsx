@@ -420,6 +420,23 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                         />
                                                         <br />
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.learning
+                                                            }
+                                                            label="Streckenkunde"
+                                                            id="learning"
+                                                            name="learning"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setFieldValue(
+                                                                    "learning",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                        <br />
                                                         <Label>Kommentar</Label>
                                                         <Textarea
                                                             id="comment"
