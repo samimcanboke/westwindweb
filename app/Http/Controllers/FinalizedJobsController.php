@@ -867,7 +867,9 @@ class FinalizedJobsController extends Controller
                 "places" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                 "client" => $finalized_job->client->name,
             ];
-            $i++;
+            if(!$finalized_job->bereitschaft || !$finalized_job->cancel){
+                $i++;
+            }
         }
         $data['totals']['dates'] = $i;
         $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
