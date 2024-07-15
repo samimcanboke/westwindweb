@@ -488,6 +488,8 @@ class FinalizedJobsController extends Controller
         if ($request->client_id) {
             $query->where('client_id', $request->client_id);
         }
+
+       
         if($user_query){
             $query->where('user_id', $request->user_id);
         }
@@ -495,7 +497,7 @@ class FinalizedJobsController extends Controller
 
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
 
-        if($user_query){
+        if($user_query && $finalized_jobs->count() > 0){
             $data['driver'] = $finalized_jobs->first()->user->name;
         }
         $data['totals']['total_day'] = $finalized_jobs->count();
@@ -545,7 +547,6 @@ class FinalizedJobsController extends Controller
                 dd($th);
             }
         }
-        
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
