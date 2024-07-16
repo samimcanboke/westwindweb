@@ -836,17 +836,35 @@ class FinalizedJobsController extends Controller
                     $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
                 }
             } else {
-                $finalized_job->guest_start_time = "";
-                $finalized_job->guest_start_end_time = "";
-                $finalized_job->guest_end_time = "";
-                $finalized_job->guest_end_end_time = "";
-                $guest_total = "00:00";
-                $public_holiday_hours = "00:00";
-                $midnight_hours = "00:00";
-                $self_night_hours = "00:00";
-                $sunday_hours = "00:00";
-                $total_breaks = "00:00";
-                $finalized_job->feeding_fee = 0;
+                if($finalized_job->bereitschaft && !$finalized_job->learning){
+                    $finalized_job->guest_start_time = "";
+                    $finalized_job->guest_start_end_time = "";
+                    $finalized_job->guest_end_time = "";
+                    $finalized_job->guest_end_end_time = "";
+                    $guest_total = "00:00";
+                    $public_holiday_hours = "00:00";
+                    $midnight_hours = "00:00";
+                    $self_night_hours = "00:00";
+                    $sunday_hours = "00:00";
+                    $total_breaks = "00:00";
+                    $finalized_job->feeding_fee = 0;
+                } else if ($finalized_job->learning && !$finalized_job->bereitschaft) {
+                    $public_holiday_hours = "00:00";
+                    $midnight_hours = "00:00";
+                    $self_night_hours = "00:00";
+                    $sunday_hours = "00:00";
+                } else {
+                    $finalized_job->guest_start_time = "";
+                    $finalized_job->guest_start_end_time = "";
+                    $finalized_job->guest_end_time = "";
+                    $finalized_job->guest_end_end_time = "";
+                    $guest_total = "00:00";
+                    $public_holiday_hours = "00:00";
+                    $midnight_hours = "00:00";
+                    $self_night_hours = "00:00";
+                    $sunday_hours = "00:00";
+                    $total_breaks = "00:00";
+                }
             }
 
            
