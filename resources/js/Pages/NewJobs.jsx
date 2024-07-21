@@ -28,9 +28,11 @@ const initialValues = {
     cancel: false,
     accomodation: false,
     bereitschaft: false,
+    ausbildung: false,
     learning: false,
     comment: "",
     client: "",
+    user: "",
     feedingFee: "",
     guestStartPlace: "",
     guestStartTime: "",
@@ -64,11 +66,19 @@ const validationSchema = Yup.object().shape({
 
 export default function NewJobs({ auth }) {
     const [client, setClient] = useState([]);
-
+    const [showAbroad, setShowAbroad] = useState(false);
+    const [showLockführer, setShowLockführer] = useState(false);
+    const [users, setUsers] = useState([]);
+    const abroad = ['Niederlande', 'Schweiz'];
     useEffect(() => {
         axios.get("/clients").then((res) => {
             if (res.status == 200) {
                 setClient(res.data);
+            }
+        });
+        axios.get(route("users.show")).then((res) => {
+            if (res.status == 200) {
+                setUsers(res.data);
             }
         });
     }, []);
@@ -96,7 +106,8 @@ export default function NewJobs({ auth }) {
         >
             <Head title="New Jobs" />
             <Label className="p-3 flex justify-center ">
-                Der gesamte Plan von der Abfahrt bis zur Rückkehr wird hier geschrieben.
+                Der gesamte Plan von der Abfahrt bis zur Rückkehr wird hier
+                geschrieben.
             </Label>
 
             <Formik
@@ -104,9 +115,9 @@ export default function NewJobs({ auth }) {
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true);
-                    
-                    values.initialDate = moment(values.initialDate).utcOffset(0).toDate();
-
+                    values.initialDate = moment(values.initialDate)
+                        .utcOffset(0)
+                        .toDate();
                     if (
                         values.breaks &&
                         values.breaks.length > 0 &&
@@ -171,14 +182,22 @@ export default function NewJobs({ auth }) {
                                         name="initialDate"
                                         value={
                                             values.initialDate
-                                                ? moment(
-                                                      values.initialDate
-                                                  ).utc().startOf("day").format("DD-MM-YYYY")
+                                                ? moment(values.initialDate)
+                                                      .utc()
+                                                      .startOf("day")
+                                                      .format("DD-MM-YYYY")
                                                 : ""
                                         }
                                         onSelectedDateChanged={(date) => {
                                             console.log(date);
-                                            setFieldValue("initialDate", moment(date).utc().startOf("day").add(1, 'days').format());
+                                            setFieldValue(
+                                                "initialDate",
+                                                moment(date)
+                                                    .utc()
+                                                    .startOf("day")
+                                                    .add(1, "days")
+                                                    .format()
+                                            );
                                         }}
                                     />
                                     {errors.initialDate &&
@@ -263,57 +282,129 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
                                     <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
-                                    <ToggleSwitch
-                                        checked={values.cancel}
-                                        label="Storniert"
-                                        id="cancel"
-                                        name="cancel"
-                                        onChange={(value) => {
-                                            setFieldValue("cancel", value);
-                                        }}
-                                    />
+                                        <ToggleSwitch
+                                            checked={values.cancel}
+                                            label="Storniert"
+                                            id="cancel"
+                                            name="cancel"
+                                            onChange={(value) => {
+                                                setFieldValue("cancel", value);
+                                            }}
+                                        />
+                                       {/*
+                                        <ToggleSwitch
+                                            checked={values.ausland}
+                                            label="Ausland"
+                                            id="ausland"
+                                            name="ausland"
+                                            onChange={(value) => {
+                                           
+                                                setFieldValue(
+                                                    "ausland",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        */}
 
-
-                                    <ToggleSwitch
-                                        checked={values.accomodation}
-                                        label="Unterkunft"
-                                        id="accomodation"
-                                        name="accomodation"
-                                        onChange={(value) => {
-                                            if (value) {
-                                                setFieldValue("feedingFee", 32);
-                                            }
-                                            setFieldValue(
-                                                "accomodation",
-                                                value
-                                            );
-                                        }}
-                                    />
-                                    <ToggleSwitch
-                                        checked={values.bereitschaft}
-                                        label="Bereitschaft"
-                                        id="bereitschaft"
-                                        name="bereitschaft"
-                                        onChange={(value) => {
-                                            setFieldValue(
-                                                "bereitschaft",
-                                                value
-                                            );
-                                        }}
-                                    />
-                                    <ToggleSwitch
-                                        checked={values.learning}
-                                        label="Streckenkunde"
-                                        id="learning"
-                                        name="learning"
-                                        onChange={(value) => {
-                                            setFieldValue(
-                                                "learning",
-                                                value
-                                            );
-                                        }}
-                                    />
+                                        <ToggleSwitch
+                                            checked={values.accomodation}
+                                            label="Unterkunft"
+                                            id="accomodation"
+                                            name="accomodation"
+                                            onChange={(value) => {
+                                                if (value) {
+                                                    setFieldValue(
+                                                        "feedingFee",
+                                                        32
+                                                    );
+                                                } else {
+                                                    setFieldValue("feedingFee", 0);
+                                                }
+                                                setFieldValue(
+                                                    "accomodation",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.bereitschaft}
+                                            label="Bereitschaft"
+                                            id="bereitschaft"
+                                            name="bereitschaft"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "bereitschaft",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.ausbildung}
+                                            label="Ausbildung"
+                                            id="ausbildung"
+                                            name="ausbildung"
+                                            onChange={(value) => {
+                                                if (value) {
+                                                    setShowLockführer(true);
+                                                } else {
+                                                    setShowLockführer(false);
+                                                }
+                                                setFieldValue(
+                                                    "ausbildung",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.learning}
+                                            label="Streckenkunde"
+                                            id="learning"
+                                            name="learning"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "learning",
+                                                    value
+                                                );
+                                            }}
+                                        />
                                     </div>
+
+                                    {showLockführer && (
+                                       <div className="max-w-md mt-5">
+                                       <div className="mb-2 block">
+                                           <Label
+                                               htmlFor="user"
+                                               value="Wählen Sie Lockführer"
+                                           />
+                                       </div>
+                                       <Select
+                                           id="user"
+                                           name="user"
+                                           required
+                                           onChange={(e) => {
+                                               setFieldValue(
+                                                   "user",
+                                                   e.target.value
+                                               );
+                                           }}
+                                       >
+                                           <option>Wählen Sie...</option>
+                                           {users &&
+                                               users.length > 0 &&
+                                               users.map((user) => (
+                                                   <option
+                                                       key={user.id}
+                                                       value={user.id}
+                                                   >
+                                                       {user.name}
+                                                   </option>
+                                               ))}
+                                       </Select>
+                                   </div>
+                                    )}
+
+
                                     <br />
                                     <Label>Kommenter</Label>
                                     <Textarea
@@ -348,7 +439,7 @@ export default function NewJobs({ auth }) {
                                                 value="Wählen Sie Ihren Kunden"
                                             />
                                         </div>
-                                       <Select
+                                        <Select
                                             id="client"
                                             name="client"
                                             required
@@ -360,14 +451,16 @@ export default function NewJobs({ auth }) {
                                             }}
                                         >
                                             <option>Wählen Sie...</option>
-                                            {client && client.length > 0 && client.map((client) => (
-                                                <option
-                                                    key={client.id}
-                                                    value={client.id}
-                                                >
-                                                    {client.name}
-                                                </option>
-                                            ))}
+                                            {client &&
+                                                client.length > 0 &&
+                                                client.map((client) => (
+                                                    <option
+                                                        key={client.id}
+                                                        value={client.id}
+                                                    >
+                                                        {client.name}
+                                                    </option>
+                                                ))}
                                         </Select>
                                     </div>
                                     {errors.client && touched.client && (
@@ -396,9 +489,10 @@ export default function NewJobs({ auth }) {
                                             required
                                             value={values.feedingFee}
                                         >
+                                            
                                             <option value={0}>0€</option>
                                             <option value={16}>16€</option>
-                                            <option value={32}>32€</option>
+                                            <option value={32} disabled={!values.accomodation}>32€</option>
                                         </Select>
 
                                         {/*//TODO: Bu alana bir buton koyulacak. Bu buton eğer bu güzergah ile ilgili bir not alınmışsa görünecek. Tıklanınca ilgili notlar görünecek. (en son iş)*/}
@@ -629,7 +723,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle>
-                                Zug Abfahrt und Ankunft
+                                    Zug Abfahrt und Ankunft
                                 </AccordionTitle>
                                 <AccordionContent>
                                     <Label>Zug Abfahrtsort</Label>
@@ -785,7 +879,8 @@ export default function NewJobs({ auth }) {
                                                             >
                                                                 <div>
                                                                     <label className="text-sm">
-                                                                    Pause Anfang
+                                                                        Pause
+                                                                        Anfang
                                                                     </label>
                                                                     <Select
                                                                         name={`breaks.${index}.start`}
@@ -825,7 +920,8 @@ export default function NewJobs({ auth }) {
                                                                 </div>
                                                                 <div>
                                                                     <label className="text-sm">
-                                                                        Pause Ende
+                                                                        Pause
+                                                                        Ende
                                                                     </label>
                                                                     <Select
                                                                         name={`breaks.${index}.end`}
@@ -972,7 +1068,9 @@ export default function NewJobs({ auth }) {
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
-                                <AccordionTitle>Gastfahrt Zürück</AccordionTitle>
+                                <AccordionTitle>
+                                    Gastfahrt Zürück
+                                </AccordionTitle>
                                 <AccordionContent>
                                     <Label>Gastfahrt Zürück Ort</Label>
                                     <input
