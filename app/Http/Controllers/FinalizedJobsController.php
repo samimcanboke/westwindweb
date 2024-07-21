@@ -992,6 +992,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->learning = $request->learning;
         $finalizedJob->locomotive_number = $request->locomotive_number;
         $finalizedJob->cancel = $request->cancel;
+        $finalizedJob->extra = $request->extra;
         $finalizedJob->accomodation = $request->accomodation;
         $finalizedJob->bereitschaft = $request->bereitschaft;
         $finalizedJob->comment = $request->comment;
@@ -1027,6 +1028,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->locomotive_number = $request->locomotive_number;
         $finalizedJob->cancel = $request->cancel;
         $finalizedJob->learning = $request->learning;
+        $finalizedJob->extra = $request->extra;
         $finalizedJob->accomodation = $request->accomodation;
         $finalizedJob->bereitschaft = $request->bereitschaft;
         $finalizedJob->comment = $request->comment;

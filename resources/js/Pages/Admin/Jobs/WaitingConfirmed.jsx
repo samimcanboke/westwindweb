@@ -478,6 +478,23 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                         />
                                                         <br />
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.extra
+                                                            }
+                                                            label="Extra"
+                                                            id="extra"
+                                                            name="extra"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setFieldValue(
+                                                                    "extra",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                        <br />
                                                         <Label>Kommentar</Label>
                                                         <Textarea
                                                             id="comment"
