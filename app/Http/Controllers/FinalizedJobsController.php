@@ -580,8 +580,14 @@ class FinalizedJobsController extends Controller
             } catch (\Exception $ex) {
                 dd($ex);
             }
+
+
             $uniq_id = uniqid();
-            $filePath = 'excels/' . $uniq_id . '.xlsx'; 
+            $filename = $user_query ? $data['driver'] . '-' : '';
+            $filename .=  $weekly_query ? 'KW' . $request->week . ' ' . $request->year : '';
+            $filename .=  !$weekly_query ? $request->month . '-' . $request->year.'-' : '';
+            $filename .=  $uniq_id. '.xlsx';
+            $filePath = 'excels/' . $filename ; 
             Storage::put($filePath, $file_req->body());
             return response()->json(["status" => true, "file" => $uniq_id]);
         } else {
