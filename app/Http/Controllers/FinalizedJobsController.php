@@ -508,6 +508,9 @@ class FinalizedJobsController extends Controller
             try{
                 $initial_date = $finalized_job->initial_date;
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                if($work_sum == "00:00"){
+                    $work_sum = "24:00";
+                }
                 if($finalized_job->guest_start_time && $finalized_job->guest_start_end_time){
                     $guest_start_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_end_time));     
                 } else {
@@ -602,9 +605,11 @@ class FinalizedJobsController extends Controller
             ]
         ];
 
+
         $month = $request->month;
         $year = $request->year;
         $user_id = $request->user_id;
+        
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
 
@@ -651,6 +656,7 @@ class FinalizedJobsController extends Controller
                 break;
         }
         $user = User::where('id', $user_id)->first();
+    
         $data['id'] = sprintf('%03d', $user->id);
         $data['name'] = $user->name ?? "";
         $data['mail'] = $user->email ?? "";
@@ -689,9 +695,11 @@ class FinalizedJobsController extends Controller
                 */
 
                 $initial_date = $finalized_job->initial_date;
-
+                
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-
+                if($work_sum == "00:00"){
+                    $work_sum = "24:00";
+                }
                 $guest_start_total = "00:00";
 
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
