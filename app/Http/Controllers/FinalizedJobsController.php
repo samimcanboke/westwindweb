@@ -589,7 +589,7 @@ class FinalizedJobsController extends Controller
             $filename .=  $uniq_id. '.xlsx';
             $filePath = 'excels/' . $filename ; 
             Storage::put($filePath, $file_req->body());
-            return response()->json(["status" => true, "file" => $uniq_id]);
+            return response()->json(["status" => true, "file" => $filename]);
         } else {
             return response()->json(["status" => false]);
         }
