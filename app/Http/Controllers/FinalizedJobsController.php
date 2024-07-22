@@ -705,7 +705,6 @@ class FinalizedJobsController extends Controller
         $total_sunday_holiday_hours = new DateInterval('PT0H0M');
 
         $i = 0;
-        $y = 0;
         $feeding_fee = 0;
 
         foreach ($finalized_jobs as $index => $finalized_job) {
@@ -917,10 +916,6 @@ class FinalizedJobsController extends Controller
                 "places" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                 "client" => $finalized_job->client->name,
             ];
-            
-            if(boolval($finalized_job->bereitschaft) || boolval($finalized_job->cancel)){
-                $y++;
-            }
             $i++;
         }
         
@@ -934,7 +929,7 @@ class FinalizedJobsController extends Controller
         $data['totals']['public_holidays'] = sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) : "-";
         $data['totals']['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
         $data['totals']['accomodations'] = $feeding_fee . " €";
-        $data['totals']['total_work_day_amount'] = $i - $y >= 20 ? 20 * $i - $y : ($i - $y) * 6;
+        $data['totals']['total_work_day_amount'] = $i  >= 20 ? 20 * $i  : $i * 6;
 
 
         if ($data && $finalized_jobs->count() > 0) {
