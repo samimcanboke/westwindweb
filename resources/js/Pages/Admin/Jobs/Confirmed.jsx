@@ -102,6 +102,30 @@ export default function Dashboard({ auth }) {
 
     const filterAction = () => {
         setLoading(true);
+        if(filter.client == ""){
+            Swal.fire({
+                icon: "error",
+                title: "Hata",
+                text: "Bitte wählen Sie einen Kunden",
+            });
+            return;
+        }
+        if(filter.year == ""){
+            Swal.fire({
+                icon: "error",
+                title: "Hata",
+                text: "Bitte wählen Sie ein Jahr",
+            });
+            return;
+        }
+        if(filter.month == ""){
+            Swal.fire({
+                icon: "error",
+                title: "Hata",
+                text: "Bitte wählen Sie einen Monat",
+            });
+            return;
+        }
         axios.post(route("get-confirmed-jobs"), filter).then((res) => {
             if (res.data.status) {
                 setLoading(false);
