@@ -429,6 +429,26 @@ class FinalizedJobsController extends Controller
     }
 
 
+    public function get_confirmed_jobs(Request $request)
+    {
+        $request->validate([
+            'user' => 'required',
+            'client' => 'required',
+            'month' => 'required',
+            'year' => 'required',
+        ]);
+
+        $startDate = Carbon::create($request->year, $request->month, 1)->startOfMonth();
+        $endDate = Carbon::create($request->year, $request->month, 1)->endOfMonth()->addMinute();
+        $query = FinalizedJobs::where('confirmation', 1);
+        $query->where('client_id', $request->client);
+        $query->where('user_id', $request->user);
+        $query->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
+        $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
+        return response()->json(["status" => true, "data" => $finalized_jobs]);
+    }
+
+
     public function get_finalized_client(Request $request)
     {
 
