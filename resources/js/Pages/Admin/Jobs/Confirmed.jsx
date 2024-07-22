@@ -1290,7 +1290,7 @@ export default function Dashboard({ auth }) {
                                                 setShowEdit(false);
                                             }}
                                         >
-                                            İptal
+                                            Zurück
                                         </Button>
                                     </div>
                                 </form>
