@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { Formik, Field, FieldArray, Form } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
+import TimePicker from "@/Components/TimePicker";
 
 const initialValues = {
     initialDate: "",
@@ -70,6 +71,9 @@ export default function NewJobs({ auth }) {
     const [showLockführer, setShowLockführer] = useState(false);
     const [users, setUsers] = useState([]);
     const abroad = ['Niederlande', 'Schweiz'];
+
+
+    const timeString = (e) =>  e[0] ? e[0].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
     useEffect(() => {
         axios.get("/clients").then((res) => {
             if (res.status == 200) {
@@ -537,35 +541,23 @@ export default function NewJobs({ auth }) {
 
                                     <Label>GF Start Uhrzeit</Label>
                                     <div className="flex">
-                                        <input
-                                            type="time"
-                                            id="guestStartTime"
-                                            name="guestStartTime"
-                                            className={
-                                                errors.guestStartTime &&
-                                                touched.guestStartTime
-                                                    ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                    : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            }
-                                            value={values.guestStartTime}
-                                            onChange={(e) => {
-                                                setFieldValue(
-                                                    "guestStartTime",
-                                                    e.target.value
-                                                );
-                                            }}
+                                        <TimePicker 
+                                          id="guestStartTime"
+                                          name="guestStartTime"
+                                        className={
+                                            errors.guestStartTime &&
+                                            touched.guestStartTime
+                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        }
+                                        value={values.guestStartTime}
+                                        onChange={(e) => {                                            
+                                            setFieldValue(
+                                                "guestStartTime",
+                                                timeString(e)
+                                            );
+                                        }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
                                     </div>
                                     {errors.guestStartTime &&
                                         touched.guestStartTime && (
@@ -605,7 +597,7 @@ export default function NewJobs({ auth }) {
 
                                     <Label>GF Ende Uhrzeit</Label>
                                     <div className="flex">
-                                        <input
+                                        <TimePicker
                                             type="time"
                                             id="guestStartEndTime"
                                             name="guestStartEndTime"
@@ -619,21 +611,11 @@ export default function NewJobs({ auth }) {
                                             onChange={(e) => {
                                                 setFieldValue(
                                                     "guestStartEndTime",
-                                                    e.target.value
+                                                    timeString(e)
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                       
                                     </div>
                                     {errors.guestStartEndTime &&
                                         touched.guestStartEndTime && (
@@ -680,7 +662,7 @@ export default function NewJobs({ auth }) {
 
                                     <Label>Anfangszeit</Label>
                                     <div className="flex">
-                                        <input
+                                        <TimePicker
                                             type="time"
                                             name="workStartTime"
                                             id="workStartTime"
@@ -694,21 +676,11 @@ export default function NewJobs({ auth }) {
                                             onChange={(e) => {
                                                 setFieldValue(
                                                     "workStartTime",
-                                                    e.target.value
+                                                    timeString(e)
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                        
                                     </div>
                                     {errors.workStartTime &&
                                         touched.workStartTime && (
@@ -774,17 +746,7 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                        
                                     </div>
                                     {errors.trainStartTime &&
                                         touched.trainStartTime && (
@@ -840,17 +802,7 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                        
                                     </div>
                                     {errors.trainEndTime &&
                                         touched.trainEndTime && (
@@ -1027,7 +979,7 @@ export default function NewJobs({ auth }) {
 
                                     <Label>Dienst Ende Zeit</Label>
                                     <div className="flex">
-                                        <input
+                                        <TimePicker
                                             type="time"
                                             id="workEndTime"
                                             className={
@@ -1040,21 +992,11 @@ export default function NewJobs({ auth }) {
                                             onChange={(e) => {
                                                 setFieldValue(
                                                     "workEndTime",
-                                                    e.target.value
+                                                    timeString(e)
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                       
                                         {errors.workEndTime &&
                                             touched.workEndTime && (
                                                 <p className="text-red-500">
@@ -1101,7 +1043,7 @@ export default function NewJobs({ auth }) {
 
                                     <Label>Gastfahrt Zürück Zeit</Label>
                                     <div className="flex">
-                                        <input
+                                        <TimePicker
                                             type="time"
                                             id="guestEndTime"
                                             className={
@@ -1114,21 +1056,11 @@ export default function NewJobs({ auth }) {
                                             onChange={(e) => {
                                                 setFieldValue(
                                                     "guestEndTime",
-                                                    e.target.value
+                                                    timeString(e)
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                        
                                         {errors.guestStartPlace &&
                                             touched.guestStartPlace && (
                                                 <p className="text-red-500">
@@ -1166,7 +1098,7 @@ export default function NewJobs({ auth }) {
 
                                     <Label>Gastfahrt Zürück Ende Zeit:</Label>
                                     <div className="flex">
-                                        <input
+                                        <TimePicker
                                             type="time"
                                             id="guestEndEndTime"
                                             className={
@@ -1179,21 +1111,11 @@ export default function NewJobs({ auth }) {
                                             onChange={(e) => {
                                                 setFieldValue(
                                                     "guestEndEndTime",
-                                                    e.target.value
+                                                    timeString(e)
                                                 );
                                             }}
                                         />
-                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
-                                            </svg>
-                                        </span>
+                                        
                                         {errors.guestEndEndTime &&
                                             touched.guestEndEndTime && (
                                                 <p className="text-red-500">

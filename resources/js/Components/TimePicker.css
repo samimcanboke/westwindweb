@@ -1,0 +1,45 @@
+/* Flatpickr saat ve dakika seçim oklarını sürekli görünür yapmak ve büyütmek için CSS */
+
+/* Flatpickr temel stilleri */
+.flatpickr-time {
+    font-size: 18px; /* Saat ve dakika seçimi için font boyutu */
+  }
+  
+  .flatpickr-time input {
+    font-size: 24px; /* Saat ve dakika giriş alanları için font boyutu */
+  }
+  
+  .flatpickr-time .flatpickr-time-separator {
+    font-size: 24px; /* Saat ve dakika ayırıcı için font boyutu */
+  }
+  
+  .flatpickr-time .numInputWrapper span.arrowUp,
+  .flatpickr-time .numInputWrapper span.arrowDown {
+    display: block; /* Okları sürekli görünür yapar */
+    font-size: 24px; /* Okların boyutunu büyütür */
+    width: 30px; /* Okların genişliğini arttırır */
+    height: 30px; /* Okların yüksekliğini arttırır */
+    line-height: 30px; /* Okların dikey hizalamasını ortalar */
+  }
+  
+  .flatpickr-time .numInputWrapper {
+    width: auto; /* Giriş alanının genişliğini otomatik yapar */
+    height: auto; /* Giriş alanının yüksekliğini otomatik yapar */
+  }
+  
+  /* Okların sürekli görünmesini sağlayacak stil */
+  .flatpickr-time .numInputWrapper {
+    position: relative;
+  }
+  
+  .flatpickr-time .numInputWrapper input {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .flatpickr-time .numInputWrapper span.arrowUp,
+  .flatpickr-time .numInputWrapper span.arrowDown {
+    position: absolute;
+    z-index: 2;
+  }
+  
