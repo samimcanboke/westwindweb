@@ -312,6 +312,8 @@ def add_lines_client_multiple_user(ws, rows):
             cell = ws.cell(row=start + index, column=col)
             if(row_values[13] == 1):
                 cell.fill = PatternFill(start_color="FFA500", end_color="FFA500", fill_type="solid")
+            if(row_values[14] == "true"):
+                cell.fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
             if col == 2 or col == 4 or col == 6 or col == 8  or col == 10 or col == 11 or col == 13 or col == 14:
                 cell.border = left_right_thick
             elif col == 3 or col == 5 or col == 7 or col == 9  or col == 12:

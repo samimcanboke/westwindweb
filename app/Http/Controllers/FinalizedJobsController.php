@@ -394,10 +394,12 @@ class FinalizedJobsController extends Controller
                     "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
                     "guest_back_total_time" => $guest_back_sum,
                     "accomodation" => $finalized_job->feeding_fee == 32 ? "X" : "",
-                    "extra" => 0,
+                    "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                     "client" => $finalized_job->client->name,
+                    "learning"  => $finalized_job->learning,
+                    "fill" => (strtotime($guest_start_sum) > strtotime('04:00')) || (strtotime($guest_back_sum) > strtotime('04:00')) ? "true" : "false",
                 ];
                 
                 $work_sum_total = gettype($work_sum) == "object" ? sprintf('%02d:%02d', $work_sum->h, $work_sum->i) : $work_sum;
@@ -420,9 +422,13 @@ class FinalizedJobsController extends Controller
                 dd($ex);
             }
             $uniq_id = uniqid();
-            $filePath = 'pdfs/' . $uniq_id . '.pdf'; 
+            $filename = $user_query ? $data['driver'] . '-' : '';
+            $filename .=  $weekly_query ? 'KW' . $request->week . ' ' . $request->year . '-' : '';
+            $filename .=  !$weekly_query ? $request->month . '-' . $request->year.'-' : '';
+            $filename .=  $uniq_id;
+            $filePath = 'pdfs/' . $filename . '.pdf'; 
             Storage::put($filePath, $file_req->body());
-            return response()->json(["status" => true, "file" => $uniq_id]);
+            return response()->json(["status" => true, "file" => $filename]);
         } else {
             return response()->json(["status" => false]);
         }
@@ -554,11 +560,12 @@ class FinalizedJobsController extends Controller
                     "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
                     "guest_back_total_time" => $guest_back_sum,
                     "accomodation" => $finalized_job->feeding_fee == 32 ? "X" : "",
-                    "extra" => $finalized_job->extra,
+                    "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                     "client" => $finalized_job->client->name,
                     "learning"  => $finalized_job->learning,
+                    "fill" => (strtotime($guest_start_sum) > strtotime('04:00')) || (strtotime($guest_back_sum) > strtotime('04:00')) ? "true" : "false",
                 ];
                 
                 $work_sum_total = gettype($work_sum) == "object" ? sprintf('%02d:%02d', $work_sum->h, $work_sum->i) : $work_sum;
