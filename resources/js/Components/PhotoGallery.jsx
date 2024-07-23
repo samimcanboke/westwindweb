@@ -24,13 +24,6 @@ const PhotoGallery = ({ images }) => {
         isButton: true,
         tagName: 'button',
         html: 'Yazdır',
-        style: {
-          backgroundColor: 'white',
-          color: 'black',
-          border: '1px solid black',
-          padding: '5px 10px',
-          borderRadius: '5px'
-        },
         onClick: () => {
           const currentSlide = lightboxRef.current.pswp.currSlide;
           if (currentSlide) {
