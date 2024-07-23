@@ -221,7 +221,10 @@ export default function DraftJobs({ auth }) {
                                 validationSchema={validationSchema}
                                 onSubmit={(values, { setSubmitting }) => {
                                     values.images = files;
-                                    console.log("düzenlemeye giden",values.images);
+                                    console.log(
+                                        "düzenlemeye giden",
+                                        values.images
+                                    );
                                     setSubmitting(true);
                                     setLoading(true);
                                     axios
@@ -492,7 +495,17 @@ export default function DraftJobs({ auth }) {
                                                                     }
                                                                 </p>
                                                             )}
-
+                                                        <div className="mt-5 w-full">
+                                                            <Label>
+                                                                Foto hinzufügen
+                                                            </Label>
+                                                            <MultipleFileUpload
+                                                                images={files}
+                                                                setImages={
+                                                                    setFiles
+                                                                }
+                                                            />
+                                                        </div>
                                                         <br />
                                                         <div className="max-w-md">
                                                             <div className="mb-2 block">
@@ -593,20 +606,6 @@ export default function DraftJobs({ auth }) {
                                                                     32€
                                                                 </option>
                                                             </Select>
-                                                        </div>
-
-                                                        <div className="mt-5 w-full">
-                                                            <Label>
-                                                                Foto hinzufügen
-                                                            </Label>
-                                                            <MultipleFileUpload
-                                                                images={
-                                                                    files
-                                                                }
-                                                                setImages={
-                                                                    setFiles
-                                                                }
-                                                            />
                                                         </div>
                                                     </AccordionContent>
                                                 </AccordionPanel>

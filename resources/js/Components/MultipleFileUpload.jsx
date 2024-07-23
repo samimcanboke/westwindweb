@@ -54,8 +54,9 @@ const MultipleFileUpload = ({images,setImages}) => {
   return (
     <div>
       <div {...getRootProps()} className={getClassNames()}>
+        
         <input {...getInputProps()} />
-        <p>Ziehen Sie einige Bilder hierher oder klicken Sie, um Bilder auszuwählen</p>
+        <p>Foto hochladen</p>
       </div>
       {images.length > 0 && (
         <div>

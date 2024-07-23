@@ -449,7 +449,11 @@ export default function NewJobs({ auth }) {
                                         </p>
                                     )}
 
-                                    <br />
+                                    <div className="mt-5 w-full">
+                                        <Label>Foto hinzufügen</Label>
+                                       <MultipleFileUpload images={files} setImages={setFiles} />
+                                    </div>
+                                    <br/>
                                     <div className="max-w-md">
                                         <div className="mb-2 block">
                                             <Label
@@ -519,10 +523,6 @@ export default function NewJobs({ auth }) {
 
                                     </div>
 
-                                    <div className="mt-5 w-full">
-                                        <Label>Foto hinzufügen</Label>
-                                       <MultipleFileUpload images={files} setImages={setFiles} />
-                                    </div>
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>

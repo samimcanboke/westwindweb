@@ -10,20 +10,19 @@
   }
   
   .dropzone {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 200px;
-    padding: 20px;
+    padding: 10px 20px;
     border-width: 2px;
-    border-radius: 2px;
+    border-radius: 5px;
     border-color: #eeeeee;
-    border-style: dashed;
-    background-color: #fafafa;
-    color: #bdbdbd;
+    border-style: solid;
+    background-color: #0a9ecf;
+    color: #fff;
     outline: none;
-    transition: border 0.24s ease-in-out;
+    cursor: pointer;
+    transition: background-color 0.24s ease-in-out, border-color 0.24s ease-in-out;
   }
   
   .dropzone.active {
@@ -38,3 +37,11 @@
     border-color: #ff1744;
   }
   
+  button.pswp__button--print {
+    background-color: #0a9ecf !important;
+    color: #fff !important;
+    padding: 5px 5px !important;
+    border-radius: 5px !important;
+    width: 100px !important;
+    margin-top: 10px !important;
+  }
