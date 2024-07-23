@@ -12,14 +12,14 @@ import {
     Textarea,
     ToggleSwitch,
     Select,
-    Button,
-    Table,
+    Button
 } from "flowbite-react";
 import Swal from "sweetalert2";
 import { Formik, Field, FieldArray, Form } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
 import TimePicker from "@/Components/TimePicker";
+import MultipleFileUpload from "@/Components/MultipleFileUpload";
 
 const initialValues = {
     initialDate: "",
@@ -52,6 +52,7 @@ const initialValues = {
     guestEndTime: "",
     guestEndEndPlace: "",
     guestEndEndTime: "",
+    files: []
 };
 
 const validationSchema = Yup.object().shape({
@@ -68,12 +69,18 @@ const validationSchema = Yup.object().shape({
 export default function NewJobs({ auth }) {
     const [client, setClient] = useState([]);
     const [showAbroad, setShowAbroad] = useState(false);
+    const [files, setFiles] = useState([]);
     const [showLockführer, setShowLockführer] = useState(false);
     const [users, setUsers] = useState([]);
-    const abroad = ['Niederlande', 'Schweiz'];
+    const abroad = ["Niederlande", "Schweiz"];
 
-
-    const timeString = (e) =>  e[0] ? e[0].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+    const timeString = (e) =>
+        e[0]
+            ? e[0].toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+              })
+            : "";
     useEffect(() => {
         axios.get("/clients").then((res) => {
             if (res.status == 200) {
@@ -117,8 +124,10 @@ export default function NewJobs({ auth }) {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values, { setSubmitting, setFieldValue }) => {
                     setSubmitting(true);
+                    values.images = files;
+                    console.log(values.images);
                     values.initialDate = moment(values.initialDate)
                         .utcOffset(0)
                         .toDate();
@@ -146,7 +155,10 @@ export default function NewJobs({ auth }) {
                             return;
                         }
                     }
-
+                    values.cancel = values.cancel ? 1 : 0;
+                    values.accomodation = values.accomodation ? 1 : 0;
+                    values.bereitschaft = values.bereitschaft ? 1 : 0;
+                    values.learning = values.learning ? 1 : 0;
                     axios.post("/save-draft-jobs", values).then((res) => {
                         if (res.status) {
                             console.log(res.data);
@@ -295,7 +307,7 @@ export default function NewJobs({ auth }) {
                                                 setFieldValue("cancel", value);
                                             }}
                                         />
-                                       {/*
+                                        {/*
                                         <ToggleSwitch
                                             checked={values.ausland}
                                             label="Ausland"
@@ -323,7 +335,10 @@ export default function NewJobs({ auth }) {
                                                         32
                                                     );
                                                 } else {
-                                                    setFieldValue("feedingFee", 0);
+                                                    setFieldValue(
+                                                        "feedingFee",
+                                                        0
+                                                    );
                                                 }
                                                 setFieldValue(
                                                     "accomodation",
@@ -375,39 +390,38 @@ export default function NewJobs({ auth }) {
                                     </div>
 
                                     {showLockführer && (
-                                       <div className="max-w-md mt-5">
-                                       <div className="mb-2 block">
-                                           <Label
-                                               htmlFor="user"
-                                               value="Wählen Sie Lockführer"
-                                           />
-                                       </div>
-                                       <Select
-                                           id="user"
-                                           name="user"
-                                           required
-                                           onChange={(e) => {
-                                               setFieldValue(
-                                                   "user",
-                                                   e.target.value
-                                               );
-                                           }}
-                                       >
-                                           <option>Wählen Sie...</option>
-                                           {users &&
-                                               users.length > 0 &&
-                                               users.map((user) => (
-                                                   <option
-                                                       key={user.id}
-                                                       value={user.id}
-                                                   >
-                                                       {user.name}
-                                                   </option>
-                                               ))}
-                                       </Select>
-                                   </div>
+                                        <div className="max-w-md mt-5">
+                                            <div className="mb-2 block">
+                                                <Label
+                                                    htmlFor="user"
+                                                    value="Wählen Sie Lockführer"
+                                                />
+                                            </div>
+                                            <Select
+                                                id="user"
+                                                name="user"
+                                                required
+                                                onChange={(e) => {
+                                                    setFieldValue(
+                                                        "user",
+                                                        e.target.value
+                                                    );
+                                                }}
+                                            >
+                                                <option>Wählen Sie...</option>
+                                                {users &&
+                                                    users.length > 0 &&
+                                                    users.map((user) => (
+                                                        <option
+                                                            key={user.id}
+                                                            value={user.id}
+                                                        >
+                                                            {user.name}
+                                                        </option>
+                                                    ))}
+                                            </Select>
+                                        </div>
                                     )}
-
 
                                     <br />
                                     <Label>Kommenter</Label>
@@ -493,13 +507,21 @@ export default function NewJobs({ auth }) {
                                             required
                                             value={values.feedingFee}
                                         >
-                                            
                                             <option value={0}>0€</option>
                                             <option value={16}>16€</option>
-                                            <option value={32} disabled={!values.accomodation}>32€</option>
+                                            <option
+                                                value={32}
+                                                disabled={!values.accomodation}
+                                            >
+                                                32€
+                                            </option>
                                         </Select>
 
-                                        {/*//TODO: Bu alana bir buton koyulacak. Bu buton eğer bu güzergah ile ilgili bir not alınmışsa görünecek. Tıklanınca ilgili notlar görünecek. (en son iş)*/}
+                                    </div>
+
+                                    <div className="mt-5 w-full">
+                                        <Label>Foto hinzufügen</Label>
+                                       <MultipleFileUpload images={files} setImages={setFiles} />
                                     </div>
                                 </AccordionContent>
                             </AccordionPanel>
@@ -541,22 +563,22 @@ export default function NewJobs({ auth }) {
 
                                     <Label>GF Start Uhrzeit</Label>
                                     <div className="flex">
-                                        <TimePicker 
-                                          id="guestStartTime"
-                                          name="guestStartTime"
-                                        className={
-                                            errors.guestStartTime &&
-                                            touched.guestStartTime
-                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        }
-                                        value={values.guestStartTime}
-                                        onChange={(e) => {                                            
-                                            setFieldValue(
-                                                "guestStartTime",
-                                                timeString(e)
-                                            );
-                                        }}
+                                        <TimePicker
+                                            id="guestStartTime"
+                                            name="guestStartTime"
+                                            className={
+                                                errors.guestStartTime &&
+                                                touched.guestStartTime
+                                                    ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            }
+                                            value={values.guestStartTime}
+                                            onChange={(e) => {
+                                                setFieldValue(
+                                                    "guestStartTime",
+                                                    timeString(e)
+                                                );
+                                            }}
                                         />
                                     </div>
                                     {errors.guestStartTime &&
@@ -615,7 +637,6 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                       
                                     </div>
                                     {errors.guestStartEndTime &&
                                         touched.guestStartEndTime && (
@@ -680,7 +701,6 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        
                                     </div>
                                     {errors.workStartTime &&
                                         touched.workStartTime && (
@@ -746,7 +766,6 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        
                                     </div>
                                     {errors.trainStartTime &&
                                         touched.trainStartTime && (
@@ -802,7 +821,6 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        
                                     </div>
                                     {errors.trainEndTime &&
                                         touched.trainEndTime && (
@@ -996,7 +1014,7 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                       
+
                                         {errors.workEndTime &&
                                             touched.workEndTime && (
                                                 <p className="text-red-500">
@@ -1060,7 +1078,7 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        
+
                                         {errors.guestStartPlace &&
                                             touched.guestStartPlace && (
                                                 <p className="text-red-500">
@@ -1115,7 +1133,7 @@ export default function NewJobs({ auth }) {
                                                 );
                                             }}
                                         />
-                                        
+
                                         {errors.guestEndEndTime &&
                                             touched.guestEndEndTime && (
                                                 <p className="text-red-500">

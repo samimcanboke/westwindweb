@@ -33,7 +33,7 @@ class DraftJobsController extends Controller
      */
     public function store(Request $request)
     {
-     
+   
         $draftJob = new DraftJobs();
         $draftJob->user_id = $request->user()->id;
         $draftJob->client_id = $request->client;
@@ -64,6 +64,7 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_time = $request->guestEndTime;
         $draftJob->guest_end_end_place = $request->guestEndEndPlace;
         $draftJob->guest_end_end_time = $request->guestEndEndTime;
+        $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
         $draftJob->save();
 
         return response()->json(["status" => true]);
@@ -121,6 +122,9 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_time = $request->guest_end_time;
         $draftJob->guest_end_end_place = $request->guest_end_end_place;
         $draftJob->guest_end_end_time = $request->guest_end_end_time;
+        if($request->images && json_encode($request->images) !== $draftJob->files){
+            $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
+        }
         $draftJob->save();
     }
         /**
@@ -160,7 +164,10 @@ class DraftJobsController extends Controller
         $finalized->guest_end_place = $draft->guest_end_place;
         $finalized->guest_end_time = $draft->guest_end_time;
         $finalized->guest_end_end_place = $draft->guest_end_end_place;
-        $finalized->guest_end_end_time = $draft->guest_end_end_time;   
+        $finalized->guest_end_end_time = $draft->guest_end_end_time;  
+        if($draft->files){
+            $finalized->files = is_string($draft->files) ? $draft->files : json_encode($draft->files);
+        }
         $finalized->save();
         $draft->delete();
         return response()->json(["status" => $finalized]);

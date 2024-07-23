@@ -629,6 +629,56 @@ export default function WaitingConfirmed({ auth }) {
                                                                 </option>
                                                             </Select>
                                                         </div>
+                                                       
+                                                        {JSON.parse(values.files).length > 0 && (
+                                                            <div className="max-w-md mt-5">
+                                                                <div>
+                                                                    <h3>
+                                                                        Hochgeladene
+                                                                        Bilder
+                                                                    </h3>
+                                                                    <ul className="uploaded-files-list">
+                                                                  
+                                                                        {JSON.parse(values.files).map(
+                                                                            (
+                                                                                file,
+                                                                                index
+                                                                            ) => (
+                                                                                <li
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                    className="uploaded-file-item"
+                                                                                    style={{
+                                                                                        position:
+                                                                                            "relative",
+                                                                                        display:
+                                                                                            "inline-block",
+                                                                                        margin: "10px",
+                                                                                    }}
+                                                                                >
+                                                                                    <a href={file.url} target="_blank">
+                                                                                        <img
+                                                                                            src={
+                                                                                            file.url
+                                                                                        }
+                                                                                        alt={`upload-${index}`}
+                                                                                        className="thumbnail"
+                                                                                        style={{
+                                                                                            width: "100px",
+                                                                                            height: "100px",
+                                                                                            objectFit:
+                                                                                                "cover",
+                                                                                        }}
+                                                                                    />
+                                                                                    </a>
+                                                                                </li>
+                                                                            )
+                                                                        )}
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </AccordionContent>
                                                 </AccordionPanel>
                                             </Accordion>

@@ -16,6 +16,8 @@ use App\Http\Controllers\PdfController;
 use App\Mail\MyTestEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+use App\Http\Controllers\FileUploadController;
+
 
 use App\Events\UserRegistered;
 
@@ -114,6 +116,10 @@ Route::post('/save-draft-jobs', [DraftJobsController::class, 'store'])->middlewa
 Route::post('/delete-draft-jobs', [DraftJobsController::class, 'destroy'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('delete-draft-jobs');
 Route::post('/send-submit-draft-jobs', [DraftJobsController::class, 'send_submit'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('send-submit-draft-jobs');
 Route::post('/update-draft-jobs', [DraftJobsController::class, 'update'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('update-draft-jobs');
+
+Route::post('/upload', [FileUploadController::class, 'upload'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('upload');
+
+
 
 Route::get('/data-unconfirmed-jobs', [FinalizedJobsController::class, 'unconfirmed_jobs'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('data-unconfirmed-jobs');
 Route::get('/data-confirmed-jobs', [FinalizedJobsController::class, 'confirmed_jobs'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('data-confirmed-jobs');
