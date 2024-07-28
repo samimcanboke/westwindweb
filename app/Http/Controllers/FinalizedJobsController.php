@@ -81,17 +81,19 @@ class FinalizedJobsController extends Controller
     {
         // %40 gece 0 dan 4 e kadar
 
-        $nightStart = $this->convertTimeToDatetime($initial_date, "00:00");
+        $nightStart = $this->convertTimeToDatetime($initial_date, "00:00")->modify('-1 day');
         $nightEnd = $this->convertTimeToDatetime($initial_date, "04:00");
         $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);
 
-
+       
         if ($work_start_time > $work_end_time) {
             $endTime->modify('+1 day');
             $nightEnd->modify('+1 day');
+            $nightStart->modify('+1 day');
         }
 
+        //dd($work_start_time, $work_end_time, $initial_date,$nightStart,$nightEnd,$startTime,$endTime);
         $nightHours = 0;
         if ($startTime < $endTime) {
             $overlapStart = max($startTime, $nightStart);
@@ -721,12 +723,11 @@ class FinalizedJobsController extends Controller
         $feeding_fee = 0;
 
         foreach ($finalized_jobs as $index => $finalized_job) {
-            try {
-                /* 
-                if($index < 1){
-                    continue;
-                }
-                */
+            try {  
+
+                //if($finalized_job->id !=  35){
+                //    continue;
+                //}
 
                 $initial_date = $finalized_job->initial_date;
                 
@@ -805,6 +806,7 @@ class FinalizedJobsController extends Controller
                 if ($test_public_holiday->h == 0 && $test_public_holiday->i == 0 && $test_public_holiday->s == 0) {
 
                     $midnight_hours = $this->calculateMidNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
+                   // dd($midnight_hours);
                     if ($midnight_hours != 0) {
                         $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
                     } else {
@@ -907,7 +909,13 @@ class FinalizedJobsController extends Controller
                     $sunday_hours = "00:00";
                     $total_breaks = "00:00";
                 }
+
+
+                
+
+              
             }
+
 
            
 
