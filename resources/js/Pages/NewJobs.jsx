@@ -1148,7 +1148,7 @@ export default function NewJobs({ auth }) {
                         <div className="flex justify-center items-center">
                             <Button
                                 type="submit"
-                                disabled={isSubmitting}
+                                //disabled={isSubmitting}
                                 className="mb-5"
                             >
                                 Speichern
