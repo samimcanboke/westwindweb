@@ -806,7 +806,7 @@ class FinalizedJobsController extends Controller
             }
 
             $feeding_fee += $finalized_job->feeding_fee;
-            if (!$finalized_job->bereitschaft && !$finalized_job->learning) {
+            if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel) {
                 $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
                 $total_public_holiday_hours = $this->calculateTotalSum($public_holiday_hours, $total_public_holiday_hours);
 
@@ -889,7 +889,7 @@ class FinalizedJobsController extends Controller
                     $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
                 }
             } else {
-                if($finalized_job->bereitschaft && !$finalized_job->learning){
+                if(($finalized_job->bereitschaft || $finalized_job->cancel) && !$finalized_job->learning){
                     $finalized_job->guest_start_time = "";
                     $finalized_job->guest_start_end_time = "";
                     $finalized_job->guest_end_time = "";
@@ -901,7 +901,7 @@ class FinalizedJobsController extends Controller
                     $sunday_hours = "00:00";
                     $total_breaks = "00:00";
                     $finalized_job->feeding_fee = 0;
-                } else if ($finalized_job->learning && !$finalized_job->bereitschaft) {
+                } else if ($finalized_job->learning && (!$finalized_job->bereitschaft || $finalized_job->cancel)) {
                     $public_holiday_hours = "00:00";
                     $midnight_hours = "00:00";
                     $self_night_hours = "00:00";
@@ -917,12 +917,7 @@ class FinalizedJobsController extends Controller
                     $self_night_hours = "00:00";
                     $sunday_hours = "00:00";
                     $total_breaks = "00:00";
-                }
-
-
-                
-
-              
+                }  
             }
 
 
