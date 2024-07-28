@@ -83,7 +83,11 @@ class FinalizedJobsController extends Controller
 
         $nightStart = $this->convertTimeToDatetime($initial_date, "00:00")->modify('-1 day');
         $nightEnd = $this->convertTimeToDatetime($initial_date, "04:00");
-        $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
+        if($work_start_time == "00:00"){
+            $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time)->modify('-1 day');    
+        } else {
+            $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
+        }
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);
 
        
@@ -134,7 +138,11 @@ class FinalizedJobsController extends Controller
         $nightStart = $this->convertTimeToDatetime($initial_date, "04:00");
         $nightEnd = $this->convertTimeToDatetime($initial_date, "06:00");
        
-        $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
+        if($work_start_time == "00:00"){
+            $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time)->modify('-1 day');    
+        } else {
+            $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
+        }
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);
 
         if ($work_end_time < $work_start_time) {
@@ -142,6 +150,7 @@ class FinalizedJobsController extends Controller
             $nightStart->modify('+1 day');
             $nightEnd->modify('+1 day');
         }
+        //dd($work_start_time, $work_end_time, $initial_date,$nightStart,$nightEnd,$startTime,$endTime);
         $nightHours = 0;
         if ($startTime < $nightEnd) {
             $overlapStart = max($startTime, $nightStart);
@@ -725,9 +734,9 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {  
 
-                //if($finalized_job->id !=  35){
-                //    continue;
-                //}
+                if($finalized_job->id !=  59){
+                    continue;
+                }
 
                 $initial_date = $finalized_job->initial_date;
                 
@@ -806,7 +815,7 @@ class FinalizedJobsController extends Controller
                 if ($test_public_holiday->h == 0 && $test_public_holiday->i == 0 && $test_public_holiday->s == 0) {
 
                     $midnight_hours = $this->calculateMidNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
-                   // dd($midnight_hours);
+                    //dd($midnight_hours);
                     if ($midnight_hours != 0) {
                         $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
                     } else {
