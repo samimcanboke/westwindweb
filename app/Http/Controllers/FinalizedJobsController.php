@@ -890,11 +890,7 @@ class FinalizedJobsController extends Controller
                 }
             } else {
                 if(($finalized_job->bereitschaft || $finalized_job->cancel) && !$finalized_job->learning){
-                    $finalized_job->guest_start_time = "";
-                    $finalized_job->guest_start_end_time = "";
-                    $finalized_job->guest_end_time = "";
-                    $finalized_job->guest_end_end_time = "";
-                    $guest_total = "00:00";
+
                     $public_holiday_hours = "00:00";
                     $midnight_hours = "00:00";
                     $self_night_hours = "00:00";
