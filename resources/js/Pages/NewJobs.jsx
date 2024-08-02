@@ -62,8 +62,44 @@ const validationSchema = Yup.object().shape({
     tourName: Yup.string().required("Required"),
     workStartPlace: Yup.string().required("Required"),
     workEndPlace: Yup.string().required("Required"),
-    workStartTime: Yup.string().required("Required"),
-    workEndTime: Yup.string().required("Required"),
+    workStartTime: Yup.string()
+        .required("Required")
+        .test(
+            "is-valid-time",
+            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+            function (value) {
+                const time = moment(value, "HH:mm");
+                return time.isValid() && time.minute() % 15 === 0;
+            }
+        ),
+    workEndTime: Yup.string()
+        .required("Required")
+        .test(
+            "is-valid-time",
+            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+            function (value) {
+                const time = moment(value, "HH:mm");
+                return time.isValid() && time.minute() % 15 === 0;
+            }
+        )
+        .test(
+            "is-valid-duration",
+            "Bei Bereitschafts- oder stornierten Arbeiten darf die Arbeitsendzeit 8 Stunden nicht überschreiten",
+            function (value) {
+                const { cancel, bereitschaft, workStartTime } = this.parent;
+                if (cancel || bereitschaft) {
+                    const start = moment(workStartTime, "HH:mm");
+                    let end = moment(value, "HH:mm");
+                    if (end.isBefore(start)) {
+                        end.add(1, 'day');
+                    }
+                    const duration = moment.duration(end.diff(start));
+                    const hours = duration.asHours();
+                    return hours <= 8;
+                }
+                return true;
+            }
+        ),
 });
 
 export default function NewJobs({ auth }) {
@@ -124,6 +160,7 @@ export default function NewJobs({ auth }) {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
+
                 onSubmit={(values, { setSubmitting, setFieldValue }) => {
                     setSubmitting(true);
                     values.images = files;
@@ -314,7 +351,7 @@ export default function NewJobs({ auth }) {
                                             id="ausland"
                                             name="ausland"
                                             onChange={(value) => {
-                                           
+
                                                 setFieldValue(
                                                     "ausland",
                                                     value
@@ -579,6 +616,8 @@ export default function NewJobs({ auth }) {
                                                     timeString(e)
                                                 );
                                             }}
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
                                         />
                                     </div>
                                     {errors.guestStartTime &&
@@ -995,7 +1034,12 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label>Dienst Ende Zeit</Label>
+                                    <Label >Dienst Ende Zeit  {errors.workEndTime &&
+                                            touched.workEndTime && (
+                                                <p className="text-red-500">
+                                                    *{errors.workEndTime}
+                                                </p>
+                                            )}</Label>
                                     <div className="flex">
                                         <TimePicker
                                             type="time"
@@ -1003,11 +1047,12 @@ export default function NewJobs({ auth }) {
                                             className={
                                                 errors.workEndTime &&
                                                 touched.workEndTime
-                                                    ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                    : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    ? "rounded-none rounded-s-lg bg-gray-50 border text-red-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-red-300 p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-re-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
                                             value={values.workEndTime}
                                             onChange={(e) => {
+
                                                 setFieldValue(
                                                     "workEndTime",
                                                     timeString(e)
@@ -1015,12 +1060,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
 
-                                        {errors.workEndTime &&
-                                            touched.workEndTime && (
-                                                <p className="text-red-500">
-                                                    *{errors.workEndTime}
-                                                </p>
-                                            )}
+
                                     </div>
                                 </AccordionContent>
                             </AccordionPanel>

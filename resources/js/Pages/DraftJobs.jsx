@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { Formik, Field, FieldArray, Form } from "formik";
 import * as Yup from "yup";
 import MultipleFileUpload from "@/Components/MultipleFileUpload";
+import moment from "moment";
 
 export default function DraftJobs({ auth }) {
     const [data, setData] = useState([]);
@@ -34,8 +35,44 @@ export default function DraftJobs({ auth }) {
         tourName: Yup.string().required("Required"),
         workStartPlace: Yup.string().required("Required"),
         workEndPlace: Yup.string().required("Required"),
-        workStartTime: Yup.string().required("Required"),
-        workEndTime: Yup.string().required("Required"),
+        workStartTime: Yup.string()
+        .required("Required")
+        .test(
+            "is-valid-time",
+            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+            function (value) {
+                const time = moment(value, "HH:mm");
+                return time.isValid() && time.minute() % 15 === 0;
+            }
+        ),
+    workEndTime: Yup.string()
+        .required("Required")
+        .test(
+            "is-valid-time",
+            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+            function (value) {
+                const time = moment(value, "HH:mm");
+                return time.isValid() && time.minute() % 15 === 0;
+            }
+        )
+        .test(
+            "is-valid-duration",
+            "Bei Bereitschafts- oder stornierten Arbeiten darf die Arbeitsendzeit 8 Stunden nicht überschreiten",
+            function (value) {
+                const { cancel, bereitschaft, workStartTime } = this.parent;
+                if (cancel || bereitschaft) {
+                    const start = moment(workStartTime, "HH:mm");
+                    let end = moment(value, "HH:mm");
+                    if (end.isBefore(start)) {
+                        end.add(1, 'day');
+                    }
+                    const duration = moment.duration(end.diff(start));
+                    const hours = duration.asHours();
+                    return hours <= 8;
+                }
+                return true;
+            }
+        ),
     });
 
     const camelCase = (obj) => {
@@ -838,6 +875,15 @@ export default function DraftJobs({ auth }) {
 
                                                         <Label>
                                                             Anfangszeit
+                                                            {errors.workStartTime &&
+                                                            touched.workStartTime && (
+                                                                <p className="text-red-500">
+                                                                    *
+                                                                    {
+                                                                        errors.workStartTime
+                                                                    }
+                                                                </p>
+                                                            )}
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -847,7 +893,7 @@ export default function DraftJobs({ auth }) {
                                                                 className={
                                                                     errors.workStartTime &&
                                                                     touched.workStartTime
-                                                                        ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                        ? "rounded-none rounded-s-lg bg-gray-50 border text-red-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-red-300 p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
@@ -875,15 +921,7 @@ export default function DraftJobs({ auth }) {
                                                                 </svg>
                                                             </span>
                                                         </div>
-                                                        {errors.workStartTime &&
-                                                            touched.workStartTime && (
-                                                                <p className="text-red-500">
-                                                                    *
-                                                                    {
-                                                                        errors.workStartTime
-                                                                    }
-                                                                </p>
-                                                            )}
+
                                                     </AccordionContent>
                                                 </AccordionPanel>
                                             </Accordion>
@@ -1268,6 +1306,15 @@ export default function DraftJobs({ auth }) {
 
                                                         <Label>
                                                             Dienst Ende Zeit
+                                                            {errors.workEndTime &&
+                                                                touched.workEndTime && (
+                                                                    <p className="text-red-500">
+                                                                        *
+                                                                        {
+                                                                            errors.workEndTime
+                                                                        }
+                                                                    </p>
+                                                                )}
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1276,7 +1323,7 @@ export default function DraftJobs({ auth }) {
                                                                 className={
                                                                     errors.workEndTime &&
                                                                     touched.workEndTime
-                                                                        ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                        ? "rounded-none rounded-s-lg bg-gray-50 border text-red-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-red-300 p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
@@ -1303,15 +1350,7 @@ export default function DraftJobs({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                                                            {errors.workEndTime &&
-                                                                touched.workEndTime && (
-                                                                    <p className="text-red-500">
-                                                                        *
-                                                                        {
-                                                                            errors.workEndTime
-                                                                        }
-                                                                    </p>
-                                                                )}
+
                                                         </div>
                                                     </AccordionContent>
                                                 </AccordionPanel>
