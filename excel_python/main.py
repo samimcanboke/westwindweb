@@ -23,14 +23,14 @@ def main_excel():
         ws.page_setup.fitToHeight = 0
         ws.page_setup.fitToWidth = 1
         ws = add_header(ws, used_data["year"],
-                            used_data["month"], 
-                            used_data["name"], 
+                            used_data["month"],
+                            used_data["name"],
                             used_data["id"],
                             used_data["mail"],
                             used_data["phone"]
                             )
-        ws = add_lines(ws, used_data)
-        ws = sum_lines(ws, used_data)
+        ws, total_height = add_lines(ws, used_data)
+        ws = sum_lines(ws, used_data, total_height)
         #img = drawing.image.Image('./logo.jpg')
         #img.anchor = 'N1'
         #ws.add_image(img)
@@ -99,10 +99,29 @@ def add_lines(ws, rows):
     for index, row in enumerate(rows['rows']):
         row_values = list(row.values())
         for col in range(2, 17):
+            if col == 14:
+                cell = ws.cell(row=start + index, column=col)
+                cell.border = full_border
+                cell.value = row_values[col - 2]
+                cell.alignment = Alignment(wrap_text=True, vertical='top')
+                if cell.value is not None:
+                    length = len(cell.value)
+                    if length < 44:
+                        ws.row_dimensions[start + index].height = 20
+                    elif length < 88 and length > 44:
+                        ws.row_dimensions[start + index].height = 40
+                    elif length < 132 and length > 88:
+                        ws.row_dimensions[start + index].height = 60
+                    else:
+                        ws.row_dimensions[start + index].height = 80
+
+                else:
+                    ws.row_dimensions[start + index].height = 20
+            ws.cell(row=start + index, column=col).alignment = Alignment(wrap_text=True, vertical='center',horizontal='center')
             cell = ws.cell(row=start + index, column=col)
             cell.border = full_border
             cell.value = row_values[col - 2]
-          
+
     total = str(count + start + 1)
     number_format = NamedStyle(name="number")
     number_format.number_format = '#,##0.00'
@@ -111,6 +130,7 @@ def add_lines(ws, rows):
         if column == 2:
             cell.value = str(count) + " Tage"
             cell.border = left_up_down_border
+            cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
         elif column == 3:
             cell.border = up_down_border
@@ -173,7 +193,7 @@ def add_lines(ws, rows):
             cell.border = up_down_border
         if column == 16:
             cell.border = right_up_down_border
-    return ws
+    return ws, total_needed
 
 
 def write_to_excel(file_path, sheet_name, cell_coordinates, value):
@@ -199,8 +219,10 @@ def color_cell(file_path, sheet_name, cell_coordinates, color):
         print("Excel dosyasında hücre renklendirme işlemi başarısız oldu. Hata:", e)
 
 
-def sum_lines(ws,used_data):
+def sum_lines(ws,used_data, total_height):
     ws['E35'].value = str(used_data['totals']['dates']) + " Tage"
+    for row in range(35, 46):
+        ws.row_dimensions[row].height = 30
     ws['E36'].value = str(used_data['totals']['workhours']) + " St"
     ws['E37'].value = str(used_data['totals']['breaks']) + " St"
     ws['E38'].value = str(used_data['totals']['sub_total']) + " St"
@@ -210,6 +232,7 @@ def sum_lines(ws,used_data):
     ws['E42'].value = str(used_data['totals']['public_holidays']) + " St"
     ws['E43'].value = str(used_data['totals']['guests']) + " St"
     ws['E44'].value = str(used_data['totals']['total_work_day_amount']) + " €"
+    ws['E45'].value = str(used_data['totals']['accomodations'])
     ws['K35'].value = str(used_data['admin_extra'])
     ws['K36'].value = str(used_data['left_admin_extra'])
     ws['K38'].value = str(used_data['current_sick'])
@@ -241,7 +264,7 @@ def main_excel_client():
         ws.page_setup.fitToHeight = 0
         ws.page_setup.fitToWidth = 1
         ws = add_header_client_multiple_user(ws, used_data["year"],
-                            used_data["month"], 
+                            used_data["month"],
                             used_data["client"]
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
@@ -361,7 +384,7 @@ def main_excel_client_pdf():
         ws.page_setup.fitToHeight = 0
         ws.page_setup.fitToWidth = 1
         ws = add_header_client_multiple_user(ws, used_data["year"],
-                            used_data["month"], 
+                            used_data["month"],
                             used_data["client"]
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
