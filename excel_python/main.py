@@ -251,6 +251,56 @@ def sum_lines(ws,used_data, total_height):
     return ws
 
 
+@app.route('/create-total-excel', methods=['POST'])
+def create_total_excel():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        used_data = json.loads(request.json)
+        wb = load_workbook(filename='./total_report.xlsx')
+        ws = wb.active
+        rows_list = []
+        for key, value in used_data['rows'].items():
+            rows_list.append(value)
+        used_data['rows'] = rows_list
+        app.logger.info(used_data)
+        ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+        ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
+        ws.page_setup.fitToHeight = 0
+        ws.page_setup.fitToWidth = 1
+        ws['D3'] = used_data['year']
+        ws['D4'] = used_data['month']
+        for row in used_data['rows']:
+            row_num = 10
+            for row_data in used_data['rows']:
+                ws[f'B{row_num}'] = row_data['id']
+                ws[f'C{row_num}'] = row_data['name']
+                ws[f'D{row_num}'] = row_data['total_day']
+                ws[f'E{row_num}'] = row_data['workhours']
+                ws[f'F{row_num}'] = row_data['breaks']
+                ws[f'G{row_num}'] = row_data['sub_total']
+                ws[f'H{row_num}'] = row_data['night_shift']
+                ws[f'I{row_num}'] = row_data['midnight_shift']
+                ws[f'J{row_num}'] = row_data['sunday_holidays']
+                ws[f'K{row_num}'] = row_data['public_holidays']
+                ws[f'L{row_num}'] = row_data['guests']
+                ws[f'M{row_num}'] = row_data['total_work_day_amount']
+                ws[f'N{row_num}'] = row_data['accomodations']
+                row_num += 1
+        wb.save("/tmp/result_total.xlsx")
+        subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
+                       shell=True,
+                       capture_output=True, text=True)
+        try:
+            return send_file('/tmp/result_total.pdf', as_attachment=True)
+        finally:
+            if os.path.exists('/tmp/result_total.pdf'):
+                os.remove('/tmp/result_total.pdf')
+                os.remove('/tmp/result_total.xlsx')
+    else:
+        return "Content type is not supported."
+
+
+
 @app.route('/create-excel-client-multiple', methods=['POST'])
 def main_excel_client():
     content_type = request.headers.get('Content-Type')

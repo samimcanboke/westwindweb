@@ -179,6 +179,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware([IsAdmin::class])->name('profile.destroy');
     Route::get('/clients', [ClientController::class, 'index'])->withoutMiddleware([IsAdmin::class])->name('clients.index');
     Route::post('/finalized-jobs/export', [FinalizedJobsController::class, 'get_finalized'])->withoutMiddleware([IsAdmin::class])->name('get-finalized');
+    Route::post('/finalized-jobs/get-total-report', [FinalizedJobsController::class, 'get_total_report'])->withoutMiddleware([IsAdmin::class])->name('get-total-report');
     Route::post('/finalized-jobs/get-confirmed-jobs', [FinalizedJobsController::class, 'get_confirmed_jobs'])->withoutMiddleware([IsAdmin::class])->name('get-confirmed-jobs');
     Route::post('/finalized-jobs/export-client', [FinalizedJobsController::class, 'get_finalized_client'])->withoutMiddleware([IsAdmin::class])->name('get-finalized-client');
     Route::post('/finalized-jobs/export-client-pdf', [FinalizedJobsController::class, 'get_finalized_client_pdf'])->withoutMiddleware([IsAdmin::class])->name('get-finalized-client-pdf');

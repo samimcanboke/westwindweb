@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UsersExport;
+use App\Models\Client;
 use App\Models\FinalizedJobs;
 use App\Models\User;
-use DateTime;
-use Illuminate\Http\Request;
-use App\Models\Client;
-use App\Exports\UsersExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use DateInterval;
+use DateTime;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FinalizedJobsController extends Controller
 {
@@ -34,8 +34,8 @@ class FinalizedJobsController extends Controller
             $new_datetime->modify('+1 day');
         }
         if (gettype($hour) == "string" || gettype($minute) == "string") {
-            $hour = (int)$hour;
-            $minute = (int)$minute;
+            $hour = (int) $hour;
+            $minute = (int) $minute;
         }
         $new_datetime->setTime($hour, $minute, 0);
         return $new_datetime;
@@ -73,9 +73,8 @@ class FinalizedJobsController extends Controller
 
         $diff = $end_time->diffInMinutes($start_time);
 
-        return  gmdate('H:i', abs($diff) * 60);
+        return gmdate('H:i', abs($diff) * 60);
     }
-
 
     private function calculateMidNightHours($work_start_time, $work_end_time, $initial_date)
     {
@@ -83,13 +82,12 @@ class FinalizedJobsController extends Controller
 
         $nightStart = $this->convertTimeToDatetime($initial_date, "00:00")->modify('-1 day');
         $nightEnd = $this->convertTimeToDatetime($initial_date, "04:00");
-        if($work_start_time == "00:00"){
+        if ($work_start_time == "00:00") {
             $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time)->modify('-1 day');
         } else {
             $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
         }
         $endTime = $this->convertTimeToDatetime($initial_date, $work_end_time);
-
 
         if ($work_start_time > $work_end_time) {
             $endTime->modify('+1 day');
@@ -138,7 +136,7 @@ class FinalizedJobsController extends Controller
         $nightStart = $this->convertTimeToDatetime($initial_date, "04:00");
         $nightEnd = $this->convertTimeToDatetime($initial_date, "06:00");
 
-        if($work_start_time == "00:00"){
+        if ($work_start_time == "00:00") {
             $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time)->modify('-1 day');
         } else {
             $startTime = $this->convertTimeToDatetime($initial_date, $work_start_time);
@@ -174,7 +172,7 @@ class FinalizedJobsController extends Controller
         $nightStart->modify('-1 minutes');
         $nightEnd = $this->convertTimeToDatetime($initial_date, "23:59");
         $nightEnd->modify('+1 minutes');
-        if ($workDate->format('w') == 6 &&  $endTime < $startTime) {
+        if ($workDate->format('w') == 6 && $endTime < $startTime) {
             $workDate->modify('+1 day');
             $nightStart->modify('+1 day');
             $nightEnd->modify('+1 day');
@@ -231,8 +229,7 @@ class FinalizedJobsController extends Controller
             $endTime->modify('+1 day');
         }
 
-
-        $publicHolidayHours = new DateInterval('PT0H0M');;
+        $publicHolidayHours = new DateInterval('PT0H0M');
         foreach ($publicHolidays as $holiday) {
             $date_holiday = Carbon::createFromFormat('d/m/Y H:i:s', $holiday . " 00:00:00");
             $end_holiday = Carbon::createFromFormat('d/m/Y H:i:s', $holiday . " 00:00:00");
@@ -353,9 +350,9 @@ class FinalizedJobsController extends Controller
         }
 
         $data['year'] = $request->year;
-        $data['client'] = Client::where('id',$request->client_id)->first()->name;
+        $data['client'] = Client::where('id', $request->client_id)->first()->name;
 
-        if($weekly_query){
+        if ($weekly_query) {
             $startDate = Carbon::now()->setISODate($request->year, $request->week)->startOfWeek();
             $endDate = Carbon::now()->setISODate($request->year, $request->week)->endOfWeek()->addMinute();
         } else {
@@ -366,31 +363,31 @@ class FinalizedJobsController extends Controller
         if ($request->client_id) {
             $query->where('client_id', $request->client_id);
         }
-        if($user_query){
+        if ($user_query) {
             $query->where('user_id', $request->user_id);
         }
         $query->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
 
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
 
-        if($user_query){
+        if ($user_query) {
             $data['driver'] = $finalized_jobs->first()->user->name;
         }
         $data['totals']['total_day'] = $finalized_jobs->count();
         $data['totals']['work_total'] = "00:00";
         $data['totals']['guest_total'] = "00:00";
         $data['totals']['guest_back_total'] = "00:00";
-        foreach($finalized_jobs as $finalized_job){
-            try{
+        foreach ($finalized_jobs as $finalized_job) {
+            try {
                 $initial_date = $finalized_job->initial_date;
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-                if($finalized_job->guest_start_time && $finalized_job->guest_start_end_time){
+                if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
                     $guest_start_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_end_time));
                 } else {
                     $guest_start_sum = "00:00";
                 }
 
-                if($finalized_job->guest_end_time && $finalized_job->guest_end_end_time){
+                if ($finalized_job->guest_end_time && $finalized_job->guest_end_end_time) {
                     $guest_back_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_end_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_end_end_time));
                 } else {
                     $guest_back_sum = "00:00";
@@ -409,7 +406,7 @@ class FinalizedJobsController extends Controller
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                     "client" => $finalized_job->client->name,
-                    "learning"  => $finalized_job->learning,
+                    "learning" => $finalized_job->learning,
                     "fill" => (strtotime($guest_start_sum) > strtotime('04:00')) || (strtotime($guest_back_sum) > strtotime('04:00')) ? "true" : "false",
                 ];
 
@@ -417,9 +414,9 @@ class FinalizedJobsController extends Controller
                 $last_work_sum = gettype($data['totals']['work_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['work_total']->h, $data['totals']['work_total']->i) : $data['totals']['work_total'];
                 $guest_start_sum_total = gettype($data['totals']['guest_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['guest_total']->h, $data['totals']['guest_total']->i) : $data['totals']['guest_total'];
                 $guest_back_sum_total = gettype($data['totals']['guest_back_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['guest_back_total']->h, $data['totals']['guest_back_total']->i) : $data['totals']['guest_back_total'];
-                $data['totals']['work_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($last_work_sum,$work_sum_total)->h, $this->calculateTotalTimesSum($last_work_sum,$work_sum_total)->i);
-                $data['totals']['guest_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_start_sum_total,$guest_start_sum)->h, $this->calculateTotalTimesSum($guest_start_sum_total,$guest_start_sum)->i);
-                $data['totals']['guest_back_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum( $guest_back_sum_total,$guest_back_sum)->h, $this->calculateTotalTimesSum( $guest_back_sum_total,$guest_back_sum)->i);
+                $data['totals']['work_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($last_work_sum, $work_sum_total)->h, $this->calculateTotalTimesSum($last_work_sum, $work_sum_total)->i);
+                $data['totals']['guest_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_start_sum_total, $guest_start_sum)->h, $this->calculateTotalTimesSum($guest_start_sum_total, $guest_start_sum)->i);
+                $data['totals']['guest_back_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_back_sum_total, $guest_back_sum)->h, $this->calculateTotalTimesSum($guest_back_sum_total, $guest_back_sum)->i);
             } catch (\Throwable $th) {
                 dd($th);
             }
@@ -427,16 +424,16 @@ class FinalizedJobsController extends Controller
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
-                    'Content-Type' => 'application/json'
+                    'Content-Type' => 'application/json',
                 ])->post('http://excel:8000/create-excel-client-multiple-pdf', json_encode($data));
             } catch (\Exception $ex) {
                 dd($ex);
             }
             $uniq_id = uniqid();
             $filename = $user_query ? $data['driver'] . '-' : '';
-            $filename .=  $weekly_query ? 'KW' . $request->week . ' ' . $request->year . '-' : '';
-            $filename .=  !$weekly_query ? $request->month . '-' . $request->year.'-' : '';
-            $filename .=  $uniq_id;
+            $filename .= $weekly_query ? 'KW' . $request->week . ' ' . $request->year . '-' : '';
+            $filename .= !$weekly_query ? $request->month . '-' . $request->year . '-' : '';
+            $filename .= $uniq_id;
             $filePath = 'pdfs/' . $filename . '.pdf';
             Storage::put($filePath, $file_req->body());
             return response()->json(["status" => true, "file" => $filename]);
@@ -444,7 +441,6 @@ class FinalizedJobsController extends Controller
             return response()->json(["status" => false]);
         }
     }
-
 
     public function get_confirmed_jobs(Request $request)
     {
@@ -459,14 +455,13 @@ class FinalizedJobsController extends Controller
         $endDate = Carbon::create($request->year, $request->month, 1)->endOfMonth()->addMinute();
         $query = FinalizedJobs::where('confirmation', 1);
         $query->where('client_id', $request->client);
-        if($request->user){
+        if ($request->user) {
             $query->where('user_id', $request->user);
         }
         $query->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
         return response()->json(["status" => true, "data" => $finalized_jobs]);
     }
-
 
     public function get_finalized_client(Request $request)
     {
@@ -514,9 +509,9 @@ class FinalizedJobsController extends Controller
         }
 
         $data['year'] = $request->year;
-        $data['client'] = Client::where('id',$request->client_id)->first()->name;
+        $data['client'] = Client::where('id', $request->client_id)->first()->name;
 
-        if($weekly_query){
+        if ($weekly_query) {
             $startDate = Carbon::now()->setISODate($request->year, $request->week)->startOfWeek();
             $endDate = Carbon::now()->setISODate($request->year, $request->week)->endOfWeek()->addMinute();
         } else {
@@ -528,35 +523,34 @@ class FinalizedJobsController extends Controller
             $query->where('client_id', $request->client_id);
         }
 
-
-        if($user_query){
+        if ($user_query) {
             $query->where('user_id', $request->user_id);
         }
         $query->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
 
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
 
-        if($user_query && $finalized_jobs->count() > 0){
+        if ($user_query && $finalized_jobs->count() > 0) {
             $data['driver'] = $finalized_jobs->first()->user->name;
         }
         $data['totals']['total_day'] = $finalized_jobs->count();
         $data['totals']['work_total'] = "00:00";
         $data['totals']['guest_total'] = "00:00";
         $data['totals']['guest_back_total'] = "00:00";
-        foreach($finalized_jobs as $finalized_job){
-            try{
+        foreach ($finalized_jobs as $finalized_job) {
+            try {
                 $initial_date = $finalized_job->initial_date;
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-                if($work_sum == "00:00"){
+                if ($work_sum == "00:00") {
                     $work_sum = "24:00";
                 }
-                if($finalized_job->guest_start_time && $finalized_job->guest_start_end_time){
+                if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
                     $guest_start_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_end_time));
                 } else {
                     $guest_start_sum = "00:00";
                 }
 
-                if($finalized_job->guest_end_time && $finalized_job->guest_end_end_time){
+                if ($finalized_job->guest_end_time && $finalized_job->guest_end_end_time) {
                     $guest_back_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_end_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_end_end_time));
                 } else {
                     $guest_back_sum = "00:00";
@@ -575,7 +569,7 @@ class FinalizedJobsController extends Controller
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                     "client" => $finalized_job->client->name,
-                    "learning"  => $finalized_job->learning,
+                    "learning" => $finalized_job->learning,
                     "fill" => (strtotime($guest_start_sum) > strtotime('04:00')) || (strtotime($guest_back_sum) > strtotime('04:00')) ? "true" : "false",
                 ];
 
@@ -583,9 +577,9 @@ class FinalizedJobsController extends Controller
                 $last_work_sum = gettype($data['totals']['work_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['work_total']->h, $data['totals']['work_total']->i) : $data['totals']['work_total'];
                 $guest_start_sum_total = gettype($data['totals']['guest_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['guest_total']->h, $data['totals']['guest_total']->i) : $data['totals']['guest_total'];
                 $guest_back_sum_total = gettype($data['totals']['guest_back_total']) == "object" ? sprintf('%02d:%02d', $data['totals']['guest_back_total']->h, $data['totals']['guest_back_total']->i) : $data['totals']['guest_back_total'];
-                $data['totals']['work_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($last_work_sum,$work_sum_total)->h, $this->calculateTotalTimesSum($last_work_sum,$work_sum_total)->i);
-                $data['totals']['guest_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_start_sum_total,$guest_start_sum)->h, $this->calculateTotalTimesSum($guest_start_sum_total,$guest_start_sum)->i);
-                $data['totals']['guest_back_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum( $guest_back_sum_total,$guest_back_sum)->h, $this->calculateTotalTimesSum( $guest_back_sum_total,$guest_back_sum)->i);
+                $data['totals']['work_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($last_work_sum, $work_sum_total)->h, $this->calculateTotalTimesSum($last_work_sum, $work_sum_total)->i);
+                $data['totals']['guest_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_start_sum_total, $guest_start_sum)->h, $this->calculateTotalTimesSum($guest_start_sum_total, $guest_start_sum)->i);
+                $data['totals']['guest_back_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum($guest_back_sum_total, $guest_back_sum)->h, $this->calculateTotalTimesSum($guest_back_sum_total, $guest_back_sum)->i);
             } catch (\Throwable $th) {
                 dd($th);
             }
@@ -593,18 +587,17 @@ class FinalizedJobsController extends Controller
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
-                    'Content-Type' => 'application/json'
+                    'Content-Type' => 'application/json',
                 ])->post('http://excel:8000/create-excel-client-multiple', json_encode($data));
             } catch (\Exception $ex) {
                 dd($ex);
             }
 
-
             $uniq_id = uniqid();
             $filename = $user_query ? $data['driver'] . '-' : '';
-            $filename .=  $weekly_query ? 'KW' . $request->week . ' ' . $request->year . '-' : '';
-            $filename .=  !$weekly_query ? $request->month . '-' . $request->year.'-' : '';
-            $filename .=  $uniq_id;
+            $filename .= $weekly_query ? 'KW' . $request->week . ' ' . $request->year . '-' : '';
+            $filename .= !$weekly_query ? $request->month . '-' . $request->year . '-' : '';
+            $filename .= $uniq_id;
             $filePath = 'excels/' . $filename . '.xlsx';
             Storage::put($filePath, $file_req->body());
             return response()->json(["status" => true, "file" => $filename]);
@@ -613,9 +606,297 @@ class FinalizedJobsController extends Controller
         }
     }
 
+    public function get_total_report(Request $request)
+    {
+        $data = [
+            "year" => "",
+            "month" => "",
+        ];
+        $month = $request->month;
+        $year = $request->year;
+
+        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
+        $data['year'] = $year;
+        switch ($month) {
+            case 1:
+                $data['month'] = "Januar";
+                break;
+            case 2:
+                $data['month'] = "Februar";
+                break;
+            case 3:
+                $data['month'] = "März";
+                break;
+            case 4:
+                $data['month'] = "April";
+                break;
+            case 5:
+                $data['month'] = "Mai";
+                break;
+            case 6:
+                $data['month'] = "Juni";
+                break;
+            case 7:
+                $data['month'] = "Juli";
+                break;
+            case 8:
+                $data['month'] = "August";
+                break;
+            case 9:
+                $data['month'] = "September";
+                break;
+            case 10:
+                $data['month'] = "Oktober";
+                break;
+            case 11:
+                $data['month'] = "November";
+                break;
+            case 12:
+                $data['month'] = "Dezember";
+                break;
+            default:
+                $data['month'] = $month;
+                break;
+        }
+
+        $users = User::all();
+        foreach ($users as $user) {
+            if($user->id == 1 || $user->id == 2){
+                continue;
+            }
+            $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
+                ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
+            $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
+
+            $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
+            $total_public_holiday_hours = new DateInterval('PT0H0M');
+            $total_work_sum = new DateInterval('PT0H0M');
+            $total_guest_sum = new DateInterval('PT0H0M');
+            $total_break_time = new DateInterval('PT0H0M');
+            $total_midnight_shift = new DateInterval('PT0H0M');
+            $total_night_shift = new DateInterval('PT0H0M');
+            $total_deep_morning_shift = new DateInterval('PT0H0M');
+            $total_sunday_holiday_hours = new DateInterval('PT0H0M');
+            $i = 0;
+            $feeding_fee = 0;
+            foreach ($finalized_jobs as $index => $finalized_job) {
+                try {
+
+                    $initial_date = $finalized_job->initial_date;
+
+                    $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                    if ($work_sum == "00:00") {
+                        $work_sum = "24:00";
+                    }
+                    $guest_start_total = "00:00";
+
+                    if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
+                        $guest_start_total = $this->guest_diffrence($finalized_job->guest_start_time, $finalized_job->guest_start_end_time, $initial_date);
+                        if ($guest_start_total != "00:00") {
+                            $total_guest_sum = $this->calculateTotalSum($guest_start_total, $total_guest_sum);
+                        }
+                    }
+                    $guest_end_total = "00:00";
+                    if ($finalized_job->guest_end_time && $finalized_job->guest_end_end_time) {
+                        $guest_end_total = $this->guest_diffrence($finalized_job->guest_end_time, $finalized_job->guest_end_end_time, $initial_date);
+                        if ($guest_end_total != "00:00") {
+                            $total_guest_sum = $this->calculateTotalSum($guest_end_total, $total_guest_sum);
+                        }
+                    }
+
+                    $guest_total_tmp = $this->calculateTotalTimesSum($guest_start_total, $guest_end_total);
+                    $guest_total = sprintf('%02d:%02d', $guest_total_tmp->h, $guest_total_tmp->i);
+
+                    $break_total = new DateInterval('PT0S');
+                    $breaks = json_decode($finalized_job->breaks);
+                    if (gettype($breaks) == "string") {
+                        $breaks = json_decode($breaks);
+                    }
+                    if ($breaks) {
+                        foreach ($breaks as $break) {
+
+                            $start = $this->convertTimeToDatetime($initial_date, $break->start);
+                            $end = $this->convertTimeToDatetime($initial_date, $break->end);
+
+                            $diff = $end->diff($start);
+                            $break_total->h += $diff->h;
+                            $break_total->i += $diff->i;
+                            $break_total->s += $diff->s;
+                        }
+
+                        if ($break_total->s >= 60) {
+                            $break_total->i += floor($break_total->s / 60);
+                            $break_total->s %= 60;
+                        }
+
+                        if ($break_total->i >= 60) {
+                            $break_total->h += floor($break_total->i / 60);
+                            $break_total->i %= 60;
+                        }
+
+                        $total_breaks = sprintf('%02d:%02d', $break_total->h, $break_total->i);
+                    } else {
+                        $total_breaks = "00:00";
+                    }
+                    $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
+                    $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
+
+                    $total_work_sum = $this->calculateTotalSum($work_sum, $total_work_sum);
+                } catch (\Exception $ex) {
+                    dd($ex);
+                }
+
+                $feeding_fee += $finalized_job->feeding_fee;
+                if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel) {
+                    $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
+                    $total_public_holiday_hours = $this->calculateTotalSum($public_holiday_hours, $total_public_holiday_hours);
+
+                    list($pblhrs, $pblmnt) = explode(':', $public_holiday_hours);
+                    $test_public_holiday = new DateInterval("PT{$pblhrs}H{$pblmnt}M");
+                    if ($test_public_holiday->h == 0 && $test_public_holiday->i == 0 && $test_public_holiday->s == 0) {
+
+                        $midnight_hours = $this->calculateMidNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
+                        //dd($midnight_hours);
+                        if ($midnight_hours != 0) {
+                            $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
+                        } else {
+                            $total_midnight_shift = $this->calculateTotalSum("00:00", $total_midnight_shift);
+                            $midnight_hours = "00:00";
+                        }
+
+                        $night_hours = $this->calculateNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
+                        if ($night_hours != 0) {
+                            $total_night_shift = $this->calculateTotalSum($night_hours, $total_night_shift);
+                        } else {
+                            $total_night_shift = $this->calculateTotalSum("00:00", $total_night_shift);
+                            $night_hours = "00:00";
+                        }
+
+                        $deep_morning_hours = $this->calculateDeepMorningHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
+
+                        if ($deep_morning_hours != 0) {
+                            $total_deep_morning_shift = $this->calculateTotalSum($deep_morning_hours, $total_deep_morning_shift);
+                        } else {
+                            $total_deep_morning_shift = $this->calculateTotalSum("00:00", $total_deep_morning_shift);
+                            $deep_morning_hours = "00:00";
+                        }
+
+                        $sunday_hours = $this->calculateSundayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $initial_date);
+
+                        $total_sunday_holiday_hours = $this->calculateTotalSum($sunday_hours, $total_sunday_holiday_hours);
+
+                        $total_night_hours = $this->totalNightSum($night_hours, $deep_morning_hours);
+                        $self_night_hours = sprintf('%02d:%02d', $total_night_hours->h, $total_night_hours->i);
+                    } else {
+                        $publicHolidayDates = $this->getPublicHolidayDate($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
+                        $publicStart = DateTime::createFromFormat('d/m/Y H:i:s', $publicHolidayDates['publicStart']);
+                        $publicEnd = DateTime::createFromFormat('d/m/Y H:i:s', $publicHolidayDates['publicEnd']);
+                        $workStart = $this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time);
+                        $workEnd = $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time);
+
+                        if ($workEnd < $workStart) {
+                            $workEnd->modify('+1 day');
+                        }
+                        if ($workStart < $publicStart) {
+                            try {
+                                $pbltmpStrt = Carbon::parse($publicStart)->toDateTimeString();
+                                $night_hrs_tmpp = $this->calculateNightHours($finalized_job->work_start_time, "00:00", $initial_date);
+                                $night_hours_tmp = $night_hrs_tmpp == 0 ? "00:00" : $night_hrs_tmpp;
+                            } catch (\Exception $ex) {
+
+                                dd($pbltmpStrt, $ex);
+                            }
+                        } else {
+                            $night_hours_tmp = "00:00";
+                        }
+
+                        if ($workEnd > $publicEnd) {
+                            $wrktmpStrt = Carbon::parse($this->convertTimeToDatetime(Carbon::parse($initial_date)->addDay(), $finalized_job->work_start_time))->toDateTimeString();
+                            $pbltmpStrt = Carbon::parse($publicStart)->toDateTimeString();
+
+                            $midnight_hours = $this->calculateMidNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
+                            $deep_morning_hours_tmp = $this->calculateDeepMorningHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
+                        } else {
+                            $midnight_hours = "00:00";
+                            $deep_morning_hours_tmp = "00:00";
+                        }
+
+                        $sunday_hours = $this->calculateSundayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $initial_date);
+                        $total_sunday_holiday_hours = $this->calculateTotalSum($sunday_hours, $total_sunday_holiday_hours);
+
+                        $night_hours = $this->calculateTotalTimesSum($deep_morning_hours_tmp, $night_hours_tmp);
+                        $self_night_hours = sprintf('%02d:%02d', $night_hours->h, $night_hours->i);
+                        $total_night_shift = $this->calculateTotalSum($self_night_hours, $total_night_shift);
+                        $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
+                    }
+                } else {
+                    if (($finalized_job->bereitschaft || $finalized_job->cancel) && !$finalized_job->learning) {
+                        $public_holiday_hours = "00:00";
+                        $midnight_hours = "00:00";
+                        $self_night_hours = "00:00";
+                        $sunday_hours = "00:00";
+                        $total_breaks = "00:00";
+                    } else if ($finalized_job->learning && (!$finalized_job->bereitschaft || $finalized_job->cancel)) {
+                        $public_holiday_hours = "00:00";
+                        $midnight_hours = "00:00";
+                        $self_night_hours = "00:00";
+                        $sunday_hours = "00:00";
+                    } else {
+                        $finalized_job->guest_start_time = "";
+                        $finalized_job->guest_start_end_time = "";
+                        $finalized_job->guest_end_time = "";
+                        $finalized_job->guest_end_end_time = "";
+                        $guest_total = "00:00";
+                        $public_holiday_hours = "00:00";
+                        $midnight_hours = "00:00";
+                        $self_night_hours = "00:00";
+                        $sunday_hours = "00:00";
+                        $total_breaks = "00:00";
+                    }
+                }
+
+                $i++;
+            }
+
+
+            $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
+            $data['rows'][$user->id]['name'] = $user->name;
+            $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);
+            $data['rows'][$user->id]['total_day'] = $i;
+            $data['rows'][$user->id]['client'] = Client::where('id', $finalized_jobs[0]->client_id)->first()->name;
+            $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+            $data['rows'][$user->id]['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
+            $data['rows'][$user->id]['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
+            $data['rows'][$user->id]['midnight_shift'] = sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) : "-";
+            $data['rows'][$user->id]['night_shift'] = sprintf('%02d:%02d', $total_night_shift->h + $total_deep_morning_shift->h, $total_night_shift->i + $total_deep_morning_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_night_shift->h + $total_deep_morning_shift->h, $total_night_shift->i + $total_deep_morning_shift->i) : "-";
+            $data['rows'][$user->id]['sub_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i))->h, $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i))->i);
+            $data['rows'][$user->id]['public_holidays'] = sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) : "-";
+            $data['rows'][$user->id]['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
+            $data['rows'][$user->id]['accomodations'] = $feeding_fee . " €";
+            $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
+        }
+        if ($data['rows'] && count($data['rows']) > 0) {
+            try {
+                $file_req = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post('http://excel:8000/create-total-excel', json_encode($data));
+            } catch (\Exception $ex) {
+                dd($ex);
+            }
+
+            $uniq_id = uniqid();
+            $filePath = 'pdfs/' . $uniq_id . '.pdf';
+            Storage::put($filePath, $file_req->body());
+            return response()->json(["status" => true, "file" => $uniq_id]);
+        } else {
+            return response()->json(["status" => false]);
+        }
 
 
 
+
+    }
 
     public function get_finalized(Request $request)
     {
@@ -647,10 +928,9 @@ class FinalizedJobsController extends Controller
                 "sunday_holidays" => "",
                 "midnight_shift" => "",
                 "night_shift" => "",
-                "accomodations" => ""
-            ]
+                "accomodations" => "",
+            ],
         ];
-
 
         $month = $request->month;
         $year = $request->year;
@@ -708,7 +988,6 @@ class FinalizedJobsController extends Controller
         $data['mail'] = $user->email ?? "";
         $data['phone'] = $user->phone ?? "";
 
-
         $query = FinalizedJobs::where('user_id', $user->id);
         if ($request->client_id) {
             $query->where('client_id', $request->client_id);
@@ -741,7 +1020,7 @@ class FinalizedJobsController extends Controller
                 $initial_date = $finalized_job->initial_date;
 
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-                if($work_sum == "00:00"){
+                if ($work_sum == "00:00") {
                     $work_sum = "24:00";
                 }
                 $guest_start_total = "00:00";
@@ -760,11 +1039,8 @@ class FinalizedJobsController extends Controller
                     }
                 }
 
-
                 $guest_total_tmp = $this->calculateTotalTimesSum($guest_start_total, $guest_end_total);
                 $guest_total = sprintf('%02d:%02d', $guest_total_tmp->h, $guest_total_tmp->i);
-
-
 
                 $break_total = new DateInterval('PT0S');
                 $breaks = json_decode($finalized_job->breaks);
@@ -889,14 +1165,12 @@ class FinalizedJobsController extends Controller
                     $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
                 }
             } else {
-                if(($finalized_job->bereitschaft || $finalized_job->cancel) && !$finalized_job->learning){
-
+                if (($finalized_job->bereitschaft || $finalized_job->cancel) && !$finalized_job->learning) {
                     $public_holiday_hours = "00:00";
                     $midnight_hours = "00:00";
                     $self_night_hours = "00:00";
                     $sunday_hours = "00:00";
                     $total_breaks = "00:00";
-
                 } else if ($finalized_job->learning && (!$finalized_job->bereitschaft || $finalized_job->cancel)) {
                     $public_holiday_hours = "00:00";
                     $midnight_hours = "00:00";
@@ -916,10 +1190,6 @@ class FinalizedJobsController extends Controller
                 }
             }
 
-
-
-
-
             $data['rows'][] = [
                 "date" => (new DateTime($finalized_job->initial_date))->format('d/m/Y'),
                 "times" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
@@ -932,7 +1202,7 @@ class FinalizedJobsController extends Controller
                 "sunday_holiday_hours" => $sunday_hours != "00:00" ? $sunday_hours : "-",
                 "midnight_shift" => $midnight_hours != "00:00" ? $midnight_hours : "-",
                 "night_shift" => $self_night_hours != "00:00" ? $self_night_hours : "-",
-                "feeding_fee" => $finalized_job->feeding_fee  == 32 ? "Hotel" : (($finalized_job->feeding_fee  == 16) ? "Heim" : "-"),
+                "feeding_fee" => $finalized_job->feeding_fee == 32 ? "Hotel" : (($finalized_job->feeding_fee == 16) ? "Heim" : "-"),
                 "comment" => $finalized_job->comment,
                 "places" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                 "client" => $finalized_job->client->name,
@@ -950,13 +1220,12 @@ class FinalizedJobsController extends Controller
         $data['totals']['public_holidays'] = sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) : "-";
         $data['totals']['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
         $data['totals']['accomodations'] = $feeding_fee . " €";
-        $data['totals']['total_work_day_amount'] = $i  >= 20 ? 20 * $i  : $i * 6;
-
+        $data['totals']['total_work_day_amount'] = $i >= 20 ? 20 * $i : $i * 6;
 
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
-                    'Content-Type' => 'application/json'
+                    'Content-Type' => 'application/json',
                 ])->post('http://excel:8000/create-excel', json_encode($data));
             } catch (\Exception $ex) {
                 dd($ex);
@@ -1030,7 +1299,7 @@ class FinalizedJobsController extends Controller
     public function edit(Request $request, FinalizedJobs $finalizedJobs)
     {
         $finalizedJob = FinalizedJobs::find($request->id);
-        $finalizedJob->user_id =  $request->user_id ?  $request->user_id : $request->user()->id;
+        $finalizedJob->user_id = $request->user_id ? $request->user_id : $request->user()->id;
         $finalizedJob->client_id = $request->client_id;
         $finalizedJob->initial_date = $request->initial_date;
         $finalizedJob->zug_nummer = $request->zug_nummer;
@@ -1101,7 +1370,6 @@ class FinalizedJobsController extends Controller
         return response()->json(["status" => true]);
     }
 
-
     public function get_filters()
     {
 
@@ -1112,10 +1380,9 @@ class FinalizedJobsController extends Controller
             "months" => ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
             "year" => ["2020", "2021", "2022", "2023", "2024"],
             "users" => $users,
-            "clients" => $clients
+            "clients" => $clients,
         ]);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -1130,7 +1397,6 @@ class FinalizedJobsController extends Controller
      */
     public function destroy(Request $request)
     {
-
 
         $finalized_job = FinalizedJobs::where("id", $request->id)->first();
         $finalized_job->delete();

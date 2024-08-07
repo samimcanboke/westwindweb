@@ -26,6 +26,7 @@ export default function Dashboard({ auth }) {
     const [loading, setLoading] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [filter, setFilter] = useState({});
+    const [gesamt, setGesamt] = useState(false);
     const [filterSources, setFilterSources] = useState({
         user: "",
         client: "",
@@ -102,7 +103,7 @@ export default function Dashboard({ auth }) {
 
     const filterAction = () => {
         setLoading(true);
-        if(filter.client == ""){
+        if (filter.client == "") {
             Swal.fire({
                 icon: "error",
                 title: "Hata",
@@ -110,7 +111,7 @@ export default function Dashboard({ auth }) {
             });
             return;
         }
-        if(filter.year == ""){
+        if (filter.year == "") {
             Swal.fire({
                 icon: "error",
                 title: "Hata",
@@ -118,7 +119,7 @@ export default function Dashboard({ auth }) {
             });
             return;
         }
-        if(filter.month == ""){
+        if (filter.month == "") {
             Swal.fire({
                 icon: "error",
                 title: "Hata",
@@ -136,25 +137,47 @@ export default function Dashboard({ auth }) {
     };
 
     const excelAction = () => {
-        axios
-            .post("/finalized-jobs/export", {
-                user_id: filter.user,
-                client_id: filter.client,
-                month: filter.month,
-                year: filter.year,
-            })
-            .then((res) => {
-                if (res.data.status) {
-                    let url = "/download-pdf/" + res.data.file + ".pdf";
-                    window.open(url, "_blank", "noreferrer");
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Hata",
-                        text: "Onaylanan İş Bulunamadı",
-                    });
-                }
-            });
+        if (gesamt) {
+            axios
+                .post("/finalized-jobs/get-total-report", {
+                    month: filter.month,
+                    year: filter.year,
+                    total: gesamt,
+                })
+                .then((res) => {
+                    if (res.data.status) {
+                        let url = "/download-pdf/" + res.data.file + ".pdf";
+                        window.open(url, "_blank", "noreferrer");
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Hata",
+                            text: "Onaylanan İş Bulunamadı",
+                        });
+                    }
+                });
+        } else {
+            axios
+                .post("/finalized-jobs/export", {
+                    user_id: filter.user,
+                    client_id: filter.client,
+                    month: filter.month,
+                    year: filter.year,
+                    total: gesamt,
+                })
+                .then((res) => {
+                    if (res.data.status) {
+                        let url = "/download-pdf/" + res.data.file + ".pdf";
+                        window.open(url, "_blank", "noreferrer");
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Hata",
+                            text: "Onaylanan İş Bulunamadı",
+                        });
+                    }
+                });
+        }
     };
 
     return (
@@ -171,42 +194,63 @@ export default function Dashboard({ auth }) {
                 <div className="flex justify-between flex-row p-5">
                     <div className="max-w-full">
                         <div className="mb-2 block">
-                            <Label htmlFor="client" value="Kunden" />
+                            <Label htmlFor="id" value="Gesamt Report" />
                         </div>
-                        <Select
-                            id="client"
-                            onChange={handleChange}
-                            disabled={!filterActive}
-                        >
-                            <option>Suchen...</option>
-                            {filterSources.client &&
-                                filterSources.client.map((client) => (
-                                    <option key={client.id} value={client.id}>
-                                        {client.name}
-                                    </option>
-                                ))}
-                        </Select>
+                        <ToggleSwitch
+                            checked={gesamt}
+                            label=""
+                            id="gesamt"
+                            name="gesamt"
+                            className="mt-4 ml-4"
+                            onChange={(value) => {
+                                setGesamt(value);
+                            }}
+                        />
                     </div>
-                    <br />
-                    <div className="max-w-full">
-                        <div className="mb-2 block">
-                            <Label htmlFor="id" value="Mitarbeiten" />
+                    {!gesamt && (
+                        <div className="max-w-full">
+                            <div className="mb-2 block">
+                                <Label htmlFor="client" value="Kunden" />
+                            </div>
+                            <Select
+                                id="client"
+                                onChange={handleChange}
+                                disabled={!filterActive}
+                            >
+                                <option>Suchen...</option>
+                                {filterSources.client &&
+                                    filterSources.client.map((client) => (
+                                        <option
+                                            key={client.id}
+                                            value={client.id}
+                                        >
+                                            {client.name}
+                                        </option>
+                                    ))}
+                            </Select>
                         </div>
-                        <Select
-                            id="user"
-                            onChange={handleChange}
-                            disabled={!filterActive}
-                        >
-                            <option>Seçiniz...</option>
-                            {filterSources.user &&
-                                filterSources.user.map((user) => (
-                                    <option key={user.id} value={user.id}>
-                                        {user.name}
-                                    </option>
-                                ))}
-                        </Select>
-                    </div>
-                    <br />
+                    )}
+                    {!gesamt && (
+                        <div className="max-w-full">
+                            <div className="mb-2 block">
+                                <Label htmlFor="id" value="Mitarbeiten" />
+                            </div>
+                            <Select
+                                id="user"
+                                onChange={handleChange}
+                                disabled={!filterActive}
+                            >
+                                <option>Seçiniz...</option>
+                                {filterSources.user &&
+                                    filterSources.user.map((user) => (
+                                        <option key={user.id} value={user.id}>
+                                            {user.name}
+                                        </option>
+                                    ))}
+                            </Select>
+                        </div>
+                    )}
+
                     <div className="max-w-full">
                         <div className="mb-2 block">
                             <Label htmlFor="id" value="Monat" />
@@ -246,41 +290,49 @@ export default function Dashboard({ auth }) {
                     </div>
 
                     <br />
-                    <div className="max-w-full flex mt-8">
-                        <div className="mb-2 block">
-                            {filterActive ? (
-                                <Button onClick={filterAction}>
-                                    Datei Abrufen
-                                </Button>
-                            ) : (
-                                <Button
-                                    onClick={() => {
-                                        setFilterActive(true);
-                                        setValues({});
-                                        setData([]);
-                                    }}
-                                >
-                                    Filter zurücksetzen
-                                </Button>
-                            )}
-                        </div>
-                    </div>
-                    
-                    {!filterActive && 
+
+                    {!gesamt && (
                         <div className="max-w-full flex mt-8">
-                        <div className="mb-2 block">
-                          
-                                <Button
-                                className="bg-red-500"
-                                onClick={excelAction}
-                            >
-                                   Excel Export
-                               </Button>
-                            
+                            <div className="mb-2 block">
+                                {filterActive ? (
+                                    <Button onClick={filterAction}>
+                                        Datei Abrufen
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={() => {
+                                            setFilterActive(true);
+                                            setValues({});
+                                            setData([]);
+                                        }}
+                                    >
+                                        Filter zurücksetzen
+                                    </Button>
+                                )}
+                            </div>
                         </div>
-                    </div>
-}
-                    
+                    )}
+
+                    {gesamt && (
+                        <div className="mt-8 block">
+                            <Button onClick={excelAction}>
+                                Gesamt Report
+                            </Button>
+                        </div>
+                    )}
+
+                    {!filterActive && (
+                        <div className="max-w-full flex mt-8">
+                            <div className="mb-2 block">
+                                <Button
+                                    className="bg-red-500"
+                                    onClick={excelAction}
+                                >
+                                    Excel Export
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
