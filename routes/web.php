@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminExtraController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\JobPlansController;
+use App\Http\Controllers\BahnCardController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,19 @@ Route::get('/dashboard', function () {
 Route::get('/users/index', function () {
     return Inertia::render('Admin/Users/Index');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('users.index');
+
+Route::get('/admin/bahn-cards', function () {
+    return Inertia::render('Admin/BahnCards/Index');
+})->middleware(['auth', 'verified'])->name('bahn-cards');
+
+Route::get('/admin/bahn-cards/create', function () {
+    return Inertia::render('Admin/BahnCards/Create');
+})->middleware(['auth', 'verified'])->name('bahn-cards.create');
+
+Route::get('/admin/bahn-cards/{id}', function ($id) {
+    return Inertia::render('Admin/BahnCards/Edit', ['id' => $id]);
+})->middleware(['auth', 'verified'])->name('bahn-cards.edit');
+
 
 Route::get('/users/edit/{user_id}', function ($user_id) {
     return Inertia::render('Admin/Users/Edit', ['user_id' => $user_id]);
@@ -134,6 +148,11 @@ Route::get('/admin/finalized-jobs', [FinalizedJobsController::class, 'index']);
 Route::post('/admin/register_inside', [RegisteredUserController::class, 'store_inside'])->middleware(['auth', 'verified',IsAdmin::class])->name('register.inside');
 Route::post('/admin/edit_inside', [RegisteredUserController::class, 'edit_inside'])->middleware(['auth', 'verified',IsAdmin::class])->name('edit.inside');
 
+Route::get('/admin/all-bahn-cards', [BahnCardController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('all-bahn-cards');
+Route::get('/admin/all-bahn-cards/{id}', [BahnCardController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-show');
+Route::post('/admin/bahn-cards', [BahnCardController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-store');
+Route::delete('/admin/bahn-cards/{id}', [BahnCardController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-destroy');
+Route::put('/admin/bahn-cards/{id}', [BahnCardController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-update');
 
 Route::get('/planner/jobs', [JobPlansController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs');
 Route::get('/planner/jobs/without-user', [JobPlansController::class, 'index_without_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-without-user');

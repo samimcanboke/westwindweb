@@ -21,7 +21,7 @@ export default function Authenticated({ user, header, children }) {
     },[])
 
     return (
-        
+
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
                 <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +40,7 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                             <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('new-jobs')} active={route().current('new-jobs')}>
-                                Neue Berichte 
+                                Neue Berichte
                                 </NavLink>
                             </div>
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
@@ -50,7 +50,7 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('finalized-jobs')} active={route().current('finalized-jobs')}>
-                                    Eingereichte Berichte 
+                                    Eingereichte Berichte
                                 </NavLink>
                             </div>
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
@@ -96,7 +96,7 @@ export default function Authenticated({ user, header, children }) {
                                                 </button>
                                         </Dropdown.Trigger>
                                         <Dropdown.Content>
-                                            
+
                                             <Dropdown.Link href={route('users.index')}>Benutzer</Dropdown.Link>
                                             <Dropdown.Link href={route('clients-index')}>Kunden</Dropdown.Link>
                                             <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Berichte</Dropdown.Link>
@@ -104,6 +104,7 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('admin-planner')}>Planung</Dropdown.Link>
                                             <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
                                             <Dropdown.Link href={route('confirmed-jobs-to-client')}>Kunden Berichte</Dropdown.Link>
+                                            <Dropdown.Link href={route('bahn-cards')}>Bahnkarten</Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>
@@ -190,7 +191,7 @@ export default function Authenticated({ user, header, children }) {
 
                     <div className="pt-2 pb-3 space-y-1">
                     {user.is_admin && (
-                                
+
                                 <div className="">
                                     <Dropdown>
                                         <Dropdown.Trigger>

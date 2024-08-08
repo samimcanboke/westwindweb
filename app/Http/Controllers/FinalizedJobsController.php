@@ -617,6 +617,7 @@ class FinalizedJobsController extends Controller
 
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
+
         $data['year'] = $year;
         switch ($month) {
             case 1:
@@ -659,15 +660,15 @@ class FinalizedJobsController extends Controller
                 $data['month'] = $month;
                 break;
         }
-
         $users = User::all();
         foreach ($users as $user) {
-            if($user->id == 1 || $user->id == 2){
+            if($user->id == 1 || $user->id == 2 || $user->id == 3 || $user->id == 9){
                 continue;
             }
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
             $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
+
 
             $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
             $total_public_holiday_hours = new DateInterval('PT0H0M');
@@ -859,12 +860,17 @@ class FinalizedJobsController extends Controller
                 $i++;
             }
 
-
+            if($finalized_jobs->count() > 0 && $finalized_jobs[0]->client_id){
+                $client = Client::where('id', $finalized_jobs[0]->client_id)->first();
+            }else{
+                $client = new Client();
+                $client->name = "Lte Niederlande";
+            }
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);
             $data['rows'][$user->id]['total_day'] = $i;
-            $data['rows'][$user->id]['client'] = Client::where('id', $finalized_jobs[0]->client_id)->first()->name;
+            $data['rows'][$user->id]['client'] = $client->name;
             $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
             $data['rows'][$user->id]['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
             $data['rows'][$user->id]['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
@@ -876,6 +882,7 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['accomodations'] = $feeding_fee . " €";
             $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
         }
+
         if ($data['rows'] && count($data['rows']) > 0) {
             try {
                 $file_req = Http::withHeaders([

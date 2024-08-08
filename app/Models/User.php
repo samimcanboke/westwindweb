@@ -64,7 +64,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(DraftJobs::class);
     }
-    
+
     public function finalizedJobs()
     {
         return $this->hasMany(finalizedJobs::class);
@@ -88,5 +88,10 @@ class User extends Authenticatable
     public function adminExtras()
     {
         return $this->hasMany(AdminExtra::class);
+    }
+
+    public function bahnCards()
+    {
+        return $this->hasMany(BahnCard::class);
     }
 }
