@@ -662,10 +662,9 @@ class FinalizedJobsController extends Controller
         }
 
         $query = FinalizedJobs::where('confirmation', 1)->where('user_id', 8)
-            ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
+            ->whereBetween('initial_date', [$startDate->toDateTimeString(), $endDate->toDateTimeString()]);
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
 
-        dd($finalized_jobs, 1, 8, $startDate->toDateString(), $endDate->toDateString() );
 
         $users = User::all();
         foreach ($users as $user) {
@@ -892,7 +891,6 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
         }
 
-        dd($data);
 
         if ($data['rows'] && count($data['rows']) > 0) {
             try {
