@@ -37,8 +37,8 @@ class BahnCardController extends Controller
                 $fail('Bahn Karte Nummer muss genau 16 Ziffern lang sein.');
             }
         }],
-        'valid_from' => 'required|date|after_or_equal:'.now()->toDateString(),
-        'valid_to' => 'required|date|after_or_equal:'.now()->toDateString(),
+        'valid_from' => 'required|date',
+        'valid_to' => 'required|date',
         'class' => 'required|string|in:1,2'
        ]);
 
