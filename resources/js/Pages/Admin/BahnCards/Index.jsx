@@ -10,29 +10,30 @@ export default function BahnCards({ auth }) {
     const [driver, setDriver] = useState(null);
     const [drivers, setDrivers] = useState([]);
     const [bahnCard, setBahnCard] = useState(null);
+    const fetchData = async () => {
+        const usersResponse = await axios.get(route("users.show"));
+        setDrivers(usersResponse.data);
+
+        const bahnCardsResponse = await axios.get("/admin/all-bahn-cards");
+        const updatedBahnCards = bahnCardsResponse.data.map((bahnCard) => {
+            if (bahnCard.user_id) {
+                const user = usersResponse.data.find(
+                    (driver) => driver.id === bahnCard.user_id
+                );
+                bahnCard.user = user;
+            } else {
+                bahnCard.user = null;
+            }
+            return bahnCard;
+        });
+
+        setBahnCards(updatedBahnCards);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            const usersResponse = await axios.get(route("users.show"));
-            setDrivers(usersResponse.data);
-
-            const bahnCardsResponse = await axios.get("/admin/all-bahn-cards");
-            const updatedBahnCards = bahnCardsResponse.data.map((bahnCard) => {
-                if (bahnCard.user_id) {
-                    const user = usersResponse.data.find(
-                        (driver) => driver.id === bahnCard.user_id
-                    );
-                    bahnCard.user = user;
-                } else {
-                    bahnCard.user = null;
-                }
-                return bahnCard;
-            });
-
-            setBahnCards(updatedBahnCards);
-        };
-
         fetchData();
+        const id = setInterval(fetchData, 2000);
+        return () => clearInterval(id);
     }, []);
 
     const setMachinist = () => {
@@ -46,14 +47,7 @@ export default function BahnCards({ auth }) {
                 }
             )
             .then((res) => {
-                setBahnCards(
-                    bahnCards.map((bahnCard) => {
-                        if (bahnCard.id === bahnCard) {
-                            return { ...bahnCard, driver: driver };
-                        }
-                        return bahnCard;
-                    })
-                );
+                fetchData();
             });
         setOpenModal(false);
         setBahnCard(null);
