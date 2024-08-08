@@ -668,6 +668,7 @@ class FinalizedJobsController extends Controller
 
         $users = User::all();
         foreach ($users as $user) {
+
             if($user->id == 1 || $user->id == 2 || $user->id == 4 || $user->id == 9){
                 continue;
             }
@@ -874,12 +875,24 @@ class FinalizedJobsController extends Controller
                 $client = new Client();
                 $client->name = "Lte Niederlande";
             }
+
+            $user_bahn_card = $user->bahnCard;
+            if($user_bahn_card){
+                $bahnCard = $user_bahn_card->class;
+            }else{
+                $bahnCard = 0;
+            }
+
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);
             $data['rows'][$user->id]['total_day'] = $i;
             $data['rows'][$user->id]['client'] = $client->name;
             $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+            $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
+            if ($bahnCard == 1) {
+                $total_guest_sum->h -= 10;
+            }
             $data['rows'][$user->id]['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
             $data['rows'][$user->id]['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
             $data['rows'][$user->id]['midnight_shift'] = sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) : "-";

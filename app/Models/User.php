@@ -90,8 +90,8 @@ class User extends Authenticatable
         return $this->hasMany(AdminExtra::class);
     }
 
-    public function bahnCards()
+    public function bahnCard()
     {
-        return $this->hasMany(BahnCard::class);
+        return $this->hasOne(BahnCard::class);
     }
 }
