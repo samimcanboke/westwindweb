@@ -272,19 +272,25 @@ def create_total_excel():
         for row in used_data['rows']:
             row_num = 10
             for row_data in used_data['rows']:
+                for col in range(2, 16):  # B to M columns
+                    cell = ws.cell(row=row_num, column=col)
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+                    cell.border = Border(left=Side(style='thin'),
+                                         right=Side(style='thin'),
+                                         top=Side(style='thin'),
+                                         bottom=Side(style='thin'))
                 ws[f'B{row_num}'] = row_data['id']
                 ws[f'C{row_num}'] = row_data['name']
                 ws[f'D{row_num}'] = row_data['total_day']
-                ws[f'E{row_num}'] = row_data['workhours']
-                ws[f'F{row_num}'] = row_data['breaks']
-                ws[f'G{row_num}'] = row_data['sub_total']
-                ws[f'H{row_num}'] = row_data['night_shift']
-                ws[f'I{row_num}'] = row_data['midnight_shift']
-                ws[f'J{row_num}'] = row_data['sunday_holidays']
-                ws[f'K{row_num}'] = row_data['public_holidays']
-                ws[f'L{row_num}'] = row_data['guests']
-                ws[f'M{row_num}'] = row_data['total_work_day_amount']
-                ws[f'N{row_num}'] = row_data['accomodations']
+                ws[f'E{row_num}'] = "160:00"
+                ws[f'F{row_num}'] = row_data['extra_work']
+                ws[f'G{row_num}'] = row_data['night_shift']
+                ws[f'H{row_num}'] = row_data['midnight_shift']
+                ws[f'I{row_num}'] = row_data['sunday_holidays']
+                ws[f'J{row_num}'] = row_data['public_holidays']
+                ws[f'K{row_num}'] = row_data['guests']
+                ws[f'L{row_num}'] = row_data['total_work_day_amount']
+                ws[f'M{row_num}'] = row_data['accomodations']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
         subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
