@@ -912,8 +912,8 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['total_day'] = $i;
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
             if ($total_work_hours > 160 * 60) {
-                $remaining_hours = 160 - ($total_annual_leave_hours + $total_sick_leave_hours);
-                $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', floor($remaining_hours), ($remaining_hours * 60) % 60);
+                $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours));
+                $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', floor($remaining_hours), ($remaining_hours * 60 + 1) % 60);
             } else {
                 $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
             }
