@@ -272,6 +272,10 @@ def create_total_excel():
         for row in used_data['rows']:
             row_num = 10
             for row_data in used_data['rows']:
+                if row_num % 2 != 0:
+                    for col in range(2, 19):  # B to M columns
+                        cell = ws.cell(row=row_num, column=col)
+                        cell.fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
                 for col in range(2, 19):  # B to M columns
                     cell = ws.cell(row=row_num, column=col)
                     cell.alignment = Alignment(horizontal='center', vertical='center')
