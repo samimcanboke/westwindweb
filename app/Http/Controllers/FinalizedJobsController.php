@@ -668,17 +668,12 @@ class FinalizedJobsController extends Controller
 
         $users = User::all();
         foreach ($users as $user) {
-
             if($user->id == 1 || $user->id == 2 || $user->id == 4 || $user->id == 9){
                 continue;
             }
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
             $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
-
-
-
-
             $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
             $total_public_holiday_hours = new DateInterval('PT0H0M');
             $total_work_sum = new DateInterval('PT0H0M');
@@ -883,11 +878,40 @@ class FinalizedJobsController extends Controller
                 $bahnCard = 0;
             }
 
+
+            $total_annual_leave_hours = 0;
+            foreach ($user->annualLeaves as $annualLeave) {
+                $start_date = \Carbon\Carbon::parse($annualLeave->start_date);
+                $end_date = \Carbon\Carbon::parse($annualLeave->end_date);
+                if ($start_date < $endDate && $end_date > $startDate) {
+                    $overlap_start = max($start_date, $startDate);
+                    $overlap_end = min($end_date, $endDate);
+                    $interval = $overlap_start->diff($overlap_end);
+                    $days = $interval->d + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
+                    $total_annual_leave_hours += $days * 8;
+                }
+            }
+            $data['rows'][$user->id]['annual_leave_hours'] = sprintf('%02d:%02d', floor($total_annual_leave_hours), ($total_annual_leave_hours * 60) % 60);
+
+            $total_sick_leave_hours = 0;
+            foreach ($user->sickLeaves as $sickLeave) {
+                $start_date = new \DateTime($sickLeave->start_date);
+                $end_date = new \DateTime($sickLeave->end_date);
+                if ($start_date < $endDate && $end_date > $startDate) {
+                    $overlap_start = max($start_date, $startDate);
+                    $overlap_end = min($end_date, $endDate);
+                    $interval = $overlap_start->diff($overlap_end);
+                    $days = $interval->d + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
+                    $total_sick_leave_hours += $days * 8;
+                }
+            }
+            $data['rows'][$user->id]['sick_leave_hours'] = sprintf('%02d:%02d', floor($total_sick_leave_hours / 60), $total_sick_leave_hours % 60);
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);
             $data['rows'][$user->id]['total_day'] = $i;
             $data['rows'][$user->id]['workhours'] = "160:00";
+            $data['rows'][$user->id]['salary'] = $user->salary . " €" ;
             $extra_work_hours = ($total_work_sum->h * 60 + $total_work_sum->i) - (160 * 60);
             if ($extra_work_hours > 0) {
                 $extra_work_hours_h = floor($extra_work_hours / 60);
