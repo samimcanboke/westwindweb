@@ -910,14 +910,17 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);
             $data['rows'][$user->id]['total_day'] = $i;
-            $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i;
+
+
+
+            $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + $total_annual_leave_hours->h * 60 + $total_annual_leave_hours->i + $total_sick_leave_hours->h * 60 + $total_sick_leave_hours->i;
             if ($total_work_hours > 160 * 60) {
                 $data['rows'][$user->id]['workhours'] = '160:00';
             } else {
                 $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
             }
             $data['rows'][$user->id]['salary'] = $user->salary . " €" ;
-            $extra_work_hours = ($total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i) - (160 * 60);
+            $extra_work_hours = $total_work_hours - (160 * 60);
             if ($extra_work_hours > 0) {
                 $extra_work_hours_h = floor($extra_work_hours / 60);
                 $extra_work_hours_i = $extra_work_hours % 60;
