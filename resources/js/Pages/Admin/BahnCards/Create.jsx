@@ -12,8 +12,8 @@ import * as yup from "yup";
 
 const validationSchema = yup.object().shape({
     number: yup.string().required("Bahn Karte Nummer erforderlich").transform(value => value.replace(/\s+/g, '')).matches(/^\d{16}$/, "Bahn Karte Nummer muss genau 16 rakamdan oluşmalıdır"),
-    valid_from: yup.date().required("Gültig ab erforderlich").min(moment().startOf('day').add(-1, 'day').toDate(), "Gültig ab darf nicht in der Vergangenheit liegen"),
-    valid_to: yup.date().required("Gültig bis erforderlich").min(new Date(), "Gültig bis darf nicht in der Vergangenheit liegen"),
+    valid_from: yup.date().required("Gültig ab erforderlich"),
+    valid_to: yup.date().required("Gültig bis erforderlich"),
     class: yup.string().oneOf(["1", "2"], "Bahn Karte Klasse muss entweder 1 oder 2 sein").required("Bahn Karte Klasse erforderlich"),
 });
 
