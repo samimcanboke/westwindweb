@@ -895,8 +895,8 @@ class FinalizedJobsController extends Controller
 
             $total_sick_leave_hours = 0;
             foreach ($user->sickLeaves as $sickLeave) {
-                $start_date = new \DateTime($sickLeave->start_date);
-                $end_date = new \DateTime($sickLeave->end_date);
+                $start_date = \Carbon\Carbon::parse($sickLeave->start_date);
+                $end_date = \Carbon\Carbon::parse($sickLeave->end_date);
                 if ($start_date < $endDate && $end_date > $startDate) {
                     $overlap_start = max($start_date, $startDate);
                     $overlap_end = min($end_date, $endDate);
@@ -905,7 +905,7 @@ class FinalizedJobsController extends Controller
                     $total_sick_leave_hours += $days * 8;
                 }
             }
-            $data['rows'][$user->id]['sick_leave_hours'] = sprintf('%02d:%02d', floor($total_sick_leave_hours / 60), $total_sick_leave_hours % 60);
+            $data['rows'][$user->id]['sick_leave_hours'] = sprintf('%02d:%02d', floor($total_sick_leave_hours), ($total_sick_leave_hours * 60) % 60);
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);
