@@ -47,6 +47,9 @@ export default function BahnCards({ auth }) {
                 }
             )
             .then((res) => {
+                if(res.data.success){
+                    setBahnCards({});
+                }
                 fetchData();
             });
         setOpenModal(false);
