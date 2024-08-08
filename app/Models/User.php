@@ -12,6 +12,8 @@ use App\Models\JobPlans;
 use App\Models\FinalizedJobs;
 use App\Models\DraftJobs;
 use App\Models\AdminExtra;
+use App\Models\UsersBonus;
+use App\Models\UsersAdvance;
 
 class User extends Authenticatable
 {
@@ -94,5 +96,15 @@ class User extends Authenticatable
     public function bahnCard()
     {
         return $this->hasOne(BahnCard::class);
+    }
+
+    public function usersBonus()
+    {
+        return $this->hasMany(UsersBonus::class);
+    }
+
+    public function usersAdvance()
+    {
+        return $this->hasMany(UsersAdvance::class);
     }
 }

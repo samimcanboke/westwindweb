@@ -298,6 +298,8 @@ def create_total_excel():
                 ws[f'N{row_num}'] = row_data['accomodations']
                 ws[f'O{row_num}'] = row_data['annual_leave_hours']
                 ws[f'P{row_num}'] = row_data['sick_leave_hours']
+                ws[f'Q{row_num}'] = row_data['user_bonus']
+                ws[f'R{row_num}'] = row_data['user_advance']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
         subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],

@@ -933,6 +933,24 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
             $data['rows'][$user->id]['accomodations'] = $feeding_fee . " €";
             $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
+
+            $total_user_advance = 0;
+            foreach ($user->usersAdvance as $advance) {
+                $transaction_date = new \DateTime($advance->transaction_date);
+                if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
+                    $total_user_advance += $advance->amount;
+                }
+            }
+            $data['rows'][$user->id]['user_advance'] = $total_user_advance . " €";
+
+            $total_user_bonus = 0;
+            foreach ($user->usersBonus as $bonus) {
+                $transaction_date = new \DateTime($bonus->transaction_date);
+                if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
+                    $total_user_bonus += $bonus->amount;
+                }
+            }
+            $data['rows'][$user->id]['user_bonus'] = $total_user_bonus . " €";
         }
 
 
