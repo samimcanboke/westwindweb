@@ -11,7 +11,7 @@ import moment from "moment";
 export default function EditUser({ auth,user_id }) {
     const [user, setUser] = useState(null);
 
-   
+
     useEffect(() => {
         axios.post(route('user.show',user_id))
         .then(res => {
@@ -37,7 +37,7 @@ export default function EditUser({ auth,user_id }) {
                 {user && (
                     <Formik
                     initialValues={{...user,
-                        is_admin: user.is_admin != null && user.is_admin == 1 ? true : false, 
+                        is_admin: user.is_admin != null && user.is_admin == 1 ? true : false,
                     }}
                     validate={(values) => {
                         const errors = {};
@@ -70,7 +70,7 @@ export default function EditUser({ auth,user_id }) {
                         axios.post(route('edit.inside'), values)
                         .then(res => {
                             if (res.data.success) {
-                        
+
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Başarılı',
@@ -83,7 +83,7 @@ export default function EditUser({ auth,user_id }) {
                                     title: 'Hata',
                                     text: data.data.message || 'Kullanıcı kaydedilemedi!',
                                 });
-                                
+
                             }
                             setSubmitting(false);
                         })
@@ -116,7 +116,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.name}
                                         </p>
-                                    )}                            
+                                    )}
                                     </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="birth_date" className="block text-sm font-medium text-gray-700">Doğum Tarihi</label>
@@ -125,7 +125,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.birth_date}
                                         </p>
-                                    )}  
+                                    )}
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -134,7 +134,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.email}
                                         </p>
-                                    )}  
+                                    )}
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
@@ -143,7 +143,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.phone}
                                         </p>
-                                    )}  
+                                    )}
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
@@ -166,7 +166,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.password}
                                         </p>
-                                    )} 
+                                    )}
                             </div>
                             <div className="flex">
                                 <div className="mb-4 mx-4 ">
@@ -176,7 +176,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.working_hours}
                                         </p>
-                                    )} 
+                                    )}
                                 </div>
                                 <div className="mb-4 mx-4">
                                     <label htmlFor="annual_leave_rights" className="block text-sm font-medium text-gray-700">Yıllık İzin Hakkı (Saat)</label>
@@ -185,7 +185,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.annual_leave_rights}
                                         </p>
-                                    )} 
+                                    )}
                                 </div>
                                 <div className="mb-4 mx-4">
                                     <label htmlFor="sick_holiday" className="block text-sm font-medium text-gray-700">Hastalık İzin Hakkı (Saat)</label>
@@ -194,7 +194,16 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.sick_holiday}
                                         </p>
-                                    )} 
+                                    )}
+                                </div>
+                                 <div className="mb-4 mx-4">
+                                    <label htmlFor="salary" className="block text-sm font-medium text-gray-700">Maaş (Saat)</label>
+                                    <Field type="text" name="salary" id="salary" className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
+                                    {errors.salary && touched.salary && (
+                                        <p className="text-red-500">
+                                            *{errors.salary}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <div className="mb-4 mx-4">
@@ -204,7 +213,7 @@ export default function EditUser({ auth,user_id }) {
                                         <p className="text-red-500">
                                             *{errors.start_working_date}
                                         </p>
-                                    )} 
+                                    )}
                             </div>
                             <ToggleSwitch
                                         label="Admin ?"

@@ -3,11 +3,8 @@ import { Head,usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Datepicker, ToggleSwitch } from "flowbite-react";
-import moment from "moment";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { values } from "pdf-lib";
-import * as yup from "yup";
 
 
 export default function CreateUsers({ auth }) {
@@ -27,7 +24,7 @@ export default function CreateUsers({ auth }) {
 
             <div className="container mx-auto mt-10">
                 <Formik
-                    initialValues={{ email: "", password: "", driver_id: "", name: "", birth_date: "", phone: "", working_hours: 160,annual_leave_rights: 160, sick_holiday: 160,start_working_date: new Date(), is_admin: false }}
+                    initialValues={{ email: "", password: "", driver_id: "", name: "", birth_date: "", phone: "", working_hours: 160,annual_leave_rights: 160, sick_holiday: 160,salary: 0.0, start_working_date: new Date(), is_admin: false }}
                     validate={(values) => {
                         const errors = {};
                         if (!values.driver_id) {
@@ -56,7 +53,7 @@ export default function CreateUsers({ auth }) {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting, resetForm  }) => {
-                   
+
                         axios.post(route('register.inside'), values)
                         .then(res => {
                             if (res.data.success) {
@@ -104,7 +101,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.name}
                                         </p>
-                                    )}                            
+                                    )}
                                     </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="birth_date" className="block text-sm font-medium text-gray-700">Doğum Tarihi</label>
@@ -113,7 +110,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.birth_date}
                                         </p>
-                                    )}  
+                                    )}
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -122,7 +119,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.email}
                                         </p>
-                                    )}  
+                                    )}
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
@@ -131,7 +128,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.phone}
                                         </p>
-                                    )}  
+                                    )}
                             </div>
                             <div className="mb-4 mx-4">
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
@@ -154,7 +151,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.password}
                                         </p>
-                                    )} 
+                                    )}
                             </div>
                             <div className="flex">
                                 <div className="mb-4 mx-4 ">
@@ -164,7 +161,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.working_hours}
                                         </p>
-                                    )} 
+                                    )}
                                 </div>
                                 <div className="mb-4 mx-4">
                                     <label htmlFor="annual_leave_rights" className="block text-sm font-medium text-gray-700">Yıllık İzin Hakkı (Saat)</label>
@@ -173,7 +170,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.annual_leave_rights}
                                         </p>
-                                    )} 
+                                    )}
                                 </div>
                                 <div className="mb-4 mx-4">
                                     <label htmlFor="sick_holiday" className="block text-sm font-medium text-gray-700">Hastalık İzin Hakkı (Saat)</label>
@@ -182,7 +179,16 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.sick_holiday}
                                         </p>
-                                    )} 
+                                    )}
+                                </div>
+                                <div className="mb-4 mx-4">
+                                    <label htmlFor="salary" className="block text-sm font-medium text-gray-700">Maaş (Saat)</label>
+                                    <Field type="number" name="salary" step="0.01" id="salary" className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
+                                    {errors.salary && touched.salary && (
+                                        <p className="text-red-500">
+                                            *{errors.salary}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <div className="mb-4 mx-4">
@@ -192,7 +198,7 @@ export default function CreateUsers({ auth }) {
                                         <p className="text-red-500">
                                             *{errors.start_working_date}
                                         </p>
-                                    )} 
+                                    )}
                             </div>
                             <ToggleSwitch
                                         label="Admin ?"

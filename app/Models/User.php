@@ -33,7 +33,8 @@ class User extends Authenticatable
         'sick_holiday',
         'annual_leave_rights',
         'is_admin',
-        'start_working_date'
+        'start_working_date',
+        'salary'
     ];
 
 

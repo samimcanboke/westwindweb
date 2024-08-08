@@ -77,6 +77,7 @@ class RegisteredUserController extends Controller
             'sick_holiday' => ['required', 'numeric'],
             'start_working_date' => ['required', 'date'],
             'annual_leave_rights' => ['required', 'numeric'],
+            'salary' => ['required', 'numeric'],
             'password' => ['required', Rules\Password::defaults()],
         ]);
 
@@ -90,7 +91,7 @@ class RegisteredUserController extends Controller
             'working_hours' => $request->working_hours,
             'annual_leave_rights' => $request->annual_leave_rights,
             'start_working_date' => $request->start_working_date,
-            'is_admin' => $request->is_admin,
+            'salary' => $request->salary,
             'sick_holiday' => $request->sick_holiday,
             'password' => Hash::make($request->password),
             'is_admin' => $request->is_admin
