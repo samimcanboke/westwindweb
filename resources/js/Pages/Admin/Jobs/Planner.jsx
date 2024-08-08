@@ -189,7 +189,7 @@ export default function Planner({ auth }) {
                                         let id =
                                             itemId.target.parentElement.getAttribute(
                                                 "dataitemid"
-                                            );                                        
+                                            );
                                         let job = await axios.get(
                                             "/planner/jobs/show/" + id
                                         );
@@ -236,7 +236,7 @@ export default function Planner({ auth }) {
                                     } catch (e) {
                                         console.log(e);
                                     }
-                                
+
                                 },
                                 onItemMove: async (itemId, newStart, newEnd) => {
                                     console.log(itemId, newStart, newEnd);
@@ -626,7 +626,7 @@ export default function Planner({ auth }) {
                                     cursor: "pointer",
                                     pointerEvents: "none", // Seçilemez hale getirmek için
                                 }
-                                
+
                             },
                         };
                         if (
@@ -1575,7 +1575,7 @@ export default function Planner({ auth }) {
                                                     setVisibleTimeEnd(
                                                         moment()
                                                             .add(7, "day")
-                                                            .endOf("week") 
+                                                            .endOf("week")
                                                     );
                                                 } else {
                                                     setVisibleTimeStart(null);
@@ -1643,23 +1643,23 @@ export default function Planner({ auth }) {
                                                 getResizeProps
                                               }) => {
                                                 const { left: leftResizeProps, right: rightResizeProps } = getResizeProps()
-                                                
+
 
                                                 return (
                                                   <div {...getItemProps(item.itemProps)} key={item.id} dataitemid={item.id} >
                                                     {itemContext.useResizeHandle ? <div {...leftResizeProps} /> : ''}
-                                              
+
                                                     <div
                                                       className="rct-item-content"
                                                       style={{ maxHeight: `${itemContext.dimensions.height}` }}
                                                     >
                                                       {itemContext.title}
                                                     </div>
-                                              
+
                                                     {itemContext.useResizeHandle ? <div {...rightResizeProps} /> : ''}
                                                   </div>
                                                 )}
-                                              
+
                                               }
                                             unit="day"
                                             defaultTimeStart={moment().add(
@@ -1685,7 +1685,7 @@ export default function Planner({ auth }) {
                                             }}
                                             onItemMove={handleItemMove}
                                         >
-                                            <TimelineHeaders className="sticky">
+                                            <TimelineHeaders >
                                                 <CustomHeader unit="month">
                                                     {({
                                                         headerContext: {
@@ -1723,7 +1723,7 @@ export default function Planner({ auth }) {
                                                                                     "#c51f21",
                                                                                 color: "white",
                                                                                 border: "1px solid #bababa",
-                                                                                
+
                                                                             };
                                                                         return (
                                                                             <div
@@ -1775,7 +1775,7 @@ export default function Planner({ auth }) {
                                                                     (
                                                                         interval
                                                                     ) => {
-                                                                        
+
                                                                         const displayNone =
                                                                             {
                                                                                 display:
@@ -1862,13 +1862,13 @@ export default function Planner({ auth }) {
                                                                                     "1px solid black",
                                                                                 cursor: "pointer",
                                                                                 backgroundColor:
-                                                                                moment(interval.startTime).day() === 0 ? "gray": 
-                                                                                moment(interval.startTime).day() === 1 ? "red": 
-                                                                                moment(interval.startTime).day() === 2 ? "green": 
-                                                                                moment(interval.startTime).day() === 3 ? "red": 
-                                                                                moment(interval.startTime).day() === 4 ? "green": 
-                                                                                moment(interval.startTime).day() === 5 ? "red": 
-                                                                                moment(interval.startTime).day() === 6 ? "green": 
+                                                                                moment(interval.startTime).day() === 0 ? "gray":
+                                                                                moment(interval.startTime).day() === 1 ? "red":
+                                                                                moment(interval.startTime).day() === 2 ? "green":
+                                                                                moment(interval.startTime).day() === 3 ? "red":
+                                                                                moment(interval.startTime).day() === 4 ? "green":
+                                                                                moment(interval.startTime).day() === 5 ? "red":
+                                                                                moment(interval.startTime).day() === 6 ? "green":
                                                                                 "black",
                                                                                 color: moment(interval.startTime).day() === 0 ? "black" : "white",
                                                                                 border: "1px solid #bababa",

@@ -58,6 +58,14 @@ Route::get('/admin/bahn-cards/{id}', function ($id) {
 })->middleware(['auth', 'verified'])->name('bahn-cards.edit');
 
 
+Route::get('/users/bonus/{user_id}', function ($user_id) {
+    return Inertia::render('Admin/Users/Bonus', ['user_id' => $user_id]);
+})->middleware(['auth', 'verified'])->name('users-bonus.show');
+
+Route::get('/users/advance/{user_id}', function ($user_id) {
+    return Inertia::render('Admin/Users/Advance', ['user_id' => $user_id]);
+})->middleware(['auth', 'verified'])->name('users-advance.show');
+
 Route::get('/users/edit/{user_id}', function ($user_id) {
     return Inertia::render('Admin/Users/Edit', ['user_id' => $user_id]);
 })->middleware(['auth', 'verified', IsAdmin::class])->name('users.edit');

@@ -3,20 +3,20 @@ import { Head } from "@inertiajs/react";
 import { Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 
-export default function Dashboard({ auth }) {
-    const [users, setUsers] = useState([]);
+export default function Bonus({ auth, user_id }) {
+    const [bonus, setBonus] = useState([]);
 
-    const getUsers = () => {
-        axios.get(route('users.show')).then((res) => {
-            let usersUnsorted = res.data;
-            let usersSorted = usersUnsorted.sort((a, b) => {
+    const getBonus = () => {
+        axios.get(route('users-bonus.show', user_id)).then((res) => {
+            let bonusUnsorted = res.data;
+            let bonusSorted = bonusUnsorted.sort((a, b) => {
                 return a.driver_id.localeCompare(b.driver_id);
             });
-            setUsers(usersSorted);
+            setBonus(bonusSorted);
         });
     }
     useEffect(() => {
-        getUsers();
+        getBonus();
     },[]);
     return (
         <AuthenticatedLayout
