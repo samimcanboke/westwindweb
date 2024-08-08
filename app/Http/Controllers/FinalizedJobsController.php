@@ -891,7 +891,7 @@ class FinalizedJobsController extends Controller
                     $total_annual_leave_hours += $days * 8;
                 }
             }
-            $data['rows'][$user->id]['annual_leave_hours'] = sprintf('%02d:%02d', floor($total_annual_leave_hours), ($total_annual_leave_hours * 60) % 60);
+            $data['rows'][$user->id]['annual_leave_hours'] = floor($total_annual_leave_hours);
 
             $total_sick_leave_hours = 0;
             foreach ($user->sickLeaves as $sickLeave) {
@@ -905,7 +905,7 @@ class FinalizedJobsController extends Controller
                     $total_sick_leave_hours += $days * 8;
                 }
             }
-            $data['rows'][$user->id]['sick_leave_hours'] = sprintf('%02d:%02d', floor($total_sick_leave_hours), ($total_sick_leave_hours * 60) % 60);
+            $data['rows'][$user->id]['sick_leave_hours'] = floor($total_sick_leave_hours);
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->id);

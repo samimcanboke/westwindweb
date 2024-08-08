@@ -62,6 +62,7 @@ Route::get('/users/bonus/{user_id}', function ($user_id) {
     return Inertia::render('Admin/Users/Bonus', ['user_id' => $user_id]);
 })->middleware(['auth', 'verified'])->name('users-bonus.show');
 
+
 Route::get('/users/advance/{user_id}', function ($user_id) {
     return Inertia::render('Admin/Users/Advance', ['user_id' => $user_id]);
 })->middleware(['auth', 'verified'])->name('users-advance.show');
