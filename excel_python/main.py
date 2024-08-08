@@ -301,11 +301,13 @@ def create_total_excel():
                 if row_data['user_bonus']:
                     ws[f'Q{row_num}'] = f"+{row_data['user_bonus']} €"
                     ws[f'Q{row_num}'].font = Font(color="00FF00")
+                    ws[f'Q{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
                 else:
                     ws[f'Q{row_num}'] = row_data['user_bonus']
                 if row_data['user_advance']:
                     ws[f'R{row_num}'] = f"-{row_data['user_advance']} €"
                     ws[f'R{row_num}'].font = Font(color="FF0000")
+                    ws[f'R{row_num}'].fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
                 else:
                     ws[f'R{row_num}'] = row_data['user_advance']
                 row_num += 1
