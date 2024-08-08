@@ -18,6 +18,8 @@ use App\Mail\MyTestEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\UsersBonusController;
+use App\Http\Controllers\UsersAdvanceController;
 
 
 use App\Events\UserRegistered;
@@ -61,7 +63,6 @@ Route::get('/admin/bahn-cards/{id}', function ($id) {
 Route::get('/users/bonus/{user_id}', function ($user_id) {
     return Inertia::render('Admin/Users/Bonus', ['user_id' => $user_id]);
 })->middleware(['auth', 'verified'])->name('users-bonus.show');
-
 
 Route::get('/users/advance/{user_id}', function ($user_id) {
     return Inertia::render('Admin/Users/Advance', ['user_id' => $user_id]);
@@ -215,6 +216,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/planner/jobs/get-user-jobs', [JobPlansController::class, 'get_user_job_plans'])->withoutMiddleware([IsAdmin::class])->name('get-user-job-plans');
 
 });
+
+Route::get('/get_user_bonus/{user_id}', [UsersBonusController::class, 'show'])->middleware(['auth', 'verified'])->name('get-user-bonus');
+Route::post('/add-bonus/{user_id}', [UsersBonusController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-bonus');
+Route::delete('/delete-bonus/{bonus_id}', [UsersBonusController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-bonus');
+
+Route::get('/get_user_advances/{user_id}', [UsersAdvanceController::class, 'show'])->middleware(['auth', 'verified'])->name('get-user-advances');
+Route::post('/add-advances/{user_id}', [UsersAdvanceController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-advances');
+Route::delete('/delete-advances/{advances_id}', [UsersAdvanceController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-advances');
+
+
 
 
 Route::get('/testroute', function() {

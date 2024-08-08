@@ -1,30 +1,49 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { Button } from "flowbite-react";
+import { Button, Modal, Label } from "flowbite-react";
 import { useEffect, useState } from "react";
+import moment from "moment";
+import axios from "axios";
 
 export default function Bonus({ auth, user_id }) {
     const [bonus, setBonus] = useState([]);
-    const [openModal, setOpenModal] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [newBonus, setNewBonus] = useState({
+        transaction_date: new Date(),
+        amount: null,
+    });
 
     const getBonus = () => {
-        axios.get(route('users-bonus.show', user_id)).then((res) => {
+        axios.get(route("get-user-bonus", user_id)).then((res) => {
             let bonusUnsorted = res.data;
-            let bonusSorted = bonusUnsorted.sort((a, b) => {
-                return a.driver_id.localeCompare(b.driver_id);
-            });
-            setBonus(bonusSorted);
+            if (bonusUnsorted.length > 0) {
+                let bonusSorted = bonusUnsorted.sort((a, b) => {
+                    return a.driver_id.localeCompare(b.driver_id);
+                });
+                setBonus(bonusSorted);
+            }
         });
-    }
+    };
 
-    const deleteBonus = () => {
-        axios.post(route('users-bonus.destroy', user_id)).then((res) => {
+    const deleteBonus = (bonus_id) => {
+        axios.delete(route("delete-bonus", bonus_id)).then((res) => {
             getBonus();
+        setBonus(bonus.filter((item) => item.id !== bonus_id));
         });
-    }
+    };
+    const addNewBonus = () => {
+        axios.post(route("add-bonus", user_id), newBonus).then((res) => {
+            getBonus();
+            setOpenModal(false);
+        });
+    };
     useEffect(() => {
         getBonus();
-    },[]);
+        const interval = setInterval(() => {
+            getBonus();
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -41,19 +60,54 @@ export default function Bonus({ auth, user_id }) {
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Bonus Hinzufügen
+                            Füllen Sie das Formular aus, um {auth.user.name}{" "}
+                            einen Bonus zu geben
                         </p>
-                        <input type="text" className="w-full" />
+                        <div>
+                            <Label htmlFor="transaction_date">Datum</Label>
+                            <input
+                                type="date"
+                                id="transaction_date"
+                                className="w-full border-2 border-gray-300 rounded-md p-2"
+                                value={
+                                    newBonus.transaction_date
+                                        .toISOString()
+                                        .split("T")[0]
+                                }
+                                onChange={(e) => {
+                                    setNewBonus({
+                                        ...newBonus,
+                                        transaction_date: new Date(
+                                            e.target.value
+                                        ),
+                                    });
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="amount">Amount</Label>
+                            <input
+                                type="number"
+                                id="amount"
+                                className="w-full border-2 border-gray-300 rounded-md p-2"
+                                value={newBonus.amount}
+                                onChange={(e) => {
+                                    setNewBonus({
+                                        ...newBonus,
+                                        amount: parseFloat(e.target.value),
+                                    });
+                                }}
+                            />
+                        </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setMachinist}>Zuweisen</Button>
+                    <Button onClick={addNewBonus}>Hinzufügen</Button>
                     <Button color="gray" onClick={() => setOpenModal(false)}>
                         Abbrechen
                     </Button>
                 </Modal.Footer>
             </Modal>
-
 
             <div className="container mx-auto mt-10">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -68,12 +122,14 @@ export default function Bonus({ auth, user_id }) {
                                     </p>
                                 </div>
                                 <div>
-                                    <a
-                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                    href={route("bonus.create")}
+                                    <button
+                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                        onClick={() => {
+                                            setOpenModal(true);
+                                        }}
                                     >
                                         Neu Bonus
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </caption>
@@ -81,34 +137,45 @@ export default function Bonus({ auth, user_id }) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Date
+                                    Datum
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Amount
+                                    Betrag
                                 </th>
+
                                 <th scope="col" className="px-6 py-3">
-                                <th scope="col" className="px-6 py-3">
-                                    Delete
-                                </th>
+                                    Löschen
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {bonus && bonus.length > 0 && bonus.map((bonus,key) => (
-                                <tr key={key} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td className="px-6 py-4">{moment(bonus.transaction_date).format('DD.MM.YYYY HH:mm')}</td>
-                                <td className="px-6 py-4">{bonus.amount}</td>
-                                <td className="px-6 py-4">
-                                    <Button
-                                        onClick={() => deleteBonus(bonus.id)}
-                                        className="bg-red-500 text-white font-bold py-2 px-4 rounded"
+                            {bonus &&
+                                bonus.length > 0 &&
+                                bonus.map((bonus, key) => (
+                                    <tr
+                                        key={key}
+                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                                     >
-                                        Bonus Sil
-                                    </Button>
-                                </td>
-                            </tr>
-                            ))}
-
+                                        <td className="px-6 py-4">
+                                            {moment(
+                                                bonus.transaction_date
+                                            ).format("DD.MM.YYYY HH:mm")}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {bonus.amount}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Button
+                                                onClick={() =>
+                                                    deleteBonus(bonus.id)
+                                                }
+                                                className="bg-red-500 text-white font-bold py-2 px-4 rounded"
+                                            >
+                                                Löschen
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
                         </tbody>
                     </table>
                 </div>

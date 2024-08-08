@@ -942,16 +942,17 @@ class FinalizedJobsController extends Controller
 
             $total_user_advance = 0;
             foreach ($user->usersAdvance as $advance) {
-                $transaction_date = new \DateTime($advance->transaction_date);
+                $transaction_date = \Carbon\Carbon::parse($advance->transaction_date);
                 if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
                     $total_user_advance += $advance->amount;
                 }
             }
+
             $data['rows'][$user->id]['user_advance'] = $total_user_advance ? $total_user_advance : null;
 
             $total_user_bonus = 0;
             foreach ($user->usersBonus as $bonus) {
-                $transaction_date = new \DateTime($bonus->transaction_date);
+                $transaction_date = \Carbon\Carbon::parse($bonus->transaction_date);
                 if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
                     $total_user_bonus += $bonus->amount;
                 }

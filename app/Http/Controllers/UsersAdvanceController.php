@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\users_advance;
+use App\Models\UsersAdvance;
 use Illuminate\Http\Request;
 
 class UsersAdvanceController extends Controller
@@ -12,7 +12,8 @@ class UsersAdvanceController extends Controller
      */
     public function index()
     {
-        //
+
+
     }
 
     /**
@@ -28,15 +29,27 @@ class UsersAdvanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'amount' => 'required|numeric',
+            'transaction_date' => 'required|date',
+        ]);
+        $user_id = $request->route('user_id');
+        $advance = new UsersAdvance();
+        $advance->amount = $request->amount;
+        $advance->transaction_date = date('Y-m-d H:i:s', strtotime($request->transaction_date));
+        $advance->user_id = $user_id;
+        $advance->save();
+
+        return response()->json($advance);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(users_advance $users_advance)
+    public function show($user_id)
     {
-        //
+        $advance = UsersAdvance::where('user_id', $user_id)->get();
+        return response()->json($advance);
     }
 
     /**
@@ -58,8 +71,11 @@ class UsersAdvanceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(users_advance $users_advance)
+    public function destroy($advances_id)
     {
-        //
+
+        $advance = UsersAdvance::where('id', $advances_id)->first();
+        $advance->delete();
+        return response()->json($advance);
     }
 }
