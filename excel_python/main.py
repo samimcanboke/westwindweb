@@ -287,7 +287,7 @@ def create_total_excel():
                 ws[f'C{row_num}'] = row_data['name']
                 ws[f'D{row_num}'] = row_data['salary']
                 ws[f'E{row_num}'] = row_data['total_day']
-                ws[f'F{row_num}'] = "160:00"
+                ws[f'F{row_num}'] = row_data['workhours']
                 ws[f'G{row_num}'] = row_data['extra_work']
                 ws[f'H{row_num}'] = row_data['night_shift']
                 ws[f'I{row_num}'] = row_data['midnight_shift']
