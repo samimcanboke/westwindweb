@@ -668,7 +668,7 @@ class FinalizedJobsController extends Controller
 
         $users = User::where('is_active', 1)->get();
         foreach ($users as $user) {
-            if($user->id == 1 || $user->id == 2 || $user->id == 4 || $user->id == 9 || $user->id == 16){
+            if($user->id == 1 || $user->id == 2 || $user->id == 16){
                 continue;
             }
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
@@ -1004,6 +1004,27 @@ class FinalizedJobsController extends Controller
                 }
             }
             $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
+            if($user->id == 4 || $user->id == 9){
+                $data['rows'][$user->id]['workhours'] = "160,00";
+                $data['rows'][$user->id]['annual_leave_hours'] = "0";
+                $data['rows'][$user->id]['sick_leave_hours'] = "0";
+                $data['rows'][$user->id]['total_day'] = 0;
+                $data['rows'][$user->id]['salary'] = 22;
+                $data['rows'][$user->id]['name'] = $user->name;
+                $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
+                $data['rows'][$user->id]['total_day'] = 0;
+                $data['rows'][$user->id]['extra_work'] = "33,00";
+                $data['rows'][$user->id]['guests'] = "25,00";
+                $data['rows'][$user->id]['breaks'] = "0";
+                $data['rows'][$user->id]['midnight_shift'] = "80,00";
+                $data['rows'][$user->id]['night_shift'] = "80,00";
+                $data['rows'][$user->id]['sub_total'] = "160,00";
+                $data['rows'][$user->id]['public_holidays'] = "0";
+                $data['rows'][$user->id]['sunday_holidays'] = "40,00";
+            }
+
+
+
         }
 
 
