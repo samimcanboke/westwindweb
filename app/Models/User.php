@@ -36,7 +36,8 @@ class User extends Authenticatable
         'annual_leave_rights',
         'is_admin',
         'start_working_date',
-        'salary'
+        'salary',
+        'leave_working_date'
     ];
 
     public function scopeWithLeaveWorkingDate($query)

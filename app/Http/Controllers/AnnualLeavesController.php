@@ -13,7 +13,7 @@ class AnnualLeavesController extends Controller
     {
         $annualLeaves = AnnualLeaves::all();
         foreach ($annualLeaves as $annualLeave) {
-            $annualLeave->user = User::where('id', $annualLeave->user_id)->withLeaveWorkingDate()->first();
+            $annualLeave->user = User::where('id', $annualLeave->user_id)->withoutLeaveWorkingDate()->first();
         }
         return response()->json(['annualLeaves' => $annualLeaves]);
     }

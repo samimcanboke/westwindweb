@@ -1462,7 +1462,7 @@ class FinalizedJobsController extends Controller
     public function get_filters()
     {
 
-        $users = User::withLeaveWorkingDate()->get();
+        $users = User::withoutLeaveWorkingDate()->get();
         $clients = Client::get();
 
         return response()->json([
