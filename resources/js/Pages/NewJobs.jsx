@@ -11,8 +11,9 @@ import {
     Datepicker,
     Textarea,
     ToggleSwitch,
+    Spinner,
     Select,
-    Button
+    Button,
 } from "flowbite-react";
 import Swal from "sweetalert2";
 import { Formik, Field, FieldArray, Form } from "formik";
@@ -52,7 +53,7 @@ const initialValues = {
     guestEndTime: "",
     guestEndEndPlace: "",
     guestEndEndTime: "",
-    files: []
+    files: [],
 };
 
 const validationSchema = Yup.object().shape({
@@ -91,7 +92,7 @@ const validationSchema = Yup.object().shape({
                     const start = moment(workStartTime, "HH:mm");
                     let end = moment(value, "HH:mm");
                     if (end.isBefore(start)) {
-                        end.add(1, 'day');
+                        end.add(1, "day");
                     }
                     const duration = moment.duration(end.diff(start));
                     const hours = duration.asHours();
@@ -141,6 +142,17 @@ export default function NewJobs({ auth }) {
         }
         return options;
     };
+    const scrollToError = (errors) => {
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length > 0) {
+            const errorElement = document.querySelector(
+                `[name="${errorKeys[0]}"]`
+            );
+            if (errorElement) {
+                errorElement.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    };
 
     return (
         <AuthenticatedLayout
@@ -160,7 +172,6 @@ export default function NewJobs({ auth }) {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-
                 onSubmit={(values, { setSubmitting, setFieldValue }) => {
                     setSubmitting(true);
                     values.images = files;
@@ -196,19 +207,32 @@ export default function NewJobs({ auth }) {
                     values.accomodation = values.accomodation ? 1 : 0;
                     values.bereitschaft = values.bereitschaft ? 1 : 0;
                     values.learning = values.learning ? 1 : 0;
-                    axios.post("/save-draft-jobs", values).then((res) => {
-                        if (res.status) {
-                            console.log(res.data);
-                            Swal.fire(
-                                "Erfolgreich",
-                                "Entwurf gespeichert.",
-                                "success"
-                            );
-                            router.visit("/draft-jobs");
+                    axios
+                        .post("/save-draft-jobs", values)
+                        .then((res) => {
+                            if (res.status) {
+                                console.log(res.data);
+                                Swal.fire(
+                                    "Erfolgreich",
+                                    "Entwurf gespeichert.",
+                                    "success"
+                                );
+                                router.visit("/draft-jobs");
+                                setSubmitting(false);
+                            }
+                        })
+                        .catch((err) => {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Hata",
+                                text: err.response.data.message,
+                            });
                             setSubmitting(false);
-                        }
-                    });
+                        });
                 }}
+                validateOnBlur={false}
+                validateOnChange={false}
+                validateOnMount={false}
             >
                 {({
                     values,
@@ -217,8 +241,19 @@ export default function NewJobs({ auth }) {
                     touched,
                     setFieldValue,
                     isSubmitting,
+                    validateForm,
                 }) => (
-                    <Form onSubmit={handleSubmit}>
+                    <Form
+                        onSubmit={async (e) => {
+                            e.preventDefault();
+                            const formErrors = await validateForm();
+                            if (Object.keys(formErrors).length > 0) {
+                                scrollToError(formErrors);
+                            } else {
+                                handleSubmit();
+                            }
+                        }}
+                    >
                         <Accordion>
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle>
@@ -488,9 +523,12 @@ export default function NewJobs({ auth }) {
 
                                     <div className="mt-5 w-full">
                                         <Label>Foto hinzufügen</Label>
-                                       <MultipleFileUpload images={files} setImages={setFiles} />
+                                        <MultipleFileUpload
+                                            images={files}
+                                            setImages={setFiles}
+                                        />
                                     </div>
-                                    <br/>
+                                    <br />
                                     <div className="max-w-md">
                                         <div className="mb-2 block">
                                             <Label
@@ -557,9 +595,7 @@ export default function NewJobs({ auth }) {
                                                 32€
                                             </option>
                                         </Select>
-
                                     </div>
-
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
@@ -1034,12 +1070,15 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label >Dienst Ende Zeit  {errors.workEndTime &&
+                                    <Label>
+                                        Dienst Ende Zeit{" "}
+                                        {errors.workEndTime &&
                                             touched.workEndTime && (
                                                 <p className="text-red-500">
                                                     *{errors.workEndTime}
                                                 </p>
-                                            )}</Label>
+                                            )}
+                                    </Label>
                                     <div className="flex">
                                         <TimePicker
                                             type="time"
@@ -1052,15 +1091,12 @@ export default function NewJobs({ auth }) {
                                             }
                                             value={values.workEndTime}
                                             onChange={(e) => {
-
                                                 setFieldValue(
                                                     "workEndTime",
                                                     timeString(e)
                                                 );
                                             }}
                                         />
-
-
                                     </div>
                                 </AccordionContent>
                             </AccordionPanel>
@@ -1186,13 +1222,23 @@ export default function NewJobs({ auth }) {
                             </AccordionPanel>
                         </Accordion>
                         <div className="flex justify-center items-center">
-                            <Button
-                                type="submit"
-                                //disabled={isSubmitting}
-                                className="mb-5"
-                            >
-                                Speichern
-                            </Button>
+                            {isSubmitting ? (
+                                <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                                    <Spinner
+                                        aria-label="Spinner button example"
+                                        size="sm"
+                                    />
+                                    <span className="pl-3">Loading...</span>
+                                </Button>
+                            ) : (
+                                <Button
+                                    type="submit"
+                                    //disabled={isSubmitting}
+                                    className="mb-5"
+                                >
+                                    Speichern
+                                </Button>
+                            )}
                         </div>
                     </Form>
                 )}

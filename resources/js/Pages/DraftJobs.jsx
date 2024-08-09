@@ -12,6 +12,7 @@ import {
     Textarea,
     ToggleSwitch,
     Select,
+    Spinner,
     Button,
     Table,
 } from "flowbite-react";
@@ -36,43 +37,43 @@ export default function DraftJobs({ auth }) {
         workStartPlace: Yup.string().required("Required"),
         workEndPlace: Yup.string().required("Required"),
         workStartTime: Yup.string()
-        .required("Required")
-        .test(
-            "is-valid-time",
-            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
-            function (value) {
-                const time = moment(value, "HH:mm");
-                return time.isValid() && time.minute() % 15 === 0;
-            }
-        ),
-    workEndTime: Yup.string()
-        .required("Required")
-        .test(
-            "is-valid-time",
-            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
-            function (value) {
-                const time = moment(value, "HH:mm");
-                return time.isValid() && time.minute() % 15 === 0;
-            }
-        )
-        .test(
-            "is-valid-duration",
-            "Bei Bereitschafts- oder stornierten Arbeiten darf die Arbeitsendzeit 8 Stunden nicht überschreiten",
-            function (value) {
-                const { cancel, bereitschaft, workStartTime } = this.parent;
-                if (cancel || bereitschaft) {
-                    const start = moment(workStartTime, "HH:mm");
-                    let end = moment(value, "HH:mm");
-                    if (end.isBefore(start)) {
-                        end.add(1, 'day');
-                    }
-                    const duration = moment.duration(end.diff(start));
-                    const hours = duration.asHours();
-                    return hours <= 8;
+            .required("Required")
+            .test(
+                "is-valid-time",
+                "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+                function (value) {
+                    const time = moment(value, "HH:mm");
+                    return time.isValid() && time.minute() % 15 === 0;
                 }
-                return true;
-            }
-        ),
+            ),
+        workEndTime: Yup.string()
+            .required("Required")
+            .test(
+                "is-valid-time",
+                "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+                function (value) {
+                    const time = moment(value, "HH:mm");
+                    return time.isValid() && time.minute() % 15 === 0;
+                }
+            )
+            .test(
+                "is-valid-duration",
+                "Bei Bereitschafts- oder stornierten Arbeiten darf die Arbeitsendzeit 8 Stunden nicht überschreiten",
+                function (value) {
+                    const { cancel, bereitschaft, workStartTime } = this.parent;
+                    if (cancel || bereitschaft) {
+                        const start = moment(workStartTime, "HH:mm");
+                        let end = moment(value, "HH:mm");
+                        if (end.isBefore(start)) {
+                            end.add(1, "day");
+                        }
+                        const duration = moment.duration(end.diff(start));
+                        const hours = duration.asHours();
+                        return hours <= 8;
+                    }
+                    return true;
+                }
+            ),
     });
 
     const camelCase = (obj) => {
@@ -280,6 +281,14 @@ export default function DraftJobs({ auth }) {
                                                         setSubmitting(false);
                                                     });
                                             }
+                                        })
+                                        .catch((err) => {
+                                            setSubmitting(false);
+                                            Swal.fire({
+                                                icon: "error",
+                                                title: "Hata",
+                                                text: err.response.data.message,
+                                            });
                                         });
                                 }}
                             >
@@ -876,14 +885,14 @@ export default function DraftJobs({ auth }) {
                                                         <Label>
                                                             Anfangszeit
                                                             {errors.workStartTime &&
-                                                            touched.workStartTime && (
-                                                                <p className="text-red-500">
-                                                                    *
-                                                                    {
-                                                                        errors.workStartTime
-                                                                    }
-                                                                </p>
-                                                            )}
+                                                                touched.workStartTime && (
+                                                                    <p className="text-red-500">
+                                                                        *
+                                                                        {
+                                                                            errors.workStartTime
+                                                                        }
+                                                                    </p>
+                                                                )}
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -921,7 +930,6 @@ export default function DraftJobs({ auth }) {
                                                                 </svg>
                                                             </span>
                                                         </div>
-
                                                     </AccordionContent>
                                                 </AccordionPanel>
                                             </Accordion>
@@ -1350,7 +1358,6 @@ export default function DraftJobs({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-
                                                         </div>
                                                     </AccordionContent>
                                                 </AccordionPanel>
@@ -1543,13 +1550,26 @@ export default function DraftJobs({ auth }) {
                                                 >
                                                     Abbrechen
                                                 </Button>
-                                                <Button
-                                                    type="submit"
-                                                    disabled={isSubmitting}
-                                                    className="ml-4"
-                                                >
-                                                    Speichern
-                                                </Button>
+
+                                                {isSubmitting ? (
+                                                    <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                                                        <Spinner
+                                                            aria-label="Spinner button example"
+                                                            size="sm"
+                                                        />
+                                                        <span className="pl-3">
+                                                            Loading...
+                                                        </span>
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        type="submit"
+                                                        className="ml-4"
+                                                    >
+                                                        Speichern
+                                                    </Button>
+                                                )}
+
                                             </div>
                                         </Form>
                                     );
