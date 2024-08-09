@@ -914,18 +914,24 @@ class FinalizedJobsController extends Controller
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
             if ($total_work_hours > 160 * 60) {
                 $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
-                $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', floor($remaining_hours), ($remaining_hours * 60) % 60);
+                $hours = floor($remaining_hours);
+                $minutes = ($remaining_hours * 60) % 60;
+                $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
             } else {
-                $data['rows'][$user->id]['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+                $hours = $total_work_sum->h;
+                $minutes = $total_work_sum->i;
+                $decimal_hours = $hours + ($minutes / 60);
+                $data['rows'][$user->id]['workhours'] = number_format($decimal_hours, 2, ',', '');
             }
             $data['rows'][$user->id]['salary'] = $user->salary . " €" ;
             $extra_work_hours = $total_work_hours - (160 * 60);
             if ($extra_work_hours > 0) {
                 $extra_work_hours_h = floor($extra_work_hours / 60);
                 $extra_work_hours_i = $extra_work_hours % 60;
-                $data['rows'][$user->id]['extra_work'] = sprintf('%02d:%02d', $extra_work_hours_h, $extra_work_hours_i);
+                $extra_work_hours_decimal = $extra_work_hours_h + ($extra_work_hours_i / 60);
+                $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
             } else {
-                $data['rows'][$user->id]['extra_work'] = "00:00";
+                $data['rows'][$user->id]['extra_work'] = "0";
             }
             $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
             if ($bahnCard == 1) {
@@ -934,13 +940,49 @@ class FinalizedJobsController extends Controller
 
 
 
-            $data['rows'][$user->id]['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
-            $data['rows'][$user->id]['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
-            $data['rows'][$user->id]['midnight_shift'] = sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) : "-";
-            $data['rows'][$user->id]['night_shift'] = sprintf('%02d:%02d', $total_night_shift->h + $total_deep_morning_shift->h, $total_night_shift->i + $total_deep_morning_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_night_shift->h + $total_deep_morning_shift->h, $total_night_shift->i + $total_deep_morning_shift->i) : "-";
-            $data['rows'][$user->id]['sub_total'] = sprintf('%02d:%02d', $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i))->h, $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i))->i);
-            $data['rows'][$user->id]['public_holidays'] = sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) : "-";
-            $data['rows'][$user->id]['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
+            if ($total_guest_sum != "00:00") {
+                $hours = $total_guest_sum->h;
+                $minutes = $total_guest_sum->i;
+                $decimal_hours = $hours + ($minutes / 60);
+                $data['rows'][$user->id]['guests'] = number_format($decimal_hours, 2, ',', '');
+            } else {
+                $data['rows'][$user->id]['guests'] = "00:00";
+            }
+            if (sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00") {
+                $hours = $total_break_time->h;
+                $minutes = $total_break_time->i;
+                $decimal_hours = $hours + ($minutes / 60);
+                $data['rows'][$user->id]['breaks'] = number_format($decimal_hours, 2, ',', '');
+            } else {
+                $data['rows'][$user->id]['breaks'] = "-";
+            }
+            $hours = $total_midnight_shift->h;
+            $minutes = $total_midnight_shift->i;
+            $decimal_hours = $hours + ($minutes / 60);
+            $data['rows'][$user->id]['midnight_shift'] = $decimal_hours != 0 ? number_format($decimal_hours, 2, ',', '') : "-";
+            $total_night_shift_hours = $total_night_shift->h + $total_deep_morning_shift->h;
+            $total_night_shift_minutes = $total_night_shift->i + $total_deep_morning_shift->i;
+            $total_night_shift_decimal = $total_night_shift_hours + ($total_night_shift_minutes / 60);
+            $data['rows'][$user->id]['night_shift'] = $total_night_shift_decimal != 0 ? number_format($total_night_shift_decimal, 2, ',', '') : "-";
+            $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i));
+            $decimal_hours = $total_hours->h + ($total_hours->i / 60);
+            $data['rows'][$user->id]['sub_total'] = number_format($decimal_hours, 2, ',', '');
+            if (sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00") {
+                $hours = $total_public_holiday_hours->h;
+                $minutes = $total_public_holiday_hours->i;
+                $decimal_hours = $hours + ($minutes / 60);
+                $data['rows'][$user->id]['public_holidays'] = number_format($decimal_hours, 2, ',', '');
+            } else {
+                $data['rows'][$user->id]['public_holidays'] = "-";
+            }
+            if (sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00") {
+                $hours = $total_sunday_holiday_hours->h;
+                $minutes = $total_sunday_holiday_hours->i;
+                $decimal_hours = $hours + ($minutes / 60);
+                $data['rows'][$user->id]['sunday_holidays'] = number_format($decimal_hours, 2, ',', '');
+            } else {
+                $data['rows'][$user->id]['sunday_holidays'] = "-";
+            }
             $data['rows'][$user->id]['accomodations'] = $feeding_fee . " €";
             $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
 

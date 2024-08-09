@@ -267,8 +267,14 @@ def create_total_excel():
         ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
         ws.page_setup.fitToHeight = 0
         ws.page_setup.fitToWidth = 1
+        ws['C3'].alignment = Alignment(horizontal='center', vertical='center')
+        ws.row_dimensions[3].height = 25
+        ws.row_dimensions[4].height = 25
+        ws['C4'].alignment = Alignment(horizontal='center', vertical='center')
         ws['D3'] = used_data['year']
+        ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
         ws['D4'] = used_data['month']
+        ws['D4'].alignment = Alignment(horizontal='center', vertical='center')
         for row in used_data['rows']:
             row_num = 10
             for row_data in used_data['rows']:
@@ -276,8 +282,11 @@ def create_total_excel():
                     for col in range(2, 18):  # B to M columns
                         cell = ws.cell(row=row_num, column=col)
                         cell.fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
+
                 for col in range(2, 18):  # B to M columns
                     cell = ws.cell(row=row_num, column=col)
+                    ws.row_dimensions[row_num].height = 30
+                    cell.font = Font(name='Montserrat', size=12, bold=False)
                     cell.alignment = Alignment(horizontal='center', vertical='center')
                     cell.border = Border(left=Side(style='thin'),
                                          right=Side(style='thin'),
