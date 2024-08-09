@@ -13,7 +13,9 @@ import {
     Select,
     Button,
     Table,
+    Spinner,
 } from "flowbite-react";
+
 import * as Yup from "yup";
 import moment from "moment";
 import Swal from "sweetalert2";
@@ -34,6 +36,7 @@ export default function Dashboard({ auth }) {
         year: "",
     });
     const [data, setData] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const camelCase = (obj) => {
         var newObj = {};
@@ -58,6 +61,8 @@ export default function Dashboard({ auth }) {
         }
         return newObj;
     };
+
+
 
     useEffect(() => {
         axios.get("finalized-filter").then((res) => {
@@ -127,17 +132,21 @@ export default function Dashboard({ auth }) {
             });
             return;
         }
+        setIsSubmitting(true);
         axios.post(route("get-confirmed-jobs"), filter).then((res) => {
             if (res.data.status) {
                 setLoading(false);
                 setFilterActive(false);
+                setIsSubmitting(false);
                 setData(res.data.data);
             }
         });
     };
 
     const excelAction = () => {
+        setIsSubmitting(true);
         if (gesamt) {
+
             axios
                 .post("/finalized-jobs/get-total-report", {
                     month: filter.month,
@@ -145,6 +154,7 @@ export default function Dashboard({ auth }) {
                     total: gesamt,
                 })
                 .then((res) => {
+                    setIsSubmitting(false);
                     if (res.data.status) {
                         let url = "/download-pdf/" + res.data.file + ".pdf";
                         window.open(url, "_blank", "noreferrer");
@@ -166,6 +176,7 @@ export default function Dashboard({ auth }) {
                     total: gesamt,
                 })
                 .then((res) => {
+                    setIsSubmitting(false);
                     if (res.data.status) {
                         let url = "/download-pdf/" + res.data.file + ".pdf";
                         window.open(url, "_blank", "noreferrer");
@@ -199,6 +210,7 @@ export default function Dashboard({ auth }) {
                         <ToggleSwitch
                             checked={gesamt}
                             label=""
+                            disabled={!filterActive}
                             id="gesamt"
                             name="gesamt"
                             className="mt-4 ml-4"
@@ -295,8 +307,28 @@ export default function Dashboard({ auth }) {
                         <div className="max-w-full flex mt-8">
                             <div className="mb-2 block">
                                 {filterActive ? (
-                                    <Button onClick={filterAction}>
-                                        Datei Abrufen
+                                    isSubmitting ? (
+                                        <Button disabled>
+                                            <Spinner
+                                                aria-label="Spinner button example"
+                                                size="sm"
+                                            />
+                                            <span className="pl-3">
+                                                Loading...
+                                            </span>
+                                        </Button>
+                                    ) : (
+                                        <Button onClick={filterAction}>
+                                            Datei Abrufen
+                                        </Button>
+                                    )
+                                ) : isSubmitting ? (
+                                    <Button disabled>
+                                        <Spinner
+                                            aria-label="Spinner button example"
+                                            size="sm"
+                                        />
+                                        <span className="pl-3">Loading...</span>
                                     </Button>
                                 ) : (
                                     <Button
@@ -315,21 +347,41 @@ export default function Dashboard({ auth }) {
 
                     {gesamt && (
                         <div className="mt-8 block">
-                            <Button onClick={excelAction}>
-                                Gesamt Report
-                            </Button>
+                            {isSubmitting ? (
+                                <Button disabled>
+                                    <Spinner
+                                        aria-label="Spinner button example"
+                                        size="sm"
+                                    />
+                                    <span className="pl-3">Loading...</span>
+                                </Button>
+                            ) : (
+                                <Button onClick={excelAction}>
+                                    Gesamt Report
+                                </Button>
+                            )}
                         </div>
                     )}
 
                     {!filterActive && (
                         <div className="max-w-full flex mt-8">
                             <div className="mb-2 block">
-                                <Button
-                                    className="bg-red-500"
-                                    onClick={excelAction}
-                                >
-                                    Excel Export
-                                </Button>
+                                {isSubmitting ? (
+                                    <Button disabled className="bg-red-500">
+                                        <Spinner
+                                            aria-label="Spinner button example"
+                                            size="sm"
+                                        />
+                                        <span className="pl-3">Loading...</span>
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className="bg-red-500"
+                                        onClick={excelAction}
+                                    >
+                                        Excel Export
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     )}

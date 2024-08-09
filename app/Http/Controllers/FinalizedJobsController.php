@@ -892,7 +892,7 @@ class FinalizedJobsController extends Controller
                     $total_annual_leave_hours += $days * 8;
                 }
             }
-            $data['rows'][$user->id]['annual_leave_hours'] = floor($total_annual_leave_hours);
+            $data['rows'][$user->id]['annual_leave_hours'] = floor($total_annual_leave_hours) == 0 ? "-" : floor($total_annual_leave_hours);
 
             $total_sick_leave_hours = 0;
             foreach ($user->sickLeaves as $sickLeave) {
@@ -906,7 +906,7 @@ class FinalizedJobsController extends Controller
                     $total_sick_leave_hours += $days * 8;
                 }
             }
-            $data['rows'][$user->id]['sick_leave_hours'] = floor($total_sick_leave_hours);
+            $data['rows'][$user->id]['sick_leave_hours'] = floor($total_sick_leave_hours) == 0 ? "-" : floor($total_sick_leave_hours);
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
@@ -931,7 +931,7 @@ class FinalizedJobsController extends Controller
                 $extra_work_hours_decimal = $extra_work_hours_h + ($extra_work_hours_i / 60);
                 $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
             } else {
-                $data['rows'][$user->id]['extra_work'] = "0";
+                $data['rows'][$user->id]['extra_work'] = "-";
             }
             $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
             if ($bahnCard == 1) {
@@ -983,7 +983,7 @@ class FinalizedJobsController extends Controller
             } else {
                 $data['rows'][$user->id]['sunday_holidays'] = "-";
             }
-            $data['rows'][$user->id]['accomodations'] = $feeding_fee . " €";
+            $data['rows'][$user->id]['accomodations'] = $feeding_fee == 0 ? "-" : $feeding_fee . " €" ;
             $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
 
             $total_user_advance = 0;
@@ -1006,21 +1006,21 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
             if($user->id == 4 || $user->id == 9){
                 $data['rows'][$user->id]['workhours'] = "160,00";
-                $data['rows'][$user->id]['annual_leave_hours'] = "0";
-                $data['rows'][$user->id]['sick_leave_hours'] = "0";
+                $data['rows'][$user->id]['annual_leave_hours'] = "-";
+                $data['rows'][$user->id]['sick_leave_hours'] = "-";
                 $data['rows'][$user->id]['total_day'] = 0;
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
                 $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['extra_work'] = $user->id == 9 ? "0,00" : "0,00";
-                $data['rows'][$user->id]['guests'] = $user->id == 9 ? "0,00" : "25,00";
-                $data['rows'][$user->id]['breaks'] = "0,00";
+                $data['rows'][$user->id]['extra_work'] = $user->id == 9 ? "-" : "-";
+                $data['rows'][$user->id]['guests'] = $user->id == 9 ? "-" : "25,00";
+                $data['rows'][$user->id]['breaks'] = "-";
                 $data['rows'][$user->id]['midnight_shift'] = "80,00";
                 $data['rows'][$user->id]['night_shift'] = "80,00";
                 $data['rows'][$user->id]['sub_total'] = "160,00";
                 $data['rows'][$user->id]['public_holidays'] = "-";
                 $data['rows'][$user->id]['sunday_holidays'] = "40,00";
-                $data['rows'][$user->id]['accomodations'] = "0 €";
+                $data['rows'][$user->id]['accomodations'] = "-";
             } else if( $user->id == 17){
                 $data['rows'][$user->id]['workhours'] = "Gehalt";
                 $data['rows'][$user->id]['total_work_day_amount'] = "-";

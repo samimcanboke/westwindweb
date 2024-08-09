@@ -271,9 +271,9 @@ def create_total_excel():
         ws.row_dimensions[3].height = 25
         ws.row_dimensions[4].height = 25
         ws['C4'].alignment = Alignment(horizontal='center', vertical='center')
-        ws['D3'] = used_data['year']
+        ws['D3'] = used_data['month']
         ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
-        ws['D4'] = used_data['month']
+        ws['D4'] = used_data['year']
         ws['D4'].alignment = Alignment(horizontal='center', vertical='center')
         for row in used_data['rows']:
             row_num = 10

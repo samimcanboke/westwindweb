@@ -2,15 +2,18 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head,usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Button, Spinner } from "flowbite-react";
 import Swal from "sweetalert2";
 import axios from "axios";
 
 
 export default function CreateUsers({ auth }) {
+
+
     useEffect(() => {
         console.log(auth);
     }, []);
-    
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -74,9 +77,20 @@ export default function CreateUsers({ auth }) {
                                 <ErrorMessage name="name" component="div" className="text-red-500 text-xs mt-1" />
                             </div>
                             <div className="flex items-center justify-end mt-4 mx-4">
-                                <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Submit
-                                </button>
+                                {isSubmitting && (
+                                    <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                                        <Spinner
+                                            aria-label="Spinner button example"
+                                            size="sm"
+                                        />
+                                        <span className="pl-3">Loading...</span>
+                                    </Button>
+                                )}
+                                {!isSubmitting && (
+                                    <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                                        Einreichen
+                                    </Button>
+                                )}
                             </div>
                         </Form>
                     )}

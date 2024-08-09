@@ -5,6 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Datepicker, ToggleSwitch } from "flowbite-react";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { Button, Spinner } from "flowbite-react";
 import axios from "axios";
 import { values } from "pdf-lib";
 import * as yup from "yup";
@@ -153,9 +154,20 @@ export default function CreateBahnCards({ auth,id }) {
 
 
                             <div className="flex items-center justify-end mt-4 mx-4">
-                                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Submit
-                                </button>
+                                {isSubmitting && (
+                                    <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                                        <Spinner
+                                            aria-label="Spinner button example"
+                                            size="sm"
+                                        />
+                                        <span className="pl-3">Loading...</span>
+                                    </Button>
+                                )}
+                                {!isSubmitting && (
+                                    <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                                        Einreichen
+                                    </Button>
+                                )}
                             </div>
                         </Form>
                     )}
