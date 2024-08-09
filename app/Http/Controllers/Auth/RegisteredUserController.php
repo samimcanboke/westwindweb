@@ -31,6 +31,12 @@ class RegisteredUserController extends Controller
         return response()->json($users);
     }
 
+    public function show_all()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
+
     public function show_leave_jobs()
     {
         $users = User::where('is_active', 1)->get();
