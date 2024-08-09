@@ -1006,21 +1006,21 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
             if($user->id == 4 || $user->id == 9){
                 $data['rows'][$user->id]['workhours'] = "160,00";
-                $data['rows'][$user->id]['annual_leave_hours'] = "0";
+                $data['rows'][$user->id]['annual_leave_hours'] = "30";
                 $data['rows'][$user->id]['sick_leave_hours'] = "0";
                 $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['salary'] = "22 €";
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
                 $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['extra_work'] = "33,00";
-                $data['rows'][$user->id]['guests'] = "25,00";
-                $data['rows'][$user->id]['breaks'] = "0";
+                $data['rows'][$user->id]['extra_work'] = $user->id == 9 ? "0,00" : "0,00";
+                $data['rows'][$user->id]['guests'] = $user->id == 9 ? "0,00" : "25,00";
+                $data['rows'][$user->id]['breaks'] = "0,00";
                 $data['rows'][$user->id]['midnight_shift'] = "80,00";
                 $data['rows'][$user->id]['night_shift'] = "80,00";
                 $data['rows'][$user->id]['sub_total'] = "160,00";
-                $data['rows'][$user->id]['public_holidays'] = "0";
+                $data['rows'][$user->id]['public_holidays'] = "-";
                 $data['rows'][$user->id]['sunday_holidays'] = "40,00";
+                $data['rows'][$user->id]['accomodations'] = "0 €";
             }
 
 
