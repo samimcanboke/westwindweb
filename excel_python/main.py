@@ -283,32 +283,32 @@ def create_total_excel():
                                          right=Side(style='thin'),
                                          top=Side(style='thin'),
                                          bottom=Side(style='thin'))
-                ws[f'B{row_num}'] = row_data['id']
-                ws[f'C{row_num}'] = row_data['name']
-                ws[f'D{row_num}'] = row_data['salary']
-                ws[f'E{row_num}'] = row_data['workhours']
-                ws[f'F{row_num}'] = row_data['guests']
-                ws[f'G{row_num}'] = row_data['total_work_day_amount']
-                ws[f'H{row_num}'] = row_data['extra_work']
-                ws[f'I{row_num}'] = row_data['night_shift']
-                ws[f'J{row_num}'] = row_data['midnight_shift']
-                ws[f'K{row_num}'] = row_data['sunday_holidays']
-                ws[f'L{row_num}'] = row_data['public_holidays']
-                ws[f'M{row_num}'] = row_data['accomodations']
+                ws[f'B{row_num}'] = f"{row_data['id']}"
+                ws[f'C{row_num}'] = f"{row_data['name']}"
+                ws[f'D{row_num}'] = f"{row_data['salary']}"
+                ws[f'E{row_num}'] = f"{row_data['workhours']}"
+                ws[f'F{row_num}'] = f"{row_data['guests']}"
+                ws[f'G{row_num}'] = f"{row_data['total_work_day_amount']}"
+                ws[f'H{row_num}'] = f"{row_data['extra_work']}"
+                ws[f'I{row_num}'] = f"{row_data['night_shift']}"
+                ws[f'J{row_num}'] = f"{row_data['midnight_shift']}"
+                ws[f'K{row_num}'] = f"{row_data['sunday_holidays']}"
+                ws[f'L{row_num}'] = f"{row_data['public_holidays']}"
+                ws[f'M{row_num}'] = f"{row_data['accomodations']}"
                 ws[f'N{row_num}'] = f"{row_data['annual_leave_hours']}"
                 ws[f'O{row_num}'] = f"{row_data['sick_leave_hours']}"
                 if row_data['user_bonus']:
-                    ws[f'Q{row_num}'] = f"+{row_data['user_bonus']} €"
-                    ws[f'Q{row_num}'].font = Font(color="00FF00")
-                    ws[f'Q{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
+                    ws[f'P{row_num}'] = f"+{row_data['user_bonus']} €"
+                    ws[f'P{row_num}'].font = Font(color="00FF00")
+                    ws[f'P{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
                 else:
-                    ws[f'Q{row_num}'] = row_data['user_bonus']
+                    ws[f'P{row_num}'] = row_data['user_bonus']
                 if row_data['user_advance']:
-                    ws[f'R{row_num}'] = f"-{row_data['user_advance']} €"
-                    ws[f'R{row_num}'].font = Font(color="FF0000")
-                    ws[f'R{row_num}'].fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
+                    ws[f'Q{row_num}'] = f"-{row_data['user_advance']} €"
+                    ws[f'Q{row_num}'].font = Font(color="FF0000")
+                    ws[f'Q{row_num}'].fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
                 else:
-                    ws[f'R{row_num}'] = row_data['user_advance']
+                    ws[f'Q{row_num}'] = row_data['user_advance']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
         subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
