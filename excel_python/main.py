@@ -294,9 +294,10 @@ def create_total_excel():
                 ws[f'J{row_num}'] = f"{row_data['midnight_shift']}"
                 ws[f'K{row_num}'] = f"{row_data['sunday_holidays']}"
                 ws[f'L{row_num}'] = f"{row_data['public_holidays']}"
-                ws[f'M{row_num}'] = f"{row_data['accomodations']}"
-                ws[f'N{row_num}'] = f"{row_data['annual_leave_hours']}"
-                ws[f'O{row_num}'] = f"{row_data['sick_leave_hours']}"
+                ws[f'M{row_num}'] = f"{row_data['annual_leave_hours']}"
+                ws[f'N{row_num}'] = f"{row_data['sick_leave_hours']}"
+                ws[f'O{row_num}'] = f"{row_data['accomodations']}"
+
                 if row_data['user_bonus']:
                     ws[f'P{row_num}'] = f"+{row_data['user_bonus']} €"
                     ws[f'P{row_num}'].font = Font(color="00FF00")
