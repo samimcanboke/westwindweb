@@ -666,7 +666,7 @@ class FinalizedJobsController extends Controller
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
 
 
-        $users = User::where('is_active', 1)->all();
+        $users = User::where('is_active', 1)->get();
         foreach ($users as $user) {
             if($user->id == 1 || $user->id == 2 || $user->id == 4 || $user->id == 9){
                 continue;
