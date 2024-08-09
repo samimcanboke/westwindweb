@@ -286,18 +286,17 @@ def create_total_excel():
                 ws[f'B{row_num}'] = row_data['id']
                 ws[f'C{row_num}'] = row_data['name']
                 ws[f'D{row_num}'] = row_data['salary']
-                ws[f'E{row_num}'] = row_data['total_day']
-                ws[f'F{row_num}'] = row_data['workhours']
-                ws[f'G{row_num}'] = row_data['extra_work']
-                ws[f'H{row_num}'] = row_data['night_shift']
-                ws[f'I{row_num}'] = row_data['midnight_shift']
-                ws[f'J{row_num}'] = row_data['sunday_holidays']
-                ws[f'K{row_num}'] = row_data['public_holidays']
-                ws[f'L{row_num}'] = row_data['guests']
-                ws[f'M{row_num}'] = row_data['total_work_day_amount']
-                ws[f'N{row_num}'] = row_data['accomodations']
-                ws[f'O{row_num}'] = row_data['annual_leave_hours']
-                ws[f'P{row_num}'] = row_data['sick_leave_hours']
+                ws[f'E{row_num}'] = row_data['workhours']
+                ws[f'F{row_num}'] = row_data['guests']
+                ws[f'G{row_num}'] = row_data['total_work_day_amount']
+                ws[f'H{row_num}'] = row_data['extra_work']
+                ws[f'I{row_num}'] = row_data['night_shift']
+                ws[f'J{row_num}'] = row_data['midnight_shift']
+                ws[f'K{row_num}'] = row_data['sunday_holidays']
+                ws[f'L{row_num}'] = row_data['public_holidays']
+                ws[f'M{row_num}'] = row_data['accomodations']
+                ws[f'N{row_num}'] = f"{row_data['annual_leave_hours']}"
+                ws[f'O{row_num}'] = f"{row_data['sick_leave_hours']}"
                 if row_data['user_bonus']:
                     ws[f'Q{row_num}'] = f"+{row_data['user_bonus']} €"
                     ws[f'Q{row_num}'].font = Font(color="00FF00")
