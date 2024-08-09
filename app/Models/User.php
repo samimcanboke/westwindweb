@@ -39,6 +39,16 @@ class User extends Authenticatable
         'salary'
     ];
 
+    public function scopeWithLeaveWorkingDate($query)
+    {
+        return $query->whereNotNull('leave_working_date');
+    }
+
+    public function scopeWithoutLeaveWorkingDate($query)
+    {
+        return $query->whereNull('leave_working_date');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

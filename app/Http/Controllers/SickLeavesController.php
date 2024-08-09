@@ -13,7 +13,7 @@ class SickLeavesController extends Controller
     {
         $sickLeaves = SickLeaves::all();
         foreach ($sickLeaves as $sickLeave) {
-            $sickLeave->user = User::find($sickLeave->user_id);
+            $sickLeave->user = User::where('id', $sickLeave->user_id)->withLeaveWorkingDate()->first();
         }
         return response()->json(['sickLeaves' => $sickLeaves]);
     }

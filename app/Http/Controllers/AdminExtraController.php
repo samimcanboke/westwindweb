@@ -13,7 +13,7 @@ class AdminExtraController extends Controller
     {
         $adminExtras = AdminExtras::all();
         foreach ($adminExtras as $adminExtra) {
-            $adminExtra->user = User::find($adminExtra->user_id);
+            $adminExtra->user = User::where('id', $adminExtra->user_id)->first();
         }
         return response()->json(['adminExtras' => $adminExtras]);
     }

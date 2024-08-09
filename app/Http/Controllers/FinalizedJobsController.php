@@ -666,7 +666,7 @@ class FinalizedJobsController extends Controller
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
 
 
-        $users = User::all();
+        $users = User::where('is_active', 1)->all();
         foreach ($users as $user) {
             if($user->id == 1 || $user->id == 2 || $user->id == 4 || $user->id == 9){
                 continue;
@@ -1462,7 +1462,7 @@ class FinalizedJobsController extends Controller
     public function get_filters()
     {
 
-        $users = User::get();
+        $users = User::withLeaveWorkingDate()->get();
         $clients = Client::get();
 
         return response()->json([
