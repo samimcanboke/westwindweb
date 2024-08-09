@@ -1021,8 +1021,11 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['public_holidays'] = "-";
                 $data['rows'][$user->id]['sunday_holidays'] = "40,00";
                 $data['rows'][$user->id]['accomodations'] = "0 €";
+            } else if( $user->id == 17){
+                $data['rows'][$user->id]['workhours'] = "Gehalt";
+            } else if($user->id == 14 || $user->id == 15){
+                $data['rows'][$user->id]['workhours'] = "Aushilfe";
             }
-
 
 
         }
