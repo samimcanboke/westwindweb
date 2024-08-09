@@ -864,6 +864,7 @@ class FinalizedJobsController extends Controller
                 $i++;
             }
 
+
             if($finalized_jobs->count() > 0 && $finalized_jobs[0]->client_id){
                 $client = Client::where('id', $finalized_jobs[0]->client_id)->first();
             }else{
@@ -930,6 +931,9 @@ class FinalizedJobsController extends Controller
             if ($bahnCard == 1) {
                 $total_guest_sum->h -= 10;
             }
+
+
+
             $data['rows'][$user->id]['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
             $data['rows'][$user->id]['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
             $data['rows'][$user->id]['midnight_shift'] = sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) : "-";
