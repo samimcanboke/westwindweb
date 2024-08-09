@@ -1009,7 +1009,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['annual_leave_hours'] = "0";
                 $data['rows'][$user->id]['sick_leave_hours'] = "0";
                 $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['salary'] = 22;
+                $data['rows'][$user->id]['salary'] = "22 €";
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
                 $data['rows'][$user->id]['total_day'] = 0;
