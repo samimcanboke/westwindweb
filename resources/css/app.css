@@ -8,7 +8,7 @@
     top: 0;
     z-index: 2000;
   }
-  
+
   .dropzone {
     display: inline-flex;
     justify-content: center;
@@ -24,19 +24,19 @@
     cursor: pointer;
     transition: background-color 0.24s ease-in-out, border-color 0.24s ease-in-out;
   }
-  
+
   .dropzone.active {
     border-color: #2196f3;
   }
-  
+
   .dropzone.accept {
     border-color: #00e676;
   }
-  
+
   .dropzone.reject {
     border-color: #ff1744;
   }
-  
+
   button.pswp__button--print {
     background-color: #0a9ecf !important;
     color: #fff !important;
@@ -44,4 +44,9 @@
     border-radius: 5px !important;
     width: 100px !important;
     margin-top: 10px !important;
+  }
+
+
+  * {
+    font-size: 18px;
   }
