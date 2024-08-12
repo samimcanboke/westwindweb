@@ -74,6 +74,9 @@ export default function Dashboard({ auth }) {
                                     Is Admin
                                 </th>
                                 <th scope="col" className="px-6 py-3">
+                                    Hour Banks
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     Bonus
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -101,6 +104,14 @@ export default function Dashboard({ auth }) {
                                 <td className="px-6 py-4">{user.phone}</td>
                                 <td className="px-6 py-4">{new Date(user.start_working_date).toDateString()}</td>
                                 <td className="px-6 py-4">{user.is_admin == 1 ? "Yes" : "No"}</td>
+                                <td className="px-6 py-4">
+                                    <a
+                                        href={route("users-hour-banks.show", user.id)}
+                                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+                                    >
+                                        Hours
+                                    </a>
+                                </td>
                                 <td className="px-6 py-4">
                                     <a
                                         href={route("users-bonus.show", user.id)}

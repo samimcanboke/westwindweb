@@ -20,6 +20,7 @@ use App\Mail\WelcomeMail;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\UsersBonusController;
 use App\Http\Controllers\UsersAdvanceController;
+use App\Http\Controllers\HourBankController;
 
 
 use App\Events\UserRegistered;
@@ -58,6 +59,11 @@ Route::get('/admin/bahn-cards/create', function () {
 Route::get('/admin/bahn-cards/{id}', function ($id) {
     return Inertia::render('Admin/BahnCards/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('bahn-cards.edit');
+
+
+Route::get('/users/hour-banks/{user_id}', function ($user_id) {
+    return Inertia::render('Admin/Users/HourBanks', ['user_id' => $user_id]);
+})->middleware(['auth', 'verified'])->name('users-hour-banks.show');
 
 
 Route::get('/users/bonus/{user_id}', function ($user_id) {
@@ -150,7 +156,7 @@ Route::get('/data-confirmed-jobs', [FinalizedJobsController::class, 'confirmed_j
 Route::post('/jobs-editing', [FinalizedJobsController::class, 'edit'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-editing');
 Route::post('/jobs-confirmation', [FinalizedJobsController::class, 'confirm_jobs'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-confirmation');
 Route::get('/admin/wait-confirmed-jobs-count', [FinalizedJobsController::class, 'wait_confirmed_jobs'])->middleware(['auth', 'verified', IsAdmin::class])->name('wait-confirmed-jobs-count');
-Route::post('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
+Route::get('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
 
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');
@@ -225,8 +231,10 @@ Route::get('/get_user_advances/{user_id}', [UsersAdvanceController::class, 'show
 Route::post('/add-advances/{user_id}', [UsersAdvanceController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-advances');
 Route::delete('/delete-advances/{advances_id}', [UsersAdvanceController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-advances');
 
-
-
+Route::get('/hour-banks/{user_id}', [HourBankController::class, 'index'])->middleware(['auth', 'verified'])->name('hour-banks');
+Route::post('/add-hour-bank/{user_id}', [HourBankController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-hour-bank');
+Route::delete('/delete-hour-bank/{hour_bank_id}', [HourBankController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-hour-bank');
+Route::get('/hour-banks/{user_id}', [HourBankController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-hour-banks');
 
 Route::get('/testroute', function() {
     $name = "Funny Coder";
