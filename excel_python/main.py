@@ -233,21 +233,29 @@ def sum_lines(ws,used_data, total_height):
     ws['E43'].value = str(used_data['totals']['guests']) + " St"
     ws['E44'].value = str(used_data['totals']['total_work_day_amount']) + " €"
     ws['E45'].value = str(used_data['totals']['accomodations'])
-    ws['K35'].value = str(used_data['admin_extra'])
-    ws['K36'].value = str(used_data['left_admin_extra'])
-    ws['K38'].value = str(used_data['current_sick'])
-    ws['K39'].value = str(used_data['rights_sick'])
-    ws['K41'].value = str(used_data['used_annual'])
-    ws['K42'].value = str(used_data['total_annual'])
-    ws['K43'].value = str(used_data['left_annual'])
+    ws['K35'].value = str(used_data['hour_bank_this_month'])
+    ws['K35'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K36'].value = str(used_data['hour_bank_this_year'])
+    ws['K36'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K38'].value = str(used_data['sick_days_this_month'])
+    ws['K38'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K39'].value = str(used_data['sick_days_this_year'])
+    ws['K39'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K41'].value = str(used_data['annual_leave_days'])
+    ws['K41'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K42'].value = str(used_data['annual_leave_rights'])
+    ws['K42'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K43'].value = str(used_data['annual_leave_left'])
+    ws['K43'].alignment = Alignment(horizontal='center', vertical='center')
     ws['O35'].value = str(used_data['total_hours_req'])
-    ws['O36'].value = str(used_data['total_worked_time'])
-    left_hours = used_data['left_work_time']
-    if left_hours > 0:
-        ws['O37'].fill = PatternFill(start_color="f01111", end_color="f01111", fill_type="solid")
-        ws['O37'].value = '-' + str(used_data['left_work_time'])
-    else:
-        ws['O37'].value = ' - '
+    ws['O35'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O36'].value = str(used_data['totals']['sub_total'])
+    ws['O36'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O37'].value = str(used_data['left_hours'])
+    ws['O37'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O37'].fill = PatternFill(start_color="f01111", end_color="f01111", fill_type="solid")
+    ws['O37'].value = '-' + str(used_data['left_hours'])
+    ws['O37'].alignment = Alignment(horizontal='center', vertical='center')
     return ws
 
 

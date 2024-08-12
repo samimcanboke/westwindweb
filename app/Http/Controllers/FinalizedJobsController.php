@@ -1163,6 +1163,58 @@ class FinalizedJobsController extends Controller
         $data['mail'] = $user->email ?? "";
         $data['phone'] = $user->phone ?? "";
 
+
+        $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+        $total_hours = $hour_banks->where('type', 'deposit')->sum('hours') - $hour_banks->where('type', 'withdraw')->sum('hours');
+        $data['hour_bank_this_month'] = sprintf('%02d:%02d', floor($total_hours), ($total_hours - floor($total_hours)) * 60);
+
+        $hour_banks_this_year = $user->hourBanks()->whereBetween('date', [Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString(), Carbon::create($year, 12, 31)->endOfDay()->toDateTimeString()])->get();
+        $total_hours_this_year = $hour_banks_this_year->where('type', 'deposit')->sum('hours') - $hour_banks_this_year->where('type', 'withdraw')->sum('hours');
+        $data['hour_bank_this_year'] = sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
+
+
+
+        $data['annual_leave_rights'] = $user->annual_leave_rights - $user->annualLeaves()
+            ->where('end_date', '<', $startDate->toDateString())
+            ->get()
+            ->map(function($leave) {
+                $leaveStart = Carbon::parse($leave->start_date);
+                $leaveEnd = Carbon::parse($leave->end_date);
+                return $leaveStart->diffInDays($leaveEnd) + 1;
+            })
+            ->sum() ?? 0;
+
+
+        $data['annual_leave_days'] = $user->annualLeaves()
+            ->where(function($query) use ($startDate, $endDate) {
+                $query->where(function($subQuery) use ($startDate, $endDate) {
+                    $subQuery->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
+                             ->orWhereBetween('end_date', [$startDate->toDateString(), $endDate->toDateString()]);
+                });
+            })
+            ->get()
+            ->map(function($leave) use ($startDate, $endDate) {
+                $leaveStart = Carbon::parse($leave->start_date);
+                $leaveEnd = Carbon::parse($leave->end_date);
+                $overlapStart = $leaveStart->greaterThan($startDate) ? $leaveStart : $startDate;
+                $overlapEnd = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
+                return $overlapStart->diffInDays($overlapEnd) + 1;
+            })
+            ->sum() ?? 0;
+
+        $data['annual_leave_left'] = $data['annual_leave_rights'] - $data['annual_leave_days'];
+
+        $data['sick_days_this_month'] = 0;
+        $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+        foreach($sickDays as $sickDay){
+            $data['sick_days_this_month'] += $sickDay->start_date->diffInDays($sickDay->end_date);
+        }
+
+        $data['sick_days_this_year'] = 0;
+        $sickDays = $user->sickLeaves()->whereBetween('start_date', [Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString(), Carbon::create($year, 12, 31)->endOfDay()->toDateTimeString()])->get();
+        foreach($sickDays as $sickDay){
+            $data['sick_days_this_year'] += $sickDay->start_date->diffInDays($sickDay->end_date);
+        }
         $query = FinalizedJobs::where('user_id', $user->id);
         if ($request->client_id) {
             $query->where('client_id', $request->client_id);
@@ -1396,6 +1448,17 @@ class FinalizedJobsController extends Controller
         $data['totals']['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
         $data['totals']['accomodations'] = $feeding_fee . " €";
         $data['totals']['total_work_day_amount'] = $i >= 20 ? 20 * $i : $i * 6;
+
+
+
+        $total_hours_req = $user->working_hours;
+        list($hours, $minutes) = explode(':', $data['totals']['sub_total']);
+        $sub_total = $hours + ($minutes / 60);
+
+
+
+        $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req);
+        $data['left_hours'] = $total_hours_req - $sub_total < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - $sub_total), ($total_hours_req - $sub_total - floor($total_hours_req - $sub_total)) * 60);
 
         if ($data && $finalized_jobs->count() > 0) {
             try {

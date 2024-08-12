@@ -14,6 +14,7 @@ use App\Models\DraftJobs;
 use App\Models\AdminExtra;
 use App\Models\UsersBonus;
 use App\Models\UsersAdvance;
+use App\Models\HourBank;
 
 class User extends Authenticatable
 {
@@ -117,5 +118,10 @@ class User extends Authenticatable
     public function usersAdvance()
     {
         return $this->hasMany(UsersAdvance::class);
+    }
+
+    public function hourBanks()
+    {
+        return $this->hasMany(HourBank::class);
     }
 }
