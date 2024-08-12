@@ -1449,9 +1449,9 @@ class FinalizedJobsController extends Controller
         $data['totals']['accomodations'] = $feeding_fee . " €";
         $data['totals']['total_work_day_amount'] = $i >= 20 ? 20 * $i : $i * 6;
 
+        $bahn_card = $user->bahnCard;
 
-
-        $total_hours_req = $user->working_hours;
+        $total_hours_req = $bahn_card ? $bahn_card->class == 1 ? 170 : $user->working_hours : $user->working_hours;
         list($hours, $minutes) = explode(':', $data['totals']['sub_total']);
         $sub_total = $hours + ($minutes / 60);
 

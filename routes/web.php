@@ -141,6 +141,12 @@ Route::get('/annual-leaves', function () {
     return Inertia::render('AnnualLeaves');
 })->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('annual-leaves');
 
+
+Route::get('/test-sign', function () {
+    return Inertia::render('TestSign');
+})->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('test-sign');
+
+
 Route::get('/data-draft-jobs', [DraftJobsController::class, 'index'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('data-draft-jobs');
 Route::post('/save-draft-jobs', [DraftJobsController::class, 'store'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('save-draft-jobs');
 Route::post('/delete-draft-jobs', [DraftJobsController::class, 'destroy'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('delete-draft-jobs');
