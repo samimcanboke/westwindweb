@@ -13,7 +13,7 @@ export default function EditUser({ auth,user_id }) {
 
 
     useEffect(() => {
-        axios.post(route('user.show',user_id))
+        axios.get(route('user.show',user_id))
         .then(res => {
             res.data.start_working_date = moment(res.data.start_working_date).format('YYYY-MM-DD');
             setUser(res.data);
