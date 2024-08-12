@@ -8,6 +8,7 @@ import axios from "axios";
 export default function Bonus({ auth, user_id }) {
     const [bonus, setBonus] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [user, setUser] = useState({});
     const [newBonus, setNewBonus] = useState({
         transaction_date: new Date(),
         amount: null,
@@ -37,8 +38,16 @@ export default function Bonus({ auth, user_id }) {
             setOpenModal(false);
         });
     };
+
+    const getUser = () => {
+        axios.get(route("user.show", user_id)).then((res) => {
+            setUser(res.data);
+        });
+    };
+
     useEffect(() => {
         getBonus();
+        getUser();
         const interval = setInterval(() => {
             getBonus();
         }, 10000);
@@ -49,7 +58,7 @@ export default function Bonus({ auth, user_id }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    {auth.user.name} - Bonus
+                    {user ? user.name : "User"} - Bonus
                 </h2>
             }
         >
@@ -60,7 +69,7 @@ export default function Bonus({ auth, user_id }) {
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Füllen Sie das Formular aus, um {auth.user.name}{" "}
+                            Füllen Sie das Formular aus, um {user ? user.name : "User"}{" "}
                             einen Bonus zu geben
                         </p>
                         <div>
@@ -116,9 +125,9 @@ export default function Bonus({ auth, user_id }) {
                             <div className="flex justify-between align-middle">
                                 <div>
                                     {" "}
-                                    {auth.user.name} - Bonus
+                                    {user ? user.name : "User"} - Bonus
                                     <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                                        {auth.user.name} - Bonus
+                                    {user ? user.name : "User"} - Bonus
                                     </p>
                                 </div>
                                 <div>

@@ -8,6 +8,7 @@ import axios from "axios";
 export default function Advances({ auth, user_id }) {
     const [advances, setAdvances] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [user, setUser] = useState({});
     const [newAdvances, setNewAdvances] = useState({
         transaction_date: new Date(),
         amount: null,
@@ -37,8 +38,15 @@ export default function Advances({ auth, user_id }) {
             setOpenModal(false);
         });
     };
+    const getUser = () => {
+        axios.get(route("user.show", user_id)).then((res) => {
+            setUser(res.data);
+        });
+    };
+
     useEffect(() => {
         getAdvances();
+        getUser();
         const interval = setInterval(() => {
             getAdvances();
         }, 10000);
@@ -49,7 +57,7 @@ export default function Advances({ auth, user_id }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    {auth.user.name} - Vorauszahlungen
+                    {user ? user.name : "User"} - Vorauszahlungen
                 </h2>
             }
         >
@@ -60,7 +68,7 @@ export default function Advances({ auth, user_id }) {
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
-                            Füllen Sie das Formular aus, um {auth.user.name}{" "}
+                            Füllen Sie das Formular aus, um {user ? user.name : "User"}{" "}
                             eine Vorauszahlung zu geben
                         </p>
                         <div>
@@ -116,9 +124,9 @@ export default function Advances({ auth, user_id }) {
                             <div className="flex justify-between align-middle">
                                 <div>
                                     {" "}
-                                    {auth.user.name} - Vorauszahlungen
+                                    {user ? user.name : "User"} - Vorauszahlungen
                                     <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                                        {auth.user.name} - Vorauszahlungen
+                                    {user ? user.name : "User"} - Vorauszahlungen
                                     </p>
                                 </div>
                                 <div>
