@@ -62,18 +62,6 @@ export default function Dashboard({ auth }) {
                                     Name Nachname
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    E-Mail
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Telefon
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    İşe Giriş Tarihi
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Is Admin
-                                </th>
-                                <th scope="col" className="px-6 py-3">
                                     Hour Banks
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -100,10 +88,6 @@ export default function Dashboard({ auth }) {
                                     {user.driver_id}
                                 </th>
                                 <td className="px-6 py-4">{user.name}</td>
-                                <td className="px-6 py-4">{user.email}</td>
-                                <td className="px-6 py-4">{user.phone}</td>
-                                <td className="px-6 py-4">{new Date(user.start_working_date).toDateString()}</td>
-                                <td className="px-6 py-4">{user.is_admin == 1 ? "Yes" : "No"}</td>
                                 <td className="px-6 py-4">
                                     <a
                                         href={route("users-hour-banks.show", user.id)}
