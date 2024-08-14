@@ -192,26 +192,26 @@ export default function EditUser({ auth, user_id }) {
                                         </div>
                                     </div>
 
+
                                     <div className="flex space-x-4 mb-4 mx-4">
                                         <div className="w-1/3">
                                             <label
-                                                htmlFor="private_phone"
+                                                htmlFor="phone"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Özel Telefon
+                                                Phone
                                             </label>
                                             <Field
                                                 type="text"
-                                                name="private_phone"
-                                                id="private_phone"
+                                                name="phone"
+                                                id="phone"
                                                 className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                             />
-                                            {errors.private_phone &&
-                                                touched.private_phone && (
-                                                    <p className="text-red-500">
-                                                        *{errors.private_phone}
-                                                    </p>
-                                                )}
+                                            {errors.phone && touched.phone && (
+                                                <p className="text-red-500">
+                                                    *{errors.phone}
+                                                </p>
+                                            )}
                                         </div>
                                         <div className="w-1/3">
                                             <label
@@ -411,6 +411,26 @@ export default function EditUser({ auth, user_id }) {
                                                 </p>
                                             )}
                                     </div>
+                                    <div className="w-1/3">
+                                            <label
+                                                htmlFor="private_phone"
+                                                className="block text-sm font-medium text-gray-700"
+                                            >
+                                                Özel Telefon
+                                            </label>
+                                            <Field
+                                                type="text"
+                                                name="private_phone"
+                                                id="private_phone"
+                                                className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            />
+                                            {errors.private_phone &&
+                                                touched.private_phone && (
+                                                    <p className="text-red-500">
+                                                        *{errors.private_phone}
+                                                    </p>
+                                                )}
+                                        </div>
 
                                     </Tabs.Item>
                                     <Tabs.Item
@@ -613,6 +633,42 @@ export default function EditUser({ auth, user_id }) {
                                     </div>
                                     </Tabs.Item>
                                     <Tabs.Item
+                                        title="Bonuslar"
+                                        icon={HiClipboardList}
+                                    >
+                                        Test
+                                    </Tabs.Item>
+                                    <Tabs.Item
+                                        title="Avanslar"
+                                        icon={HiUserCircle}
+                                    >
+                                        Test
+                                    </Tabs.Item>
+                                    <Tabs.Item
+                                        title="Saat Bankası"
+                                        icon={HiClipboardList}
+                                    >
+                                        Test
+                                    </Tabs.Item>
+                                    <Tabs.Item
+                                        title="Sertifikalar"
+                                        icon={HiShieldCheck}
+                                    >
+                                        Test
+                                    </Tabs.Item>
+                                    <Tabs.Item
+                                        title="Sözleşmeler"
+                                        icon={HiClipboardList}
+                                    >
+                                        Test
+                                    </Tabs.Item>
+                                    <Tabs.Item
+                                        title="Programlar"
+                                        icon={MdDashboard}
+                                    >
+                                        Test
+                                    </Tabs.Item>
+                                    <Tabs.Item
                                         title="Ayarlar"
                                         icon={HiAdjustments}
                                     >
@@ -635,25 +691,7 @@ export default function EditUser({ auth, user_id }) {
                                             </p>
                                         )}
                                     </div>
-                                    <div className="mb-4 mx-4">
-                                        <label
-                                            htmlFor="phone"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Phone
-                                        </label>
-                                        <Field
-                                            type="text"
-                                            name="phone"
-                                            id="phone"
-                                            className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        />
-                                        {errors.phone && touched.phone && (
-                                            <p className="text-red-500">
-                                                *{errors.phone}
-                                            </p>
-                                        )}
-                                    </div>
+
                                     <div className="mb-4 mx-4">
                                         <label
                                             htmlFor="password"
@@ -748,26 +786,7 @@ export default function EditUser({ auth, user_id }) {
                                                     </p>
                                                 )}
                                         </div>
-                                        <div className="mb-4 mx-4">
-                                            <label
-                                                htmlFor="sick_holiday"
-                                                className="block text-sm font-medium text-gray-700"
-                                            >
-                                                Hastalık İzin Hakkı (Saat)
-                                            </label>
-                                            <Field
-                                                type="text"
-                                                name="sick_holiday"
-                                                id="sick_holiday"
-                                                className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                            />
-                                            {errors.sick_holiday &&
-                                                touched.sick_holiday && (
-                                                    <p className="text-red-500">
-                                                        *{errors.sick_holiday}
-                                                    </p>
-                                                )}
-                                        </div>
+
                                         <div className="mb-4 mx-4">
                                             <label
                                                 htmlFor="salary"
