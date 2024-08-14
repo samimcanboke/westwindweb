@@ -12,6 +12,7 @@ import {
     HiClipboardList,
     HiUserCircle,
     HiShieldCheck,
+    HiCreditCard
 } from "react-icons/hi";
 import { MdDashboard, MdOutlineWorkOutline } from "react-icons/md";
 
@@ -448,6 +449,181 @@ export default function EditUser({ auth, user_id }) {
                                                     )}
                                             </div>
                                         </div>
+                                        <div className="mb-4 mx-4 flex space-x-4">
+                                            <div className="w-1/2">
+                                                <label
+                                                    htmlFor="email"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Email
+                                                </label>
+                                                <Field
+                                                    type="email"
+                                                    name="email"
+                                                    id="email"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.email &&
+                                                    touched.email && (
+                                                        <p className="text-red-500">
+                                                            *{errors.email}
+                                                        </p>
+                                                    )}
+                                            </div>
+
+                                            <div className="w-1/2">
+                                                <label
+                                                    htmlFor="password"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Password
+                                                </label>
+                                                <div className="relative">
+                                                    <Field
+                                                        type="password"
+                                                        name="password"
+                                                        id="password"
+                                                        className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    />
+                                                    <span
+                                                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                                        onClick={() => {
+                                                            const passwordField =
+                                                                document.getElementById(
+                                                                    "password"
+                                                                );
+                                                            if (
+                                                                passwordField.type ===
+                                                                "password"
+                                                            ) {
+                                                                passwordField.type =
+                                                                    "text";
+                                                            } else {
+                                                                passwordField.type =
+                                                                    "password";
+                                                            }
+                                                        }}
+                                                    >
+                                                        <svg
+                                                            className="h-5 w-5 text-gray-500"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 20 20"
+                                                            fill="currentColor"
+                                                        >
+                                                            <path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                                {errors.password &&
+                                                    touched.password && (
+                                                        <p className="text-red-500">
+                                                            *{errors.password}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-4 mx-4 flex space-x-4">
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="working_hours"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Çalışma Saati
+                                                </label>
+                                                <Field
+                                                    type="number"
+                                                    name="working_hours"
+                                                    id="working_hours"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.working_hours &&
+                                                    touched.working_hours && (
+                                                        <p className="text-red-500">
+                                                            *
+                                                            {
+                                                                errors.working_hours
+                                                            }
+                                                        </p>
+                                                    )}
+                                            </div>
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="annual_leave_rights"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Yıllık İzin Hakkı (Saat)
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="annual_leave_rights"
+                                                    id="annual_leave_rights"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.annual_leave_rights &&
+                                                    touched.annual_leave_rights && (
+                                                        <p className="text-red-500">
+                                                            *
+                                                            {
+                                                                errors.annual_leave_rights
+                                                            }
+                                                        </p>
+                                                    )}
+                                            </div>
+
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="salary"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Maaş (Saat)
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="salary"
+                                                    id="salary"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.salary &&
+                                                    touched.salary && (
+                                                        <p className="text-red-500">
+                                                            *{errors.salary}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="is_admin"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Admin Kullanıcısı mı ?
+                                                </label>
+
+                                                <ToggleSwitch
+                                                    label=""
+                                                    id="is_admin"
+                                                    name="is_admin"
+                                                    className="mt-2"
+                                                    checked={
+                                                        values.is_admin
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    onChange={(e) => {
+                                                        setFieldValue(
+                                                            "is_admin",
+                                                            e
+                                                        );
+                                                    }}
+                                                />
+                                                {errors.is_admin &&
+                                                    touched.is_admin && (
+                                                        <p className="text-red-500">
+                                                            *{errors.is_admin}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                        </div>
                                     </Tabs.Item>
                                     <Tabs.Item
                                         title="Banka Bilgileri"
@@ -692,184 +868,10 @@ export default function EditUser({ auth, user_id }) {
                                         Test
                                     </Tabs.Item>
                                     <Tabs.Item
-                                        title="Ayarlar"
-                                        icon={HiAdjustments}
+                                        title="Bahn Kart"
+                                        icon={HiCreditCard}
                                     >
-                                        <div className="mb-4 mx-4 flex space-x-4">
-                                            <div className="w-1/2">
-                                                <label
-                                                    htmlFor="email"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Email
-                                                </label>
-                                                <Field
-                                                    type="email"
-                                                    name="email"
-                                                    id="email"
-                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                />
-                                                {errors.email &&
-                                                    touched.email && (
-                                                        <p className="text-red-500">
-                                                            *{errors.email}
-                                                        </p>
-                                                    )}
-                                            </div>
 
-                                            <div className="w-1/2">
-                                                <label
-                                                    htmlFor="password"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Password
-                                                </label>
-                                                <div className="relative">
-                                                    <Field
-                                                        type="password"
-                                                        name="password"
-                                                        id="password"
-                                                        className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                    />
-                                                    <span
-                                                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                                                        onClick={() => {
-                                                            const passwordField =
-                                                                document.getElementById(
-                                                                    "password"
-                                                                );
-                                                            if (
-                                                                passwordField.type ===
-                                                                "password"
-                                                            ) {
-                                                                passwordField.type =
-                                                                    "text";
-                                                            } else {
-                                                                passwordField.type =
-                                                                    "password";
-                                                            }
-                                                        }}
-                                                    >
-                                                        <svg
-                                                            className="h-5 w-5 text-gray-500"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewBox="0 0 20 20"
-                                                            fill="currentColor"
-                                                        >
-                                                            <path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z" />
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                                {errors.password &&
-                                                    touched.password && (
-                                                        <p className="text-red-500">
-                                                            *{errors.password}
-                                                        </p>
-                                                    )}
-                                            </div>
-                                        </div>
-
-                                        <div className="mb-4 mx-4 flex space-x-4">
-                                            <div className="w-1/4">
-                                                <label
-                                                    htmlFor="working_hours"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Çalışma Saati
-                                                </label>
-                                                <Field
-                                                    type="number"
-                                                    name="working_hours"
-                                                    id="working_hours"
-                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                />
-                                                {errors.working_hours &&
-                                                    touched.working_hours && (
-                                                        <p className="text-red-500">
-                                                            *
-                                                            {
-                                                                errors.working_hours
-                                                            }
-                                                        </p>
-                                                    )}
-                                            </div>
-                                            <div className="w-1/4">
-                                                <label
-                                                    htmlFor="annual_leave_rights"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Yıllık İzin Hakkı (Saat)
-                                                </label>
-                                                <Field
-                                                    type="text"
-                                                    name="annual_leave_rights"
-                                                    id="annual_leave_rights"
-                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                />
-                                                {errors.annual_leave_rights &&
-                                                    touched.annual_leave_rights && (
-                                                        <p className="text-red-500">
-                                                            *
-                                                            {
-                                                                errors.annual_leave_rights
-                                                            }
-                                                        </p>
-                                                    )}
-                                            </div>
-
-                                            <div className="w-1/4">
-                                                <label
-                                                    htmlFor="salary"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Maaş (Saat)
-                                                </label>
-                                                <Field
-                                                    type="text"
-                                                    name="salary"
-                                                    id="salary"
-                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                />
-                                                {errors.salary &&
-                                                    touched.salary && (
-                                                        <p className="text-red-500">
-                                                            *{errors.salary}
-                                                        </p>
-                                                    )}
-                                            </div>
-                                            <div className="w-1/4">
-                                                <label
-                                                    htmlFor="is_admin"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Admin Kullanıcısı mı ?
-                                                </label>
-
-                                                <ToggleSwitch
-                                                    label=""
-                                                    id="is_admin"
-                                                    name="is_admin"
-                                                    className="mt-2"
-                                                    checked={
-                                                        values.is_admin
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    onChange={(e) => {
-                                                        setFieldValue(
-                                                            "is_admin",
-                                                            e
-                                                        );
-                                                    }}
-                                                />
-                                                {errors.is_admin &&
-                                                    touched.is_admin && (
-                                                        <p className="text-red-500">
-                                                            *{errors.is_admin}
-                                                        </p>
-                                                    )}
-                                            </div>
-                                        </div>
                                     </Tabs.Item>
                                 </Tabs>
                                 <Form>
