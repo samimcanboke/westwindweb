@@ -545,6 +545,7 @@ export default function EditUser({ auth, user_id }) {
                                                         type="password"
                                                         name="password"
                                                         id="password"
+                                                        autoComplete="new-password"
                                                         className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                     />
                                                     <span
