@@ -124,6 +124,11 @@ class RegisteredUserController extends Controller
             'identity_number' => $request->identity_number,
             'urgency_contact_name' => $request->urgency_contact_name,
             'urgency_contact_phone' => $request->urgency_contact_phone,
+            'street' => $request->street,
+            'city' => $request->city,
+            'zip_code' => $request->zip_code,
+            'apartment' => $request->apartment,
+            'tax_id' => $request->tax_id,
         ]);
 
         event(new UserRegistered($user));
