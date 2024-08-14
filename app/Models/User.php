@@ -38,7 +38,24 @@ class User extends Authenticatable
         'is_admin',
         'start_working_date',
         'salary',
-        'leave_working_date'
+        'leave_working_date',
+        'private_phone',
+        'address',
+        'nationality',
+        'bank_name',
+        'bank_account_number',
+        'bank_iban',
+        'bank_bic',
+        'bank_account_holder',
+        'insurance_number',
+        'social_security_number',
+        'social_security_name',
+        'kinder',
+        'is_retired',
+        'tax_class',
+        'identity_number',
+        'urgency_contact_name',
+        'urgency_contact_phone',
     ];
 
     public function scopeWithLeaveWorkingDate($query)

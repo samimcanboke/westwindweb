@@ -106,7 +106,24 @@ class RegisteredUserController extends Controller
             'salary' => $request->salary,
             'sick_holiday' => $request->sick_holiday,
             'password' => Hash::make($request->password),
-            'is_admin' => $request->is_admin
+            'is_admin' => $request->is_admin,
+            'private_phone' => $request->private_phone,
+            'address' => $request->address,
+            'nationality' => $request->nationality,
+            'bank_name' => $request->bank_name,
+            'bank_account_number' => $request->bank_account_number,
+            'bank_iban' => $request->bank_iban,
+            'bank_bic' => $request->bank_bic,
+            'bank_account_holder' => $request->bank_account_holder,
+            'insurance_number' => $request->insurance_number,
+            'social_security_number' => $request->social_security_number,
+            'social_security_name' => $request->social_security_name,
+            'kinder' => $request->kinder,
+            'is_retired' => $request->is_retired,
+            'tax_class' => $request->tax_class,
+            'identity_number' => $request->identity_number,
+            'urgency_contact_name' => $request->urgency_contact_name,
+            'urgency_contact_phone' => $request->urgency_contact_phone,
         ]);
 
         event(new UserRegistered($user));
