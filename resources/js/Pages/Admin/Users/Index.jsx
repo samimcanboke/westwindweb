@@ -64,12 +64,7 @@ export default function Dashboard({ auth }) {
                                 <th scope="col" className="px-6 py-3">
                                     Hour Banks
                                 </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Bonus
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Advance
-                                </th>
+
                                 <th scope="col" className="px-6 py-3">
                                     <span className="sr-only">Bearbeiten</span>
                                 </th>
@@ -96,22 +91,7 @@ export default function Dashboard({ auth }) {
                                         Hours
                                     </a>
                                 </td>
-                                <td className="px-6 py-4">
-                                    <a
-                                        href={route("users-bonus.show", user.id)}
-                                        className="bg-green-500 text-white font-bold py-2 px-4 rounded"
-                                    >
-                                        Bonus
-                                    </a>
-                                </td>
-                                <td className="px-6 py-4">
-                                    <a
-                                        href={route("users-advance.show", user.id)}
-                                        className="bg-red-500 text-white font-bold py-2 px-4 rounded"
-                                    >
-                                      Vorschüsse
-                                    </a>
-                                </td>
+
                                 <td className="px-6 py-4 text-right">
                                     <a
                                         href={route("users.edit", user.id)}
