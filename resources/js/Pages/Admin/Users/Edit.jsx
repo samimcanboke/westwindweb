@@ -2,7 +2,14 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Datepicker, ToggleSwitch, Tabs } from "flowbite-react";
+import {
+    Datepicker,
+    ToggleSwitch,
+    Tabs,
+    Modal,
+    Button,
+    Label,
+} from "flowbite-react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import moment from "moment";
@@ -12,12 +19,62 @@ import {
     HiClipboardList,
     HiUserCircle,
     HiShieldCheck,
-    HiCreditCard
+    HiCreditCard,
 } from "react-icons/hi";
 import { MdDashboard, MdOutlineWorkOutline } from "react-icons/md";
 
 export default function EditUser({ auth, user_id }) {
     const [user, setUser] = useState(null);
+    const [advances, setAdvances] = useState([]);
+    const [bonus, setBonus] = useState([]);
+    const [openBonusModal, setOpenBonusModal] = useState(false);
+    const [openAdvancesModal, setOpenAdvancesModal] = useState(false);
+    const [newBonus, setNewBonus] = useState({
+        transaction_date: new Date(),
+        amount: null,
+    });
+    const [newAdvances, setNewAdvances] = useState({
+        transaction_date: new Date(),
+        amount: null,
+    });
+
+    const getBonus = () => {
+        axios.get(route("get-user-bonus", user_id)).then((res) => {
+            setBonus(res.data);
+        });
+    };
+
+    const deleteBonus = (bonus_id) => {
+        axios.delete(route("delete-bonus", bonus_id)).then((res) => {
+            getBonus();
+            setBonus(bonus.filter((item) => item.id !== bonus_id));
+        });
+    };
+    const addNewBonus = () => {
+        axios.post(route("add-bonus", user_id), newBonus).then((res) => {
+            getBonus();
+            setOpenBonusModal(false);
+        });
+    };
+
+    const getAdvances = () => {
+        axios.get(route("get-user-advances", user_id)).then((res) => {
+            setAdvances(res.data);
+        });
+    };
+
+    const deleteAdvances = (advances_id) => {
+        axios.delete(route("delete-advances", advances_id)).then((res) => {
+            getAdvances();
+            setAdvances(advances.filter((item) => item.id !== advances_id));
+        });
+    };
+    const addNewAdvances = () => {
+        axios.post(route("add-advances", user_id), newAdvances).then((res) => {
+            getAdvances();
+            setOpenAdvancesModal(false);
+        });
+    };
 
     useEffect(() => {
         axios
@@ -31,6 +88,12 @@ export default function EditUser({ auth, user_id }) {
             .catch((err) => {
                 console.log(err);
             });
+        getBonus();
+        const interval = setInterval(() => {
+            getBonus();
+            getAdvances();
+        }, 10000);
+        return () => clearInterval(interval);
     }, []);
     return (
         <AuthenticatedLayout
@@ -42,6 +105,129 @@ export default function EditUser({ auth, user_id }) {
             }
         >
             <Head title="User Edit" />
+
+            {/* Bonus Modal */}
+            <Modal
+                show={openBonusModal}
+                onClose={() => setOpenBonusModal(false)}
+            >
+                <Modal.Header>Bonus Hinzufügen</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-6">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Füllen Sie das Formular aus, um{" "}
+                            {user ? user.name : "User"} einen Bonus zu geben
+                        </p>
+                        <div>
+                            <Label htmlFor="transaction_date">Datum</Label>
+                            <input
+                                type="date"
+                                id="transaction_date"
+                                className="w-full border-2 border-gray-300 rounded-md p-2"
+                                value={
+                                    newBonus.transaction_date
+                                        .toISOString()
+                                        .split("T")[0]
+                                }
+                                onChange={(e) => {
+                                    setNewBonus({
+                                        ...newBonus,
+                                        transaction_date: new Date(
+                                            e.target.value
+                                        ),
+                                    });
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="amount">Amount</Label>
+                            <input
+                                type="number"
+                                id="amount"
+                                className="w-full border-2 border-gray-300 rounded-md p-2"
+                                value={newBonus.amount}
+                                onChange={(e) => {
+                                    setNewBonus({
+                                        ...newBonus,
+                                        amount: parseFloat(e.target.value),
+                                    });
+                                }}
+                            />
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={addNewBonus}>Hinzufügen</Button>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenBonusModal(false)}
+                    >
+                        Abbrechen
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Advances Modal */}
+            <Modal
+                show={openAdvancesModal}
+                onClose={() => setOpenAdvancesModal(false)}
+            >
+                <Modal.Header>Vorauszahlung Hinzufügen</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-6">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Füllen Sie das Formular aus, um{" "}
+                            {user ? user.name : "User"} eine Vorauszahlung zu
+                            geben
+                        </p>
+                        <div>
+                            <Label htmlFor="transaction_date">Datum</Label>
+                            <input
+                                type="date"
+                                id="transaction_date"
+                                className="w-full border-2 border-gray-300 rounded-md p-2"
+                                value={
+                                    newAdvances.transaction_date
+                                        .toISOString()
+                                        .split("T")[0]
+                                }
+                                onChange={(e) => {
+                                    setNewAdvances({
+                                        ...newAdvances,
+                                        transaction_date: new Date(
+                                            e.target.value
+                                        ),
+                                    });
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="amount">Amount</Label>
+                            <input
+                                type="number"
+                                id="amount"
+                                className="w-full border-2 border-gray-300 rounded-md p-2"
+                                value={newAdvances.amount}
+                                onChange={(e) => {
+                                    setNewAdvances({
+                                        ...newAdvances,
+                                        amount: parseFloat(e.target.value),
+                                    });
+                                }}
+                            />
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={addNewAdvances}>Hinzufügen</Button>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenAdvancesModal(false)}
+                    >
+                        Abbrechen
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
             <div className="container mx-auto mt-10">
                 {user && (
@@ -411,12 +597,11 @@ export default function EditUser({ auth, user_id }) {
                                                     id="zip"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 />
-                                                {errors.zip &&
-                                                    touched.zip && (
-                                                        <p className="text-red-500">
-                                                            *{errors.zip}
-                                                        </p>
-                                                    )}
+                                                {errors.zip && touched.zip && (
+                                                    <p className="text-red-500">
+                                                        *{errors.zip}
+                                                    </p>
+                                                )}
                                             </div>
                                             <div className="w-1/4">
                                                 <label
@@ -914,48 +1099,283 @@ export default function EditUser({ auth, user_id }) {
                                                 )}
                                         </div>
                                     </Tabs.Item>
+                                    {/* Bonuslar */}
                                     <Tabs.Item
                                         title="Bonuslar"
                                         icon={HiClipboardList}
                                     >
-                                        Test
+                                        <div className="container mx-auto mt-10">
+                                            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                                    <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                                                        <div className="flex justify-between align-middle">
+                                                            <div>
+                                                                {user
+                                                                    ? user.name
+                                                                    : "User"}{" "}
+                                                                - Bonus
+                                                                <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                                                    {user
+                                                                        ? user.name
+                                                                        : "User"}{" "}
+                                                                    - Bonus
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <button
+                                                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                                                    onClick={() => {
+                                                                        setOpenBonusModal(
+                                                                            true
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Neu Bonus
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </caption>
+
+                                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                        <tr>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3"
+                                                            >
+                                                                Datum
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3"
+                                                            >
+                                                                Betrag
+                                                            </th>
+
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3"
+                                                            >
+                                                                Löschen
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {bonus &&
+                                                            bonus.length > 0 &&
+                                                            bonus.map(
+                                                                (
+                                                                    bonus,
+                                                                    key
+                                                                ) => (
+                                                                    <tr
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                                                    >
+                                                                        <td className="px-6 py-4">
+                                                                            {moment(
+                                                                                bonus.transaction_date
+                                                                            ).format(
+                                                                                "DD.MM.YYYY HH:mm"
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                bonus.amount
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            <Button
+                                                                                onClick={() =>
+                                                                                    deleteBonus(
+                                                                                        bonus.id
+                                                                                    )
+                                                                                }
+                                                                                className="bg-red-500 text-white font-bold py-2 px-4 rounded"
+                                                                            >
+                                                                                Löschen
+                                                                            </Button>
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            )}
+                                                        {bonus &&
+                                                            bonus.length ===
+                                                                0 && (
+                                                                <tr>
+                                                                    <td
+                                                                        colSpan="3"
+                                                                        className="text-center py-4"
+                                                                    >
+                                                                        Bonus
+                                                                        bulunamadı
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </Tabs.Item>
+                                    {/* Avanslar */}
                                     <Tabs.Item
                                         title="Avanslar"
                                         icon={HiUserCircle}
                                     >
-                                        Test
+                                        <div className="container mx-auto mt-10">
+                                            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                                    <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                                                        <div className="flex justify-between align-middle">
+                                                            <div>
+                                                                {" "}
+                                                                {user
+                                                                    ? user.name
+                                                                    : "User"}{" "}
+                                                                -
+                                                                Vorauszahlungen
+                                                                <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                                                    {user
+                                                                        ? user.name
+                                                                        : "User"}{" "}
+                                                                    -
+                                                                    Vorauszahlungen
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <button
+                                                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                                                    onClick={() => {
+                                                                        setOpenAdvancesModal(
+                                                                            true
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Neu
+                                                                    Vorauszahlung
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </caption>
+
+                                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                        <tr>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3"
+                                                            >
+                                                                Datum
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3"
+                                                            >
+                                                                Betrag
+                                                            </th>
+
+                                                            <th
+                                                                scope="col"
+                                                                className="px-6 py-3"
+                                                            >
+                                                                Löschen
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {advances &&
+                                                            advances.length >
+                                                                0 &&
+                                                            advances.map(
+                                                                (
+                                                                    advances,
+                                                                    key
+                                                                ) => (
+                                                                    <tr
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                                                    >
+                                                                        <td className="px-6 py-4">
+                                                                            {moment(
+                                                                                advances.transaction_date
+                                                                            ).format(
+                                                                                "DD.MM.YYYY HH:mm"
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            {
+                                                                                advances.amount
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-6 py-4">
+                                                                            <Button
+                                                                                onClick={() =>
+                                                                                    deleteAdvances(
+                                                                                        advances.id
+                                                                                    )
+                                                                                }
+                                                                                className="bg-red-500 text-white font-bold py-2 px-4 rounded"
+                                                                            >
+                                                                                Löschen
+                                                                            </Button>
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            )}
+
+                                                        {advances &&
+                                                            advances.length ===
+                                                                0 && (
+                                                                <tr>
+                                                                    <td
+                                                                        colSpan="3"
+                                                                        className="text-center py-4"
+                                                                    >
+                                                                        Avans
+                                                                        bulunamadı
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </Tabs.Item>
+                                    {/* Saat Bankası */}
                                     <Tabs.Item
                                         title="Saat Bankası"
                                         icon={HiClipboardList}
                                     >
                                         Test
                                     </Tabs.Item>
+                                    {/* Sertifikalar */}
                                     <Tabs.Item
                                         title="Sertifikalar"
                                         icon={HiShieldCheck}
                                     >
                                         Test
                                     </Tabs.Item>
+                                    {/* Sözleşmeler */}
                                     <Tabs.Item
                                         title="Sözleşmeler"
                                         icon={HiClipboardList}
                                     >
                                         Test
                                     </Tabs.Item>
+                                    {/* Programlar */}
                                     <Tabs.Item
                                         title="Programlar"
                                         icon={MdDashboard}
                                     >
                                         Test
                                     </Tabs.Item>
+                                    {/* Bahn Kart */}
                                     <Tabs.Item
                                         title="Bahn Kart"
                                         icon={HiCreditCard}
-                                    >
-
-                                    </Tabs.Item>
+                                    ></Tabs.Item>
                                 </Tabs>
                                 <Form>
                                     <div className="flex items-center justify-end mt-4 mx-4">
