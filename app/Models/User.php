@@ -56,6 +56,11 @@ class User extends Authenticatable
         'identity_number',
         'urgency_contact_name',
         'urgency_contact_phone',
+        'street',
+        'city',
+        'zip',
+        'apartment',
+        'tax_id',
     ];
 
     public function scopeWithLeaveWorkingDate($query)

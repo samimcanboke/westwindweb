@@ -129,8 +129,8 @@ class RegisteredUserController extends Controller
             'zip_code' => $request->zip_code,
             'apartment' => $request->apartment,
             'tax_id' => $request->tax_id,
-        ]);
 
+        ]);
         event(new UserRegistered($user));
         return response()->json(['success'=>true, 'message' => 'User created successfully']);
     }
