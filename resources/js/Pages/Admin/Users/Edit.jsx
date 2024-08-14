@@ -357,25 +357,87 @@ export default function EditUser({ auth, user_id }) {
                                             </div>
                                         </div>
 
-                                        <div className="mb-4 mx-4">
-                                            <label
-                                                htmlFor="address"
-                                                className="block text-sm font-medium text-gray-700"
-                                            >
-                                                Adres
-                                            </label>
-                                            <Field
-                                                as="textarea"
-                                                name="address"
-                                                id="address"
-                                                className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                            />
-                                            {errors.address &&
-                                                touched.address && (
-                                                    <p className="text-red-500">
-                                                        *{errors.address}
-                                                    </p>
-                                                )}
+                                        <div className="mb-4 mx-4 flex space-x-4">
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="street"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Sokak Adı
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="street"
+                                                    id="street"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.street &&
+                                                    touched.street && (
+                                                        <p className="text-red-500">
+                                                            *{errors.street}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="apartment"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Ev Numarası
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="apartment"
+                                                    id="apartment"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.apartment &&
+                                                    touched.apartment && (
+                                                        <p className="text-red-500">
+                                                            *{errors.apartment}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="zip"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Posta Kodu
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="zip"
+                                                    id="zip"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.zip &&
+                                                    touched.zip && (
+                                                        <p className="text-red-500">
+                                                            *{errors.zip}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                            <div className="w-1/4">
+                                                <label
+                                                    htmlFor="city"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Şehir
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="city"
+                                                    id="city"
+                                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                />
+                                                {errors.city &&
+                                                    touched.city && (
+                                                        <p className="text-red-500">
+                                                            *{errors.city}
+                                                        </p>
+                                                    )}
+                                            </div>
                                         </div>
 
                                         <div className="mb-4 mx-4 flex space-x-4">
