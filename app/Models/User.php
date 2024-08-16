@@ -146,4 +146,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(HourBank::class);
     }
+    public function professions()
+    {
+        return $this->hasMany(UsersProfession::class);
+    }
 }

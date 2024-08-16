@@ -21,6 +21,7 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\UsersBonusController;
 use App\Http\Controllers\UsersAdvanceController;
 use App\Http\Controllers\HourBankController;
+use App\Http\Controllers\ProfessionsController;
 
 
 use App\Events\UserRegistered;
@@ -163,6 +164,13 @@ Route::post('/jobs-editing', [FinalizedJobsController::class, 'edit'])->middlewa
 Route::post('/jobs-confirmation', [FinalizedJobsController::class, 'confirm_jobs'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-confirmation');
 Route::get('/admin/wait-confirmed-jobs-count', [FinalizedJobsController::class, 'wait_confirmed_jobs'])->middleware(['auth', 'verified', IsAdmin::class])->name('wait-confirmed-jobs-count');
 Route::get('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
+
+
+Route::get('/professions', [ProfessionsController::class, 'index'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('professions');
+Route::post('/professions', [ProfessionsController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('professions-store');
+Route::post('/add-user-profession/{user_id}', [ProfessionsController::class, 'add_user_profession'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-user-profession');
+Route::get('/get-user-professions/{user_id}', [ProfessionsController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-professions');
+
 
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');

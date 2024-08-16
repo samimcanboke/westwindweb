@@ -3,6 +3,7 @@ import { Head, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
+import Select from "react-select";
 
 import {
     Datepicker,
@@ -15,6 +16,7 @@ import {
 import Swal from "sweetalert2";
 import axios from "axios";
 import moment from "moment";
+import CreatableSelect from "react-select/creatable";
 
 import {
     HiAdjustments,
@@ -27,6 +29,10 @@ import { MdDashboard, MdOutlineWorkOutline } from "react-icons/md";
 
 export default function EditUser({ auth, user_id }) {
     const [user, setUser] = useState(null);
+
+    const [userProfessions, setUserProfessions] = useState([]);
+
+    const [professions, setProfessions] = useState([]);
     const [advances, setAdvances] = useState([]);
     const [bonus, setBonus] = useState([]);
     const [openBonusModal, setOpenBonusModal] = useState(false);
@@ -124,6 +130,59 @@ export default function EditUser({ auth, user_id }) {
             .matches(/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Geçerli bir IBAN girin"),
     });
 
+    const getProfessions = () => {
+        axios
+            .get(route("professions"))
+            .then((res) => {
+                setProfessions([
+                    ...res.data.map((profession) => ({
+                        label: profession.name,
+                        value: profession.id,
+                    })),
+                ]);
+                return [...res.data];
+            })
+            .then((old_resp) => {
+                console.log(old_resp);
+                axios
+                    .get(route("get-user-professions", user_id))
+                    .then(async (res) => {
+                        let userProfessions = res.data;
+                        let selectedProfessions = [];
+                        for (const userProfession of userProfessions) {
+                            let profession = old_resp.find((profession) =>
+                                    profession.id ===
+                                    userProfession.profession_id
+                            );
+
+                            selectedProfessions.push({
+                                label: profession.name,
+                                value: profession.id,
+                            });
+                        }
+                        setUserProfessions(selectedProfessions);
+                    });
+            });
+    };
+
+    const handleCreateProfession = (value) => {
+        axios.post(route("professions-store"), { name: value }).then((res) => {
+            getProfessions();
+        });
+    };
+
+    const handleSelectProfession = async (selected) => {
+        console.log(selected);
+        for (const selectedProfession of selected) {
+            axios
+                .post(route("add-user-profession", user_id), {
+                    profession_id: selectedProfession.value,
+                })
+                .then((res) => {
+                    getProfessions();
+                });
+        }
+    };
 
     useEffect(() => {
         axios
@@ -138,9 +197,11 @@ export default function EditUser({ auth, user_id }) {
                 console.log(err);
             });
         getBonus();
+        getProfessions();
         const interval = setInterval(() => {
             getBonus();
             getAdvances();
+            getProfessions();
         }, 10000);
         return () => clearInterval(interval);
     }, []);
@@ -280,7 +341,10 @@ export default function EditUser({ auth, user_id }) {
             </Modal>
 
             {/** Hour Bank Modal*/}
-            <Modal show={openHourBanksModal} onClose={() => setOpenHourBanksModal(false)}>
+            <Modal
+                show={openHourBanksModal}
+                onClose={() => setOpenHourBanksModal(false)}
+            >
                 <Modal.Header>Hour Bank Hinzufügen</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
@@ -296,14 +360,27 @@ export default function EditUser({ auth, user_id }) {
                                 date: "",
                             }}
                             validationSchema={hourBankValidationSchema}
-                            onSubmit={(values, { setSubmitting, setErrors }) => {
+                            onSubmit={(
+                                values,
+                                { setSubmitting, setErrors }
+                            ) => {
                                 if (values.type === "withdraw") {
-                                    const totalHours = hourBanks.reduce((acc, curr) => {
-                                        return acc + (curr.type === "deposit" ? curr.hours : -curr.hours);
-                                    }, 0);
+                                    const totalHours = hourBanks.reduce(
+                                        (acc, curr) => {
+                                            return (
+                                                acc +
+                                                (curr.type === "deposit"
+                                                    ? curr.hours
+                                                    : -curr.hours)
+                                            );
+                                        },
+                                        0
+                                    );
 
                                     if (values.hours > totalHours) {
-                                        setErrors({ hours: "In der Kasse ist dieser Betrag nicht vorhanden" });
+                                        setErrors({
+                                            hours: "In der Kasse ist dieser Betrag nicht vorhanden",
+                                        });
                                         setSubmitting(false);
                                         return;
                                     }
@@ -341,7 +418,11 @@ export default function EditUser({ auth, user_id }) {
                                             step="0.01"
                                             className="w-full border-2 border-gray-300 rounded-md p-2"
                                         />
-                                        {errors.hours && <div className="text-red-500">{errors.hours}</div>}
+                                        {errors.hours && (
+                                            <div className="text-red-500">
+                                                {errors.hours}
+                                            </div>
+                                        )}
                                     </div>
                                     <div>
                                         <Label>Typ</Label>
@@ -379,7 +460,9 @@ export default function EditUser({ auth, user_id }) {
                                         </Button>
                                         <Button
                                             color="gray"
-                                            onClick={() => setOpenHourBanksModal(false)}
+                                            onClick={() =>
+                                                setOpenHourBanksModal(false)
+                                            }
                                         >
                                             Abbrechen
                                         </Button>
@@ -1008,6 +1091,26 @@ export default function EditUser({ auth, user_id }) {
                                                     )}
                                             </div>
                                         </div>
+                                        <div className="mb-4 mx-4">
+                                            <label
+                                                htmlFor="profession_name"
+                                                className="block text-sm font-medium text-gray-700"
+                                            >
+                                                Meslek
+                                            </label>
+                                            <CreatableSelect
+                                                isClearable
+                                                isMulti
+                                                onCreateOption={
+                                                    handleCreateProfession
+                                                }
+                                                options={professions}
+                                                value={userProfessions}
+                                                onChange={
+                                                    handleSelectProfession
+                                                }
+                                            />
+                                        </div>
                                     </Tabs.Item>
                                     <Tabs.Item
                                         title="Banka Bilgileri"
@@ -1071,11 +1174,32 @@ export default function EditUser({ auth, user_id }) {
                                                 pattern="[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}"
                                                 placeholder="DE00 0000 0000 0000 0000 0000 00"
                                                 onKeyDown={(e) => {
-                                                    const value = e.target.value.replace(/\s+/g, "");
-                                                    if (e.keyCode !== 8 && value.length >= 26) {
+                                                    const value =
+                                                        e.target.value.replace(
+                                                            /\s+/g,
+                                                            ""
+                                                        );
+                                                    if (
+                                                        e.keyCode !== 8 &&
+                                                        value.length >= 26
+                                                    ) {
                                                         e.preventDefault();
-                                                    } else if (e.keyCode !== 8 && (value.length === 4 || value.length === 8 || value.length === 12 || value.length === 16 || value.length === 20 || value.length === 24)) {
-                                                        e.target.value = e.target.value + " ";
+                                                    } else if (
+                                                        e.keyCode !== 8 &&
+                                                        (value.length === 4 ||
+                                                            value.length ===
+                                                                8 ||
+                                                            value.length ===
+                                                                12 ||
+                                                            value.length ===
+                                                                16 ||
+                                                            value.length ===
+                                                                20 ||
+                                                            value.length === 24)
+                                                    ) {
+                                                        e.target.value =
+                                                            e.target.value +
+                                                            " ";
                                                     }
                                                 }}
                                             />

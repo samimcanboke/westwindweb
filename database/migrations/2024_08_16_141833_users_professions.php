@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('users_professions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('profession_name')->nullable();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->after('id');
+            $table->foreignId('profession_id')->constrained('professions')->cascadeOnDelete()->after('user_id');
             $table->timestamps();
         });
     }
