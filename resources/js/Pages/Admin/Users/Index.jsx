@@ -61,9 +61,7 @@ export default function Dashboard({ auth }) {
                                 <th scope="col" className="px-6 py-3">
                                     Name Nachname
                                 </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Hour Banks
-                                </th>
+
 
                                 <th scope="col" className="px-6 py-3">
                                     <span className="sr-only">Bearbeiten</span>
@@ -83,14 +81,6 @@ export default function Dashboard({ auth }) {
                                     {user.driver_id}
                                 </th>
                                 <td className="px-6 py-4">{user.name}</td>
-                                <td className="px-6 py-4">
-                                    <a
-                                        href={route("users-hour-banks.show", user.id)}
-                                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                                    >
-                                        Hours
-                                    </a>
-                                </td>
 
                                 <td className="px-6 py-4 text-right">
                                     <a
