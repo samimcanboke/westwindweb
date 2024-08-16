@@ -143,7 +143,6 @@ export default function EditUser({ auth, user_id }) {
                 return [...res.data];
             })
             .then((old_resp) => {
-                console.log(old_resp);
                 axios
                     .get(route("get-user-professions", user_id))
                     .then(async (res) => {
@@ -167,20 +166,30 @@ export default function EditUser({ auth, user_id }) {
 
     const handleCreateProfession = (value) => {
         axios.post(route("professions-store"), { name: value }).then((res) => {
-            getProfessions();
+            let profession_id = res.data.id;
+            axios.post(route("add-user-profession", user_id), {
+                profession_id: profession_id,
+            }).then((res) => {
+                getProfessions();
+            });
         });
     };
 
-    const handleSelectProfession = async (selected) => {
-        console.log(selected);
-        for (const selectedProfession of selected) {
-            axios
-                .post(route("add-user-profession", user_id), {
-                    profession_id: selectedProfession.value,
-                })
-                .then((res) => {
-                    getProfessions();
-                });
+    const handleSelectProfession = async (selected,process) => {
+        console.log(selected,process);
+        if(process.action === "select-option"){
+            let profession_id = process.option.value;
+            axios.post(route("add-user-profession", user_id), {
+                profession_id: profession_id,
+            }).then((res) => {
+                getProfessions();
+            });
+        } else if(process.action === "remove-value"){
+            let profession_id = process.removedValue.value;
+            console.log(profession_id);
+            axios.delete(route("delete-user-professions", { user_id: user_id, profession_id: profession_id })).then((res) => {
+                getProfessions();
+            });
         }
     };
 
@@ -202,7 +211,7 @@ export default function EditUser({ auth, user_id }) {
             getBonus();
             getAdvances();
             getProfessions();
-        }, 10000);
+        }, 100000);
         return () => clearInterval(interval);
     }, []);
 

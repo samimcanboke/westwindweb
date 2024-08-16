@@ -170,6 +170,7 @@ Route::get('/professions', [ProfessionsController::class, 'index'])->middleware(
 Route::post('/professions', [ProfessionsController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('professions-store');
 Route::post('/add-user-profession/{user_id}', [ProfessionsController::class, 'add_user_profession'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-user-profession');
 Route::get('/get-user-professions/{user_id}', [ProfessionsController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-professions');
+Route::delete('/delete-user-professions/{user_id}/{profession_id}', [ProfessionsController::class, 'delete_user_profession'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-user-professions');
 
 
 

@@ -34,6 +34,13 @@ class ProfessionsController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
+        $existingProfession = Professions::where('name', $request->name)->first();
+        if ($existingProfession) {
+            return response()->json(['message' => 'Bu meslek zaten mevcut.'], 400);
+        }
+        $name = ucwords(strtolower($request->name));
+        $request->merge(['name' => $name]);
+
         $profession = Professions::create($request->all());
         return response()->json($profession);
     }
@@ -90,5 +97,12 @@ class ProfessionsController extends Controller
     {
         $professions->delete();
         return response()->json($professions);
+    }
+
+    public function delete_user_profession(Request $request, $user_id, $profession_id)
+    {
+        $userProfession = UsersProfession::where('user_id', $user_id)->where('profession_id', $profession_id)->first();
+        $userProfession->delete();
+        return response()->json($userProfession);
     }
 }
