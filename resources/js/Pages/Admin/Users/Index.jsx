@@ -64,11 +64,9 @@ export default function Dashboard({ auth }) {
 
 
                                 <th scope="col" className="px-6 py-3">
-                                    <span className="sr-only">Bearbeiten</span>
+                                    <span className="sr-only">Datenbank</span>
                                 </th>
-                                 <th scope="col" className="px-6 py-3">
-                                    <span className="sr-only">Leave Jobs</span>
-                                </th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -85,22 +83,12 @@ export default function Dashboard({ auth }) {
                                 <td className="px-6 py-4 text-right">
                                     <a
                                         href={route("users.edit", user.id)}
-                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
                                     >
-                                        Bearbeiten
+                                        Datenbank
                                     </a>
                                 </td>
-                                <td className="px-6 py-4 text-right">
-                                    <Button
-                                        onClick={()=>{
-                                            axios.post(route("user-leave-jobs"),{id:user.id});
-                                            getUsers();
-                                        }}
-                                        className="font-medium text-white bg-red-600 dark:text-red-500 hover:underline"
-                                    >
-                                        Jobs Verlassen
-                                    </Button>
-                                </td>
+
                             </tr>
                             ))}
 
