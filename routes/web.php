@@ -181,6 +181,7 @@ Route::post('/admin/edit_inside', [RegisteredUserController::class, 'edit_inside
 
 Route::get('/admin/all-bahn-cards', [BahnCardController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('all-bahn-cards');
 Route::get('/admin/all-bahn-cards/{id}', [BahnCardController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-show');
+Route::get('/admin/user-bahn-cards/{user_id}', [BahnCardController::class, 'show_user_bahn_cards'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-show-user');
 Route::post('/admin/bahn-cards', [BahnCardController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-store');
 Route::delete('/admin/bahn-cards/{id}', [BahnCardController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-destroy');
 Route::put('/admin/bahn-cards/{id}', [BahnCardController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('bahn-cards-update');

@@ -57,6 +57,14 @@ class BahnCardController extends Controller
         return response()->json(["success" => true, "data" => $bahnCard]);
     }
 
+
+    public function show_user_bahn_cards(Request $request, BahnCard $bahnCard)
+    {
+        $user_id = $request->route('user_id');
+        $bahnCards = BahnCard::where('user_id', $user_id)->get();
+        return response()->json(["success" => true, "data" => $bahnCards]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

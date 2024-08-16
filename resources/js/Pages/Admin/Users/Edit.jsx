@@ -3,6 +3,7 @@ import { Head, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
+import BahnCard from "@/Components/BahnCard";
 import Select from "react-select";
 
 import {
@@ -29,6 +30,7 @@ import { MdDashboard, MdOutlineWorkOutline } from "react-icons/md";
 
 export default function EditUser({ auth, user_id }) {
     const [user, setUser] = useState(null);
+    const [userBahnCard, setUserBahnCard] = useState([]);
 
     const [userProfessions, setUserProfessions] = useState([]);
 
@@ -58,6 +60,12 @@ export default function EditUser({ auth, user_id }) {
         transaction_date: new Date(),
         amount: null,
     });
+
+    const getUserBahnCards = () => {
+        axios.get(route("bahn-cards-show-user", user_id)).then((res) => {
+            setUserBahnCard(res.data.data[0]);
+        });
+    };
 
     const getBonus = () => {
         axios.get(route("get-user-bonus", user_id)).then((res) => {
@@ -128,7 +136,7 @@ export default function EditUser({ auth, user_id }) {
             .required("IBAN gerekli")
             .transform((value) => value.replace(/\s+/g, ""))
             .matches(/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Geçerli bir IBAN girin"),
-    });
+    })
 
     const getProfessions = () => {
         axios
@@ -209,10 +217,13 @@ export default function EditUser({ auth, user_id }) {
         getAdvances();
         getHourBanks();
         getProfessions();
+        getUserBahnCards();
         const interval = setInterval(() => {
             getBonus();
             getAdvances();
+            getHourBanks();
             getProfessions();
+            getUserBahnCards();
         }, 100000);
         return () => clearInterval(interval);
     }, []);
@@ -1889,7 +1900,15 @@ export default function EditUser({ auth, user_id }) {
                                     <Tabs.Item
                                         title="Bahn Kart"
                                         icon={HiCreditCard}
-                                    ></Tabs.Item>
+                                    >
+
+                                    {userBahnCard && (
+                                        <div className="flex justify-center">
+                                            <BahnCard bahnCard={userBahnCard} user={user} />
+                                        </div>
+                                    )}
+
+                                    </Tabs.Item>
                                 </Tabs>
                                 <Form>
                                     <div className="flex items-center justify-end mt-4 mx-4">
