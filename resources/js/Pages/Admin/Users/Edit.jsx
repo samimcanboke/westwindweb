@@ -206,6 +206,8 @@ export default function EditUser({ auth, user_id }) {
                 console.log(err);
             });
         getBonus();
+        getAdvances();
+        getHourBanks();
         getProfessions();
         const interval = setInterval(() => {
             getBonus();
