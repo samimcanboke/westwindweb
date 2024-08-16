@@ -110,6 +110,20 @@ export default function EditUser({ auth, user_id }) {
         });
     };
 
+    const validationSchema = yup.object().shape({
+        driver_id: yup.string().required(),
+        name: yup.string().required(),
+        birth_date: yup.date().required(),
+        identity_number: yup.string().required(),
+        phone: yup.string().required(),
+        email: yup.string().email().required(),
+        bank_iban: yup
+            .string()
+            .required("IBAN gerekli")
+            .transform((value) => value.replace(/\s+/g, ""))
+            .matches(/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Geçerli bir IBAN girin"),
+    });
+
 
     useEffect(() => {
         axios
@@ -387,33 +401,7 @@ export default function EditUser({ auth, user_id }) {
                                     ? true
                                     : false,
                         }}
-                        validate={(values) => {
-                            const errors = {};
-                            if (!values.driver_id) {
-                                errors.driver_id = "Sürücü ID gerekli";
-                            }
-
-                            if (!values.name) {
-                                errors.name = "İsim Soyisim gerekli";
-                            }
-
-                            if (!values.birth_date) {
-                                errors.birth_date = "Doğum Tarihi gerekli";
-                            }
-                            if (!values.phone) {
-                                errors.phone = "Doğum Tarihi gerekli";
-                            }
-                            if (!values.email) {
-                                errors.email = "Required";
-                            } else if (
-                                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                                    values.email
-                                )
-                            ) {
-                                errors.email = "Invalid email address";
-                            }
-                            return errors;
-                        }}
+                        validate={validationSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
                             axios
                                 .post(route("edit.inside"), values)
@@ -1080,6 +1068,16 @@ export default function EditUser({ auth, user_id }) {
                                                 name="bank_iban"
                                                 id="bank_iban"
                                                 className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                pattern="[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}"
+                                                placeholder="DE00 0000 0000 0000 0000 0000 00"
+                                                onKeyDown={(e) => {
+                                                    const value = e.target.value.replace(/\s+/g, "");
+                                                    if (e.keyCode !== 8 && value.length >= 26) {
+                                                        e.preventDefault();
+                                                    } else if (e.keyCode !== 8 && (value.length === 4 || value.length === 8 || value.length === 12 || value.length === 16 || value.length === 20 || value.length === 24)) {
+                                                        e.target.value = e.target.value + " ";
+                                                    }
+                                                }}
                                             />
                                             {errors.bank_iban &&
                                                 touched.bank_iban && (
