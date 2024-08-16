@@ -9,9 +9,7 @@ import BahnCard from "@/Components/BahnCard";
 
 
 export default function Edit({ auth, mustVerifyEmail, status, bahnCard }) {
-    useEffect(() => {
-        console.log(bahnCard);
-    }, [bahnCard]);
+
     return (
         <AuthenticatedLayout
             user={auth.user}
