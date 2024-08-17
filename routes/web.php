@@ -22,6 +22,7 @@ use App\Http\Controllers\UsersBonusController;
 use App\Http\Controllers\UsersAdvanceController;
 use App\Http\Controllers\HourBankController;
 use App\Http\Controllers\ProfessionsController;
+use App\Http\Controllers\AggreementController;
 
 
 use App\Events\UserRegistered;
@@ -52,6 +53,21 @@ Route::get('/users/index', function () {
 Route::get('/admin/bahn-cards', function () {
     return Inertia::render('Admin/BahnCards/Index');
 })->middleware(['auth', 'verified'])->name('bahn-cards');
+
+Route::get('/admin/aggreements', function () {
+    return Inertia::render('Admin/Aggreements/Index');
+})->middleware(['auth', 'verified'])->name('aggreements.view');
+
+Route::get('/admin/aggreements/create', function () {
+    return Inertia::render('Admin/Aggreements/Create');
+})->middleware(['auth', 'verified'])->name('aggreements.create');
+
+Route::get('/admin/aggreements/edit/{id}', function ($id    ) {
+    return Inertia::render('Admin/Aggreements/Edit', ['id' => $id]);
+})->middleware(['auth', 'verified'])->name('aggreements.edit');
+
+
+
 
 Route::get('/admin/bahn-cards/create', function () {
     return Inertia::render('Admin/BahnCards/Create');
@@ -171,6 +187,13 @@ Route::post('/professions', [ProfessionsController::class, 'store'])->middleware
 Route::post('/add-user-profession/{user_id}', [ProfessionsController::class, 'add_user_profession'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-user-profession');
 Route::get('/get-user-professions/{user_id}', [ProfessionsController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-professions');
 Route::delete('/delete-user-professions/{user_id}/{profession_id}', [ProfessionsController::class, 'delete_user_profession'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-user-professions');
+
+
+Route::get('/agreements', [AggreementController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements');
+Route::get('/agreements/{id}', [AggreementController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.show');
+Route::post('/agreements', [AggreementController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.store');
+Route::put('/agreements/{id}', [AggreementController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.update');
+Route::delete('/agreements/{id}', [AggreementController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.destroy');
 
 
 
