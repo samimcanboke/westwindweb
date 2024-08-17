@@ -38,7 +38,7 @@ export default function CreateAggreements({ auth }) {
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
                         axios
-                            .post(route("agreements.store"), values)
+                            .post(route("aggreements.store"), values)
                             .then((res) => {
                                 if (res.data.success) {
                                     resetForm();
