@@ -105,7 +105,7 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
                                             <Dropdown.Link href={route('confirmed-jobs-to-client')}>Kunden Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('bahn-cards')}>Bahnkarten</Dropdown.Link>
-                                            <Dropdown.Link href={route('aggreements')}>Vereinbarungen</Dropdown.Link>
+                                            <Dropdown.Link href={route('aggreements.view')}>Vereinbarungen</Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>
