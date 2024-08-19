@@ -105,7 +105,8 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
                                             <Dropdown.Link href={route('confirmed-jobs-to-client')}>Kunden Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('bahn-cards')}>Bahnkarten</Dropdown.Link>
-                                            <Dropdown.Link href={route('aggreements.view')}>Vereinbarungen</Dropdown.Link>
+                                            <Dropdown.Link href={route('aggreements.view')}>Vertrag</Dropdown.Link>
+                                            <Dropdown.Link href={route('certificates')}>Zertifikate</Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>
@@ -226,6 +227,8 @@ export default function Authenticated({ user, header, children }) {
                                             <ResponsiveNavLink href={route('admin-planner')}>Planung</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('clients.new-job')}>Kundenaufträge</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('confirmed-jobs-to-client')}>Kunden Berichte</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('aggreements.view')}>Vertrag</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('certificates')}>Zertifikate</ResponsiveNavLink>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>

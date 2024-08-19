@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CertificateController extends Controller
 {
@@ -12,7 +13,11 @@ class CertificateController extends Controller
      */
     public function index()
     {
-        //
+        $certificates = Certificate::orderBy('sort')->get();
+
+        return Inertia::render('Admin/Certificates/Index', [
+            'certificates' => $certificates,
+        ]);
     }
 
     /**
@@ -20,7 +25,7 @@ class CertificateController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Certificates/Create');
     }
 
     /**
@@ -28,15 +33,24 @@ class CertificateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'sort' => 'required|integer',
+        ]);
+
+        $certificate = Certificate::create($request->all());
+
+        return response()->json(["success" => true, "message" => "Zertifikat erfolgreich erstellt."]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Certificate $certificate)
+    public function show(Request $request)
     {
-        //
+        $certificate = Certificate::where('id', $request->id)->first();
+
+        return response()->json($certificate);
     }
 
     /**
@@ -44,7 +58,9 @@ class CertificateController extends Controller
      */
     public function edit(Certificate $certificate)
     {
-        //
+        return Inertia::render('Admin/Certificates/Edit', [
+            'certificate' => $certificate,
+        ]);
     }
 
     /**
@@ -52,14 +68,29 @@ class CertificateController extends Controller
      */
     public function update(Request $request, Certificate $certificate)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'certificate_date' => 'required|date',
+            'creator' => 'required|string|max:255',
+            'confirmer' => 'required|string|max:255',
+            'validity' => 'required|date',
+            'sort' => 'required|integer',
+        ]);
+
+        $certificate = Certificate::where('id', $request->id)->first();
+        $certificate->update($request->all());
+
+        return response()->json(["success" => true, "message" => "Zertifikat erfolgreich aktualisiert."]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Certificate $certificate)
+    public function destroy(Request $request)
     {
-        //
+        $certificate = Certificate::where('id', $request->id)->first();
+        $certificate->delete();
+
+        return response()->json(["success" => true, "message" => "Zertifikat erfolgreich gelöscht."]);
     }
 }

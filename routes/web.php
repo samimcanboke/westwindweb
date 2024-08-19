@@ -23,6 +23,7 @@ use App\Http\Controllers\UsersAdvanceController;
 use App\Http\Controllers\HourBankController;
 use App\Http\Controllers\ProfessionsController;
 use App\Http\Controllers\AggreementController;
+use App\Http\Controllers\CertificateController;
 
 
 use App\Events\UserRegistered;
@@ -195,6 +196,13 @@ Route::post('/agreements', [AggreementController::class, 'store'])->middleware([
 Route::put('/agreements/{id}', [AggreementController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.update');
 Route::delete('/agreements/{id}', [AggreementController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.destroy');
 
+Route::get('/certificates', [CertificateController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates');
+Route::get('/certificates/create', [CertificateController::class, 'create'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.create');
+Route::post('/certificates', [CertificateController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.store');
+Route::get('/certificates/{id}', [CertificateController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.show');
+Route::get('/certificates/edit/{id}', [CertificateController::class, 'edit'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.edit');
+Route::put('/certificates/{id}', [CertificateController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.update');
+Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.destroy');
 
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');
@@ -227,6 +235,7 @@ Route::delete('/planner/jobs/delete/{id}', [JobPlansController::class, 'destroy'
 Route::get('/sick-leaves', [SickLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('sick-leaves');
 Route::post('/sick-leaves', [SickLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('sick-leaves-store');
 Route::delete('/sick-leaves/{id}', [SickLeavesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('sick-leaves-destroy');
+
 
 Route::get('/annual-leaves', [AnnualLeavesController::class, 'index'])->middleware(['auth', 'verified'])->name('annual-leaves');
 Route::post('/annual-leaves', [AnnualLeavesController::class, 'store'])->middleware(['auth', 'verified'])->name('annual-leaves-store');
