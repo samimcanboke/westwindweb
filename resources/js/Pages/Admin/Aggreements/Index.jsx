@@ -62,12 +62,6 @@ export default function BahnCards({ auth }) {
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-6 py-3 text-center"
-                                >
-                                    <span>Erinnerungszeitraum Tage</span>
-                                </th>
-                                <th
-                                    scope="col"
                                     className="px-6 py-3 text-right"
                                 >
                                    Ist Pflicht
@@ -94,12 +88,7 @@ export default function BahnCards({ auth }) {
                                         >
                                             {aggreement.name}
                                         </td>
-                                        <td
-                                            scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            {aggreement.reminder_period_days}
-                                        </td>
+
                                         <td className="px-6 py-4 text-right">
                                             {aggreement.is_mandatory ? "Ja" : "Nein"}
                                         </td>

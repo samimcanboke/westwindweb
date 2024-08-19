@@ -1488,10 +1488,20 @@ class FinalizedJobsController extends Controller
         return response()->json($unconfirmeds);
     }
 
-    public function confirmed_jobs()
+    public function confirmed_jobs(Request $request)
     {
-        $unconfirmeds = FinalizedJobs::where("confirmation", true)->get();
-        return response()->json($unconfirmeds);
+        $query = FinalizedJobs::where("confirmation", true);
+        if($request->month && $request->year){
+            $startDate = Carbon::createFromDate($request->year, $request->month, 1)->startOfMonth();
+            $endDate = Carbon::createFromDate($request->year, $request->month, 1)->endOfMonth();
+
+            $query = $query->whereBetween("initial_date", [$startDate, $endDate]);
+        }
+        if($request->text){
+            $users = User::where("name", "like", "%" . $request->text . "%")->get();
+            $query = $query->whereIn("user_id", $users->pluck("id"));
+        }
+        return response()->json($query->orderBy("initial_date", "asc")->get());
     }
 
     public function user_confirmed_jobs(Request $request)

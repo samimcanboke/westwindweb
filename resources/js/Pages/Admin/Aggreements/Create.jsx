@@ -105,26 +105,7 @@ export default function CreateAggreements({ auth }) {
                                     </p>
                                 )}
                             </div>
-                            <div className="mb-4 mx-4">
-                                <label
-                                    htmlFor="reminder_period_days"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Erinnerungszeitraum
-                                </label>
-                                <Field
-                                    type="number"
-                                    name="reminder_period_days"
-                                    id="reminder_period_days"
-                                    className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                />
-                                {errors.reminder_period_days &&
-                                    touched.reminder_period_days && (
-                                    <p className="text-red-500">
-                                        *{errors.reminder_period_days}
-                                    </p>
-                                )}
-                            </div>
+
                             <div className="mb-4 mx-4">
                                 <label
                                     htmlFor="is_mandatory"

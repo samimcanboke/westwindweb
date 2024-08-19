@@ -32,8 +32,6 @@ class AggreementController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'is_mandatory' => 'required',
-            'reminder_period_days' => 'required',
         ]);
 
         $aggreement = Aggreement::create($request->all());
@@ -65,8 +63,6 @@ class AggreementController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'is_mandatory' => 'required',
-            'reminder_period_days' => 'required',
         ]);
 
         $aggreement = Aggreement::where('id',$request->id)->first();
