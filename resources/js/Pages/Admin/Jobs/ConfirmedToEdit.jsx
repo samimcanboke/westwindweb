@@ -158,7 +158,7 @@ export default function ConfirmedToEdit({ auth }) {
                                     <Select
                                         id="yearFilter"
                                         name="yearFilter"
-                                        className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        className="placeholder:italic placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         value={filter.year || moment().format("YYYY")}
                                         onChange={(e) => {
                                             setFilter({
@@ -176,7 +176,7 @@ export default function ConfirmedToEdit({ auth }) {
                                     <Select
                                         id="monthFilter"
                                         name="monthFilter"
-                                        className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                        className="placeholder:italic placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         value={filter.month || moment().format("MM")}
                                         onChange={(e) => {
                                             setFilter({
