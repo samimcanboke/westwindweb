@@ -911,7 +911,11 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['name'] = $user->name;
             $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
             $data['rows'][$user->id]['total_day'] = $i;
+            if ($bahnCard == 1) {
+                $total_work_sum->h -= 10;
+            }
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
+
             if ($total_work_hours > 160 * 60) {
                 $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
                 $hours = floor($remaining_hours);
@@ -934,11 +938,6 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['extra_work'] = "-";
             }
             $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
-            if ($bahnCard == 1) {
-                $total_work_hours->h -= 10;
-            }
-
-
 
             if ($total_guest_sum != "00:00") {
                 $hours = $total_guest_sum->h;
