@@ -5,6 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import BahnCard from "@/Components/BahnCard";
 import Select from "react-select";
+import UserCertificate from "@/Components/UserCertificate";
 
 import {
     Datepicker,
@@ -41,6 +42,10 @@ export default function EditUser({ auth, user_id }) {
     const [openAdvancesModal, setOpenAdvancesModal] = useState(false);
     const [hourBanks, setHourBanks] = useState([]);
     const [openHourBanksModal, setOpenHourBanksModal] = useState(false);
+    const [aggreements, setAggreements] = useState([]);
+    const [certificates, setCertificates] = useState([]);
+    const [userCertificates, setUserCertificates] = useState([]);
+
     const [newHourBank, setNewHourBank] = useState({
         date: new Date(),
         hours: null,
@@ -105,6 +110,24 @@ export default function EditUser({ auth, user_id }) {
         });
     };
 
+    const getAggreements = () => {
+        axios.get(route("aggreements")).then((res) => {
+            setAggreements(res.data);
+        });
+    };
+
+    const getCertificates = () => {
+        axios.get(route("certificates-get")).then((res) => {
+            setCertificates(res.data);
+        });
+    };
+
+    const getUserCertificates = () => {
+        axios.get(route("get-user-certificates", user_id)).then((res) => {
+            setUserCertificates(res.data);
+        });
+    };
+
     const getHourBanks = () => {
         axios.get(route("get-user-hour-banks", user_id)).then((res) => {
             let hourBanksUnsorted = res.data;
@@ -136,7 +159,7 @@ export default function EditUser({ auth, user_id }) {
             .required("IBAN gerekli")
             .transform((value) => value.replace(/\s+/g, ""))
             .matches(/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Geçerli bir IBAN girin"),
-    })
+    });
 
     const getProfessions = () => {
         axios
@@ -157,7 +180,8 @@ export default function EditUser({ auth, user_id }) {
                         let userProfessions = res.data;
                         let selectedProfessions = [];
                         for (const userProfession of userProfessions) {
-                            let profession = old_resp.find((profession) =>
+                            let profession = old_resp.find(
+                                (profession) =>
                                     profession.id ===
                                     userProfession.profession_id
                             );
@@ -175,29 +199,38 @@ export default function EditUser({ auth, user_id }) {
     const handleCreateProfession = (value) => {
         axios.post(route("professions-store"), { name: value }).then((res) => {
             let profession_id = res.data.id;
-            axios.post(route("add-user-profession", user_id), {
-                profession_id: profession_id,
-            }).then((res) => {
-                getProfessions();
-            });
+            axios
+                .post(route("add-user-profession", user_id), {
+                    profession_id: profession_id,
+                })
+                .then((res) => {
+                    getProfessions();
+                });
         });
     };
 
-    const handleSelectProfession = async (selected,process) => {
-        console.log(selected,process);
-        if(process.action === "select-option"){
+    const handleSelectProfession = async (selected, process) => {
+        if (process.action === "select-option") {
             let profession_id = process.option.value;
-            axios.post(route("add-user-profession", user_id), {
-                profession_id: profession_id,
-            }).then((res) => {
-                getProfessions();
-            });
-        } else if(process.action === "remove-value"){
+            axios
+                .post(route("add-user-profession", user_id), {
+                    profession_id: profession_id,
+                })
+                .then((res) => {
+                    getProfessions();
+                });
+        } else if (process.action === "remove-value") {
             let profession_id = process.removedValue.value;
-            console.log(profession_id);
-            axios.delete(route("delete-user-professions", { user_id: user_id, profession_id: profession_id })).then((res) => {
-                getProfessions();
-            });
+            axios
+                .delete(
+                    route("delete-user-professions", {
+                        user_id: user_id,
+                        profession_id: profession_id,
+                    })
+                )
+                .then((res) => {
+                    getProfessions();
+                });
         }
     };
 
@@ -218,6 +251,9 @@ export default function EditUser({ auth, user_id }) {
         getHourBanks();
         getProfessions();
         getUserBahnCards();
+        getAggreements();
+        getCertificates();
+        getUserCertificates();
         const interval = setInterval(() => {
             getBonus();
             getAdvances();
@@ -1880,14 +1916,25 @@ export default function EditUser({ auth, user_id }) {
                                         title="Sertifikalar"
                                         icon={HiShieldCheck}
                                     >
-                                        Test
+
+                                        <UserCertificate certificates={certificates} user={user} userCertificates={userCertificates} />
+
+
                                     </Tabs.Item>
                                     {/* Sözleşmeler */}
                                     <Tabs.Item
                                         title="Sözleşmeler"
                                         icon={HiClipboardList}
                                     >
-                                        Test
+                                        {aggreements &&
+                                            aggreements.length > 0 &&
+                                            aggreements.map(
+                                                (aggreement, key) => (
+                                                    <div key={key}>
+                                                        {aggreement.name}
+                                                    </div>
+                                                )
+                                            )}
                                     </Tabs.Item>
                                     {/* Programlar */}
                                     <Tabs.Item
@@ -1901,13 +1948,14 @@ export default function EditUser({ auth, user_id }) {
                                         title="Bahn Kart"
                                         icon={HiCreditCard}
                                     >
-
-                                    {userBahnCard && (
-                                        <div className="flex justify-center">
-                                            <BahnCard bahnCard={userBahnCard} user={user} />
-                                        </div>
-                                    )}
-
+                                        {userBahnCard && (
+                                            <div className="flex justify-center">
+                                                <BahnCard
+                                                    bahnCard={userBahnCard}
+                                                    user={user}
+                                                />
+                                            </div>
+                                        )}
                                     </Tabs.Item>
                                 </Tabs>
                                 <Form>

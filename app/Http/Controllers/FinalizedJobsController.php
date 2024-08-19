@@ -1501,7 +1501,7 @@ class FinalizedJobsController extends Controller
             $users = User::where("name", "like", "%" . $request->text . "%")->get();
             $query = $query->whereIn("user_id", $users->pluck("id"));
         }
-        return response()->json($query->orderBy("initial_date", "asc")->get());
+        return response()->json($query->orderBy("initial_date", "asc")->orderBy('user_id', 'asc')->get());
     }
 
     public function user_confirmed_jobs(Request $request)

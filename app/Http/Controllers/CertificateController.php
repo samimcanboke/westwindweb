@@ -20,6 +20,12 @@ class CertificateController extends Controller
         ]);
     }
 
+    public function getCertificates()
+    {
+        $certificates = Certificate::orderBy('sort')->get();
+        return response()->json($certificates);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -52,6 +58,9 @@ class CertificateController extends Controller
 
         return response()->json($certificate);
     }
+
+
+
 
     /**
      * Show the form for editing the specified resource.

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\UserCertificate;
 
 class Certificate extends Model
 {
@@ -13,5 +14,11 @@ class Certificate extends Model
         'name',
         'sort',
     ];
+
+
+    public function userCertificates()
+    {
+        return $this->hasMany(UserCertificate::class);
+    }
 
 }

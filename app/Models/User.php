@@ -15,6 +15,7 @@ use App\Models\AdminExtra;
 use App\Models\UsersBonus;
 use App\Models\UsersAdvance;
 use App\Models\HourBank;
+use App\Models\UserCertificate;
 
 class User extends Authenticatable
 {
@@ -149,5 +150,10 @@ class User extends Authenticatable
     public function professions()
     {
         return $this->hasMany(UsersProfession::class);
+    }
+
+    public function userCertificates()
+    {
+        return $this->hasMany(UserCertificate::class);
     }
 }

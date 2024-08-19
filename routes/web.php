@@ -24,7 +24,7 @@ use App\Http\Controllers\HourBankController;
 use App\Http\Controllers\ProfessionsController;
 use App\Http\Controllers\AggreementController;
 use App\Http\Controllers\CertificateController;
-
+use App\Http\Controllers\UserCertificateController;
 
 use App\Events\UserRegistered;
 
@@ -201,12 +201,15 @@ Route::put('/agreements/{id}', [AggreementController::class, 'update'])->middlew
 Route::delete('/agreements/{id}', [AggreementController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.destroy');
 
 Route::get('/certificates', [CertificateController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates');
+Route::get('/certificates-get', [CertificateController::class, 'getCertificates'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates-get');
 Route::get('/certificates/create', [CertificateController::class, 'create'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.create');
 Route::post('/certificates', [CertificateController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.store');
 Route::get('/certificates/{id}', [CertificateController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.show');
 Route::get('/certificates/edit/{id}', [CertificateController::class, 'edit'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.edit');
 Route::put('/certificates/{id}', [CertificateController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.update');
 Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.destroy');
+
+Route::get('/get-user-certificates/{user_id}', [UserCertificateController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-certificates');
 
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');
