@@ -101,6 +101,7 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('clients-index')}>Kunden</Dropdown.Link>
                                             <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</Dropdown.Link>
+                                            <Dropdown.Link href={route('confirmed-jobs-to-edit')}>Bearbeiten Bestätigte Berichte</Dropdown.Link>
                                             <Dropdown.Link href={route('admin-planner')}>Planung</Dropdown.Link>
                                             <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
                                             <Dropdown.Link href={route('confirmed-jobs-to-client')}>Kunden Berichte</Dropdown.Link>
@@ -224,6 +225,7 @@ export default function Authenticated({ user, header, children }) {
                                             <ResponsiveNavLink href={route('clients-index')}>Kunden</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('confirmed-jobs-to-edit')}>Bearbeiten Bestätigte Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('admin-planner')}>Planung</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('clients.new-job')}>Kundenaufträge</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('confirmed-jobs-to-client')}>Kunden Berichte</ResponsiveNavLink>

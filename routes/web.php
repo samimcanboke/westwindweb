@@ -126,6 +126,10 @@ Route::get('/wait-confirmation-jobs', function () {
     return Inertia::render('Admin/Jobs/WaitingConfirmed');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('wait-confirmed-jobs');
 
+Route::get('/confirmed-jobs-to-edit', function () {
+    return Inertia::render('Admin/Jobs/ConfirmedToEdit');
+})->middleware(['auth', 'verified', IsAdmin::class])->name('confirmed-jobs-to-edit');
+
 Route::get('/admin/planner', function () {
     return Inertia::render('Admin/Jobs/Planner');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('admin-planner');
