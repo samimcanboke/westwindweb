@@ -49,6 +49,9 @@ export default function Certificates({ auth, certificates }) {
                                     Zertifikat Name
                                 </th>
                                 <th scope="col" className="px-6 py-3">
+                                    Zertifikat Nr.
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     <span className="sr-only">Bearbeiten</span>
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -69,6 +72,12 @@ export default function Certificates({ auth, certificates }) {
                                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                         >
                                             {certificate.name}
+                                        </td>
+                                        <td
+                                            scope="row"
+                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                        >
+                                            {certificate.sort}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <a
