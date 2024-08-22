@@ -13,8 +13,8 @@ const validationSchema = yup.object().shape({
 });
 
 
-export default function EditAggreements({ auth,id }) {
-    const [agreement, setAgreement] = useState({});
+export default function editCertificate({ auth,id }) {
+    const [certificate, setCertificate] = useState({});
     const [initialValues, setInitialValues] = useState({
         id: "",
         name: "",
@@ -26,7 +26,7 @@ export default function EditAggreements({ auth,id }) {
         axios.get(route('certificates.show',{id:id}))
         .then(res => {
             console.log(res.data);
-            setAgreement(res.data);
+            setCertificate(res.data);
             setInitialValues({
                 id: res.data.id,
                 name: res.data.name,
@@ -44,34 +44,34 @@ export default function EditAggreements({ auth,id }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Vertrag Bearbeiten
+                    Zertifikat Bearbeiten
                 </h2>
             }
         >
-            <Head title="Vertrag Bearbeiten" />
+            <Head title="Zertifikat Bearbeiten" />
 
             <div className="container mx-auto mt-10">
-                {   agreement && (
+                {   certificate && (
                 <Formik
                     initialValues={initialValues}
                     enableReinitialize={true}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting, resetForm  }) => {
-                        axios.put(route('aggreements.update',{id:values.id}), values)
+                        axios.put(route('certificates.update',{id:values.id}), values)
                         .then(res => {
                             if (res.data.success) {
                                 resetForm();
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Erfolgreich',
-                                    text: 'Vertrag erfolgreich bearbeitet!',
+                                    text: 'Zertifikat erfolgreich bearbeitet!',
                                 });
-                                window.location.href = '/admin/aggreements';
+                                window.location.href = '/certificates';
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Hata',
-                                    text: data.data.message || 'Vertrag konnte nicht bearbeitet werden!',
+                                    text: data.data.message || 'Zertifikat konnte nicht bearbeitet werden!',
                                 });
                             }
                             setSubmitting(false);
@@ -81,7 +81,7 @@ export default function EditAggreements({ auth,id }) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Hata',
-                                text: error.response.data.message || 'Vertrag konnte nicht aktualisiert werden!',
+                                text: error.response.data.message || 'Zertifikat konnte nicht aktualisiert werden!',
                             });
                             setSubmitting(false);
                         });
