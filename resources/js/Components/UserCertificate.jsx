@@ -12,25 +12,17 @@ function UserCertificate({user}) {
     const [isLoading, setIsLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({});
 
-    const uploadFiles = async (acceptedFiles) => {
+    const uploadFiles = async (acceptedFiles,certificate,userInfo) => {
         const formData = new FormData();
-        let certificate_name = certificates.find(
-            (crtfc) => crtfc.id === certificate.certificate_id
-        );
-
         acceptedFiles.forEach((file) => {
-            console.log(certificate,certificate_name);
             formData.append("files[]", file);
             formData.append("user_id", user.id);
             formData.append("user_name", userInfo.name);
-            formData.append("sort", certificate_name.sort);
-            if(certificate.certificate_date){
+            formData.append("sort", certificate.sort || "default_sort");
+            if (certificate.certificate_date) {
                 formData.append("certificate_date", certificate.certificate_date);
             }
-            formData.append(
-                "certificate_id",
-                certificate_name ? certificate_name.name : "Null"
-            );
+            formData.append("certificate_id", certificate.name);
         });
 
         try {
@@ -47,13 +39,14 @@ function UserCertificate({user}) {
         } catch (error) {
             console.error("Fehler beim Hochladen der Datei:", error);
         }
+
     };
 
     const onDrop = useCallback((acceptedFiles) => {
-        console.log(certificate,userInfo);
-        uploadFiles(acceptedFiles);
+        console.log(certificate);
+        uploadFiles(acceptedFiles,certificate,userInfo);
         setIsLoading(true);
-    }, []);
+    }, [certificate, userInfo]);
 
     const {
         getRootProps,
@@ -89,9 +82,11 @@ function UserCertificate({user}) {
         }
     };
 
-    const addNewCertificate = (certificate) => {
+    const addNewCertificate = (certificate_new) => {
         setCertificate({
-            certificate_id: certificate.id,
+            certificate_id: certificate_new.id,
+            sort: certificate_new.sort,
+            name: certificate_new.name,
             user_id: user.id,
         });
         setShowModal(true);
@@ -104,7 +99,9 @@ function UserCertificate({user}) {
             user_id: null,
         });
         mergeCertificates();
-        axios.delete(route("user.certificate.destroy", certificate.id));
+        if(certificate.id){
+            axios.delete(route("user.certificate.destroy", certificate.id));
+        }
     }
 
     const mergeCertificates = async () => {
@@ -385,10 +382,15 @@ function UserCertificate({user}) {
                                                     certificate.certificate_date
                                                 ).format("DD.MM.YYYY") : ""}
                                             </td>
-                                            <td className={`py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ${moment(certificate.validity_date).isBetween(moment().subtract(certificate.reminder_day, 'days'), moment()) ? 'text-red-500' : ''}`}>
+                                            <td className={`py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ${moment(certificate.validity_date).subtract(certificate.reminder_day, 'days') <= moment() ? 'text-red-500' : ''}`}>
                                                 {certificate.validity_date ? moment(
                                                     certificate.validity_date
                                                 ).format("DD.MM.YYYY") : ""}
+
+
+
+
+
                                             </td>
 
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
@@ -418,10 +420,11 @@ function UserCertificate({user}) {
                                             >
                                                 <button
                                                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                                                    onClick={() =>
+                                                    onClick={() => {
                                                         addNewCertificate(
                                                             certificate
                                                         )
+                                                    }
                                                     }
                                                 >
                                                     Hinzufügen

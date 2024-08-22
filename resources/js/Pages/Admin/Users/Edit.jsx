@@ -48,7 +48,7 @@ export default function EditUser({ auth, user_id }) {
 
     const [newHourBank, setNewHourBank] = useState({
         date: new Date(),
-        hours: null,
+        hours: "",
         type: "",
     });
     const hourBankValidationSchema = yup.object().shape({
@@ -59,11 +59,11 @@ export default function EditUser({ auth, user_id }) {
 
     const [newBonus, setNewBonus] = useState({
         transaction_date: new Date(),
-        amount: null,
+        amount: "",
     });
     const [newAdvances, setNewAdvances] = useState({
         transaction_date: new Date(),
-        amount: null,
+        amount: "",
     });
 
     const getUserBahnCards = () => {
@@ -609,6 +609,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="driver_id"
                                                     id="driver_id"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.driver_id || ""}
                                                 />
                                                 {errors.driver_id &&
                                                     touched.driver_id && (
@@ -630,6 +631,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="name"
                                                     id="name"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.name || ""}
                                                 />
                                                 {errors.name &&
                                                     touched.name && (
@@ -651,6 +653,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="identity_number"
                                                     id="identity_number"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.identity_number || ""}
                                                 />
                                                 {errors.identity_number &&
                                                     touched.identity_number && (
@@ -677,6 +680,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="phone"
                                                     id="phone"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.phone || ""}
                                                 />
                                                 {errors.phone &&
                                                     touched.phone && (
@@ -697,6 +701,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="birth_date"
                                                     id="birth_date"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.birth_date || ""}
                                                 />
                                                 {errors.birth_date &&
                                                     touched.birth_date && (
@@ -726,7 +731,7 @@ export default function EditUser({ auth, user_id }) {
                                                         );
                                                     }}
                                                     value={
-                                                        values.start_working_date
+                                                        values.start_working_date || ""
                                                     }
                                                     className=""
                                                 />
@@ -755,6 +760,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="nationality"
                                                     id="nationality"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.nationality || ""}
                                                 />
                                                 {errors.nationality &&
                                                     touched.nationality && (
@@ -777,6 +783,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="kinder"
                                                     id="kinder"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.kinder || ""}
                                                 />
                                                 {errors.kinder &&
                                                     touched.kinder && (
@@ -833,6 +840,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="street"
                                                     id="street"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.street || ""}
                                                 />
                                                 {errors.street &&
                                                     touched.street && (
@@ -853,6 +861,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="apartment"
                                                     id="apartment"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.apartment || ""}
                                                 />
                                                 {errors.apartment &&
                                                     touched.apartment && (
@@ -873,6 +882,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="zip"
                                                     id="zip"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.zip || ""}
                                                 />
                                                 {errors.zip && touched.zip && (
                                                     <p className="text-red-500">
@@ -892,6 +902,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="city"
                                                     id="city"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.city || ""}
                                                 />
                                                 {errors.city &&
                                                     touched.city && (
@@ -915,6 +926,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="urgency_contact_name"
                                                     id="urgency_contact_name"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.urgency_contact_name || ""}
                                                 />
                                                 {errors.urgency_contact_name &&
                                                     touched.urgency_contact_name && (
@@ -938,6 +950,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="urgency_contact_phone"
                                                     id="urgency_contact_phone"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.urgency_contact_phone || ""}
                                                 />
                                                 {errors.urgency_contact_phone &&
                                                     touched.urgency_contact_phone && (
@@ -961,6 +974,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="private_phone"
                                                     id="private_phone"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.private_phone || ""}
                                                 />
                                                 {errors.private_phone &&
                                                     touched.private_phone && (
@@ -986,6 +1000,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="email"
                                                     id="email"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.email || ""}
                                                 />
                                                 {errors.email &&
                                                     touched.email && (
@@ -1009,6 +1024,7 @@ export default function EditUser({ auth, user_id }) {
                                                         id="password"
                                                         autoComplete="new-password"
                                                         className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                        value={values.password || ""}
                                                     />
                                                     <span
                                                         className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -1061,6 +1077,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="working_hours"
                                                     id="working_hours"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.working_hours || ""}
                                                 />
                                                 {errors.working_hours &&
                                                     touched.working_hours && (
@@ -1084,6 +1101,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="annual_leave_rights"
                                                     id="annual_leave_rights"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.annual_leave_rights || ""}
                                                 />
                                                 {errors.annual_leave_rights &&
                                                     touched.annual_leave_rights && (
@@ -1108,6 +1126,7 @@ export default function EditUser({ auth, user_id }) {
                                                     name="salary"
                                                     id="salary"
                                                     className="placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-slate-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                                    value={values.salary || ""}
                                                 />
                                                 {errors.salary &&
                                                     touched.salary && (
