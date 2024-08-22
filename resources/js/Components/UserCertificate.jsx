@@ -38,7 +38,7 @@ function UserCertificate({user}) {
                 file: response.data[0].url.replace("http://localhost", ""),
             }));
         } catch (error) {
-            console.error("Dosya yükleme hatası:", error);
+            console.error("Fehler beim Hochladen der Datei:", error);
         }
     };
 
@@ -121,12 +121,12 @@ function UserCertificate({user}) {
     return (
         <>
             <Modal show={showModal} onClose={() => setShowModal(false)}>
-                <Modal.Header>Sertifika Ekle</Modal.Header>
+                <Modal.Header>Zertifikat Hinzufügen</Modal.Header>
                 <Modal.Body>
                     {!certificate.file && (
                         <div className="mt-2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Dosya Yükle
+                                Datei Hochladen
                             </p>
                             <div
                                 {...getRootProps({
@@ -136,9 +136,9 @@ function UserCertificate({user}) {
                             >
                                 <input {...getInputProps()} />
                                 {isLoading ? (
-                                    <p>Yükleniyor...</p>
+                                    <p>Lädt...</p>
                                 ) : (
-                                    <p>Dosyayı sürükleyip bırakın veya seçin</p>
+                                    <p>Datei hierher ziehen oder auswählen</p>
                                 )}
                             </div>
                         </div>
@@ -152,14 +152,14 @@ function UserCertificate({user}) {
                                         window.open(certificate.file, "_blank");
                                     }}
                                 >
-                                    Göster
+                                    Anzeigen
                                 </Button>
                                 <Button
                                     onClick={() => {
                                         deleteCertificate();
                                     }}
                                 >
-                                    Dosyayı Kaldır
+                                    Datei Entfernen
                                 </Button>
                             </div>
                         </div>
@@ -167,7 +167,7 @@ function UserCertificate({user}) {
 
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            Sertifika
+                            Zertifikat
                         </p>
                         <Select
                             className="w-full "
@@ -195,7 +195,7 @@ function UserCertificate({user}) {
                     <div className="mt-2 flex space-x-4">
                         <div className="w-1/2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Tarih
+                                Datum
                             </p>
                             <input
                                 className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -211,7 +211,7 @@ function UserCertificate({user}) {
                         </div>
                         <div className="w-1/2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Geçerlilik Tarihi
+                                Gültigkeitsdatum
                             </p>
                             <input
                                 className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -229,7 +229,7 @@ function UserCertificate({user}) {
                     <div className="mt-2 flex space-x-4">
                         <div className="w-1/2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Eğitim Veren Kurum
+                                Ausbildungsinstitut
                             </p>
                             <input
                                 className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -245,7 +245,7 @@ function UserCertificate({user}) {
                         </div>
                         <div className="w-1/2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Onaylayan Kişi
+                                Bestätigende Person
                             </p>
                             <input
                                 className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -263,7 +263,7 @@ function UserCertificate({user}) {
                     <div className="mt-2 flex space-x-4">
                         <div className="w-1/2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Hatırlatma Gün Sayısı
+                                Erinnerungstage
                             </p>
                             <input
                                 className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -279,7 +279,7 @@ function UserCertificate({user}) {
                         </div>
                         <div className="w-1/2">
                             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Görünür mü?
+                                Sichtbar?
                             </p>
                             <div className="flex items-center">
                                 <ToggleSwitch
@@ -310,22 +310,23 @@ function UserCertificate({user}) {
                     <thead>
                         <tr>
                             <th className="py-2 px-4 border-b">
-                                Certificate Adı
+                                Zertifikat Name
                             </th>
-                            <th className="py-2 px-4 border-b">Oluşturan</th>
-                            <th className="py-2 px-4 border-b">Onaylayan</th>
+                            <th className="py-2 px-4 border-b">Datei</th>
+                            <th className="py-2 px-4 border-b">Ersteller</th>
+                            <th className="py-2 px-4 border-b">Bestätiger</th>
                             <th className="py-2 px-4 border-b">
-                                Sertifika Tarihi
+                                Zertifikatsdatum
                             </th>
                             <th className="py-2 px-4 border-b">
-                                Sertifika Geçerlilik Tarihi
+                                Gültigkeitsdatum
                             </th>
-                            <th className="py-2 px-4 border-b">Görünür mü?</th>
+                            <th className="py-2 px-4 border-b">Sichtbar?</th>
                             <th className="py-2 px-4 border-b">
-                                Hatırlatma Gün Sayısı
+                                Erinnerungstage
                             </th>
-                            <th className="py-2 px-4 border-b">Dosya</th>
-                            <th className="py-2 px-4 border-b">İşlemler</th>
+
+                            <th className="py-2 px-4 border-b">Aktionen</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -336,6 +337,28 @@ function UserCertificate({user}) {
                                         <>
                                             <td className="py-2 px-4 border-b">
                                                 {certificate.name}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                {certificate.file ? (
+                                                    <>
+                                                    <a
+                                                        href={certificate.file}
+                                                        className="text-blue-500 border-2 border-blue-500 rounded-md p-1 hover:bg-blue-500 hover:text-white px-5 py-2"
+                                                        target="_blank"
+                                                    >
+                                                        Anzeigen
+                                                    </a>
+                                                    <a
+                                                        className="text-green-500 mx-2 border-2 border-green-500  rounded-md p-1 hover:bg-green-500 hover:text-white px-5 py-2"
+                                                        download
+                                                        href={certificate.file}
+                                                    >
+                                                        Herunterladen
+                                                    </a>
+                                                    </>
+                                                ) : (
+                                                    "Keine Datei"
+                                                )}
                                             </td>
                                             <td className="py-2 px-4 border-b">
                                                 {certificate.creator}
@@ -355,33 +378,22 @@ function UserCertificate({user}) {
                                             </td>
                                             <td className="py-2 px-4 border-b">
                                                 {certificate.visible
-                                                    ? "Evet"
-                                                    : "Hayır"}
+                                                    ? "Ja"
+                                                    : "Nein"}
                                             </td>
                                             <td className="py-2 px-4 border-b">
                                                 {certificate.reminder_day}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
-                                                {certificate.file ? (
-                                                    <a
-                                                        href={certificate.file}
-                                                        className="text-blue-500"
-                                                        target="_blank"
-                                                    >
-                                                        Göster
-                                                    </a>
-                                                ) : (
-                                                    "Dosya Yok"
-                                                )}
-                                            </td>
+
                                             <td className="py-2 px-4 border-b">
                                                 <Button
                                                     color="gray"
+                                                    className="px-5  text-red-500 border-2 border-red-500 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 hover:bg-red-500"
                                                     onClick={() => {
                                                         deleteCertificate(certificate);
                                                     }}
                                                 >
-                                                    Dosyayı Kaldır
+                                                    Löschen
                                                 </Button>
                                             </td>
                                         </>
@@ -401,7 +413,7 @@ function UserCertificate({user}) {
                                                         )
                                                     }
                                                 >
-                                                    Ekle
+                                                    Hinzufügen
                                                 </button>
                                             </td>
                                         </>
