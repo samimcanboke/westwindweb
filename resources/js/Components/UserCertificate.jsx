@@ -399,7 +399,7 @@ function UserCertificate({user}) {
                                             </td>
                                             <td
                                                 colSpan="8"
-                                                className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300 text-center"
+                                                className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300 text-end"
                                             >
                                                 <button
                                                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
