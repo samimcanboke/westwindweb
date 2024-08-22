@@ -19,10 +19,11 @@ function UserCertificate({user}) {
         );
 
         acceptedFiles.forEach((file) => {
+            console.log(certificate,certificate_name);
             formData.append("files[]", file);
             formData.append("user_id", user.id);
             formData.append("user_name", userInfo.name);
-            formData.append("sort", certificate.sort);
+            formData.append("sort", certificate_name.sort);
             if(certificate.certificate_date){
                 formData.append("certificate_date", certificate.certificate_date);
             }
@@ -49,6 +50,7 @@ function UserCertificate({user}) {
     };
 
     const onDrop = useCallback((acceptedFiles) => {
+        console.log(certificate,userInfo);
         uploadFiles(acceptedFiles);
         setIsLoading(true);
     }, []);
@@ -69,8 +71,9 @@ function UserCertificate({user}) {
     });
 
     const getUser = async () => {
-        const {data: user} = await axios.get(route("user.show", user.id));
-        setUserInfo(user);
+        const {data: userI} = await axios.get(route("user.show", user.id));
+        setUserInfo(userI);
+
     }
 
     const saveCertificate = async () => {

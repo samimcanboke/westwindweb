@@ -269,11 +269,11 @@ export default function EditUser({ auth, user_id }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    User Edit
+                    {user ? user.name : "User"} Edit
                 </h2>
             }
         >
-            <Head title="User Edit" />
+            <Head title={user ? user.name : "User  Edit"} />
 
             {/* Bonus Modal */}
             <Modal
