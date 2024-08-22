@@ -79,11 +79,6 @@ class CertificateController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'certificate_date' => 'required|date',
-            'creator' => 'required|string|max:255',
-            'confirmer' => 'required|string|max:255',
-            'validity' => 'required|date',
-            'sort' => 'required|integer',
         ]);
 
         $certificate = Certificate::where('id', $request->id)->first();
