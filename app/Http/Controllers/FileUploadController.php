@@ -12,7 +12,14 @@ class FileUploadController extends Controller
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 if($request->has('user_id') && $request->has('certificate_id')){
-                    $add_filename = $request->user_id . '_' . $request->certificate_id;
+                    $user_name_parts = explode(' ', $request->user_name);
+                    $last_name = array_pop($user_name_parts);
+                    $first_name = implode(' ', $user_name_parts);
+                    if($request->has('certificate_date')){
+                        $add_filename = $request->sort . '_' . $last_name . '_' . $first_name . '_' . $request->certificate_id ;
+                    }else{
+                        $add_filename = $request->sort . '_' . $last_name . '_' . $first_name . '_'  . $request->certificate_date . "_" . $request->certificate_id;
+                    }
                 }
                 $uniqueId = uniqid();
                 $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

@@ -10,6 +10,7 @@ function UserCertificate({user}) {
     const [certificate, setCertificate] = useState({});
     const [certificates, setCertificates] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [userInfo, setUserInfo] = useState({});
 
     const uploadFiles = async (acceptedFiles) => {
         const formData = new FormData();
@@ -20,6 +21,11 @@ function UserCertificate({user}) {
         acceptedFiles.forEach((file) => {
             formData.append("files[]", file);
             formData.append("user_id", user.id);
+            formData.append("user_name", userInfo.name);
+            formData.append("sort", certificate.sort);
+            if(certificate.certificate_date){
+                formData.append("certificate_date", certificate.certificate_date);
+            }
             formData.append(
                 "certificate_id",
                 certificate_name ? certificate_name.name : "Null"
@@ -61,6 +67,11 @@ function UserCertificate({user}) {
             "application/pdf": [".pdf"],
         },
     });
+
+    const getUser = async () => {
+        const {data: user} = await axios.get(route("user.show", user.id));
+        setUserInfo(user);
+    }
 
     const saveCertificate = async () => {
         let response = await axios.post(
@@ -116,6 +127,7 @@ function UserCertificate({user}) {
 
     useEffect(() => {
         mergeCertificates();
+        getUser();
     }, []);
 
     return (
