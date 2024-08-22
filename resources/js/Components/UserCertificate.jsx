@@ -313,8 +313,8 @@ function UserCertificate({user}) {
                                 Zertifikat Name
                             </th>
                             <th className="py-2 px-4 border-b">Datei</th>
-                            <th className="py-2 px-4 border-b">Ersteller</th>
-                            <th className="py-2 px-4 border-b">Bestätiger</th>
+                            <th className="py-2 px-4 border-b">Austeller</th>
+                            <th className="py-2 px-4 border-b">Prüfer</th>
                             <th className="py-2 px-4 border-b">
                                 Zertifikatsdatum
                             </th>
@@ -332,13 +332,13 @@ function UserCertificate({user}) {
                     <tbody>
                         {mergedCertificates.length > 0 &&
                             mergedCertificates.map((certificate, index) => (
-                                <tr key={index}>
+                                <tr key={index} className={ index % 2 === 0 ? "bg-gray-100" : "bg-white"}>
                                     {certificate.user_id ? (
                                         <>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.name}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.file ? (
                                                     <>
                                                     <a
@@ -360,35 +360,35 @@ function UserCertificate({user}) {
                                                     "Keine Datei"
                                                 )}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.creator}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.confirmer}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {moment(
                                                     certificate.certificate_date
                                                 ).format("DD.MM.YYYY")}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {moment(
                                                     certificate.validity_date
                                                 ).format("DD.MM.YYYY")}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.visible
                                                     ? "Ja"
                                                     : "Nein"}
                                             </td>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.reminder_day}
                                             </td>
 
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ">
                                                 <Button
                                                     color="gray"
-                                                    className="px-5  text-red-500 border-2 border-red-500 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 hover:bg-red-500"
+                                                    className="px-5  text-red-500 border-2  border-red-500 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 hover:bg-red-500"
                                                     onClick={() => {
                                                         deleteCertificate(certificate);
                                                     }}
@@ -399,14 +399,15 @@ function UserCertificate({user}) {
                                         </>
                                     ) : (
                                         <>
-                                            <td className="py-2 px-4 border-b">
+                                            <td className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300">
                                                 {certificate.name}
                                             </td>
                                             <td
-                                                colSpan="6"
-                                                className="py-2 px-4 border-b text-center"
+                                                colSpan="8"
+                                                className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300 text-center"
                                             >
                                                 <button
+                                                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
                                                     onClick={() =>
                                                         addNewCertificate(
                                                             certificate
