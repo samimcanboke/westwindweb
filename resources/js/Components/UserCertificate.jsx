@@ -323,7 +323,7 @@ function UserCertificate({user}) {
                             </th>
                             <th className="py-2 px-4 border-b">Sichtbar?</th>
                             <th className="py-2 px-4 border-b">
-                                Erinnerungstage
+                                WV
                             </th>
 
                             <th className="py-2 px-4 border-b">Aktionen</th>
@@ -353,7 +353,7 @@ function UserCertificate({user}) {
                                                         download
                                                         href={certificate.file}
                                                     >
-                                                        Herunterladen
+                                                        Download
                                                     </a>
                                                     </>
                                                 ) : (
