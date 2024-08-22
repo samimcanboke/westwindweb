@@ -313,8 +313,8 @@ function UserCertificate({user}) {
                                 Zertifikat Name
                             </th>
                             <th className="py-2 px-4 border-b">Datei</th>
-                            <th className="py-2 px-4 border-b min-w-[300px]">Austeller</th>
-                            <th className="py-2 px-4 border-b min-w-[300px]">Prüfer</th>
+                            <th className="py-2 px-4 border-b min-w-[200px]">Austeller</th>
+                            <th className="py-2 px-4 border-b min-w-[200px]">Prüfer</th>
                             <th className="py-2 px-4 border-b">
                                 Zertifikatsdatum
                             </th>
@@ -370,7 +370,7 @@ function UserCertificate({user}) {
                                                     certificate.certificate_date
                                                 ).format("DD.MM.YYYY")}
                                             </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
+                                            <td className={`py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ${moment(certificate.validity_date).isBetween(moment().subtract(certificate.reminder_day, 'days'), moment()) ? 'text-red-500' : ''}`}>
                                                 {moment(
                                                     certificate.validity_date
                                                 ).format("DD.MM.YYYY")}
