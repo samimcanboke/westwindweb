@@ -321,7 +321,6 @@ function UserCertificate({user}) {
                             <th className="py-2 px-4 border-b">
                                 Gültigkeitsdatum
                             </th>
-                            <th className="py-2 px-4 border-b">Sichtbar?</th>
                             <th className="py-2 px-4 border-b">
                                 WV
                             </th>
@@ -376,11 +375,7 @@ function UserCertificate({user}) {
                                                     certificate.validity_date
                                                 ).format("DD.MM.YYYY")}
                                             </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
-                                                {certificate.visible
-                                                    ? "Ja"
-                                                    : "Nein"}
-                                            </td>
+
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                                 {certificate.reminder_day}
                                             </td>
