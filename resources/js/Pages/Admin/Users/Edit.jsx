@@ -45,6 +45,26 @@ export default function EditUser({ auth, user_id }) {
     const [aggreements, setAggreements] = useState([]);
     const [certificates, setCertificates] = useState([]);
     const [userCertificates, setUserCertificates] = useState([]);
+    const [alertCertificates, setAlertCertificates] = useState(0);
+
+    useEffect(() => {
+        const certificatesNew = async()=> {
+            for(const certificate of certificates){
+             if(certificate.required){
+                const userCertificate = userCertificates.find(userCertificate => userCertificate.certificate_id === certificate.id);
+                if(!userCertificate){
+                    setAlertCertificates(alertCertificates + 1);
+                } else {
+                    if(moment(userCertificate.validity_date).subtract(userCertificate.reminder_day, 'days') <= moment()){
+                        setAlertCertificates(alertCertificates + 1);
+                    }
+                }
+             }
+            }
+        }
+        certificatesNew();
+
+    }, [userCertificates]);
 
     const [newHourBank, setNewHourBank] = useState({
         date: new Date(),
@@ -1932,7 +1952,16 @@ export default function EditUser({ auth, user_id }) {
                                     </Tabs.Item>
                                     {/* Sertifikalar */}
                                     <Tabs.Item
-                                        title="Sertifikalar"
+                                        title={
+                                            <div className="flex items-center">
+                                                Sertifikalar
+                                                {alertCertificates && (
+                                                    <span className="bg-red-500 text-white text-xs font-semibold ml-2 px-2.5 py-0.5 rounded">
+                                                        {alertCertificates}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        }
                                         icon={HiShieldCheck}
                                     >
 
