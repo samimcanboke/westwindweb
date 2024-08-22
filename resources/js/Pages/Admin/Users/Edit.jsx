@@ -49,18 +49,20 @@ export default function EditUser({ auth, user_id }) {
 
     useEffect(() => {
         const certificatesNew = async()=> {
+            let count = 0;
             for(const certificate of certificates){
              if(certificate.required){
                 const userCertificate = userCertificates.find(userCertificate => userCertificate.certificate_id === certificate.id);
                 if(!userCertificate){
-                    setAlertCertificates(alertCertificates + 1);
+                    count++;
                 } else {
                     if(moment(userCertificate.validity_date).subtract(userCertificate.reminder_day, 'days') <= moment()){
-                        setAlertCertificates(alertCertificates + 1);
+                        count++;
                     }
                 }
              }
             }
+            setAlertCertificates(count);
         }
         certificatesNew();
 
