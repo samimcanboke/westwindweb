@@ -135,47 +135,6 @@ function UserCertificate({user}) {
             <Modal show={showModal} onClose={() => setShowModal(false)}>
                 <Modal.Header>Zertifikat Hinzufügen</Modal.Header>
                 <Modal.Body>
-                    {!certificate.file && (
-                        <div className="mt-2">
-                            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                Datei Hochladen
-                            </p>
-                            <div
-                                {...getRootProps({
-                                    className:
-                                        "border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer",
-                                })}
-                            >
-                                <input {...getInputProps()} />
-                                {isLoading ? (
-                                    <p>Lädt...</p>
-                                ) : (
-                                    <p>Datei hierher ziehen oder auswählen</p>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {certificate.file && (
-                        <div className="mt-2 mb-2">
-                            <div className="flex space-x-2">
-                                <Button
-                                    onClick={() => {
-                                        window.open(certificate.file, "_blank");
-                                    }}
-                                >
-                                    Anzeigen
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        deleteCertificate();
-                                    }}
-                                >
-                                    Datei Entfernen
-                                </Button>
-                            </div>
-                        </div>
-                    )}
 
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
@@ -308,6 +267,49 @@ function UserCertificate({user}) {
                             </div>
                         </div>
                     </div>
+
+                    {!certificate.file && (
+                        <div className="mt-2">
+                            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                Datei Hochladen
+                            </p>
+                            <div
+                                {...getRootProps({
+                                    className:
+                                        "border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer py-10",
+                                })}
+                            >
+                                <input {...getInputProps()} />
+                                {isLoading ? (
+                                    <p>Lädt...</p>
+                                ) : (
+                                    <p>Datei hierher ziehen oder auswählen</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {certificate.file && (
+                        <div className="mt-2 mb-2">
+                            <div className="flex space-x-2">
+                                <Button
+                                    onClick={() => {
+                                        window.open(certificate.file, "_blank");
+                                    }}
+                                >
+                                    Anzeigen
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        deleteCertificate();
+                                    }}
+                                >
+                                    Datei Entfernen
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={saveCertificate}>Zuweisen</Button>
