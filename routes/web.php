@@ -312,6 +312,13 @@ Route::get('/trigger-event', function () {
     return 'Event triggered!';
 })->withoutMiddleware(['auth', 'verified',IsAdmin::class]);
 
+Route::get('/check-certificates', function () {
+    $expiredCertificates = \App\Models\UserCertificate::whereRaw('DATE_SUB(validity_date, INTERVAL reminder_day DAY) <= CURDATE()')->get();
+    foreach ($expiredCertificates as $certificate) {
+        Mail::to('sadettin.gokcen@westwind-eisenbahnservice.de')->send(new \App\Mail\CertificateExpired($certificate->certificate->name, $certificate->user->name));
+    }
+});
+
 
 
 require __DIR__.'/auth.php';
