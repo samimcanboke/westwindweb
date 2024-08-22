@@ -210,6 +210,8 @@ Route::put('/certificates/{id}', [CertificateController::class, 'update'])->midd
 Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.destroy');
 
 Route::get('/get-user-certificates/{user_id}', [UserCertificateController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-certificates');
+Route::post('/user-certificates', [UserCertificateController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.certificate.store');
+Route::delete('/user-certificates/{id}', [UserCertificateController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.certificate.destroy');
 
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');

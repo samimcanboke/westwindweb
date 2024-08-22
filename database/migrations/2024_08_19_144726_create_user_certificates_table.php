@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('validity_date')->nullable();
             $table->boolean('is_visible')->default(false);
             $table->integer('reminder_day')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

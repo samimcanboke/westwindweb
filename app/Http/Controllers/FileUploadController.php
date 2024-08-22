@@ -11,6 +11,9 @@ class FileUploadController extends Controller
         $uploadedFiles = [];
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
+                if($request->has('user_id') && $request->has('certificate_id')){
+                    $add_filename = $request->user_id . '_' . $request->certificate_id;
+                }
                 $uniqueId = uniqid();
                 $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
@@ -20,7 +23,7 @@ class FileUploadController extends Controller
                     $filename
                 );
                 $newFilename = $filename . '_' . $uniqueId . '.' . $extension;
-                $path = $file->storeAs('uploads', $newFilename, 'public');
+                $path = $file->storeAs('uploads', $add_filename . '/' . $newFilename, 'public');
                 $uploadedFiles[] = [
                     'name' => $newFilename,
                     'url' => asset('storage/' . $path),

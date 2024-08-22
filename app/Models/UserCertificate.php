@@ -20,6 +20,7 @@ class UserCertificate extends Model
         'creator',
         'is_visible',
         'reminder_day',
+        'file',
     ];
 
     protected $casts = [

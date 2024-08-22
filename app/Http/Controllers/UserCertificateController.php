@@ -29,7 +29,22 @@ class UserCertificateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $request->validate([
+            'certificate_id' => 'required',
+            'user_id' => 'required',
+            'certificate_date' => 'required',
+            'validity_date' => 'required',
+            'file' => 'required',
+            'reminder_day' => 'required',
+            'creator'=> 'required',
+            'confirmer'=> 'required',
+            'file' => 'required',
+        ]);
+
+        $userCertificate = UserCertificate::create($request->all());
+        return response()->json(["success" => true, "message" => "Sertifika başarıyla eklendi."], 201);
     }
 
     /**
@@ -59,8 +74,10 @@ class UserCertificateController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserCertificate $userCertificate)
+    public function destroy($id)
     {
-        //
+        $userCertificate = UserCertificate::where('id', $id)->first();
+        $userCertificate->delete();
+        return response()->json(["success" => true, "message" => "Sertifika başarıyla kaldırıldı."], 200);
     }
 }
