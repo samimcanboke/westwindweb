@@ -10,9 +10,10 @@ class UsersAggreementsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($user_id)
     {
-        //
+        $userAgreements = UsersAggreements::where('user_id', $user_id)->get();
+        return response()->json($userAgreements);
     }
 
     /**
@@ -28,7 +29,14 @@ class UsersAggreementsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $userAgreement = new UsersAggreements();
+        $userAgreement->user_id = $request->user_id;
+        $userAgreement->agreement_id = $request->agreement_id ;
+        $userAgreement->agreement_file = $request->file;
+        $userAgreement->agreement_type = $request->name;
+        $userAgreement->save();
+        return response()->json(["success" => true, "message" => "User agreement created successfully", "data" => $userAgreement]);
     }
 
     /**
@@ -58,8 +66,10 @@ class UsersAggreementsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UsersAggreements $usersAggreements)
+    public function destroy($id)
     {
-        //
+        $userAgreement = UsersAggreements::where('id', $id)->first();
+        $userAgreement->delete();
+        return response()->json(["success" => true, "message" => "User agreement deleted successfully"]);
     }
 }

@@ -6,6 +6,7 @@ import * as yup from "yup";
 import BahnCard from "@/Components/BahnCard";
 import Select from "react-select";
 import UserCertificate from "@/Components/UserCertificate";
+import UserAgreement from "@/Components/UserAgreement";
 
 import {
     Datepicker,
@@ -45,6 +46,8 @@ export default function EditUser({ auth, user_id }) {
     const [aggreements, setAggreements] = useState([]);
     const [certificates, setCertificates] = useState([]);
     const [userCertificates, setUserCertificates] = useState([]);
+    const [userAgreements, setUserAgreements] = useState([]);
+
     const [alertCertificates, setAlertCertificates] = useState(0);
 
     useEffect(() => {
@@ -1976,15 +1979,7 @@ export default function EditUser({ auth, user_id }) {
                                         title="Sözleşmeler"
                                         icon={HiClipboardList}
                                     >
-                                        {aggreements &&
-                                            aggreements.length > 0 &&
-                                            aggreements.map(
-                                                (aggreement, key) => (
-                                                    <div key={key}>
-                                                        {aggreement.name}
-                                                    </div>
-                                                )
-                                            )}
+                                        <UserAgreement agreements={aggreements} user={user} userAgreements={userAgreements} />
                                     </Tabs.Item>
                                     {/* Programlar */}
                                     <Tabs.Item

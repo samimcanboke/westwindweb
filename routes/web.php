@@ -25,6 +25,7 @@ use App\Http\Controllers\ProfessionsController;
 use App\Http\Controllers\AggreementController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\UserCertificateController;
+use App\Http\Controllers\UsersAggreementsController;
 
 use App\Events\UserRegistered;
 
@@ -209,9 +210,19 @@ Route::get('/certificates/edit/{id}', [CertificateController::class, 'edit'])->m
 Route::put('/certificates/{id}', [CertificateController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.update');
 Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates.destroy');
 
+
+
+
+
+
 Route::get('/get-user-certificates/{user_id}', [UserCertificateController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-certificates');
 Route::post('/user-certificates', [UserCertificateController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.certificate.store');
 Route::delete('/user-certificates/{id}', [UserCertificateController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.certificate.destroy');
+
+
+Route::get('/get-user-agreements/{user_id}', [UsersAggreementsController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-agreements');
+Route::post('/user-agreements', [UsersAggreementsController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.agreement.store');
+Route::delete('/user-agreements/{id}', [UsersAggreementsController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.agreement.destroy');
 
 
 Route::get('/finalized-filter', [FinalizedJobsController::class, 'get_filters'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('finalized-filter');
