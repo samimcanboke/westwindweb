@@ -313,8 +313,8 @@ function UserCertificate({user}) {
                                 Zertifikat Name
                             </th>
                             <th className="py-2 px-4 border-b">Datei</th>
-                            <th className="py-2 px-4 border-b">Austeller</th>
-                            <th className="py-2 px-4 border-b">Prüfer</th>
+                            <th className="py-2 px-4 border-b min-w-[300px]">Austeller</th>
+                            <th className="py-2 px-4 border-b min-w-[300px]">Prüfer</th>
                             <th className="py-2 px-4 border-b">
                                 Zertifikatsdatum
                             </th>
