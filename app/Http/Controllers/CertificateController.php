@@ -52,9 +52,9 @@ class CertificateController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(Request $request, $id)
     {
-        $certificate = Certificate::where('id', $request->id)->first();
+        $certificate = Certificate::where('id', $id)->first();
 
         return response()->json($certificate);
     }

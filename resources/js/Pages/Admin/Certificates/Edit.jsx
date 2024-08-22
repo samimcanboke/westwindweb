@@ -25,7 +25,7 @@ export default function EditAggreements({ auth,id }) {
     });
 
     useEffect(() => {
-        axios.get(route('aggreements.show',{id:id}))
+        axios.get(route('certificates.show',{id:id}))
         .then(res => {
             console.log(res.data);
             setAgreement(res.data);
