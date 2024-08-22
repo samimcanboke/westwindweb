@@ -313,7 +313,7 @@ function UserCertificate({user}) {
                                 Zertifikat Name
                             </th>
                             <th className="py-2 px-4 border-b">Datei</th>
-                            <th className="py-2 px-4 border-b min-w-[200px]">Austeller</th>
+                            <th className="py-2 px-4 border-b max-w-[100px]">Austeller</th>
                             <th className="py-2 px-4 border-b min-w-[200px]">Prüfer</th>
                             <th className="py-2 px-4 border-b">
                                 Zertifikatsdatum
@@ -334,7 +334,7 @@ function UserCertificate({user}) {
                                 <tr key={index} className={ index % 2 === 0 ? "bg-gray-100" : "bg-white"}>
                                     {certificate.user_id ? (
                                         <>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 min-w-[250px]">
                                                 {certificate.name}
                                             </td>
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
@@ -359,21 +359,21 @@ function UserCertificate({user}) {
                                                     "Keine Datei"
                                                 )}
                                             </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 max-w-[180px] ">
                                                 {certificate.creator}
                                             </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 max-w-[200px]">
                                                 {certificate.confirmer}
                                             </td>
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
-                                                {moment(
+                                                { certificate.certificate_date ? moment(
                                                     certificate.certificate_date
-                                                ).format("DD.MM.YYYY")}
+                                                ).format("DD.MM.YYYY") : ""}
                                             </td>
                                             <td className={`py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ${moment(certificate.validity_date).isBetween(moment().subtract(certificate.reminder_day, 'days'), moment()) ? 'text-red-500' : ''}`}>
-                                                {moment(
+                                                {certificate.validity_date ? moment(
                                                     certificate.validity_date
-                                                ).format("DD.MM.YYYY")}
+                                                ).format("DD.MM.YYYY") : ""}
                                             </td>
 
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
