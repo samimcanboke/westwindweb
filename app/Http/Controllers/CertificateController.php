@@ -65,10 +65,10 @@ class CertificateController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Certificate $certificate)
+    public function edit(Certificate $certificate ,$id)
     {
         return Inertia::render('Admin/Certificates/Edit', [
-            'certificate' => $certificate,
+            'id' => $id,
         ]);
     }
 
