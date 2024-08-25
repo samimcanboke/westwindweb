@@ -478,14 +478,14 @@ export default function Planner({ auth }) {
                     group: job.user_id,
                     start_time: startDate,
                     end_time: endDate,
-                    title: job.work_start_place + " - " + job.work_end_place,
+                    title: "",
                     canMove: false,
                     canResize: false,
                     itemProps: {
                         type: "userFinalizedJob",
                         className: "weekend",
                         style: {
-                            background: "gray",
+                            background: "#80808080",
                             zIndex: 50,
                         },
                     },
