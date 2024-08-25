@@ -1506,8 +1506,12 @@ class FinalizedJobsController extends Controller
 
     public function user_confirmed_jobs(Request $request)
     {
-        $user_id = $request->user()->id;
-        $confirmed_jobs = FinalizedJobs::where("user_id", $user_id)->where("confirmation", true)->get();
+        $user_id = $request->user_id ?? "";
+        if($user_id){
+            $confirmed_jobs = FinalizedJobs::where("user_id", $user_id)->where("confirmation", true)->get();
+        }else{
+            $confirmed_jobs = FinalizedJobs::where("confirmation", true)->get();
+        }
         return response()->json($confirmed_jobs);
     }
     /**

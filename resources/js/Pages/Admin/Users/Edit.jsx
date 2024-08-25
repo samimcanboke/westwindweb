@@ -27,8 +27,12 @@ import {
     HiUserCircle,
     HiShieldCheck,
     HiCreditCard,
+    HiDocumentReport
 } from "react-icons/hi";
 import { MdDashboard, MdOutlineWorkOutline } from "react-icons/md";
+
+//TODO: Gehaltsabrechnungen Maaş Dökümanları ekle
+
 
 export default function EditUser({ auth, user_id }) {
     const [user, setUser] = useState(null);
@@ -1992,6 +1996,19 @@ export default function EditUser({ auth, user_id }) {
                                     <Tabs.Item
                                         title="Bahn Kart"
                                         icon={HiCreditCard}
+                                    >
+                                        {userBahnCard && (
+                                            <div className="flex justify-center">
+                                                <BahnCard
+                                                    bahnCard={userBahnCard}
+                                                    user={user}
+                                                />
+                                            </div>
+                                        )}
+                                    </Tabs.Item>
+                                    <Tabs.Item
+                                        title="Gehaltsberichte"
+                                        icon={HiDocumentReport}
                                     >
                                         {userBahnCard && (
                                             <div className="flex justify-center">

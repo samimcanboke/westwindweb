@@ -462,23 +462,23 @@ export default function Planner({ auth }) {
             for (const job of response.data) {
                 let workStartTime = job.work_start_time.split(":");
                 let workEndTime = job.work_end_time.split(":");
-                let startDate = moment(job.initial_date);
-                let endDate = moment(job.initial_date);
-                if (workStartTime[0] < workEndTime[0]) {
+                let startDate = moment(job.initial_date).set({
+                    hour: workStartTime[0],
+                    minute: workStartTime[1],
+                });
+                let endDate = moment(job.initial_date).set({
+                    hour: workEndTime[0],
+                    minute: workEndTime[1],
+                });
+                if (workEndTime[0] < workStartTime[0]) {
                     endDate.add(1, "day");
                 }
                 let newUserFinalizedJob = {
                     id: "u" + job.id,
                     group: job.user_id,
-                    start_time: startDate.set({
-                        hour: workStartTime[0],
-                        minute: workStartTime[1],
-                    }),
-                    end_time: endDate.set({
-                        hour: workEndTime[0],
-                        minute: workEndTime[1],
-                    }),
-                    title: job.from + " - " + job.to,
+                    start_time: startDate,
+                    end_time: endDate,
+                    title: job.work_start_place + " - " + job.work_end_place,
                     canMove: false,
                     canResize: false,
                     itemProps: {
@@ -486,7 +486,7 @@ export default function Planner({ auth }) {
                         className: "weekend",
                         style: {
                             background: "gray",
-                            zIndex: 49,
+                            zIndex: 50,
                         },
                     },
                 };
