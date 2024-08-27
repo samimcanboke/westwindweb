@@ -1162,7 +1162,6 @@ class FinalizedJobsController extends Controller
         $data['mail'] = $user->email ?? "";
         $data['phone'] = $user->phone ?? "";
 
-
         $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
         $total_hours = $hour_banks->where('type', 'deposit')->sum('hours') - $hour_banks->where('type', 'withdraw')->sum('hours');
         $data['hour_bank_this_month'] = sprintf('%02d:%02d', floor($total_hours), ($total_hours - floor($total_hours)) * 60);
@@ -1170,8 +1169,6 @@ class FinalizedJobsController extends Controller
         $hour_banks_this_year = $user->hourBanks()->whereBetween('date', [Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString(), Carbon::create($year, 12, 31)->endOfDay()->toDateTimeString()])->get();
         $total_hours_this_year = $hour_banks_this_year->where('type', 'deposit')->sum('hours') - $hour_banks_this_year->where('type', 'withdraw')->sum('hours');
         $data['hour_bank_this_year'] = sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
-
-
 
         $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
@@ -1202,11 +1199,7 @@ class FinalizedJobsController extends Controller
             ->sum() ?? 0;
 
         $data['annual_leave_days'] = number_format($annual_leave_days, 2, ',', '');
-
-
-
         $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
-
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();

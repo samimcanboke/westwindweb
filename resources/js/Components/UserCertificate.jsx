@@ -11,6 +11,12 @@ function UserCertificate({user}) {
     const [certificates, setCertificates] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({});
+    const [selectedCertificates, setSelectedCertificates] = useState([]);
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [email, setEmail] = useState("");
+    const [recipient, setRecipient] = useState("");
+    const [subject, setSubject] = useState("");
+    const [message, setMessage] = useState("");
 
     const uploadFiles = async (acceptedFiles,certificate,userInfo) => {
         const formData = new FormData();
@@ -123,6 +129,38 @@ function UserCertificate({user}) {
             }
         }
         setMergedCertificates(mergedCertificates);
+    };
+
+    const handleCertificateSelect = (certificateId) => {
+        setSelectedCertificates((prevSelected) =>
+            prevSelected.includes(certificateId)
+                ? prevSelected.filter((id) => id !== certificateId)
+                : [...prevSelected, certificateId]
+        );
+    };
+
+    const sendEmail = async () => {
+        const selectedFiles = mergedCertificates
+            .filter((cert) => selectedCertificates.includes(cert.id))
+            .map((cert) => cert.file);
+
+        try {
+            await axios.post("/send-email", {
+                email,
+                recipient,
+                subject,
+                message,
+                files: selectedFiles,
+            });
+            setShowEmailModal(false);
+            setSelectedCertificates([]);
+            setEmail("");
+            setRecipient("");
+            setSubject("");
+            setMessage("");
+        } catch (error) {
+            console.error("Email gönderme hatası:", error);
+        }
     };
 
     useEffect(() => {
@@ -319,10 +357,75 @@ function UserCertificate({user}) {
                 </Modal.Footer>
             </Modal>
 
+            <Button
+                className="mb-4"
+                onClick={() => setShowEmailModal(true)}
+            >
+                Seçilen Sertifikaları Mail At
+            </Button>
+
+            <Modal show={showEmailModal} onClose={() => setShowEmailModal(false)}>
+                <Modal.Header>Seçilen Sertifikaları Mail At</Modal.Header>
+                <Modal.Body>
+                    <div className="mt-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            Email Adresi
+                        </p>
+                        <input
+                            className="w-full border-2 border-gray-300 rounded-md p-2"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="mt-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            Kime
+                        </p>
+                        <input
+                            className="w-full border-2 border-gray-300 rounded-md p-2"
+                            type="text"
+                            value={recipient}
+                            onChange={(e) => setRecipient(e.target.value)}
+                        />
+                    </div>
+                    <div className="mt-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            Konu
+                        </p>
+                        <input
+                            className="w-full border-2 border-gray-300 rounded-md p-2"
+                            type="text"
+                            value={subject}
+                            onChange={(e) => setSubject(e.target.value)}
+                        />
+                    </div>
+                    <div className="mt-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            Mesaj İçeriği
+                        </p>
+                        <textarea
+                            className="w-full border-2 border-gray-300 rounded-md p-2"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                        />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={sendEmail}>Gönder</Button>
+                    <Button color="gray" onClick={() => setShowEmailModal(false)}>
+                        İptal
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white">
                     <thead>
                         <tr>
+                            <th className="py-2 px-4 border-b">
+                                Seç
+                            </th>
                             <th className="py-2 px-4 border-b">
                                 Zertifikat Name
                             </th>
@@ -346,6 +449,13 @@ function UserCertificate({user}) {
                         {mergedCertificates.length > 0 &&
                             mergedCertificates.map((certificate, index) => (
                                 <tr key={index} className={ index % 2 === 0 ? "bg-gray-100" : "bg-white"}>
+                                    <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedCertificates.includes(certificate.id)}
+                                            onChange={() => handleCertificateSelect(certificate.id)}
+                                        />
+                                    </td>
                                     {certificate.user_id ? (
                                         <>
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 min-w-[250px]">
