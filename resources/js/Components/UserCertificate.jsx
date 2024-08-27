@@ -56,6 +56,9 @@ function UserCertificate({user}) {
     }, [certificate, userInfo]);
 
 
+    useEffect(() => {
+        console.log(selectedCertificates);
+    }, [selectedCertificates]);
     const {
         getRootProps,
         getInputProps,
@@ -478,7 +481,8 @@ function UserCertificate({user}) {
                                     <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
                                         <input
                                             type="checkbox"
-                                            checked={selectedCertificates.includes(certificate.id)}
+                                            disabled={!certificate.file}
+                                            checked={certificate.file && selectedCertificates.includes(certificate.id)}
                                             onChange={() => handleCertificateSelect(certificate.id)}
                                         />
                                     </td>
