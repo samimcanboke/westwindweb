@@ -3,6 +3,7 @@ import { Modal, Button, Select, ToggleSwitch } from "flowbite-react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import moment from "moment";
+import Swal from "sweetalert2";
 
 function UserCertificate({user}) {
     const [mergedCertificates, setMergedCertificates] = useState([]);
@@ -53,6 +54,7 @@ function UserCertificate({user}) {
         uploadFiles(acceptedFiles,certificate,userInfo);
         setIsLoading(true);
     }, [certificate, userInfo]);
+
 
     const {
         getRootProps,
@@ -140,6 +142,7 @@ function UserCertificate({user}) {
     };
 
     const sendEmail = async () => {
+
         const selectedFiles = mergedCertificates
             .filter((cert) => selectedCertificates.includes(cert.id))
             .map((cert) => cert.file);
@@ -359,7 +362,30 @@ function UserCertificate({user}) {
 
             <Button
                 className="mb-4"
-                onClick={() => setShowEmailModal(true)}
+                onClick={() => {
+                    const selectedFiles = mergedCertificates
+                    .filter((cert) => selectedCertificates.includes(cert.id))
+                    .map((cert) => cert.file);
+
+                    if(selectedCertificates.length === 0){
+                        Swal.fire(
+                            "Hata",
+                            "Lütfen önce bir sertifika seçiniz.",
+                            "error"
+                        );
+                        return;
+                    } else {
+                        if(selectedFiles.filter(file => file === null || file === undefined).length > 0 ){
+                            Swal.fire(
+                                "Hata",
+                                "Seçtiklerinizden birinde dosya bulunmuyor.",
+                                "error"
+                            );
+                            return;
+                        }
+                    }
+                    setShowEmailModal(true);
+                }}
             >
                 Seçilen Sertifikaları Mail At
             </Button>
