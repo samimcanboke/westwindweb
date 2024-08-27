@@ -27,7 +27,7 @@ class FileUploadController extends Controller
                         ['_', 'c', 'g', 'i', 'o', 's', 'u', 'C', 'G', 'I', 'O', 'S', 'U', 'ae', 'oe', 'ue', 'ss', 'Ae', 'Oe', 'Ue', 'e', 'e', 'e', 'a', 'a', 'i', 'i', 'o', 'u', 'c', 'e', 'y', 'n'],
                         $add_filename
                     );
-                    $newFilename = $filename . '.' . $extension;
+                    $newFilename = $filename .'_'. uniqid() . '.' . $extension;
                     $path = $file->storeAs('uploads', $newFilename, 'public');
                     $uploadedFiles[] = [
                         'name' => $newFilename,

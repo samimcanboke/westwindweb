@@ -109,8 +109,7 @@ class UserCertificateController extends Controller
             }
         }
 
-
-        $message .= "\n\nSadettin Gökcen\n\nWestwind-Eisenbahnservice\nGmbH\nBoelerstr. 153\n58097 Hagen\nTel: 0176 1513 5952\ninfo@westwind-eisenbahnservice.de\nwww.westwind-eisenbahnservice.de\nHandelsregister:\nHagen - HRB 12738\n\nSteuer-Nr.: 321/5766/1173\nUSt-ID-Nr.: DE361496739";
+        $message .= "<br><br>Sadettin Gökcen<br><br>Westwind-Eisenbahnservice<br>GmbH<br>Boelerstr. 153<br>58097 Hagen<br>Tel: 0176 1513 5952<br>info@westwind-eisenbahnservice.de<br>www.westwind-eisenbahnservice.de<br>Handelsregister:<br>Hagen - HRB 12738<br><br>Steuer-Nr.: 321/5766/1173<br>USt-ID-Nr.: DE361496739";
 
         $data = [
             'recipient' => $recipient,
