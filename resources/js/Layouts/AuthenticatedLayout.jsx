@@ -16,7 +16,7 @@ export default function Authenticated({ user, header, children }) {
 
     useEffect(()=>{
         getWaitConfirmedCount();
-        let id = setInterval(getWaitConfirmedCount, 15000);
+        let id = setInterval(getWaitConfirmedCount, 60000);
         return () => clearInterval(id);
     },[])
 
