@@ -1173,7 +1173,7 @@ class FinalizedJobsController extends Controller
 
 
 
-        $data['annual_leave_rights'] = $user->annual_leave_rights - $user->annualLeaves()
+        $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
             ->get()
             ->map(function($leave) {
@@ -1182,9 +1182,9 @@ class FinalizedJobsController extends Controller
                 return $leaveStart->diffInDays($leaveEnd) + 1;
             })
             ->sum() ?? 0;
+        $data['annual_leave_rights'] = sprintf('%02d', $annual_leave_rights);
 
-
-        $data['annual_leave_days'] = $user->annualLeaves()
+        $annual_leave_days = $user->annualLeaves()
             ->where(function($query) use ($startDate, $endDate) {
                 $query->where(function($subQuery) use ($startDate, $endDate) {
                     $subQuery->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
@@ -1201,7 +1201,11 @@ class FinalizedJobsController extends Controller
             })
             ->sum() ?? 0;
 
-        $data['annual_leave_left'] = $data['annual_leave_rights'] - $data['annual_leave_days'];
+        $data['annual_leave_days'] = sprintf('%02d', $annual_leave_days);
+
+
+
+        $data['annual_leave_left'] = sprintf('%02d', floatval($annual_leave_rights) - floatval($annual_leave_days));
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
