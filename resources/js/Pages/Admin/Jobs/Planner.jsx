@@ -345,12 +345,9 @@ export default function Planner({ auth }) {
                     canMove: false,
                     canResize: false,
                     itemProps: {
-                        onContextMenu: async (itemId) => {
+                        onContextMenu: async (event,itemId) => {
                             try {
-                                let id =
-                                    itemId.target.parentElement.getAttribute(
-                                        "dataitemid"
-                                    );
+                                let id = event.target.getAttribute("dataitemid").replace("a","");
 
                                 Swal.fire({
                                     title: "Eminmisin?",
