@@ -55,10 +55,6 @@ function UserCertificate({user}) {
         setIsLoading(true);
     }, [certificate, userInfo]);
 
-
-    useEffect(() => {
-        console.log(selectedCertificates);
-    }, [selectedCertificates]);
     const {
         getRootProps,
         getInputProps,
@@ -152,6 +148,7 @@ function UserCertificate({user}) {
 
         try {
             await axios.post("/send-email", {
+                name: user.name,
                 email,
                 recipient,
                 subject,
@@ -398,22 +395,12 @@ function UserCertificate({user}) {
                 <Modal.Body>
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            Email Adresi
-                        </p>
-                        <input
-                            className="w-full border-2 border-gray-300 rounded-md p-2"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="mt-2">
-                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                             Kime
                         </p>
                         <input
                             className="w-full border-2 border-gray-300 rounded-md p-2"
                             type="text"
+                            placeholder="test@test.com"
                             value={recipient}
                             onChange={(e) => setRecipient(e.target.value)}
                         />
@@ -425,6 +412,7 @@ function UserCertificate({user}) {
                         <input
                             className="w-full border-2 border-gray-300 rounded-md p-2"
                             type="text"
+                            placeholder="Subject"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
                         />

@@ -24,12 +24,111 @@ class UserCertificateController extends Controller
         //
     }
 
+    public function send_email(Request $request)
+    {
+        $request->validate([
+            'recipient' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
+            'files' => 'required',
+        ]);
+
+        $recipient = $request->input('recipient');
+        $subject = $request->input('subject');
+        $message = $request->input('message');
+        $files = $request->input('files');
+        $name = $request->input('name');
+
+        $name = str_replace(
+            ['ç', 'ğ', 'ı', 'ö', 'ş', 'ü', 'Ç', 'Ğ', 'İ', 'Ö', 'Ş', 'Ü', 'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü'],
+            ['c', 'g', 'i', 'o', 's', 'u', 'C', 'G', 'I', 'O', 'S', 'U', 'ae', 'oe', 'ue', 'ss', 'Ae', 'Oe', 'Ue'],
+            $name
+        );
+
+        $name = str_replace(' ', '_', $name);
+
+        $nameParts = explode('_', $name);
+        if (count($nameParts) > 1) {
+            $lastName = array_pop($nameParts);
+            array_unshift($nameParts, $lastName);
+            $name = implode('_', $nameParts);
+        }
+
+        $totalSize = 0;
+        foreach ($files as $file) {
+            $filePath = storage_path('app/public/uploads/' . basename($file));
+            if (file_exists($filePath)) {
+                $totalSize += filesize($filePath);
+            } else {
+                return response()->json(['error' => 'Dosya bulunamadı: ' . $filePath], 404);
+            }
+        }
+
+        if (count($files) == 1) {
+            // Tek dosya varsa direk ekle
+            $attachment = storage_path('app/public/uploads/' . basename($files[0]));
+        } else {
+            $zip = new \ZipArchive();
+            $zipFileName = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate.zip');
+
+            if ($zip->open($zipFileName, \ZipArchive::CREATE) === true) {
+                foreach ($files as $file) {
+                    $filePath = storage_path('app/public/uploads/' . basename($file));
+                    $zip->addFile($filePath, basename($file));
+                }
+                $zip->close();
+            }
+
+            if ($totalSize > 15 * 1024 * 1024) {
+                $zip1 = new \ZipArchive();
+                $zipFileName1 = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate_part1.zip');
+                $zip2 = new \ZipArchive();
+                $zipFileName2 = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate_part2.zip');
+
+                $zip1->open($zipFileName1, \ZipArchive::CREATE);
+                $zip2->open($zipFileName2, \ZipArchive::CREATE);
+
+                $currentSize = 0;
+                foreach ($files as $file) {
+                    $filePath = storage_path('app/public/uploads/' . basename($file));
+                    $fileSize = filesize($filePath);
+                    if ($currentSize + $fileSize <= 15 * 1024 * 1024) {
+                        $zip1->addFile($filePath, basename($file));
+                        $currentSize += $fileSize;
+                    } else {
+                        $zip2->addFile($filePath, basename($file));
+                    }
+                }
+
+                $zip1->close();
+                $zip2->close();
+
+            } else {
+                $attachment = $zipFileName;
+            }
+        }
+
+        $data = [
+            'recipient' => $recipient,
+            'subject' => $subject,
+            'message' => $message,
+        ];
+
+        Mail::send([], [], function ($mail) use ($data, $attachment) {
+            $mail->to($data['recipient'])
+                ->subject($data['subject'])
+                ->setBody($data['message'], 'text/plain')
+                ->attach($attachment);
+        });
+
+        return response()->json(['success' => 'Mail başarıyla gönderildi.']);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-
 
         $request->validate([
             'certificate_id' => 'required',

@@ -309,6 +309,8 @@ Route::get('/testroute', function() {
     Mail::to('samimcanboke@hotmail.com')->send(new MyTestEmail($name));
 });
 
+Route::post('/send-email', [UserCertificateController::class, 'send_email'])->middleware(['auth', 'verified'])->name('send-email');
+
 Route::get('/test-email', function () {
     $user = \App\Models\User::first(); // Örneğin ilk kullanıcıya mail gönderelim
     $asd = Mail::to($user->email)->send(new WelcomeMail($user));
