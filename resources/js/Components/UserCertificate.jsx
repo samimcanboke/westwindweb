@@ -484,6 +484,7 @@ function UserCertificate({user}) {
                                             disabled={!certificate.file}
                                             checked={certificate.file && selectedCertificates.includes(certificate.id)}
                                             onChange={() => handleCertificateSelect(certificate.id)}
+                                            className="disabled:bg-gray-400"
                                         />
                                     </td>
                                     {certificate.user_id ? (
