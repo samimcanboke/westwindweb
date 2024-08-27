@@ -1197,7 +1197,7 @@ class FinalizedJobsController extends Controller
                 $leaveEnd = Carbon::parse($leave->end_date);
                 $overlapStart = $leaveStart->greaterThan($startDate) ? $leaveStart : $startDate;
                 $overlapEnd = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
-                return $overlapStart->diffInDays($overlapEnd) + 1;
+                return $overlapStart->diffInDays($overlapEnd);
             })
             ->sum() ?? 0;
 
@@ -1461,8 +1461,8 @@ class FinalizedJobsController extends Controller
 
 
 
-        $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req);
-        $data['left_hours'] = $total_hours_req - $sub_total < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - $sub_total), ($total_hours_req - $sub_total - floor($total_hours_req - $sub_total)) * 60);
+        $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
+        $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8))) * 60);
 
         if ($data && $finalized_jobs->count() > 0) {
             try {
