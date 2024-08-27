@@ -135,7 +135,7 @@ function UserCertificate({user}) {
 
     const handleCertificateSelect = (certificateId) => {
         setSelectedCertificates((prevSelected) =>
-            prevSelected.includes(certificateId)
+            prevSelected.some((id) => id === certificateId)
                 ? prevSelected.filter((id) => id !== certificateId)
                 : [...prevSelected, certificateId]
         );
