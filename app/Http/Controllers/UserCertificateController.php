@@ -108,7 +108,7 @@ class UserCertificateController extends Controller
                 $attachment = $zipFileName;
             }
         }
-
+        $message = str_replace("\n", "<br>", $message);
         $message .= "<br><br>Sadettin Gökcen<br><br>Westwind-Eisenbahnservice<br>GmbH<br>Boelerstr. 153<br>58097 Hagen<br>Tel: 0176 1513 5952<br>info@westwind-eisenbahnservice.de<br>www.westwind-eisenbahnservice.de<br>Handelsregister:<br>Hagen - HRB 12738<br><br>Steuer-Nr.: 321/5766/1173<br>USt-ID-Nr.: DE361496739";
 
         $data = [
