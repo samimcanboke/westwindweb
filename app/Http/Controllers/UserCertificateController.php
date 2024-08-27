@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserCertificate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserCertificateController extends Controller
 {
@@ -108,6 +109,9 @@ class UserCertificateController extends Controller
             }
         }
 
+
+        $message .= "\n\nSadettin Gökcen\n\nWestwind-Eisenbahnservice\nGmbH\nBoelerstr. 153\n58097 Hagen\nTel: 0176 1513 5952\ninfo@westwind-eisenbahnservice.de\nwww.westwind-eisenbahnservice.de\nHandelsregister:\nHagen - HRB 12738\n\nSteuer-Nr.: 321/5766/1173\nUSt-ID-Nr.: DE361496739";
+
         $data = [
             'recipient' => $recipient,
             'subject' => $subject,
@@ -117,7 +121,7 @@ class UserCertificateController extends Controller
         Mail::send([], [], function ($mail) use ($data, $attachment) {
             $mail->to($data['recipient'])
                 ->subject($data['subject'])
-                ->setBody($data['message'], 'text/plain')
+                ->html($data['message'])
                 ->attach($attachment);
         });
 
