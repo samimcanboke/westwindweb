@@ -283,8 +283,14 @@ export default function EditUser({ auth, user_id }) {
         getAggreements();
         getCertificates();
         getUserCertificates();
-
-        return () => clearInterval(interval);
+        /*const interval = setInterval(() => {
+            getBonus();
+            getAdvances();
+            getHourBanks();
+            getProfessions();
+            getUserBahnCards();
+        }, 100000);
+        return () => clearInterval(interval);*/
     }, []);
 
     return (
