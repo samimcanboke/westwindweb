@@ -397,16 +397,6 @@ function UserCertificate({user}) {
                             "error"
                         );
                         return;
-                    } else {
-                        console.log(selectedFiles);
-                        if(selectedFiles.filter(file => file === null || file === undefined).length > 0 ){
-                            Swal.fire(
-                                "Hata",
-                                "Seçtiklerinizden birinde dosya bulunmuyor.",
-                                "error"
-                            );
-                            return;
-                        }
                     }
                     setShowEmailModal(true);
                 }}
