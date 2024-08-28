@@ -29,7 +29,7 @@ class UserCertificateController extends Controller
     {
 
         $request->validate([
-            'recipient' => 'required|email',
+            'recipient' => 'required',
             'subject' => 'required',
             'message' => 'required',
             'files' => 'required',
@@ -118,9 +118,14 @@ class UserCertificateController extends Controller
             'subject' => $subject,
             'message' => $message,
         ];
-        Mail::send([], [], function ($mail) use ($data, $attachments) {
-            $mail->to($data['recipient'])
-                ->subject($data['subject'])
+
+        $recipients = explode(';', $recipient);
+
+        Mail::send([], [], function ($mail) use ($data, $attachments, $recipients) {
+            foreach ($recipients as $recipient) {
+                $mail->to(trim($recipient));
+            }
+            $mail->subject($data['subject'])
                 ->html($data['message']);
             foreach ($attachments as $attachment) {
                 $mail->attach($attachment);
