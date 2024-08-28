@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_salary_reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->string('file');
+            $table->date('date');
             $table->timestamps();
         });
     }

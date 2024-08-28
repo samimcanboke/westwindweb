@@ -15,6 +15,8 @@ function GehaltsBerichte({user}) {
         const formData = new FormData();
         acceptedFiles.forEach((file) => {
             formData.append("files[]", file);
+            formData.append("date", moment(agreement.date).format("YYYY-MM-DD"));
+            formData.append("user_id", userInfo.name);
         });
 
         try {
@@ -60,16 +62,21 @@ function GehaltsBerichte({user}) {
 
     }
 
+    const getReports = async () => {
+        const {data: reports} = await axios.get(route("user.salary.show", user.id));
+        setReports(reports);
+    }
+
     const saveReport = async () => {
+        report.user_id = user.id;
         let response = await axios.post(
-            route("user.report.store"),
+            route("user.salary.store"),
             report
         );
-        if (response.data.success) {
+        console.log(response.data);
+        if (response.data.status === "success") {
             setReport({});
             setShowModal(false);
-            mergeReports();
-
         }
     };
 
@@ -88,15 +95,16 @@ function GehaltsBerichte({user}) {
             file: null,
             user_id: null,
         });
-        mergeReports();
         if(report.id){
-            axios.delete(route("user.report.destroy", report.id));
+            axios.delete(route("user.salary.destroy", report.id));
         }
+        getReports()
     }
 
 
     useEffect(() => {
         getUser();
+        getReports();
     }, []);
 
     return (
@@ -109,6 +117,13 @@ function GehaltsBerichte({user}) {
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                             Gehaltsbericht
                         </p>
+
+                        <input
+                            type="month"
+                            value={report.date}
+                            onChange={(e) => setReport({ ...report, date: e.target.value })}
+                            placeholder="Monat und Jahr auswählen"
+                        />
 
                     </div>
 
@@ -165,11 +180,21 @@ function GehaltsBerichte({user}) {
             </Modal>
 
             <div className="overflow-x-auto">
+                <div className="flex justify-end mb-4">
+                    <Button
+                        onClick={() => {
+                           setShowModal(true);
+                        }}
+                    >
+                        Yeni Ekle
+                    </Button>
+                </div>
+
                 <table className="min-w-full bg-white">
                     <thead>
                         <tr>
                             <th className="py-2 px-4 border-b">
-                                Gehaltsbericht Name
+                                Gehaltsdatum
                             </th>
                             <th className="py-2 px-4 border-b">Datei</th>
                             <th className="py-2 px-4 border-b">Aktionen</th>
@@ -182,9 +207,9 @@ function GehaltsBerichte({user}) {
                                     {report.user_id ? (
                                         <>
                                             <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 min-w-[250px]">
-                                                {report.name}
+                                                {moment(report.date).format("MMMM YYYY")}
                                             </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2">
+                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 justify-center items-center">
                                                 {report.file ? (
                                                     <>
                                                     <a

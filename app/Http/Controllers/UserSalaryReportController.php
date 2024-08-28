@@ -10,9 +10,10 @@ class UserSalaryReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($user_id)
     {
-        //
+        $reports = UserSalaryReport::where('user_id', $user_id)->get();
+        return response()->json($reports);
     }
 
     /**
@@ -28,7 +29,19 @@ class UserSalaryReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required',
+            'file' => 'required',
+            'date' => 'required|date',
+        ]);
+
+        $report = UserSalaryReport::create([
+            'user_id' => $request->user_id,
+            'file' => $request->file,
+            'date' => $request->date,
+        ]);
+
+        return response()->json(['status' => 'success', 'report' => $report]);
     }
 
     /**
@@ -58,8 +71,10 @@ class UserSalaryReportController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserSalaryReport $userSalaryReport)
+    public function destroy($id)
     {
-        //
+        $userSalaryReport = UserSalaryReport::where('id', $id)->first();
+        $userSalaryReport->delete();
+        return response()->json(['message' => 'Report deleted successfully']);
     }
 }

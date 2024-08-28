@@ -26,6 +26,7 @@ use App\Http\Controllers\AggreementController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\UserCertificateController;
 use App\Http\Controllers\UsersAggreementsController;
+use App\Http\Controllers\UserSalaryReportController;
 
 use App\Events\UserRegistered;
 
@@ -294,6 +295,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/get_user_bonus/{user_id}', [UsersBonusController::class, 'show'])->middleware(['auth', 'verified'])->name('get-user-bonus');
 Route::post('/add-bonus/{user_id}', [UsersBonusController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-bonus');
 Route::delete('/delete-bonus/{bonus_id}', [UsersBonusController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-bonus');
+
+Route::get('user-salary-reports/{user_id}', [UserSalaryReportController::class, 'index'])->name('user.salary.show');
+Route::post('user-salary-reports', [UserSalaryReportController::class, 'store'])->name('user.salary.store');
+Route::delete('user-salary-reports/{id}', [UserSalaryReportController::class, 'destroy'])->name('user.salary.destroy');
 
 Route::get('/get_user_advances/{user_id}', [UsersAdvanceController::class, 'show'])->middleware(['auth', 'verified'])->name('get-user-advances');
 Route::post('/add-advances/{user_id}', [UsersAdvanceController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-advances');
