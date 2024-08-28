@@ -7,7 +7,6 @@ import BahnCard from "@/Components/BahnCard";
 import Select from "react-select";
 import UserCertificate from "@/Components/UserCertificate";
 import UserAgreement from "@/Components/UserAgreement";
-
 import {
     Datepicker,
     ToggleSwitch,
@@ -20,7 +19,6 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import moment from "moment";
 import CreatableSelect from "react-select/creatable";
-
 import {
     HiAdjustments,
     HiClipboardList,
@@ -186,7 +184,6 @@ export default function EditUser({ auth, user_id }) {
         bank_iban: yup
             .string()
             .required("IBAN gerekli")
-            .transform((value) => value.replace(/\s+/g, ""))
             .matches(/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Geçerli bir IBAN girin"),
     });
 
@@ -446,7 +443,7 @@ export default function EditUser({ auth, user_id }) {
                                 type: "",
                                 date: "",
                             }}
-                            validationSchema={hourBankValidationSchema}
+                            validate={hourBankValidationSchema}
                             onSubmit={(
                                 values,
                                 { setSubmitting, setErrors }
@@ -571,7 +568,7 @@ export default function EditUser({ auth, user_id }) {
                                     ? true
                                     : false,
                         }}
-                        validate={validationSchema}
+                        validationSchema={validationSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
                             axios
                                 .post(route("edit.inside"), values)
