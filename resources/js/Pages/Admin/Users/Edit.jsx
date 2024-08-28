@@ -174,7 +174,7 @@ export default function EditUser({ auth, user_id }) {
             setHourBanks(hourBanks.filter((item) => item.id !== hourBank.id));
         });
     };
-
+/*
     const validationSchema = yup.object().shape({
         driver_id: yup.string().required(),
         name: yup.string().required(),
@@ -186,7 +186,7 @@ export default function EditUser({ auth, user_id }) {
             .string()
             .required("IBAN gerekli")
     });
-
+*/
     const getProfessions = () => {
         axios
             .get(route("professions"))
