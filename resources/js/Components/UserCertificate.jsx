@@ -158,8 +158,7 @@ function UserCertificate({user}) {
                 message,
                 files: selectedFiles,
             });
-            console.log(test.error);
-            if(test.response.data.error){
+            if(test.data.error){
                 Swal.fire(
                     "Hata",
                     test.response.data.error,
@@ -173,8 +172,9 @@ function UserCertificate({user}) {
                 );
             }
             setEmailSending(false);
-            setShowEmailModal(false);
+            setShowModal(false);
             setSelectedCertificates([]);
+            setShowEmailModal(false);
             setEmail("");
             setRecipient("");
             setSubject("");
@@ -186,9 +186,10 @@ function UserCertificate({user}) {
                     error.response.data.error,
                     "error"
                 );
-                setShowEmailModal(false);
+                setShowModal(false);
                 setEmailSending(false);
                 setSelectedCertificates([]);
+                setShowEmailModal(false);
                 setEmail("");
                 setRecipient("");
                 setSubject("");
