@@ -4,6 +4,8 @@ import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { Spinner } from "flowbite-react";
+
 
 function UserCertificate({user}) {
     const [mergedCertificates, setMergedCertificates] = useState([]);
@@ -18,6 +20,7 @@ function UserCertificate({user}) {
     const [recipient, setRecipient] = useState("");
     const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
+    const [emailSending, setEmailSending] = useState(false);
 
     const uploadFiles = async (acceptedFiles,certificate,userInfo) => {
         const formData = new FormData();
@@ -141,7 +144,7 @@ function UserCertificate({user}) {
     };
 
     const sendEmail = async () => {
-
+        setEmailSending(true);
         const selectedFiles = mergedCertificates
             .filter((cert) => selectedCertificates.includes(cert.id))
             .map((cert) => cert.id);
@@ -169,6 +172,7 @@ function UserCertificate({user}) {
                     "success"
                 );
             }
+            setEmailSending(false);
             setShowEmailModal(false);
             setSelectedCertificates([]);
             setEmail("");
@@ -183,7 +187,12 @@ function UserCertificate({user}) {
                     "error"
                 );
                 setShowEmailModal(false);
+                setEmailSending(false);
                 setSelectedCertificates([]);
+                setEmail("");
+                setRecipient("");
+                setSubject("");
+                setMessage("");
             }
             console.error("Email gönderme hatası:", error);
         }
@@ -443,7 +452,11 @@ function UserCertificate({user}) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={sendEmail}>Gönder</Button>
+                    {emailSending ? (
+                        <Spinner aria-label="Gönderiliyor..." />
+                    ) : (
+                        <Button onClick={sendEmail}>Gönder</Button>
+                    )}
                     <Button color="gray" onClick={() => setShowEmailModal(false)}>
                         İptal
                     </Button>
