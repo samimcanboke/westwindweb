@@ -568,7 +568,7 @@ export default function EditUser({ auth, user_id }) {
                                     ? true
                                     : false,
                         }}
-                        validationSchema={validationSchema}
+                        //validationSchema={validationSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
                             axios
                                 .post(route("edit.inside"), values)
