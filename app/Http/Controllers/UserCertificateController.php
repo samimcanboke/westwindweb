@@ -70,22 +70,45 @@ class UserCertificateController extends Controller
             $name = implode('_', $nameParts);
         }
 
-        if (count($files) == 1) {
-            // Tek dosya varsa direk ekle
-            $attachment = storage_path('app/public/uploads/' . basename($files[0]));
-        } else {
-            $zip = new \ZipArchive();
-            $zipFileName = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate.zip');
+        $totalSize = 0;
+        $attachments = [];
+        foreach ($newFiles as $file) {
+            $totalSize += filesize($file);
+            $attachments[] = $file;
+        }
 
-            if ($zip->open($zipFileName, \ZipArchive::CREATE) === true) {
-                foreach ($files as $file) {
-                    $filePath = storage_path('app/public/uploads/' . basename($file));
-                    $zip->addFile($filePath, basename($file));
+        if ($totalSize > 20 * 1024 * 1024) { // 20 MB
+            $chunks = array_chunk($attachments, ceil(count($attachments) / 2));
+            foreach ($chunks as $index => $chunk) {
+                $zip = new \ZipArchive();
+                $zipFileName = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate_Part' . ($index + 1) . '.zip');
+
+                if ($zip->open($zipFileName, \ZipArchive::CREATE) === true) {
+                    foreach ($chunk as $file) {
+                        $zip->addFile($file, basename($file));
+                    }
+                    $zip->close();
                 }
-                $zip->close();
-            }
 
-            $attachment = $zipFileName;
+                $attachments[$index] = $zipFileName;
+            }
+        } else {
+            if (count($newFiles) == 1) {
+                // Tek dosya varsa direk ekle
+                $attachments = [$newFiles[0]];
+            } else {
+                $zip = new \ZipArchive();
+                $zipFileName = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate.zip');
+
+                if ($zip->open($zipFileName, \ZipArchive::CREATE) === true) {
+                    foreach ($newFiles as $file) {
+                        $zip->addFile($file, basename($file));
+                    }
+                    $zip->close();
+                }
+
+                $attachments = [$zipFileName];
+            }
         }
         $message = str_replace("\n", "<br>", $message);
         $message .= "<br><br>Sadettin Gökcen<br><br>Westwind-Eisenbahnservice<br>GmbH<br>Boelerstr. 153<br>58097 Hagen<br>Tel: 0176 1513 5952<br>info@westwind-eisenbahnservice.de<br>www.westwind-eisenbahnservice.de<br>Handelsregister:<br>Hagen - HRB 12738<br><br>Steuer-Nr.: 321/5766/1173<br>USt-ID-Nr.: DE361496739";
@@ -95,13 +118,22 @@ class UserCertificateController extends Controller
             'subject' => $subject,
             'message' => $message,
         ];
-
-        Mail::send([], [], function ($mail) use ($data, $attachment) {
+        Mail::send([], [], function ($mail) use ($data, $attachments) {
             $mail->to($data['recipient'])
                 ->subject($data['subject'])
-                ->html($data['message'])
-                ->attach($attachment);
+                ->html($data['message']);
+            foreach ($attachments as $attachment) {
+                $mail->attach($attachment);
+            }
         });
+
+        foreach ($attachments as $attachment) {
+            if(filetype($attachment) == "zip"){
+                if (file_exists($attachment)) {
+                    unlink($attachment);
+                }
+            }
+        }
 
         return response()->json(['success' => 'Mail başarıyla gönderildi.']);
     }
