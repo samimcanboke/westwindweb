@@ -147,7 +147,7 @@ function UserCertificate({user}) {
             .map((cert) => cert.file);
 
         try {
-            await axios.post("/send-email", {
+            let test = await axios.post("/send-email", {
                 name: user.name,
                 email,
                 recipient,
@@ -155,6 +155,20 @@ function UserCertificate({user}) {
                 message,
                 files: selectedFiles,
             });
+            console.log(test.error);
+            if(test.response.data.error){
+                Swal.fire(
+                    "Hata",
+                    test.response.data.error,
+                    "error"
+                );
+            } else {
+                Swal.fire(
+                    "Başarılı",
+                    "Mail başarıyla gönderildi.",
+                    "success"
+                );
+            }
             setShowEmailModal(false);
             setSelectedCertificates([]);
             setEmail("");
@@ -162,6 +176,15 @@ function UserCertificate({user}) {
             setSubject("");
             setMessage("");
         } catch (error) {
+            if(error.response.data.error){
+                Swal.fire(
+                    "Hata",
+                    error.response.data.error,
+                    "error"
+                );
+                setShowEmailModal(false);
+                setSelectedCertificates([]);
+            }
             console.error("Email gönderme hatası:", error);
         }
     };
@@ -375,6 +398,7 @@ function UserCertificate({user}) {
                         );
                         return;
                     } else {
+                        console.log(selectedFiles);
                         if(selectedFiles.filter(file => file === null || file === undefined).length > 0 ){
                             Swal.fire(
                                 "Hata",
