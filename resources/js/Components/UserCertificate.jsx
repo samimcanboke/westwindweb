@@ -144,7 +144,7 @@ function UserCertificate({user}) {
 
         const selectedFiles = mergedCertificates
             .filter((cert) => selectedCertificates.includes(cert.id))
-            .map((cert) => cert.file);
+            .map((cert) => cert.id);
 
         try {
             let test = await axios.post("/send-email", {
@@ -388,8 +388,7 @@ function UserCertificate({user}) {
                 onClick={() => {
                     const selectedFiles = mergedCertificates
                     .filter((cert) => selectedCertificates.includes(cert.id))
-                    .map((cert) => cert.file);
-
+                    .map((cert) => cert.id);
                     if(selectedCertificates.length === 0){
                         Swal.fire(
                             "Hata",
@@ -398,6 +397,7 @@ function UserCertificate({user}) {
                         );
                         return;
                     }
+                    console.log(selectedFiles);
                     setShowEmailModal(true);
                 }}
             >

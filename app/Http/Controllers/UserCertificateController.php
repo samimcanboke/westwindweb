@@ -27,6 +27,7 @@ class UserCertificateController extends Controller
 
     public function send_email(Request $request)
     {
+
         $request->validate([
             'recipient' => 'required|email',
             'subject' => 'required',
@@ -37,7 +38,9 @@ class UserCertificateController extends Controller
         $recipient = $request->input('recipient');
         $subject = $request->input('subject');
         $message = $request->input('message');
-        $files = $request->input('files');
+        $fileIds = $request->input('files');
+        $files = UserCertificate::whereIn('id', $fileIds)->pluck('file')->toArray();
+        //$files = UserCertificate::whereIn('id', $fileIds)->get();
         $name = $request->input('name');
 
         $name = str_replace(
@@ -46,6 +49,18 @@ class UserCertificateController extends Controller
             $name
         );
 
+        $newFiles = [];
+
+        foreach($files as $file){
+        $filePath = storage_path('app/public/uploads/' . basename($file));
+        if (!file_exists($filePath)) {
+            $fileContent = file_get_contents($file);
+            file_put_contents($filePath, $fileContent);
+        }
+        $newFiles[] = $filePath;
+        }
+
+
         $name = str_replace(' ', '_', $name);
 
         $nameParts = explode('_', $name);
@@ -53,16 +68,6 @@ class UserCertificateController extends Controller
             $lastName = array_pop($nameParts);
             array_unshift($nameParts, $lastName);
             $name = implode('_', $nameParts);
-        }
-
-        $totalSize = 0;
-        foreach ($files as $file) {
-            $filePath = storage_path('app/public/uploads/' . basename($file));
-            if (file_exists($filePath)) {
-                $totalSize += filesize($filePath);
-            } else {
-                return response()->json(['error' => 'Dosya bulunamadı: ' . $filePath], 404);
-            }
         }
 
         if (count($files) == 1) {
@@ -80,33 +85,7 @@ class UserCertificateController extends Controller
                 $zip->close();
             }
 
-            if ($totalSize > 15 * 1024 * 1024) {
-                $zip1 = new \ZipArchive();
-                $zipFileName1 = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate_part1.zip');
-                $zip2 = new \ZipArchive();
-                $zipFileName2 = storage_path('app/public/uploads/00_Tfz_' . $name . '_Zertifikate_part2.zip');
-
-                $zip1->open($zipFileName1, \ZipArchive::CREATE);
-                $zip2->open($zipFileName2, \ZipArchive::CREATE);
-
-                $currentSize = 0;
-                foreach ($files as $file) {
-                    $filePath = storage_path('app/public/uploads/' . basename($file));
-                    $fileSize = filesize($filePath);
-                    if ($currentSize + $fileSize <= 15 * 1024 * 1024) {
-                        $zip1->addFile($filePath, basename($file));
-                        $currentSize += $fileSize;
-                    } else {
-                        $zip2->addFile($filePath, basename($file));
-                    }
-                }
-
-                $zip1->close();
-                $zip2->close();
-
-            } else {
-                $attachment = $zipFileName;
-            }
+            $attachment = $zipFileName;
         }
         $message = str_replace("\n", "<br>", $message);
         $message .= "<br><br>Sadettin Gökcen<br><br>Westwind-Eisenbahnservice<br>GmbH<br>Boelerstr. 153<br>58097 Hagen<br>Tel: 0176 1513 5952<br>info@westwind-eisenbahnservice.de<br>www.westwind-eisenbahnservice.de<br>Handelsregister:<br>Hagen - HRB 12738<br><br>Steuer-Nr.: 321/5766/1173<br>USt-ID-Nr.: DE361496739";
