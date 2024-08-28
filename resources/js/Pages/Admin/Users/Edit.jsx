@@ -7,6 +7,7 @@ import BahnCard from "@/Components/BahnCard";
 import Select from "react-select";
 import UserCertificate from "@/Components/UserCertificate";
 import UserAgreement from "@/Components/UserAgreement";
+import GehaltsBerichte from "@/Components/GehaltsBerichte";
 import {
     Datepicker,
     ToggleSwitch,
@@ -184,7 +185,6 @@ export default function EditUser({ auth, user_id }) {
         bank_iban: yup
             .string()
             .required("IBAN gerekli")
-            .matches(/^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/, "Geçerli bir IBAN girin"),
     });
 
     const getProfessions = () => {
@@ -2007,14 +2007,7 @@ export default function EditUser({ auth, user_id }) {
                                         title="Gehaltsberichte"
                                         icon={HiDocumentReport}
                                     >
-                                        {userBahnCard && (
-                                            <div className="flex justify-center">
-                                                <BahnCard
-                                                    bahnCard={userBahnCard}
-                                                    user={user}
-                                                />
-                                            </div>
-                                        )}
+                                        <GehaltsBerichte  user={user} />
                                     </Tabs.Item>
                                 </Tabs>
                                 <Form>
