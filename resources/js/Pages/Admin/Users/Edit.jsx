@@ -443,7 +443,7 @@ export default function EditUser({ auth, user_id }) {
                                 type: "",
                                 date: "",
                             }}
-                            validate={hourBankValidationSchema}
+                            //validate={hourBankValidationSchema}
                             onSubmit={(
                                 values,
                                 { setSubmitting, setErrors }
