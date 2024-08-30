@@ -118,8 +118,10 @@ export default function EditUser({ auth, id }) {
                                         }
                                         value={values.start_time}
                                         onChange={(e) => {
+                                            console.log(e.target.value);
                                             const startTime = e.target.value;
                                             setFieldValue("start_time", startTime);
+
 
                                             const [hours, minutes] = startTime.split(':');
                                             const endTime = new Date();
@@ -129,13 +131,14 @@ export default function EditUser({ auth, id }) {
                                             const endHours = endTime.getHours().toString().padStart(2, '0');
                                             const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
                                             setFieldValue("end_time", `${endHours}:${endMinutes}`);
-
-                                            const startDate = new Date(values.start_date);
-                                            const endDate = new Date(startDate);
-                                            if (endTime.getDate() !== startDate.getDate()) {
-                                                endDate.setDate(startDate.getDate() + 1);
+                                            const startDateTime = moment(`${values.start_date}T${values.start_time}`);
+                                            const endDateTime = moment(`${values.start_date}T${values.end_time}`);
+                                            console.log(startDateTime.toDate(), endDateTime.toDate());
+                                            if (endDateTime.isBefore(startDateTime)) {
+                                                endDateTime.add(1, 'day');
                                             }
-                                            setFieldValue("end_date", endDate.toISOString().split('T')[0]);
+                                            console.log(endDateTime.toISOString().split('T')[0]);
+                                            setFieldValue("end_date", endDateTime.toISOString().split('T')[0]);
                                         }}
                                     />
                                 </div>

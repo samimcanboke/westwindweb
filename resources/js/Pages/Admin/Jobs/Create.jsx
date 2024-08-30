@@ -129,6 +129,9 @@ export default function Dashboard({ auth }) {
                                         }
                                         value={values.start_time}
                                         onChange={(e) => {
+                                            setFieldValue("start_time", e.target.value);
+                                        }}
+                                        onBlur={(e) => {
                                             const startTime = e.target.value;
                                             setFieldValue("start_time", startTime);
 
@@ -140,13 +143,14 @@ export default function Dashboard({ auth }) {
                                             const endHours = endTime.getHours().toString().padStart(2, '0');
                                             const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
                                             setFieldValue("end_time", `${endHours}:${endMinutes}`);
-
-                                            const startDate = new Date(values.start_date);
-                                            const endDate = new Date(startDate);
-                                            if (endTime.getDate() !== startDate.getDate()) {
-                                                endDate.setDate(startDate.getDate() + 1);
+                                            const startDateTime = moment(`${values.start_date}T${values.start_time}`);
+                                            const endDateTime = moment(`${values.start_date}T${values.end_time}`);
+                                            if (endDateTime.isBefore(startDateTime)) {
+                                                endDateTime.add(1, 'day');
                                             }
-                                            setFieldValue("end_date", endDate.toISOString().split('T')[0]);
+                                            console.log(startDateTime.toDate(), endDateTime.toDate());
+
+                                            setFieldValue("end_date", endDateTime.toISOString().split('T')[0]);
                                         }}
                                     />
                                     <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
