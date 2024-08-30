@@ -685,6 +685,7 @@ class FinalizedJobsController extends Controller
             $total_sunday_holiday_hours = new DateInterval('PT0H0M');
             $i = 0;
             $feeding_fee = 0;
+
             foreach ($finalized_jobs as $index => $finalized_job) {
                 try {
 
@@ -744,6 +745,7 @@ class FinalizedJobsController extends Controller
                     } else {
                         $total_breaks = "00:00";
                     }
+
                     $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
                     $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
 
@@ -751,6 +753,8 @@ class FinalizedJobsController extends Controller
                 } catch (\Exception $ex) {
                     dd($ex);
                 }
+
+
 
                 $feeding_fee += $finalized_job->feeding_fee;
                 if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel) {
@@ -1003,6 +1007,9 @@ class FinalizedJobsController extends Controller
                 }
             }
             $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
+            if($user->id == 12){
+                dd($data['rows'][$user->id]);
+            }
             if($user->id == 4 || $user->id == 9){
                 $data['rows'][$user->id]['workhours'] = "160,00";
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
