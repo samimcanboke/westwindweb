@@ -19,13 +19,13 @@ const initialValues = {
     start_time: "",
     end_date: "",
     end_time: "",
-    zug_nummer: "",
-    locomotive_nummer: "",
+    zug_nummer: "X",
+    locomotive_nummer: "193",
     tour_name: "",
     from: "",
     to: "",
     description: "",
-    client: 0,
+    client: 1,
     extra: false,
 };
 
@@ -239,7 +239,7 @@ export default function Dashboard({ auth }) {
                                     onChange={(e) => {
                                         setFieldValue("zug_nummer", e.target.value);
                                     }}
-                                    value={values.zug_nummer ? values.zug_nummer : "X"}
+                                    value={values.zug_nummer}
                                 />
                                 {errors.zug_nummer && touched.zug_nummer && (
                                     <p className="text-red-500">
@@ -263,7 +263,7 @@ export default function Dashboard({ auth }) {
                                     onChange={(e) => {
                                         setFieldValue("locomotive_nummer", e.target.value);
                                     }}
-                                    value={values.locomotive_nummer ? values.locomotive_nummer : "193"}
+                                    value={values.locomotive_nummer}
                                 />
                                 {errors.locomotive_nummer && touched.locomotive_nummer && (
                                     <p className="text-red-500">
@@ -357,7 +357,7 @@ export default function Dashboard({ auth }) {
                                     id="client"
                                     name="client"
                                     required
-                                    value={values.client ? values.client : 1}
+                                    value={values.client}
                                     onChange={(e) => {
                                         setFieldValue("client", e.target.value);
                                     }}

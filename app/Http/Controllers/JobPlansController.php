@@ -59,6 +59,7 @@ class JobPlansController extends Controller
         $jobPlan->to = $request->to;
         $jobPlan->from = $request->from;
         $jobPlan->client_id = $request->client;
+        $jobPlan->extra = $request->extra;
         $jobPlan->save();
 
         return response()->json(["status" => true, "jobPlan" => $jobPlan]);
@@ -86,7 +87,7 @@ class JobPlansController extends Controller
      */
     public function edit(JobPlans $client)
     {
-   
+
         //
     }
 
@@ -94,9 +95,9 @@ class JobPlansController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, JobPlans $plans)
-    {  
-        $jobPlan = JobPlans::where('id',$request->id)->first();  
-        $oldJobPlane = $jobPlan;    
+    {
+        $jobPlan = JobPlans::where('id',$request->id)->first();
+        $oldJobPlane = $jobPlan;
         $jobPlan->start_date = Carbon::createFromDate($request->start_date)->format('Y-m-d');
         $jobPlan->end_date = Carbon::createFromDate($request->end_date)->format('Y-m-d');
         $jobPlan->start_time = $request->start_time;
@@ -109,6 +110,7 @@ class JobPlansController extends Controller
         $jobPlan->from = $request->from;
         $jobPlan->client_id = $request->client_id;
         $jobPlan->user_id = $request->user_id;
+        $jobPlan->extra = $request->extra;
         $jobPlan->save();
         if($jobPlan->user_id != null){
             Mail::to($jobPlan->user->email)->send(new JobPlanChangeMail($jobPlan, $oldJobPlane));
@@ -118,7 +120,7 @@ class JobPlansController extends Controller
 
 
     public function leave_job(Request $request){
-        $jobPlan = JobPlans::where('id',$request->id)->first();      
+        $jobPlan = JobPlans::where('id',$request->id)->first();
         if($request->user_id == null){
             if($jobPlan->user_id != null){
                 Mail::to($jobPlan->user->email)->send(new JobPlanDeleteMail($jobPlan));

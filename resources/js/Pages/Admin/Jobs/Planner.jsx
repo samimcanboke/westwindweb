@@ -246,7 +246,7 @@ export default function Planner({ auth }) {
                                 },
                                 className: "jobs",
                                 style: {
-                                    background: "green",
+                                    background: job.extra ? "red" : "green",
                                     zIndex: 50,
                                     minHeight: 40,
                                 },
