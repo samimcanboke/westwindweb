@@ -479,7 +479,7 @@ export default function Planner({ auth }) {
                     canMove: false,
                     canResize: false,
                     itemProps: {
-                        type: "userFinalizedJob",
+                        type: "job",
                         className: "weekend",
                         style: {
                             background: "#80808080",

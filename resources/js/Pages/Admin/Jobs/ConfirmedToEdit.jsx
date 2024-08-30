@@ -107,15 +107,16 @@ export default function ConfirmedToEdit({ auth }) {
 
     useEffect(() => {
         getUnconfirmed();
-    }, [filter.month, filter.year,filter.text]);
-
+    }, [filter.month, filter.year, filter.text]);
 
     const getUnconfirmed = async () => {
-        await axios.get("/data-confirmed-jobs", { params: filter }).then((res) => {
-            setData(res.data);
-            setLoading(false);
-            console.log(res.data);
-        });
+        await axios
+            .get("/data-confirmed-jobs", { params: filter })
+            .then((res) => {
+                setData(res.data);
+                setLoading(false);
+                console.log(res.data);
+            });
     };
 
     useEffect(() => {
@@ -159,7 +160,10 @@ export default function ConfirmedToEdit({ auth }) {
                                         id="yearFilter"
                                         name="yearFilter"
                                         className="placeholder:italic placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        value={filter.year || moment().format("YYYY")}
+                                        value={
+                                            filter.year ||
+                                            moment().format("YYYY")
+                                        }
                                         onChange={(e) => {
                                             setFilter({
                                                 ...filter,
@@ -177,7 +181,10 @@ export default function ConfirmedToEdit({ auth }) {
                                         id="monthFilter"
                                         name="monthFilter"
                                         className="placeholder:italic placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        value={filter.month || moment().format("MM")}
+                                        value={
+                                            filter.month ||
+                                            moment().format("MM")
+                                        }
                                         onChange={(e) => {
                                             setFilter({
                                                 ...filter,
@@ -185,7 +192,9 @@ export default function ConfirmedToEdit({ auth }) {
                                             });
                                         }}
                                     >
-                                        <option value="">Monat wählen...</option>
+                                        <option value="">
+                                            Monat wählen...
+                                        </option>
                                         <option value="01">Januar</option>
                                         <option value="02">Februar</option>
                                         <option value="03">März</option>
@@ -291,7 +300,6 @@ export default function ConfirmedToEdit({ auth }) {
                                         </Table.Cell>
                                     </Table.Row>
                                 ))}
-
                         </Table.Body>
                     </Table>
                 </div>
@@ -351,26 +359,17 @@ export default function ConfirmedToEdit({ auth }) {
                                                         name="initialDate"
                                                         value={moment(
                                                             values.initialDate
-                                                        )
-                                                            .utc()
-                                                            .startOf("00:00")
-                                                            .format(
-                                                                "DD.MM.YYYY"
-                                                            )}
+                                                        ).format("DD.MM.YYYY")}
                                                         onSelectedDateChanged={(
                                                             date
                                                         ) => {
-                                                            console.log(date);
+
                                                             setFieldValue(
                                                                 "initialDate",
-                                                                moment
-                                                                    .utc(date)
-                                                                    .subtract(
-                                                                        1,
-                                                                        "days"
-                                                                    )
-                                                                    .startOf(
-                                                                        "00:00"
+                                                                moment(date)
+                                                                    .add(
+                                                                        2,
+                                                                        "hours"
                                                                     )
                                                                     .format()
                                                             );

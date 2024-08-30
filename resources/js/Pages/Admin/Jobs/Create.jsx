@@ -7,6 +7,7 @@ import {
     Textarea,
     Select,
     Button,
+    ToggleSwitch
 } from "flowbite-react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
@@ -25,6 +26,7 @@ const initialValues = {
     to: "",
     description: "",
     client: 0,
+    extra: false,
 };
 
 const validationSchema = Yup.object().shape({
@@ -32,7 +34,7 @@ const validationSchema = Yup.object().shape({
     start_date: Yup.date().required("Required"),
     start_time: Yup.string().required("Required"),
     end_date: Yup.date().required("Required").when(
-        "start_date", 
+        "start_date",
         (eventStartDate, schema) => eventStartDate && schema.min(eventStartDate, "Enddatum muss grßer als Startdatum sein")),
     end_time: Yup.string().required("Required"),
     zug_nummer: Yup.string(),
@@ -190,7 +192,7 @@ export default function Dashboard({ auth }) {
                                 {errors.start_time &&
                                     touched.start_time &&
                                     errors.start_time}
-                                </p>    
+                                </p>
                             </div>
                             <span className="mx-4 mt-9 text-gray-500">bis</span>
                             <div className="">
@@ -231,180 +233,202 @@ export default function Dashboard({ auth }) {
                                     errors.end_time}
                             </div>
                         </div>
-                       
-                        <div className="container mx-auto mt-10">
-                            <Label>Zug Nummer</Label>
-                            <Field
-                                id="zugNummer"
-                                type="text"
-                                placeholder="Zug Nummer"
-                                name="zugNummer"
-                                className={
-                                    errors.zug_nummer && touched.zug_nummer
-                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white border border-red-500 w-full rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        : "placeholder:italic placeholder:text-slate-400 block bg-white  border border-slate-300 w-full rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                }
-                                onChange={(e) => {
-                                    setFieldValue("zug_nummer", e.target.value);
-                                }}
-                                value={values.zug_nummer}
-                            />
-                            {errors.zug_nummer && touched.zug_nummer && (
-                                <p className="text-red-500">
-                                    *{errors.zug_nummer}
-                                </p>
-                            )}
-                        </div>
-                        
 
-                        <div className="container mx-auto mt-10">
-                            <Label>Lokomotive Nummer</Label>
-                            <Field
-                                id="locomotive_nummer"
-                                type="text"
-                                placeholder="Locomotive Nummer"
-                                name="locomotive_nummer"
-                                className={
-                                    errors.locomotive_nummer && touched.locomotive_nummer
-                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                }
-                                onChange={(e) => {
-                                    setFieldValue("locomotive_nummer", e.target.value);
-                                }}
-                                value={values.locomotive_nummer}
-                            />
-                            {errors.locomotive_nummer && touched.locomotive_nummer && (
-                                <p className="text-red-500">
-                                    *{errors.locomotive_nummer}
-                                </p>
-                            )}
-                        </div>
-                  
-
-                        <div className="container mx-auto mt-10">
-                            <Label>Tour Name</Label>
-                            <Field
-                                id="tour_name"
-                                type="text"
-                                placeholder="Tour Name"
-                                name="tour_name"
-                                className={
-                                    errors.tour_name && touched.tour_name
-                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                }
-                                onChange={(e) => {
-                                    setFieldValue("tour_name", e.target.value);
-                                }}
-                                value={values.tour_name}
-                            />
-                            {errors.tour_name && touched.tour_name && (
-                                <p className="text-red-500">
-                                    *{errors.tour_name}
-                                </p>
-                            )}
-                        </div>
-                        
-
-                        <div className="container mx-auto mt-10">
-                            <Label>Von</Label>
-                            <Field
-                                id="from"
-                                type="text"
-                                placeholder="From"
-                                name="from"
-                                className={
-                                    errors.from && touched.from
-                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                }
-                                onChange={(e) => {
-                                    setFieldValue("from", e.target.value);
-                                }}
-                                value={values.from}
-                            />
-                            {errors.from && touched.from && (
-                                <p className="text-red-500">
-                                    *{errors.from}
-                                </p>
-                            )}
-                        </div>
-                        <br />
-                        <div className="container mx-auto mt-10">
-                            <Label>Bis</Label>
-                            <Field
-                                id="to"
-                                type="text"
-                                placeholder="To"
-                                name="to"
-                                className={
-                                    errors.to && touched.to
-                                        ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                }
-                                onChange={(e) => {
-                                    setFieldValue("to", e.target.value);
-                                }}
-                                value={values.to}
-                            />
-                            {errors.to && touched.to && (
-                                <p className="text-red-500">
-                                    *{errors.to}
-                                </p>
-                            )}
-                        </div>
-                        <br />
-                        <div className="container mx-auto mt-10">
-                        <Label>Kommenter</Label>
-                        <Textarea
-                            id="description"
-                            name="description"
-                            placeholder="Einen Kommentar hinterlassen..."
-                            value={values.description}
-                            rows={4}
-                            className={
-                                errors.description && touched.description
-                                    ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                    : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                            }
-                            onChange={(e) => {
-                                setFieldValue("description", e.target.value);
-                            }}
-                        />
-                        {errors.description && touched.description && (
-                            <p className="text-red-500">*{errors.description}</p>
-                        )}
-                        </div>
-                        
-                        <div className="container mx-auto mt-10">
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="client"
-                                    value="Wählen Sie Ihren Kunden"
+                        <div className="container mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <Label>Zug Nummer</Label>
+                                <Field
+                                    id="zugNummer"
+                                    type="text"
+                                    placeholder="Zug Nummer"
+                                    name="zugNummer"
+                                    className={
+                                        errors.zug_nummer && touched.zug_nummer
+                                            ? "placeholder:italic placeholder:text-slate-4000 block bg-white border border-red-500 w-full rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            : "placeholder:italic placeholder:text-slate-400 block bg-white  border border-slate-300 w-full rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    }
+                                    onChange={(e) => {
+                                        setFieldValue("zug_nummer", e.target.value);
+                                    }}
+                                    value={values.zug_nummer ?? "X"}
                                 />
+                                {errors.zug_nummer && touched.zug_nummer && (
+                                    <p className="text-red-500">
+                                        *{errors.zug_nummer}
+                                    </p>
+                                )}
                             </div>
-                            <Select
-                                id="client"
-                                name="client"
-                                required
-                                value={values.client}
-                                onChange={(e) => {
-                                    setFieldValue("client", e.target.value);
-                                }}
-                            >
-                                <option value={0}>Wählen Sie...</option>
-                               {clients.map((client) => (
-                                <option key={client.id} value={client.id}>
-                                    {client.name}
-                                </option>
-                               ))}
-                            </Select>
+
+                            <div>
+                                <Label>Lokomotive Nummer</Label>
+                                <Field
+                                    id="locomotive_nummer"
+                                    type="text"
+                                    placeholder="Locomotive Nummer"
+                                    name="locomotive_nummer"
+                                    className={
+                                        errors.locomotive_nummer && touched.locomotive_nummer
+                                            ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    }
+                                    onChange={(e) => {
+                                        setFieldValue("locomotive_nummer", e.target.value);
+                                    }}
+                                    value={values.locomotive_nummer ?? "193"}
+                                />
+                                {errors.locomotive_nummer && touched.locomotive_nummer && (
+                                    <p className="text-red-500">
+                                        *{errors.locomotive_nummer}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div>
+                                <Label>Tour Name</Label>
+                                <Field
+                                    id="tour_name"
+                                    type="text"
+                                    placeholder="Tour Name"
+                                    name="tour_name"
+                                    className={
+                                        errors.tour_name && touched.tour_name
+                                            ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    }
+                                    onChange={(e) => {
+                                        setFieldValue("tour_name", e.target.value);
+                                    }}
+                                    value={values.tour_name}
+                                />
+                                {errors.tour_name && touched.tour_name && (
+                                    <p className="text-red-500">
+                                        *{errors.tour_name}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div>
+                                <Label>Von</Label>
+                                <Field
+                                    id="from"
+                                    type="text"
+                                    placeholder="From"
+                                    name="from"
+                                    className={
+                                        errors.from && touched.from
+                                            ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    }
+                                    onChange={(e) => {
+                                        setFieldValue("from", e.target.value);
+                                    }}
+                                    value={values.from}
+                                />
+                                {errors.from && touched.from && (
+                                    <p className="text-red-500">
+                                        *{errors.from}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div>
+                                <Label>Bis</Label>
+                                <Field
+                                    id="to"
+                                    type="text"
+                                    placeholder="To"
+                                    name="to"
+                                    className={
+                                        errors.to && touched.to
+                                            ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    }
+                                    onChange={(e) => {
+                                        setFieldValue("to", e.target.value);
+                                    }}
+                                    value={values.to}
+                                />
+                                {errors.to && touched.to && (
+                                    <p className="text-red-500">
+                                        *{errors.to}
+                                    </p>
+                                )}
+                            </div>
+
+
+
+                            <div>
+                                <div className=" block">
+                                    <Label
+                                        htmlFor="client"
+                                        value="Wählen Sie Ihren Kunden"
+                                    />
+                                </div>
+                                <Select
+                                    id="client"
+                                    name="client"
+                                    required
+                                    value={values.client}
+                                    onChange={(e) => {
+                                        setFieldValue("client", e.target.value);
+                                    }}
+                                >
+                                    <option value={0}>Wählen Sie...</option>
+                                   {clients.map((client) => (
+                                    <option key={client.id} value={client.id}>
+                                        {client.name}
+                                    </option>
+                                   ))}
+                                </Select>
+                                {errors.client && touched.client && (
+                                    <p className="text-red-500">*{errors.client}</p>
+                                )}
+                            </div>
+                            <div className="md:col-span-2">
+                                <Label>Kommenter</Label>
+                                <Textarea
+                                    id="description"
+                                    name="description"
+                                    placeholder="Einen Kommentar hinterlassen..."
+                                    value={values.description}
+                                    rows={4}
+                                    className={
+                                        errors.description && touched.description
+                                            ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                            : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                                    }
+                                    onChange={(e) => {
+                                        setFieldValue("description", e.target.value);
+                                    }}
+                                />
+                                {errors.description && touched.description && (
+                                    <p className="text-red-500">*{errors.description}</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="extra"
+                                        value="Extra"
+                                    />
+                                </div>
+                                <ToggleSwitch
+                                    id="extra"
+                                    name="extra"
+                                    required
+                                    checked={values.extra}
+                                    onChange={(e) => {
+                                        setFieldValue("extra", e);
+                                    }}
+                                />
+                                {errors.client && touched.client && (
+                                    <p className="text-red-500">*{errors.client}</p>
+                                )}
+                            </div>
                         </div>
-                        {errors.client && touched.client && (
-                            <p className="text-red-500">*{errors.client}</p>
-                        )}
-                        <br />
+
+
 
                         <div className="flex justify-center items-center">
                             <Button
