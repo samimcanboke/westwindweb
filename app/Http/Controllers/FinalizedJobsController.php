@@ -919,7 +919,14 @@ class FinalizedJobsController extends Controller
                 $total_work_sum->h -= 10;
             }
 
+            $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+            $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
+
+
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
+
+            $total_work_hours += $total_hours * 60;
+
 
             if ($total_work_hours > 160 * 60) {
                 $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
@@ -1171,12 +1178,15 @@ class FinalizedJobsController extends Controller
         $data['phone'] = $user->phone ?? "";
 
         $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
-        $total_hours = $hour_banks->where('type', 'deposit')->sum('hours') - $hour_banks->where('type', 'withdraw')->sum('hours');
+        $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
         $data['hour_bank_this_month'] = sprintf('%02d:%02d', floor($total_hours), ($total_hours - floor($total_hours)) * 60);
 
+
+
         $hour_banks_this_year = $user->hourBanks()->whereBetween('date', [Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString(), Carbon::create($year, 12, 31)->endOfDay()->toDateTimeString()])->get();
-        $total_hours_this_year = $hour_banks_this_year->where('type', 'deposit')->sum('hours') - $hour_banks_this_year->where('type', 'withdraw')->sum('hours');
+        $total_hours_this_year = $hour_banks_this_year->where('type', 'withdraw')->sum('hours') - $hour_banks_this_year->where('type', 'deposit')->sum('hours');
         $data['hour_bank_this_year'] = sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
+
 
         $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
@@ -1231,7 +1241,7 @@ class FinalizedJobsController extends Controller
         $data['totals']['dates'] = $finalized_jobs->count();
         $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
         $total_public_holiday_hours = new DateInterval('PT0H0M');
-        $total_work_sum = new DateInterval('PT0H0M');
+        $total_work_sum = new DateInterval('PT0H0M') ;
         $total_guest_sum = new DateInterval('PT0H0M');
         $total_break_time = new DateInterval('PT0H0M');
         $total_midnight_shift = new DateInterval('PT0H0M');
@@ -1432,7 +1442,7 @@ class FinalizedJobsController extends Controller
             $data['rows'][] = [
                 "date" => (new DateTime($finalized_job->initial_date))->format('d/m/Y'),
                 "times" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
-                "work_sum" => $work_sum,
+                "work_sum" => $work_sum ,
                 "guest_start_times" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
                 "guest_end_times" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
                 "guest_total" => $guest_total == "00:00" ? "-" : $guest_total,
@@ -1449,8 +1459,15 @@ class FinalizedJobsController extends Controller
             $i++;
         }
 
+        $hours = floor($total_hours);
+        $minutes = ($total_hours - $hours) * 60;
+        $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+        $total_hours_interval = new DateInterval('PT' . $hours . 'H' . $minutes . 'M');
+        $total_work_sum->h += $total_hours_interval->h;
+        $total_work_sum->i += $total_hours_interval->i;
         $data['totals']['dates'] = $i;
         $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+        $data['totals']['work_sum_amount'] = $total_work_summary_amount;
         $data['totals']['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
         $data['totals']['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
         $data['totals']['midnight_shift'] = sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) != "00:00" ? sprintf('%02d:%02d', $total_midnight_shift->h, $total_midnight_shift->i) : "-";
@@ -1469,7 +1486,10 @@ class FinalizedJobsController extends Controller
 
 
 
+
+
         $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
+        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $annual_leave_days * 8), (($sub_total + $annual_leave_days * 8) - floor($sub_total + $annual_leave_days * 8)) * 60);
         $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8))) * 60);
 
         if ($data && $finalized_jobs->count() > 0) {

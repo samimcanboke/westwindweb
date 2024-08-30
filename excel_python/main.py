@@ -135,7 +135,7 @@ def add_lines(ws, rows):
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
-            cell.value = rows['totals']['workhours']
+            cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
@@ -249,13 +249,11 @@ def sum_lines(ws,used_data, total_height):
     ws['K43'].alignment = Alignment(horizontal='center', vertical='center')
     ws['O35'].value = str(used_data['total_hours_req'])
     ws['O35'].alignment = Alignment(horizontal='center', vertical='center')
-    ws['O36'].value = str(used_data['totals']['sub_total'])
+    ws['O36'].value = str(used_data['total_made_hours'])
     ws['O36'].alignment = Alignment(horizontal='center', vertical='center')
     ws['O37'].value = str(used_data['left_hours'])
     ws['O37'].alignment = Alignment(horizontal='center', vertical='center')
     ws['O37'].fill = PatternFill(start_color="f01111", end_color="f01111", fill_type="solid")
-    ws['O37'].value = '-' + str(used_data['left_hours'])
-    ws['O37'].alignment = Alignment(horizontal='center', vertical='center')
     return ws
 
 
