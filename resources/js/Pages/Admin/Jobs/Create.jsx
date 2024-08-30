@@ -101,79 +101,52 @@ export default function Dashboard({ auth }) {
                         <div className="container mx-auto mt-10 flex flex-row justify-center">
                             <div className="">
                                 <Label>Startdatum</Label>
-                                <Datepicker
-                                    language="de-DE"
-                                    labelTodayButton="Heute"
-                                    labelClearButton="Löschen"
-                                    id="start_date"
-                                    name="start_date"
-                                    format="yyyy-MM-dd"
-                                    type="date"
-                                    value={
-                                        values.start_date
-                                    }
-                                    onSelectedDateChanged={(date) => {
-                                        let datenew = new Date(date).toLocaleDateString().split('.')
-                                        datenew[0] = datenew[0].padStart(2, '0');
-                                        datenew[1] = datenew[1].padStart(2, '0');
-                                        setFieldValue("start_date", datenew.reverse().join('-'));
-                                    }}
-                                />
-                                <p className="text-red-500">
-                                {errors.start_date &&
-                                    touched.start_date &&
-                                    errors.start_date}
-                                    </p>
-                            </div>
-                            <span className="mx-4 mt-9 text-gray-500">bis</span>
-                            <div className="">
-                                <Label>Enddatum</Label>
-                                <Datepicker
-                                    language="de-DE"
-                                    labelTodayButton="Heute"
-                                    labelClearButton="Löschen"
-                                    id="end_date"
-                                    format="yyyy-MM-dd"
-                                    type="date"
-                                    name="end_date"
-                                    value={
-                                        values.end_date
-                                    }
-                                    onSelectedDateChanged={(date) => {
-                                        let datenew = new Date(date).toLocaleDateString().split('.')
-                                        datenew[0] = datenew[0].padStart(2, '0');
-                                        datenew[1] = datenew[1].padStart(2, '0');
-                                        setFieldValue("end_date", datenew.reverse().join('-'));
-                                    }}
-                                />
-                                <p className="text-red-500">
-                                {errors.end_date &&
-                                    touched.end_date &&
-                                    errors.end_date}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="container mx-auto mt-3 flex flex-row justify-center">
-                            <div className="">
-                                <Label>Startzeit</Label>
                                 <div className="flex">
+                                    <Datepicker
+                                        language="de-DE"
+                                        labelTodayButton="Heute"
+                                        labelClearButton="Löschen"
+                                        id="start_date"
+                                        name="start_date"
+                                        format="yyyy-MM-dd"
+                                        type="date"
+                                        value={values.start_date}
+                                        onSelectedDateChanged={(date) => {
+                                            let datenew = new Date(date).toLocaleDateString().split('.')
+                                            datenew[0] = datenew[0].padStart(2, '0');
+                                            datenew[1] = datenew[1].padStart(2, '0');
+                                            setFieldValue("start_date", datenew.reverse().join('-'));
+                                        }}
+                                    />
                                     <input
                                         type="time"
                                         id="start_time"
                                         name="start_time"
                                         className={
-                                            errors.start_time &&
-                                            touched.start_time
-                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            errors.start_time && touched.start_time
+                                                ? "rounded-none rounded-s-lg bg-gray-50 ml-2 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                : "rounded-none rounded-s-lg bg-gray-50 ml-2 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         }
                                         value={values.start_time}
                                         onChange={(e) => {
-                                            setFieldValue(
-                                                "start_time",
-                                                e.target.value
-                                            );
+                                            const startTime = e.target.value;
+                                            setFieldValue("start_time", startTime);
+
+                                            const [hours, minutes] = startTime.split(':');
+                                            const endTime = new Date();
+                                            endTime.setHours(parseInt(hours) + 10);
+                                            endTime.setMinutes(parseInt(minutes));
+
+                                            const endHours = endTime.getHours().toString().padStart(2, '0');
+                                            const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
+                                            setFieldValue("end_time", `${endHours}:${endMinutes}`);
+
+                                            const startDate = new Date(values.start_date);
+                                            const endDate = new Date(startDate);
+                                            if (endTime.getDate() !== startDate.getDate()) {
+                                                endDate.setDate(startDate.getDate() + 1);
+                                            }
+                                            setFieldValue("end_date", endDate.toISOString().split('T')[0]);
                                         }}
                                     />
                                     <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
@@ -189,31 +162,44 @@ export default function Dashboard({ auth }) {
                                     </span>
                                 </div>
                                 <p className="text-red-500">
-                                {errors.start_time &&
-                                    touched.start_time &&
-                                    errors.start_time}
+                                    {errors.start_date && touched.start_date && errors.start_date}
+                                </p>
+                                <p className="text-red-500">
+                                    {errors.start_time && touched.start_time && errors.start_time}
                                 </p>
                             </div>
                             <span className="mx-4 mt-9 text-gray-500">bis</span>
                             <div className="">
-                                <Label>Endzeit</Label>
+                                <Label>Enddatum</Label>
                                 <div className="flex">
+                                    <Datepicker
+                                        language="de-DE"
+                                        labelTodayButton="Heute"
+                                        labelClearButton="Löschen"
+                                        id="end_date"
+                                        format="yyyy-MM-dd"
+                                        type="date"
+                                        name="end_date"
+                                        value={values.end_date}
+                                        onSelectedDateChanged={(date) => {
+                                            let datenew = new Date(date).toLocaleDateString().split('.')
+                                            datenew[0] = datenew[0].padStart(2, '0');
+                                            datenew[1] = datenew[1].padStart(2, '0');
+                                            setFieldValue("end_date", datenew.reverse().join('-'));
+                                        }}
+                                    />
                                     <input
                                         type="time"
                                         id="end_time"
                                         name="end_time"
                                         className={
-                                            errors.end_time &&
-                                            touched.end_time
+                                            errors.end_time && touched.end_time
                                                 ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         }
                                         value={values.end_time}
                                         onChange={(e) => {
-                                            setFieldValue(
-                                                "end_time",
-                                                e.target.value
-                                            );
+                                            setFieldValue("end_time", e.target.value);
                                         }}
                                     />
                                     <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
@@ -228,9 +214,12 @@ export default function Dashboard({ auth }) {
                                         </svg>
                                     </span>
                                 </div>
-                                {errors.end_time &&
-                                    touched.end_time &&
-                                    errors.end_time}
+                                <p className="text-red-500">
+                                    {errors.end_date && touched.end_date && errors.end_date}
+                                </p>
+                                <p className="text-red-500">
+                                    {errors.end_time && touched.end_time && errors.end_time}
+                                </p>
                             </div>
                         </div>
 
@@ -250,7 +239,7 @@ export default function Dashboard({ auth }) {
                                     onChange={(e) => {
                                         setFieldValue("zug_nummer", e.target.value);
                                     }}
-                                    value={values.zug_nummer ?? "X"}
+                                    value={values.zug_nummer ? values.zug_nummer : "X"}
                                 />
                                 {errors.zug_nummer && touched.zug_nummer && (
                                     <p className="text-red-500">
@@ -274,7 +263,7 @@ export default function Dashboard({ auth }) {
                                     onChange={(e) => {
                                         setFieldValue("locomotive_nummer", e.target.value);
                                     }}
-                                    value={values.locomotive_nummer ?? "193"}
+                                    value={values.locomotive_nummer ? values.locomotive_nummer : "193"}
                                 />
                                 {errors.locomotive_nummer && touched.locomotive_nummer && (
                                     <p className="text-red-500">
@@ -361,14 +350,14 @@ export default function Dashboard({ auth }) {
                                 <div className=" block">
                                     <Label
                                         htmlFor="client"
-                                        value="Wählen Sie Ihren Kunden"
+                                        value="Kunden"
                                     />
                                 </div>
                                 <Select
                                     id="client"
                                     name="client"
                                     required
-                                    value={values.client}
+                                    value={values.client ? values.client : 1}
                                     onChange={(e) => {
                                         setFieldValue("client", e.target.value);
                                     }}
@@ -430,7 +419,7 @@ export default function Dashboard({ auth }) {
 
 
 
-                        <div className="flex justify-center items-center">
+                        <div className="flex justify-center items-center mt-8">
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
