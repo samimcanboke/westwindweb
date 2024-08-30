@@ -1007,9 +1007,6 @@ class FinalizedJobsController extends Controller
                 }
             }
             $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
-            if($user->id == 12){
-                dd($data['rows'][$user->id]);
-            }
             if($user->id == 4 || $user->id == 9){
                 $data['rows'][$user->id]['workhours'] = "160,00";
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
