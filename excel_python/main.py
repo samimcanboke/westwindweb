@@ -303,7 +303,7 @@ def create_total_excel():
                 ws[f'B{row_num}'] = f"{row_data['id']}"
                 ws[f'C{row_num}'] = f"{row_data['name']}"
                 ws[f'D{row_num}'] = f"{row_data['salary']}"
-                ws[f'E{row_num}'] = f"{row_data['sub_total']}"
+                ws[f'E{row_num}'] = f"{row_data['workhours']}"
                 ws[f'F{row_num}'] = f"{row_data['guests']}"
                 ws[f'G{row_num}'] = f"{row_data['total_work_day_amount']}"
                 ws[f'H{row_num}'] = f"{row_data['extra_work']}"

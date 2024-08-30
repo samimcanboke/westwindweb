@@ -918,6 +918,7 @@ class FinalizedJobsController extends Controller
             if ($bahnCard == 1) {
                 $total_work_sum->h -= 10;
             }
+
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
 
             if ($total_work_hours > 160 * 60) {
@@ -926,12 +927,13 @@ class FinalizedJobsController extends Controller
                 $minutes = ($remaining_hours * 60) % 60;
                 $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
             } else {
-                $hours = $total_work_sum->h;
-                $minutes = $total_work_sum->i;
+                $hours = $total_work_sum->h + $total_break_time->h;
+                $minutes = $total_work_sum->i + $total_break_time->i;
                 $decimal_hours = $hours + ($minutes / 60);
                 $data['rows'][$user->id]['workhours'] = number_format($decimal_hours, 2, ',', '');
             }
             $data['rows'][$user->id]['salary'] = $user->salary . " €" ;
+
             $extra_work_hours = $total_work_hours - (160 * 60);
             if ($extra_work_hours > 0) {
                 $extra_work_hours_h = floor($extra_work_hours / 60);
@@ -940,7 +942,9 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
             } else {
                 $data['rows'][$user->id]['extra_work'] = "-";
+
             }
+
             $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
 
             if ($total_guest_sum != "00:00") {
