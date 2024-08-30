@@ -33,7 +33,7 @@ class DraftJobsController extends Controller
      */
     public function store(Request $request)
     {
-   
+
         $draftJob = new DraftJobs();
         $draftJob->user_id = $request->user()->id;
         $draftJob->client_id = $request->client;
@@ -65,6 +65,8 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_end_place = $request->guestEndEndPlace;
         $draftJob->guest_end_end_time = $request->guestEndEndTime;
         $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
+        $draftJob->ausland = $request->ausland;
+        $draftJob->country = $request->country;
         $draftJob->save();
 
         return response()->json(["status" => true]);
@@ -122,14 +124,58 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_time = $request->guest_end_time;
         $draftJob->guest_end_end_place = $request->guest_end_end_place;
         $draftJob->guest_end_end_time = $request->guest_end_end_time;
+        $draftJob->ausland = $request->ausland;
+        $draftJob->country = $request->country;
         if($request->images && json_encode($request->images) !== $draftJob->files){
             $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
         }
         $draftJob->save();
     }
-        /**
+
+
+    public function edit_update(Request $request, DraftJobs $client)
+    {
+        $draftJob = FinalizedJobs::find($request->id);
+        $draftJob->user_id = $request->user_id ?? $draftJob->user_id    ;
+        $draftJob->client_id = $request->client_id ?? $draftJob->client_id;
+        $draftJob->initial_date = $request->initial_date ?? $draftJob->initial_date;
+        $draftJob->zug_nummer = $request->zug_nummer ?? $draftJob->zug_nummer;
+        $draftJob->tour_name = $request->tour_name ?? $draftJob->tour_name;
+        $draftJob->locomotive_number = $request->locomotive_number ?? $draftJob->locomotive_number;
+        $draftJob->cancel = $request->cancel ?? $draftJob->cancel;
+        $draftJob->accomodation = $request->accomodation ?? $draftJob->accomodation;
+        $draftJob->bereitschaft = $request->bereitschaft ?? $draftJob->bereitschaft;
+        $draftJob->comment = $request->comment ?? $draftJob->comment;
+        $draftJob->learning = $request->learning ?? $draftJob->learning;
+        $draftJob->feeding_fee = $request->feeding_fee ?? $draftJob->feeding_fee;
+        $draftJob->guest_start_place = $request->guest_start_place ?? $draftJob->guest_start_place;
+        $draftJob->guest_start_time = $request->guest_start_time ?? $draftJob->guest_start_time;
+        $draftJob->guest_start_end_place = $request->guest_start_end_place ?? $draftJob->guest_start_end_place;
+        $draftJob->guest_start_end_time = $request->guest_start_end_time ?? $draftJob->guest_start_end_time;
+        $draftJob->work_start_place = $request->work_start_place ?? $draftJob->work_start_place;
+        $draftJob->work_start_time = $request->work_start_time ?? $draftJob->work_start_time;
+        $draftJob->train_start_place = $request->train_start_place ?? $draftJob->train_start_place;
+        $draftJob->train_start_time = $request->train_start_time ?? $draftJob->train_start_time;
+        $draftJob->train_end_place = $request->train_end_place ?? $draftJob->train_end_place;
+        $draftJob->train_end_time = $request->train_end_time ?? $draftJob->train_end_time;
+        $draftJob->breaks = json_encode($request->breaks) ?? $draftJob->breaks;
+        $draftJob->work_end_place = $request->work_end_place ?? $draftJob->work_end_place;
+        $draftJob->work_end_time = $request->work_end_time ?? $draftJob->work_end_time;
+        $draftJob->guest_end_place = $request->guest_end_place ?? $draftJob->guest_end_place;
+        $draftJob->guest_end_time = $request->guest_end_time ?? $draftJob->guest_end_time;
+        $draftJob->guest_end_end_place = $request->guest_end_end_place ?? $draftJob->guest_end_end_place;
+        $draftJob->guest_end_end_time = $request->guest_end_end_time ?? $draftJob->guest_end_end_time;
+        $draftJob->ausland = $request->ausland ?? $draftJob->ausland;
+        $draftJob->country = $request->country ?? $draftJob->country;
+        if($request->images && json_encode($request->images) !== $draftJob->files){
+            $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
+        }
+        $draftJob->save();
+        return response()->json(["status" => true]);
+    }
+    /**
      * Update the specified resource in storage.
-     */
+    */
     public function send_submit(Request $request, DraftJobs $client)
     {
         $draft_id = $request->draft_id;
@@ -164,7 +210,9 @@ class DraftJobsController extends Controller
         $finalized->guest_end_place = $draft->guest_end_place;
         $finalized->guest_end_time = $draft->guest_end_time;
         $finalized->guest_end_end_place = $draft->guest_end_end_place;
-        $finalized->guest_end_end_time = $draft->guest_end_end_time;  
+        $finalized->guest_end_end_time = $draft->guest_end_end_time;
+        $finalized->ausland = $draft->ausland;
+        $finalized->country = $draft->country;
         if($draft->files){
             $finalized->files = is_string($draft->files) ? $draft->files : json_encode($draft->files);
         }

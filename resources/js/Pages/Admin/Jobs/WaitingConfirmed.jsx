@@ -62,57 +62,71 @@ export default function WaitingConfirmed({ auth }) {
         return newObj;
     };
 
-    const deleteDraft = async (draft) => {  
+    const deleteDraft = async (draft) => {
         Swal.fire({
-            title: 'Sind Sie sicher?',
-            text: 'Das Job wird gelscht',
-            icon: 'warning',
+            title: "Sind Sie sicher?",
+            text: "Das Job wird gelscht",
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonText: 'Lschen',
-            cancelButtonText: 'Abbrechen',
-            
+            confirmButtonText: "Lschen",
+            cancelButtonText: "Abbrechen",
         }).then((result) => {
             if (result.isConfirmed) {
                 console.log(draft);
-                axios.delete(route("jobs-unconfirmed-destroy", {id: draft.id})).then((res) => {
-                    if(res.data.status){
-                        Swal.fire({
-                            title: 'Erfolgreich',
-                            text: 'Job wurde gelschen',
-                            icon: 'success',
-                        });
-                        getUnconfirmed();
-                    }
-                });
+                axios
+                    .delete(route("jobs-unconfirmed-destroy", { id: draft.id }))
+                    .then((res) => {
+                        if (res.data.status) {
+                            Swal.fire({
+                                title: "Erfolgreich",
+                                text: "Job wurde gelschen",
+                                icon: "success",
+                            });
+                            getUnconfirmed();
+                        }
+                    });
             }
-        });        
-    }
+        });
+    };
 
     const edit = async (finalized) => {
-        let editingDraft =  finalized;
-        try{
+        let editingDraft = finalized;
+
+        try {
             editingDraft.breaks = JSON.parse(finalized.breaks);
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
+        console.log(editingDraft);
         setValues(camelCase(editingDraft));
         setShowEdit(true);
     };
     const getUnconfirmed = async () => {
         await axios.get("/data-unconfirmed-jobs").then((res) => {
+            if (drivers) {
+                res.data.forEach((job) => {
+                    let driver = drivers.find(
+                        (driver) => driver.id === job.user_id
+                    );
+                    job.driverId = driver
+                        ? driver.id.toString().padStart(3, "0")
+                        : "000";
+                    job.driverName = driver
+                        ? driver.name
+                        : "Fahrer nicht gefunden";
+                });
+            }
             setData(res.data);
             setLoading(false);
-            console.log(res.data);
         });
     };
 
     useEffect(() => {
         getUnconfirmed();
-  
 
         axios.get(route("users.show")).then((res) => {
             setDrivers(res.data);
-            //console.log(res.data);
+            console.log(res.data);
         });
         axios.get("/clients").then((res) => {
             setClients(res.data);
@@ -125,7 +139,7 @@ export default function WaitingConfirmed({ auth }) {
         setLoading(true);
         axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
             getUnconfirmed();
-            
+
             setShowEdit(false);
             setLoading(false);
         });
@@ -160,7 +174,7 @@ export default function WaitingConfirmed({ auth }) {
                                 <Table.HeadCell>
                                     <span className="sr-only">Bearbeiten</span>
                                 </Table.HeadCell>
-                                 <Table.HeadCell>
+                                <Table.HeadCell>
                                     <span className="sr-only">Löschen</span>
                                 </Table.HeadCell>
                             </Table.Head>
@@ -173,9 +187,10 @@ export default function WaitingConfirmed({ auth }) {
                                             className="bg-white dark:border-gray-700 dark:bg-gray-800"
                                         >
                                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                                {moment.utc(
-                                                    draft.initial_date
-                                                ).startOf("00:00").format("DD.MM.YYYY")}
+                                                {moment
+                                                    .utc(draft.initial_date)
+                                                    .startOf("00:00")
+                                                    .format("DD.MM.YYYY")}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.tour_name}
@@ -184,25 +199,14 @@ export default function WaitingConfirmed({ auth }) {
                                                 {draft.user_id &&
                                                 draft.user_id != "" &&
                                                 drivers
-                                                    ? drivers
-                                                          .find(
-                                                              (driver) =>
-                                                                  driver.id ==
-                                                                  draft.user_id
-                                                          )
-                                                          .id.toString()
-                                                          .padStart(3, "0")
+                                                    ? draft.driverId
                                                     : "Fahrer nicht gefunden"}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.user_id &&
                                                 draft.user_id != "" &&
                                                 drivers
-                                                    ? drivers.find(
-                                                          (driver) =>
-                                                              driver.id ==
-                                                              draft.user_id
-                                                      ).name
+                                                    ? draft.driverName
                                                     : "Fahrer nicht gefunden"}
                                             </Table.Cell>
                                             <Table.Cell className=" text-center ">
@@ -247,7 +251,7 @@ export default function WaitingConfirmed({ auth }) {
                                     setLoading(true);
                                     axios
                                         .post(
-                                            "/jobs-editing",
+                                            route("update-draft-job-inside"),
                                             snakeCase(values)
                                         )
                                         .then((res) => {
@@ -280,23 +284,49 @@ export default function WaitingConfirmed({ auth }) {
                                                         <Label>
                                                             Startdatum
                                                         </Label>
-                                                        <input type="hidden" name="user_id" value={values.userId}></input>
+                                                        <input
+                                                            type="hidden"
+                                                            name="user_id"
+                                                            value={
+                                                                values.userId
+                                                            }
+                                                        ></input>
                                                         <Datepicker
                                                             language="de-DE"
                                                             labelTodayButton="Heute"
                                                             labelClearButton="Löschen"
                                                             id="initialDate"
                                                             name="initialDate"
-                                                            value={
-                                                                moment(values.initialDate).utc().startOf("00:00").format("DD.MM.YYYY")
-                                                            }   
+                                                            value={moment(
+                                                                values.initialDate
+                                                            )
+                                                                .utc()
+                                                                .startOf(
+                                                                    "00:00"
+                                                                )
+                                                                .format(
+                                                                    "DD.MM.YYYY"
+                                                                )}
                                                             onSelectedDateChanged={(
                                                                 date
                                                             ) => {
-                                                                console.log(date);
+                                                                console.log(
+                                                                    date
+                                                                );
                                                                 setFieldValue(
                                                                     "initialDate",
-                                                                    moment.utc(date).subtract(1, 'days').startOf("00:00").format()
+                                                                    moment
+                                                                        .utc(
+                                                                            date
+                                                                        )
+                                                                        .subtract(
+                                                                            1,
+                                                                            "days"
+                                                                        )
+                                                                        .startOf(
+                                                                            "00:00"
+                                                                        )
+                                                                        .format()
                                                                 );
                                                             }}
                                                         />
@@ -403,106 +433,341 @@ export default function WaitingConfirmed({ auth }) {
                                                             )}
                                                         <br />
 
-                                                        <ToggleSwitch
-                                                            checked={
-                                                                values.cancel
-                                                            }
-                                                            label="Storniert"
-                                                            id="cancel"
-                                                            name="cancel"
-                                                            onChange={(
-                                                                value
-                                                            ) => {
-                                                                setFieldValue(
-                                                                    "cancel",
-                                                                    value
-                                                                );
-                                                            }}
-                                                        />
+                                                        <div className="flex flex-wrap">
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.cancel
+                                                                    }
+                                                                    label="Storniert"
+                                                                    id="cancel"
+                                                                    name="cancel"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "cancel",
+                                                                            value
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.ausland
+                                                                    }
+                                                                    label="Ausland"
+                                                                    id="ausland"
+                                                                    name="ausland"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "ausland",
+                                                                            value
+                                                                        );
+                                                                        if (
+                                                                            value
+                                                                        ) {
+                                                                            if (
+                                                                                values.accomodation
+                                                                            ) {
+                                                                                if (
+                                                                                    values.country ===
+                                                                                    "nl"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        47
+                                                                                    );
+                                                                                } else if (
+                                                                                    values.country ===
+                                                                                    "ch"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        64
+                                                                                    );
+                                                                                } else {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        32
+                                                                                    );
+                                                                                }
+                                                                            } else {
+                                                                                if (
+                                                                                    values.country ===
+                                                                                    "nl"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        32
+                                                                                    );
+                                                                                } else if (
+                                                                                    values.country ===
+                                                                                    "ch"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        43
+                                                                                    );
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            if (
+                                                                                values.accomodation
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    32
+                                                                                );
+                                                                            } else {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    16
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.accomodation
+                                                                    }
+                                                                    label="Unterkunft"
+                                                                    id="accomodation"
+                                                                    name="accomodation"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "accomodation",
+                                                                            value
+                                                                        );
+                                                                        if (
+                                                                            value
+                                                                        ) {
+                                                                            if (
+                                                                                values.ausland
+                                                                            ) {
+                                                                                if (
+                                                                                    values.country ===
+                                                                                    "nl"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        47
+                                                                                    );
+                                                                                } else if (
+                                                                                    values.country ===
+                                                                                    "ch"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        64
+                                                                                    );
+                                                                                }
+                                                                            } else {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    32
+                                                                                );
+                                                                            }
+                                                                        } else {
+                                                                            if (
+                                                                                values.ausland
+                                                                            ) {
+                                                                                if (
+                                                                                    values.country ===
+                                                                                    "nl"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        32
+                                                                                    );
+                                                                                } else if (
+                                                                                    values.country ===
+                                                                                    "ch"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        43
+                                                                                    );
+                                                                                } else {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        0
+                                                                                    );
+                                                                                }
+                                                                            } else {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    16
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.bereitschaft
+                                                                    }
+                                                                    label="Bereitschaft"
+                                                                    id="bereitschaft"
+                                                                    name="bereitschaft"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "bereitschaft",
+                                                                            value
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.learning
+                                                                    }
+                                                                    label="Streckenkunde"
+                                                                    id="learning"
+                                                                    name="learning"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "learning",
+                                                                            value
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.extra
+                                                                    }
+                                                                    label="Extra"
+                                                                    id="extra"
+                                                                    name="extra"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "extra",
+                                                                            value
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div className="max-w-md">
+                                                            {values.ausland && (
+                                                                <div className="my-5">
+                                                                    <Label>
+                                                                        Land
+                                                                    </Label>
+                                                                    <Select
+                                                                        id="country"
+                                                                        name="country"
+                                                                        placeholder="Land"
+                                                                        onChange={(
+                                                                            e
+                                                                        ) => {
+                                                                            setFieldValue(
+                                                                                "country",
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            );
+                                                                            if (
+                                                                                values.accomodation
+                                                                            ) {
+                                                                                if (
+                                                                                    e
+                                                                                        .target
+                                                                                        .value ===
+                                                                                    "nl"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        47
+                                                                                    );
+                                                                                } else if (
+                                                                                    e
+                                                                                        .target
+                                                                                        .value ===
+                                                                                    "ch"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        64
+                                                                                    );
+                                                                                } else {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        32
+                                                                                    );
+                                                                                }
+                                                                            } else {
+                                                                                if (
+                                                                                    e
+                                                                                        .target
+                                                                                        .value ===
+                                                                                    "nl"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        32
+                                                                                    );
+                                                                                } else if (
+                                                                                    e
+                                                                                        .target
+                                                                                        .value ===
+                                                                                    "ch"
+                                                                                ) {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        43
+                                                                                    );
+                                                                                } else {
+                                                                                    setFieldValue(
+                                                                                        "feedingFee",
+                                                                                        16
+                                                                                    );
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                        value={
+                                                                            values.country
+                                                                        }
+                                                                    >
+                                                                        <option value="nl">
+                                                                            Niederlande
+                                                                        </option>
+                                                                        <option value="ch">
+                                                                            Schweiz
+                                                                        </option>
+                                                                    </Select>
+                                                                </div>
+                                                            )}
+                                                        </div>
 
-                                                        <br />
-
-                                                        <ToggleSwitch
-                                                            checked={
-                                                                values.accomodation
-                                                            }
-                                                            label="Unterkunft"
-                                                            id="accomodation"
-                                                            name="accomodation"
-                                                            onChange={(
-                                                                value
-                                                            ) => {
-                                                                if (value) {
-                                                                    setFieldValue(
-                                                                        "feedingFee",
-                                                                        32
-                                                                    );
-                                                                }
-                                                                setFieldValue(
-                                                                    "accomodation",
-                                                                    value
-                                                                );
-                                                            }}
-                                                        />
-                                                        <br />
-                                                        <ToggleSwitch
-                                                            checked={
-                                                                values.bereitschaft
-                                                            }
-                                                            label="Bereitschaft"
-                                                            id="bereitschaft"
-                                                            name="bereitschaft"
-                                                            onChange={(
-                                                                value
-                                                            ) => {
-                                                                setFieldValue(
-                                                                    "bereitschaft",
-                                                                    value
-                                                                );
-                                                            }}
-                                                        />
-                                                        <br />
-                                                        <ToggleSwitch
-                                                            checked={
-                                                                values.learning
-                                                            }
-                                                            label="Streckenkunde"
-                                                            id="learning"
-                                                            name="learning"
-                                                            onChange={(
-                                                                value
-                                                            ) => {
-                                                                setFieldValue(
-                                                                    "learning",
-                                                                    value
-                                                                );
-                                                            }}
-                                                        />
-                                                        <br />
-                                                        <ToggleSwitch
-                                                            checked={
-                                                                values.extra
-                                                            }
-                                                            label="Extra"
-                                                            id="extra"
-                                                            name="extra"
-                                                            onChange={(
-                                                                value
-                                                            ) => {
-                                                                setFieldValue(
-                                                                    "extra",
-                                                                    value
-                                                                );
-                                                            }}
-                                                        />
-                                                        <br />
                                                         <Label>Kommentar</Label>
                                                         <Textarea
                                                             id="comment"
                                                             name="comment"
                                                             placeholder="Hinterlassen Sie einen Kommentar..."
                                                             value={
-                                                                values.comment ?? undefined
+                                                                values.comment ??
+                                                                undefined
                                                             }
                                                             rows={4}
                                                             className={
@@ -530,13 +795,21 @@ export default function WaitingConfirmed({ auth }) {
                                                             )}
 
                                                         <br />
-                                                        {JSON.parse(values.files) && JSON.parse(values.files).length > 0 && (
-                                                        <div className="max-w-md">
+                                                        {JSON.parse(
+                                                            values.files
+                                                        ) &&
+                                                            JSON.parse(
+                                                                values.files
+                                                            ).length > 0 && (
+                                                                <div className="max-w-md">
+                                                                    <PhotoGallery
+                                                                        images={JSON.parse(
+                                                                            values.files
+                                                                        )}
+                                                                    />
+                                                                </div>
+                                                            )}
 
-                                                        <PhotoGallery images={JSON.parse(values.files)} />
-                                                        </div>
-                                                        )}
-                                                        
                                                         <div className="max-w-md">
                                                             <div className="mb-2 block">
                                                                 <Label
@@ -558,30 +831,33 @@ export default function WaitingConfirmed({ auth }) {
                                                                     );
                                                                 }}
                                                                 value={
-                                                                    values.clientId ?? ""
+                                                                    values.clientId ??
+                                                                    ""
                                                                 }
                                                             >
                                                                 <option>
-                                                                    Wählen Sie...
+                                                                    Wählen
+                                                                    Sie...
                                                                 </option>
-                                                                {clients && clients.map(
-                                                                    (
-                                                                        client
-                                                                    ) => (
-                                                                        <option
-                                                                            key={
-                                                                                client.id
-                                                                            }
-                                                                            value={
-                                                                                client.id
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                client.name
-                                                                            }
-                                                                        </option>
-                                                                    )
-                                                                )}
+                                                                {clients &&
+                                                                    clients.map(
+                                                                        (
+                                                                            client
+                                                                        ) => (
+                                                                            <option
+                                                                                key={
+                                                                                    client.id
+                                                                                }
+                                                                                value={
+                                                                                    client.id
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    client.name
+                                                                                }
+                                                                            </option>
+                                                                        )
+                                                                    )}
                                                             </Select>
                                                         </div>
                                                         {errors.client &&
@@ -603,7 +879,6 @@ export default function WaitingConfirmed({ auth }) {
                                                                 />
                                                             </div>
                                                             <Select
-                                                            
                                                                 id="feedingFee"
                                                                 name="feedingFee"
                                                                 onChange={(
@@ -617,7 +892,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                 }}
                                                                 required
                                                                 value={
-                                                                    values.feedingFee ?? ""
+                                                                    values.feedingFee ??
+                                                                    ""
                                                                 }
                                                             >
                                                                 <option
@@ -635,10 +911,23 @@ export default function WaitingConfirmed({ auth }) {
                                                                 >
                                                                     32€
                                                                 </option>
+                                                                <option
+                                                                    value={43}
+                                                                >
+                                                                    43€
+                                                                </option>{" "}
+                                                                <option
+                                                                    value={47}
+                                                                >
+                                                                    47€
+                                                                </option>
+                                                                <option
+                                                                    value={64}
+                                                                >
+                                                                    64€
+                                                                </option>
                                                             </Select>
                                                         </div>
-                                                       
-                                                        
                                                     </AccordionContent>
                                                 </AccordionPanel>
                                             </Accordion>
@@ -651,7 +940,7 @@ export default function WaitingConfirmed({ auth }) {
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
-                                                            Gastfahrt Beginn 
+                                                            Gastfahrt Beginn
                                                         </Label>
                                                         <Field
                                                             id="guestStartPlace"
@@ -672,7 +961,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestStartPlace ?? undefined
+                                                                values.guestStartPlace ??
+                                                                undefined
                                                             }
                                                         />
 
@@ -703,7 +993,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestStartTime ?? undefined
+                                                                    values.guestStartTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -759,7 +1050,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestStartEndPlace ?? undefined
+                                                                values.guestStartEndPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.guestStartEndPlace &&
@@ -775,7 +1067,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                            Gastfahrt Ende 
+                                                            Gastfahrt Ende
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -789,7 +1081,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestStartEndTime ?? undefined
+                                                                    values.guestStartEndTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -834,9 +1127,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         Dienst Beginn
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>
-                                                            Startort
-                                                        </Label>
+                                                        <Label>Startort</Label>
                                                         <input
                                                             id="workStartPlace"
                                                             name="workStartPlace"
@@ -856,7 +1147,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.workStartPlace ?? undefined
+                                                                values.workStartPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.workStartPlace &&
@@ -885,7 +1177,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.workStartTime ?? undefined
+                                                                    values.workStartTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -951,7 +1244,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.trainStartPlace ?? undefined
+                                                                values.trainStartPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.trainStartPlace &&
@@ -980,7 +1274,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.trainStartTime ?? undefined
+                                                                    values.trainStartTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1035,7 +1330,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.trainEndPlace ?? undefined
+                                                                values.trainEndPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.trainEndPlace &&
@@ -1064,7 +1360,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.trainEndTime ?? undefined
+                                                                    values.trainEndTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1116,8 +1413,9 @@ export default function WaitingConfirmed({ auth }) {
                                                                 push,
                                                             }) => (
                                                                 <div className="">
-                                                                    {values.breaks && 
-                                                                        typeof values.breaks !== "string" &&
+                                                                    {values.breaks &&
+                                                                        typeof values.breaks !==
+                                                                            "string" &&
                                                                         values.breaks.map(
                                                                             (
                                                                                 breakItem,
@@ -1131,7 +1429,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                                 >
                                                                                     <div>
                                                                                         <label className="text-sm">
-                                                                                            Pause Anfang
+                                                                                            Pause
+                                                                                            Anfang
                                                                                         </label>
                                                                                         <Field
                                                                                             name={`breaks.${index}.start`}
@@ -1151,7 +1450,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                                     </div>
                                                                                     <div>
                                                                                         <label className="text-sm">
-                                                                                            Pause Ende
+                                                                                            Pause
+                                                                                            Ende
                                                                                         </label>
                                                                                         <Field
                                                                                             name={`breaks.${index}.end`}
@@ -1183,9 +1483,12 @@ export default function WaitingConfirmed({ auth }) {
                                                                                 </div>
                                                                             )
                                                                         )}
-                                                                    {values.breaks && 
-                                                                        typeof values.breaks !== "object" &&
-                                                                        JSON.parse(values.breaks).map(
+                                                                    {values.breaks &&
+                                                                        typeof values.breaks !==
+                                                                            "object" &&
+                                                                        JSON.parse(
+                                                                            values.breaks
+                                                                        ).map(
                                                                             (
                                                                                 breakItem,
                                                                                 index
@@ -1205,7 +1508,10 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             name={`breaks.${index}.start`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                                            value={breakItem.start ?? undefined}
+                                                                                            value={
+                                                                                                breakItem.start ??
+                                                                                                undefined
+                                                                                            }
                                                                                             onChange={(
                                                                                                 e
                                                                                             ) => {
@@ -1227,7 +1533,10 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             name={`breaks.${index}.end`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                                            value={breakItem.end ?? undefined}
+                                                                                            value={
+                                                                                                breakItem.end ??
+                                                                                                undefined
+                                                                                            }
                                                                                             onChange={(
                                                                                                 e
                                                                                             ) => {
@@ -1304,7 +1613,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.workEndPlace ?? undefined
+                                                                values.workEndPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.workEndPlace &&
@@ -1332,7 +1642,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.workEndTime ?? undefined
+                                                                    values.workEndTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1372,7 +1683,8 @@ export default function WaitingConfirmed({ auth }) {
                                                 <AccordionPanel />
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
-                                                        Rückkehr des Gastes nach Hause
+                                                        Rückkehr des Gastes nach
+                                                        Hause
                                                     </AccordionTitle>
                                                     <AccordionContent>
                                                         <Label>
@@ -1396,7 +1708,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestEndPlace ?? undefined
+                                                                values.guestEndPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.guestEndPlace &&
@@ -1411,7 +1724,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                        Gastfahrt Start Zeit
+                                                            Gastfahrt Start Zeit
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1424,7 +1737,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestEndTime ?? undefined
+                                                                    values.guestEndTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1459,7 +1773,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         </div>
                                                         <br />
                                                         <Label>
-                                                        Gastfahrt End Ort
+                                                            Gastfahrt End Ort
                                                         </Label>
                                                         <input
                                                             id="guestEndEndPlace"
@@ -1479,7 +1793,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestEndEndPlace ?? undefined
+                                                                values.guestEndEndPlace ??
+                                                                undefined
                                                             }
                                                         />
                                                         {errors.guestEndEndPlace &&
@@ -1494,7 +1809,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
 
                                                         <Label>
-                                                        Gastfahrt End Zeit :
+                                                            Gastfahrt End Zeit :
                                                         </Label>
                                                         <div className="flex">
                                                             <input
@@ -1507,7 +1822,8 @@ export default function WaitingConfirmed({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestEndEndTime ?? undefined
+                                                                    values.guestEndEndTime ??
+                                                                    undefined
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1560,7 +1876,7 @@ export default function WaitingConfirmed({ auth }) {
                                                 >
                                                     Speichern
                                                 </Button>
-                                                <Button 
+                                                <Button
                                                     onClick={handleConfirm}
                                                     className="ml-4 bg-green-500"
                                                 >

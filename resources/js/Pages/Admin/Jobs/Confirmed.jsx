@@ -62,8 +62,6 @@ export default function Dashboard({ auth }) {
         return newObj;
     };
 
-
-
     useEffect(() => {
         axios.get("finalized-filter").then((res) => {
             if (res.status == 200) {
@@ -146,7 +144,6 @@ export default function Dashboard({ auth }) {
     const excelAction = () => {
         setIsSubmitting(true);
         if (gesamt) {
-
             axios
                 .post("/finalized-jobs/get-total-report", {
                     month: filter.month,
@@ -554,83 +551,122 @@ export default function Dashboard({ auth }) {
 
                                                 <br />
 
-                                                <ToggleSwitch
-                                                    checked={values.cancel}
-                                                    label="Storniert"
-                                                    id="cancel"
-                                                    name="cancel"
-                                                    onChange={(value) => {
-                                                        setinputValue(
-                                                            "cancel",
-                                                            value
-                                                        );
-                                                    }}
-                                                />
-
-                                                <br />
-
-                                                <ToggleSwitch
-                                                    checked={
-                                                        values.accomodation
-                                                    }
-                                                    label="Unterkunft"
-                                                    id="accomodation"
-                                                    name="accomodation"
-                                                    onChange={(value) => {
-                                                        if (value) {
-                                                            setinputValue(
-                                                                "feedingFee",
-                                                                32
-                                                            );
-                                                        }
-                                                        setinputValue(
-                                                            "accomodation",
-                                                            value
-                                                        );
-                                                    }}
-                                                />
-                                                <br />
-                                                <ToggleSwitch
-                                                    checked={
-                                                        values.bereitschaft
-                                                    }
-                                                    label="Bereitschaft"
-                                                    id="bereitschaft"
-                                                    name="bereitschaft"
-                                                    onChange={(value) => {
-                                                        setinputValue(
-                                                            "bereitschaft",
-                                                            value
-                                                        );
-                                                    }}
-                                                />
-                                                <br />
-                                                <ToggleSwitch
-                                                    checked={values.learning}
-                                                    label="Streckenkunde"
-                                                    id="learning"
-                                                    name="learning"
-                                                    onChange={(value) => {
-                                                        setinputValue(
-                                                            "learning",
-                                                            value
-                                                        );
-                                                    }}
-                                                />
-                                                <br />
-                                                <ToggleSwitch
-                                                    checked={values.extra}
-                                                    label="Extra"
-                                                    id="extra"
-                                                    name="extra"
-                                                    onChange={(value) => {
-                                                        setinputValue(
-                                                            "extra",
-                                                            value
-                                                        );
-                                                    }}
-                                                />
-                                                <br />
+                                                <div className="flex flex-wrap">
+                                                    <div className="w-1/6 p-2">
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.cancel
+                                                            }
+                                                            label="Storniert"
+                                                            id="cancel"
+                                                            name="cancel"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setinputValue(
+                                                                    "cancel",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="w-1/6 p-2">
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.ausland
+                                                            }
+                                                            label="Ausland"
+                                                            id="ausland"
+                                                            name="ausland"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setinputValue(
+                                                                    "ausland",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="w-1/6 p-2">
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.accomodation
+                                                            }
+                                                            label="Unterkunft"
+                                                            id="accomodation"
+                                                            name="accomodation"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                if (value) {
+                                                                    setinputValue(
+                                                                        "feedingFee",
+                                                                        32
+                                                                    );
+                                                                }
+                                                                setinputValue(
+                                                                    "accomodation",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="w-1/6 p-2">
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.bereitschaft
+                                                            }
+                                                            label="Bereitschaft"
+                                                            id="bereitschaft"
+                                                            name="bereitschaft"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setinputValue(
+                                                                    "bereitschaft",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="w-1/6 p-2">
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.learning
+                                                            }
+                                                            label="Streckenkunde"
+                                                            id="learning"
+                                                            name="learning"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setinputValue(
+                                                                    "learning",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="w-1/6 p-2">
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.extra
+                                                            }
+                                                            label="Extra"
+                                                            id="extra"
+                                                            name="extra"
+                                                            onChange={(
+                                                                value
+                                                            ) => {
+                                                                setinputValue(
+                                                                    "extra",
+                                                                    value
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <Label>Kommentar</Label>
                                                 <Textarea
                                                     id="comment"
@@ -651,6 +687,96 @@ export default function Dashboard({ auth }) {
                                                         );
                                                     }}
                                                 />
+
+                                                <div className="max-w-md">
+                                                    {values.ausland && (
+                                                        <div className="my-5">
+                                                            <Label>Land</Label>
+                                                            <Select
+                                                                id="country"
+                                                                name="country"
+                                                                placeholder="Land"
+                                                                onChange={(
+                                                                    e
+                                                                ) => {
+                                                                    setFieldValue(
+                                                                        "country",
+                                                                        e.target
+                                                                            .value
+                                                                    );
+                                                                    if (
+                                                                        values.accomodation
+                                                                    ) {
+                                                                        if (
+                                                                            e
+                                                                                .target
+                                                                                .value ===
+                                                                            "nl"
+                                                                        ) {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                47
+                                                                            );
+                                                                        } else if (
+                                                                            e
+                                                                                .target
+                                                                                .value ===
+                                                                            "ch"
+                                                                        ) {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                64
+                                                                            );
+                                                                        } else {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                32
+                                                                            );
+                                                                        }
+                                                                    } else {
+                                                                        if (
+                                                                            e
+                                                                                .target
+                                                                                .value ===
+                                                                            "nl"
+                                                                        ) {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                32
+                                                                            );
+                                                                        } else if (
+                                                                            e
+                                                                                .target
+                                                                                .value ===
+                                                                            "ch"
+                                                                        ) {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                43
+                                                                            );
+                                                                        } else {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                16
+                                                                            );
+                                                                        }
+                                                                    }
+                                                                }}
+                                                                value={
+                                                                    values.country
+                                                                }
+                                                            >
+                                                                <option value="nl">
+                                                                    Niederlande
+                                                                </option>
+                                                                <option value="ch">
+                                                                    Schweiz
+                                                                </option>
+                                                            </Select>
+                                                        </div>
+                                                    )}
+                                                </div>
+
                                                 <br />
                                                 <div className="max-w-md">
                                                     <div className="mb-2 block">
@@ -727,6 +853,15 @@ export default function Dashboard({ auth }) {
                                                         </option>
                                                         <option value={32}>
                                                             32€
+                                                        </option>
+                                                        <option value={43}>
+                                                            43€
+                                                        </option>
+                                                        <option value={47}>
+                                                            47€
+                                                        </option>
+                                                        <option value={64}>
+                                                            64€
                                                         </option>
                                                     </Select>
                                                 </div>

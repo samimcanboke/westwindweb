@@ -176,6 +176,7 @@ Route::post('/save-draft-jobs', [DraftJobsController::class, 'store'])->middlewa
 Route::post('/delete-draft-jobs', [DraftJobsController::class, 'destroy'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('delete-draft-jobs');
 Route::post('/send-submit-draft-jobs', [DraftJobsController::class, 'send_submit'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('send-submit-draft-jobs');
 Route::post('/update-draft-jobs', [DraftJobsController::class, 'update'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('update-draft-jobs');
+Route::post('/update-draft-job-inside', [DraftJobsController::class, 'edit_update'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('update-draft-job-inside');
 
 Route::post('/upload', [FileUploadController::class, 'upload'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('upload');
 

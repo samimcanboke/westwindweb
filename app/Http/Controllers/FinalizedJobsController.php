@@ -401,7 +401,7 @@ class FinalizedJobsController extends Controller
                     "guest_total_time" => $guest_start_sum,
                     "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
                     "guest_back_total_time" => $guest_back_sum,
-                    "accomodation" => $finalized_job->feeding_fee == 32 ? "X" : "",
+                    "accomodation" => ($finalized_job->feeding_fee == 32  ? "X" : "") . ($finalized_job->ausland ? $finalized_job->country : ""),
                     "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
@@ -564,7 +564,7 @@ class FinalizedJobsController extends Controller
                     "guest_total_time" => $guest_start_sum,
                     "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
                     "guest_back_total_time" => $guest_back_sum,
-                    "accomodation" => $finalized_job->feeding_fee == 32 ? "X" : "",
+                    "accomodation" => ($finalized_job->feeding_fee == 32 ? "X" : "") . ($finalized_job->ausland ? $finalized_job->country : ""),
                     "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
                     "train_number" => $finalized_job->zug_nummer,
                     "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
@@ -1422,6 +1422,13 @@ class FinalizedJobsController extends Controller
                 }
             }
 
+            $feeding_fee_text = "";
+            if($finalized_job->ausland){
+                $feeding_fee_text = strtoupper($finalized_job->country . "/" . ($finalized_job->accomodation ? "Hotel" : "Heim"));
+            } else {
+                $feeding_fee_text = $finalized_job->accomodation ? "Hotel" : "Heim";
+            }
+
             $data['rows'][] = [
                 "date" => (new DateTime($finalized_job->initial_date))->format('d/m/Y'),
                 "times" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
@@ -1434,7 +1441,7 @@ class FinalizedJobsController extends Controller
                 "sunday_holiday_hours" => $sunday_hours != "00:00" ? $sunday_hours : "-",
                 "midnight_shift" => $midnight_hours != "00:00" ? $midnight_hours : "-",
                 "night_shift" => $self_night_hours != "00:00" ? $self_night_hours : "-",
-                "feeding_fee" => $finalized_job->feeding_fee == 32 ? "Hotel" : (($finalized_job->feeding_fee == 16) ? "Heim" : "-"),
+                "feeding_fee" => $feeding_fee_text,
                 "comment" => $finalized_job->comment,
                 "places" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
                 "client" => $finalized_job->client->name,
@@ -1555,6 +1562,7 @@ class FinalizedJobsController extends Controller
      */
     public function edit(Request $request, FinalizedJobs $finalizedJobs)
     {
+
         $finalizedJob = FinalizedJobs::find($request->id);
         $finalizedJob->user_id = $request->user_id ? $request->user_id : $request->user()->id;
         $finalizedJob->client_id = $request->client_id;

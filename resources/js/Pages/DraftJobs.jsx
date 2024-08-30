@@ -456,6 +456,77 @@ export default function DraftJobs({ auth }) {
 
                                                             <ToggleSwitch
                                                                 checked={
+                                                                    values.ausland
+                                                                }
+                                                                label="Ausland"
+                                                                id="ausland"
+                                                                name="ausland"
+                                                                onChange={(
+                                                                    value
+                                                                ) => {
+                                                                    if (value) {
+                                                                        if (values.accomodation) {
+                                                                            if (
+                                                                                values.country ===
+                                                                                "nl"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    47
+                                                                                );
+                                                                            } else if (
+                                                                                values.country ===
+                                                                                "ch"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    64
+                                                                                );
+                                                                            } else {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    32
+                                                                                );
+                                                                            }
+                                                                        } else {
+                                                                            if (
+                                                                                values.country ===
+                                                                                "nl"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    32
+                                                                                );
+                                                                            } else if (
+                                                                                values.country ===
+                                                                                "ch"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    43
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        if(values.accomodation){
+
+                                                                                setFieldValue("feedingFee", 32);
+
+
+                                                                        } else {
+                                                                            setFieldValue("feedingFee", 16);
+                                                                        }
+                                                                    }
+                                                                    setFieldValue(
+                                                                        "ausland",
+                                                                        value
+                                                                    );
+                                                                }}
+                                                            />
+
+
+                                                            <ToggleSwitch
+                                                                checked={
                                                                     values.accomodation
                                                                 }
                                                                 label="Unterkunft"
@@ -464,16 +535,66 @@ export default function DraftJobs({ auth }) {
                                                                 onChange={(
                                                                     value
                                                                 ) => {
-                                                                    if (value) {
-                                                                        setFieldValue(
-                                                                            "feedingFee",
-                                                                            32
-                                                                        );
-                                                                    }
                                                                     setFieldValue(
                                                                         "accomodation",
                                                                         value
                                                                     );
+                                                                    if (value) {
+                                                                        if (values.ausland) {
+                                                                            if (
+                                                                                values.country ===
+                                                                                "nl"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    47
+                                                                                );
+                                                                            } else if (
+                                                                                values.country ===
+                                                                                "ch"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    64
+                                                                                );
+                                                                            }
+                                                                        } else {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                32
+                                                                            );
+                                                                        }
+                                                                    } else {
+                                                                        if (values.ausland) {
+                                                                            if (
+                                                                                values.country ===
+                                                                                "nl"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    32
+                                                                                );
+                                                                            } else if (
+                                                                                values.country ===
+                                                                                "ch"
+                                                                            ) {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    43
+                                                                                );
+                                                                            } else {
+                                                                                setFieldValue(
+                                                                                    "feedingFee",
+                                                                                    0
+                                                                                );
+                                                                            }
+                                                                        } else {
+                                                                            setFieldValue(
+                                                                                "feedingFee",
+                                                                                16
+                                                                            );
+                                                                        }
+                                                                    }
                                                                 }}
                                                             />
                                                             <ToggleSwitch
@@ -510,6 +631,46 @@ export default function DraftJobs({ auth }) {
                                                             />
                                                         </div>
                                                         <br />
+                                                        <div className="max-w-md mt-5">
+                                        {values.ausland && (
+                                            <div>
+                                                <Label>Land</Label>
+                                                <Select
+                                                    id="country"
+                                                    name="country"
+                                                    placeholder="Land"
+                                                    onChange={(e) => {
+                                                        setFieldValue("country", e.target.value);
+                                                        if (values.accomodation) {
+                                                            if (e.target.value === "nl") {
+                                                                setFieldValue("feedingFee", 47);
+                                                            } else if (e.target.value === "ch") {
+                                                                setFieldValue("feedingFee", 64);
+                                                            } else {
+                                                                setFieldValue("feedingFee", 32);
+                                                            }
+                                                        } else {
+                                                            if (e.target.value === "nl") {
+                                                                setFieldValue("feedingFee", 32);
+                                                            } else if (e.target.value === "ch") {
+                                                                setFieldValue("feedingFee", 43);
+                                                            } else {
+                                                                setFieldValue("feedingFee", 16);
+                                                            }
+                                                        }
+                                                    }}
+                                                    value={values.country}
+                                                >
+                                                    <option value="nl">
+                                                        Niederlande
+                                                    </option>
+                                                    <option value="ch">
+                                                        Schweiz
+                                                    </option>
+                                                </Select>
+                                            </div>
+                                        )}
+                                    </div>
                                                         <Label>Kommenter</Label>
                                                         <Textarea
                                                             id="comment"
@@ -650,6 +811,20 @@ export default function DraftJobs({ auth }) {
                                                                     value={32}
                                                                 >
                                                                     32€
+                                                                </option>
+                                                                <option
+                                                                    value={43}
+                                                                >
+                                                                    43€
+                                                                </option> <option
+                                                                    value={47}
+                                                                >
+                                                                    47€
+                                                                </option>
+                                                                <option
+                                                                    value={64}
+                                                                >
+                                                                    64€
                                                                 </option>
                                                             </Select>
                                                         </div>
