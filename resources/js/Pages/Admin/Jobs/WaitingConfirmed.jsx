@@ -106,7 +106,6 @@ export default function WaitingConfirmed({ auth }) {
             await axios.get(route("users.show")).then((driver_response) => {
                 setDrivers(driver_response.data);
                 for (let job of jobs.data) {
-                    console.log(job.user_id);
                     let driver = driver_response.data.find(
                         (driver) => driver.id === job.user_id
                     );
