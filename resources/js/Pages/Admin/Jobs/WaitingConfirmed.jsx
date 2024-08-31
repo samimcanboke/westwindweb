@@ -103,11 +103,11 @@ export default function WaitingConfirmed({ auth }) {
     };
     const getUnconfirmed = async () => {
         await axios.get("/data-unconfirmed-jobs").then(async (jobs) => {
-            await axios.get(route("users.show")).then((drivers) => {
-                setDrivers(drivers.data);
+            await axios.get(route("users.show")).then((driver_response) => {
+                setDrivers(driver_response.data);
                 for (let job of jobs.data) {
                     console.log(job.user_id);
-                    let driver = drivers.find(
+                    let driver = driver_response.data.find(
                         (driver) => driver.id === job.user_id
                     );
                     if(driver){
