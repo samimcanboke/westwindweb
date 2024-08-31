@@ -102,9 +102,10 @@ export default function WaitingConfirmed({ auth }) {
         setShowEdit(true);
     };
     const getUnconfirmed = async () => {
-        await axios.get("/data-unconfirmed-jobs").then((res) => {
-            if (drivers) {
-                res.data.forEach((job) => {
+        await axios.get("/data-unconfirmed-jobs").then(async (jobs) => {
+            await axios.get(route("users.show")).then((drivers) => {
+                setDrivers(drivers.data);
+                jobs.data.forEach((job) => {
                     let driver = drivers.find(
                         (driver) => driver.id === job.user_id
                     );
@@ -115,23 +116,17 @@ export default function WaitingConfirmed({ auth }) {
                         ? driver.name
                         : "Fahrer nicht gefunden";
                 });
-            }
-            setData(res.data);
-            setLoading(false);
+                setData(jobs.data);
+                setLoading(false);
+            });
+        });
+        await axios.get("/clients").then((res) => {
+            setClients(res.data);
         });
     };
 
     useEffect(() => {
         getUnconfirmed();
-
-        axios.get(route("users.show")).then((res) => {
-            setDrivers(res.data);
-            console.log(res.data);
-        });
-        axios.get("/clients").then((res) => {
-            setClients(res.data);
-            //console.log(res.data);
-        });
     }, []);
 
     function handleConfirm(e) {
