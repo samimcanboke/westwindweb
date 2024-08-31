@@ -105,19 +105,16 @@ export default function WaitingConfirmed({ auth }) {
         await axios.get("/data-unconfirmed-jobs").then(async (jobs) => {
             await axios.get(route("users.show")).then((drivers) => {
                 setDrivers(drivers.data);
-                console.log(drivers.data);
-                console.log(jobs.data);
-                jobs.data.forEach((job) => {
+                for (let job of jobs.data) {
+                    console.log(job.user_id);
                     let driver = drivers.find(
                         (driver) => driver.id === job.user_id
                     );
-                    job.driverId = driver
-                        ? driver.id.toString().padStart(3, "0")
-                        : "000";
-                    job.driverName = driver
-                        ? driver.name
-                        : "Fahrer nicht gefunden";
-                });
+                    if(driver){
+                        job.driverId = driver ? driver.id.toString().padStart(3, "0") : "000";
+                        job.driverName = driver ? driver.name : "Fahrer nicht gefunden";
+                    }
+                }
                 setData(jobs.data);
                 setLoading(false);
             });
