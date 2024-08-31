@@ -21,3 +21,4 @@ excel_python/.~lock.test.xlsx#
 resources/js/bootstrap.js
 package-lock.json
 yarn.lock
+.DS_Store
