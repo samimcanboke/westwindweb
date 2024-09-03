@@ -14,11 +14,54 @@ import {
     Button,
     Table,
 } from "flowbite-react";
-import { Formik, Field, FieldArray, Form } from "formik";
+import { Formik, Field, FieldArray, Form,useFormikContext } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
 import Swal from "sweetalert2";
 import PhotoGallery from "@/Components/PhotoGallery";
+
+const camelCase = (obj) => {
+    var newObj = {};
+    for (const d in obj) {
+        if (obj.hasOwnProperty(d)) {
+            newObj[
+                d.replace(/(\_\w)/g, function (k) {
+                    return k[1].toUpperCase();
+                })
+            ] = obj[d];
+        }
+    }
+    return newObj;
+};
+const snakeCase = (obj) => {
+    var newObj = {};
+    for (const d in obj) {
+        if (obj.hasOwnProperty(d)) {
+            newObj[d.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase()] =
+                obj[d];
+        }
+    }
+    return newObj;
+};
+
+const ConfirmButton = ({ onConfirm, setShowEdit, showEdit, getUnconfirmed }) => {
+    const { values } = useFormikContext();
+
+    const handleConfirm = (e) => {
+        e.preventDefault();
+        axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
+            getUnconfirmed();
+            setShowEdit(false);
+        });
+    };
+
+    return (
+        <Button onClick={handleConfirm} className="ml-4 bg-green-500">
+            Bestätigen
+        </Button>
+    );
+};
+
 
 const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
@@ -38,29 +81,8 @@ export default function WaitingConfirmed({ auth }) {
     const [drivers, setDrivers] = useState("");
     const [clients, setClients] = useState("");
 
-    const camelCase = (obj) => {
-        var newObj = {};
-        for (const d in obj) {
-            if (obj.hasOwnProperty(d)) {
-                newObj[
-                    d.replace(/(\_\w)/g, function (k) {
-                        return k[1].toUpperCase();
-                    })
-                ] = obj[d];
-            }
-        }
-        return newObj;
-    };
-    const snakeCase = (obj) => {
-        var newObj = {};
-        for (const d in obj) {
-            if (obj.hasOwnProperty(d)) {
-                newObj[d.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase()] =
-                    obj[d];
-            }
-        }
-        return newObj;
-    };
+
+
 
     const deleteDraft = async (draft) => {
         Swal.fire({
@@ -127,16 +149,6 @@ export default function WaitingConfirmed({ auth }) {
         getUnconfirmed();
     }, []);
 
-    function handleConfirm(e) {
-        e.preventDefault();
-        setLoading(true);
-        axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
-            getUnconfirmed();
-
-            setShowEdit(false);
-            setLoading(false);
-        });
-    }
 
     return (
         <AuthenticatedLayout
@@ -312,13 +324,13 @@ export default function WaitingConfirmed({ auth }) {
                                                                         .utc(
                                                                             date
                                                                         )
-                                                                        .subtract(
-                                                                            1,
-                                                                            "days"
-                                                                        )
-                                                                        .startOf(
-                                                                            "00:00"
-                                                                        )
+                                                                    .subtract(
+                                                                        1,
+                                                                        "days"
+                                                                    )
+                                                                    .startOf(
+                                                                        "00:00"
+                                                                    )
                                                                         .format()
                                                                 );
                                                             }}
@@ -652,9 +664,10 @@ export default function WaitingConfirmed({ auth }) {
                                                                     onChange={(
                                                                         value
                                                                     ) => {
+                                                                        console.log(value);
                                                                         setFieldValue(
                                                                             "extra",
-                                                                            value
+                                                                            value ? 1 : 0
                                                                         );
                                                                     }}
                                                                 />
@@ -1194,7 +1207,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                                                        </div>
+                                            </div>
                                                         {errors.workStartTime &&
                                                             touched.workStartTime && (
                                                                 <p className="text-red-500">
@@ -1291,7 +1304,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                                                        </div>
+                        </div>
                                                         {errors.trainStartTime &&
                                                             touched.trainStartTime && (
                                                                 <p className="text-red-500">
@@ -1377,7 +1390,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                                                        </div>
+                </div>
                                                         {errors.trainEndTime &&
                                                             touched.trainEndTime && (
                                                                 <p className="text-red-500">
@@ -1497,7 +1510,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             Break
                                                                                             Start
                                                                                         </label>
-                                                                                        <Field
+                                                        <Field
                                                                                             name={`breaks.${index}.start`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -1818,16 +1831,16 @@ export default function WaitingConfirmed({ auth }) {
                                                                     values.guestEndEndTime ??
                                                                     undefined
                                                                 }
-                                                                onChange={(
+                                                                    onChange={(
                                                                     e
-                                                                ) => {
-                                                                    setFieldValue(
+                                                                    ) => {
+                                                                        setFieldValue(
                                                                         "guestEndEndTime",
                                                                         e.target
                                                                             .value
-                                                                    );
-                                                                }}
-                                                            />
+                                                                        );
+                                                                    }}
+                                                                />
                                                             <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                                                                 <svg
                                                                     className="w-4 h-4 text-gray-500 dark:text-gray-400"
@@ -1869,12 +1882,7 @@ export default function WaitingConfirmed({ auth }) {
                                                 >
                                                     Speichern
                                                 </Button>
-                                                <Button
-                                                    onClick={handleConfirm}
-                                                    className="ml-4 bg-green-500"
-                                                >
-                                                    Bestätigen
-                                                </Button>
+                                                <ConfirmButton setShowEdit={setShowEdit} showEdit={showEdit} getUnconfirmed={getUnconfirmed} />
                                             </div>
                                         </Form>
                                     );
