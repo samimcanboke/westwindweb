@@ -542,7 +542,7 @@ export default function Planner({ auth }) {
                                           )
                                       )
                                       .days() *
-                                      24 +
+                                  24 +
                                   moment
                                       .duration(
                                           groupedPlans[group][
@@ -834,6 +834,22 @@ export default function Planner({ auth }) {
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);
         });
+
+        // Modalı sürüklenebilir hale getirmek için interactjs kullanımı
+        interact('.draggable')
+            .draggable({
+                listeners: {
+                    move(event) {
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                        target.style.transform = `translate(${x}px, ${y}px)`;
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                    }
+                }
+            });
     }, []);
 
     useEffect(() => {
@@ -870,7 +886,11 @@ export default function Planner({ auth }) {
                 </style>
             </Head>
 
-            <Modal show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal
+                show={openModal}
+                onClose={() => setOpenModal(false)}
+                className="draggable"
+            >
                 <Modal.Header>Lokführer Wählen</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
