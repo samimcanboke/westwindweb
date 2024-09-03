@@ -251,7 +251,7 @@ export default function Planner({ auth }) {
                                 },
                                 className: "jobs",
                                 style: {
-                                    background: job.extra == 1 ? "red" : "green",
+                                    background: job.client_id == 1 ? (job.extra == 1 ? "red" : "green") : (job.client_id == 3 ? (job.extra == 1 ? "pink" : "turquoise") : ""),
                                     border: job.extra == 1 ? "2px solid red" : "",
                                     zIndex: 50,
                                     minHeight: 40,
