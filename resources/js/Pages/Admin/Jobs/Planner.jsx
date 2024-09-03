@@ -170,6 +170,11 @@ export default function Planner({ auth }) {
             .then(async (response) => {
                 for (const job of response.data) {
                     if (job.user_id !== null) {
+                        if(job.extra == 1 || job.extra == "1"){
+                            job.extra = 1;
+                        }else{
+                            job.extra = 0;
+                        }
                         let newJobs = {
                             id: job.id,
                             group: job.user_id,
@@ -246,7 +251,8 @@ export default function Planner({ auth }) {
                                 },
                                 className: "jobs",
                                 style: {
-                                    background: job.extra == 1? "red" : "green",
+                                    background: job.extra == 1 ? "red" : "green",
+                                    border: job.extra == 1 ? "2px solid red" : "",
                                     zIndex: 50,
                                     minHeight: 40,
                                 },

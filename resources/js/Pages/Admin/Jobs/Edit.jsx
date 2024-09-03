@@ -370,7 +370,7 @@ export default function EditUser({ auth, id }) {
                                     id="extra"
                                     name="extra"
                                     required
-                                    checked={values.extra}
+                                    checked={values.extra == 1 ? true : false}
                                     onChange={(e) => {
                                         setFieldValue("extra", e);
                                     }}
