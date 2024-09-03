@@ -10,6 +10,7 @@ function GehaltsBerichte({user}) {
     const [report, setReport] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({});
+    const [selectedYear, setSelectedYear] = useState("");
 
     const uploadFiles = async (acceptedFiles,agreement,userInfo) => {
         const formData = new FormData();
@@ -180,7 +181,7 @@ function GehaltsBerichte({user}) {
             </Modal>
 
             <div className="overflow-x-auto">
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-between mb-4">
                     <Button
                         onClick={() => {
                            setShowModal(true);
@@ -188,6 +189,18 @@ function GehaltsBerichte({user}) {
                     >
                         Yeni Ekle
                     </Button>
+                    <select
+                        value={selectedYear}
+                        onChange={(e) => setSelectedYear(e.target.value)}
+                        className="border border-gray-300 rounded-md p-2"
+                    >
+                        <option value="">Tüm Yıllar</option>
+                        {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <table className="min-w-full bg-white">
@@ -202,72 +215,74 @@ function GehaltsBerichte({user}) {
                     </thead>
                     <tbody>
                         {reports.length > 0 &&
-                            reports.map((report, index) => (
-                                <tr key={index} className={ index % 2 === 0 ? "bg-gray-100" : "bg-white"}>
-                                    {report.user_id ? (
-                                        <>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 min-w-[250px]">
-                                                {moment(report.date).format("MMMM YYYY")}
-                                            </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 justify-center items-center">
-                                                {report.file ? (
-                                                    <>
-                                                    <a
-                                                        href={report.file}
-                                                        className="text-blue-500 border-2 border-blue-500 rounded-md p-1 hover:bg-blue-500 hover:text-white px-5 py-2"
-                                                        target="_blank"
+                            reports
+                                .filter((report) => selectedYear === "" || moment(report.date).year() === parseInt(selectedYear))
+                                .map((report, index) => (
+                                    <tr key={index} className={ index % 2 === 0 ? "bg-gray-100" : "bg-white"}>
+                                        {report.user_id ? (
+                                            <>
+                                                <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 min-w-[250px]">
+                                                    {moment(report.date).format("MMMM YYYY")}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 justify-center items-center">
+                                                    {report.file ? (
+                                                        <>
+                                                        <a
+                                                            href={report.file}
+                                                            className="text-blue-500 border-2 border-blue-500 rounded-md p-1 hover:bg-blue-500 hover:text-white px-5 py-2"
+                                                            target="_blank"
+                                                        >
+                                                            Anzeigen
+                                                        </a>
+                                                        <a
+                                                            className="text-green-500 mx-2 border-2 border-green-500  rounded-md p-1 hover:bg-green-500 hover:text-white px-5 py-2"
+                                                            download
+                                                            href={report.file}
+                                                        >
+                                                            Download
+                                                        </a>
+                                                        </>
+                                                    ) : (
+                                                        "Keine Datei"
+                                                    )}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ">
+                                                    <Button
+                                                        color="gray"
+                                                        className="px-5  text-red-500 border-2  border-red-500 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 hover:bg-red-500"
+                                                        onClick={() => {
+                                                            deleteReport(report);
+                                                        }}
                                                     >
-                                                        Anzeigen
-                                                    </a>
-                                                    <a
-                                                        className="text-green-500 mx-2 border-2 border-green-500  rounded-md p-1 hover:bg-green-500 hover:text-white px-5 py-2"
-                                                        download
-                                                        href={report.file}
+                                                        Löschen
+                                                    </Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300">
+                                                    {report.name}
+                                                </td>
+                                                <td
+                                                    colSpan="8"
+                                                    className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300 text-end"
+                                                >
+                                                    <button
+                                                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                                                        onClick={() => {
+                                                            addNewReport(
+                                                                report
+                                                            )
+                                                        }
+                                                        }
                                                     >
-                                                        Download
-                                                    </a>
-                                                    </>
-                                                ) : (
-                                                    "Keine Datei"
-                                                )}
-                                            </td>
-                                            <td className="py-2 px-4 border-b border-gray-300 border-l-2 border-r-2 ">
-                                                <Button
-                                                    color="gray"
-                                                    className="px-5  text-red-500 border-2  border-red-500 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 hover:bg-red-500"
-                                                    onClick={() => {
-                                                        deleteReport(report);
-                                                    }}
-                                                >
-                                                    Löschen
-                                                </Button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300">
-                                                {report.name}
-                                            </td>
-                                            <td
-                                                colSpan="8"
-                                                className="py-2 px-4 border-b border-l-2 border-r-2 border-gray-300 text-end"
-                                            >
-                                                <button
-                                                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                                                    onClick={() => {
-                                                        addNewReport(
-                                                            report
-                                                        )
-                                                    }
-                                                    }
-                                                >
-                                                    Hinzufügen
-                                                </button>
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                            ))}
+                                                        Hinzufügen
+                                                    </button>
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
                     </tbody>
                 </table>
             </div>
