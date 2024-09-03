@@ -143,6 +143,7 @@ class DraftJobsController extends Controller
         $draftJob->tour_name = $request->tour_name ?? $draftJob->tour_name;
         $draftJob->locomotive_number = $request->locomotive_number ?? $draftJob->locomotive_number;
         $draftJob->cancel = $request->cancel ?? $draftJob->cancel;
+        $draftJob->extra = $request->extra ?? $draftJob->extra;
         $draftJob->accomodation = $request->accomodation ?? $draftJob->accomodation;
         $draftJob->bereitschaft = $request->bereitschaft ?? $draftJob->bereitschaft;
         $draftJob->comment = $request->comment ?? $draftJob->comment;
@@ -189,6 +190,7 @@ class DraftJobsController extends Controller
         $finalized->tour_name = $draft->tour_name;
         $finalized->locomotive_number = $draft->locomotive_number;
         $finalized->cancel = $draft->cancel;
+        $finalized->extra = $draft->extra;
         $finalized->learning = $draft->learning;
         $finalized->accomodation = $draft->accomodation;
         $finalized->bereitschaft = $draft->bereitschaft;
