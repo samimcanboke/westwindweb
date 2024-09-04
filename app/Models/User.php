@@ -16,6 +16,7 @@ use App\Models\UsersBonus;
 use App\Models\UsersAdvance;
 use App\Models\HourBank;
 use App\Models\UserCertificate;
+use App\Models\UserSalaryReport;
 
 class User extends Authenticatable
 {
@@ -155,5 +156,10 @@ class User extends Authenticatable
     public function userCertificates()
     {
         return $this->hasMany(UserCertificate::class);
+    }
+
+    public function salaryReport()
+    {
+        return $this->hasMany(UserSalaryReport::class);
     }
 }

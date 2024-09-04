@@ -37,7 +37,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     <TextInput
                         id="id"
                         className="mt-1 block w-full"
-                        value={data.id}
+                        value={data.id ?? " "}
                         onChange={(e) => setData('name', e.target.value)}
                         required
                         isFocused
