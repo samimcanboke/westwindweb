@@ -1026,8 +1026,8 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
                 $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['extra_work'] = $user->id == 9 ? "-" : "-";
-                $data['rows'][$user->id]['guests'] = $user->id == 9 ? "-" : "25,00";
+                $data['rows'][$user->id]['extra_work'] = $user->id == 9 ? "-" : "40,00";
+                $data['rows'][$user->id]['guests'] = $user->id == 9 ? "-" : "-";
                 $data['rows'][$user->id]['breaks'] = "-";
                 $data['rows'][$user->id]['midnight_shift'] = "80,00";
                 $data['rows'][$user->id]['night_shift'] = "80,00";

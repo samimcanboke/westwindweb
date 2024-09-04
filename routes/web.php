@@ -136,6 +136,10 @@ Route::get('/admin/planner', function () {
     return Inertia::render('Admin/Jobs/Planner');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('admin-planner');
 
+Route::get('/admin/holiday-planner', function () {
+    return Inertia::render('Admin/Jobs/HolidayPlanner');
+})->middleware(['auth', 'verified', IsAdmin::class])->name('admin-holiday-planner');
+
 Route::get('/clients/new-job', function () {
     return Inertia::render('Admin/Jobs/Create');
 })->middleware(['auth', 'verified', IsAdmin::class])->name('clients.new-job');
