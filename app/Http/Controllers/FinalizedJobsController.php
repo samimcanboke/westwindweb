@@ -1021,7 +1021,7 @@ class FinalizedJobsController extends Controller
             if($user->id == 4 || $user->id == 9){
                 $data['rows'][$user->id]['workhours'] = "160,00";
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
-                $data['rows'][$user->id]['sick_leave_hours'] = "-";
+                // $data['rows'][$user->id]['sick_leave_hours'] = "-";
                 $data['rows'][$user->id]['total_day'] = 0;
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
