@@ -919,6 +919,7 @@ class FinalizedJobsController extends Controller
                 $total_work_sum->h -= 10;
             }
 
+
             $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
             $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
 
@@ -1020,8 +1021,8 @@ class FinalizedJobsController extends Controller
             $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
             if($user->id == 4 || $user->id == 9){
                 $data['rows'][$user->id]['workhours'] = "160,00";
-                $data['rows'][$user->id]['annual_leave_hours'] = "-";
-                // $data['rows'][$user->id]['sick_leave_hours'] = "-";
+                $data['rows'][$user->id]['annual_leave_hours'] = $total_annual_leave_hours > 0 ? number_format($total_annual_leave_hours, 2, ',', '') : "-";
+                $data['rows'][$user->id]['sick_leave_hours'] = $total_sick_leave_hours > 0 ? number_format($total_sick_leave_hours, 2, ',', '') : "-";
                 $data['rows'][$user->id]['total_day'] = 0;
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
