@@ -171,6 +171,8 @@ export default function Planner({ auth }) {
             setSelectedUsers(users);
         } else {
             getUsers();
+            setSelectedUsersForTime([]);
+            setSelectedUsers(users);
         }
     }, [selectedClients]);
 
