@@ -267,7 +267,17 @@ export default function EditUser({ auth, user_id }) {
                 res.data.start_working_date = moment(
                     res.data.start_working_date
                 ).format("YYYY-MM-DD");
-                setUser(res.data);
+                if(auth.user.accountant){
+                    if(res.data.is_admin ){
+                        window.location.href = route("users.index");
+                    }
+                } else {
+                    if(res.data.id){
+                        setUser(res.data);
+                    } else {
+                        window.location.href = route("users.index");
+                    }
+                }
             })
             .catch((err) => {
                 console.log(err);

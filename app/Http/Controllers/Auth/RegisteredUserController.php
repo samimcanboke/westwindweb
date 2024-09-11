@@ -27,13 +27,14 @@ class RegisteredUserController extends Controller
 
     public function show()
     {
+        dd("asd");
         $users = User::where('is_active', 1)->withoutLeaveWorkingDate()->get();
         return response()->json($users);
     }
 
     public function show_all()
     {
-        $users = User::all();
+        $users = User::excludeAdminsIfAccountant()->get();
         return response()->json($users);
     }
 

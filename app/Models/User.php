@@ -17,6 +17,10 @@ use App\Models\UsersAdvance;
 use App\Models\HourBank;
 use App\Models\UserCertificate;
 use App\Models\UserSalaryReport;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class User extends Authenticatable
 {
@@ -66,6 +70,7 @@ class User extends Authenticatable
         'accountant',
     ];
 
+
     public function scopeWithLeaveWorkingDate($query)
     {
         return $query->whereNotNull('leave_working_date');
@@ -76,15 +81,13 @@ class User extends Authenticatable
         return $query->whereNull('leave_working_date');
     }
 
-    protected static function boot()
+    public function scopeExcludeAdminsIfAccountant($query)
     {
-        parent::boot();
 
-        static::addGlobalScope('excludeAdminsIfAccountant', function ($query) {
-            if (auth()->check() && auth()->user()->accountant) {
-                $query->where('is_admin', false);
-            }
-        });
+        if (auth()->user()->accountant) {
+            return $query->where('is_admin', false);
+        }
+        return $query;
     }
 
     /**
