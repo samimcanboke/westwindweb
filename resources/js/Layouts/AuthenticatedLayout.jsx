@@ -68,7 +68,7 @@ export default function Authenticated({ user, header, children }) {
                                 Urlaubsanträge
                                 </NavLink>
                             </div>*/}
-                            {user.is_admin && user.accountant && (
+                            {(user.is_admin || user.accountant) && (
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                     <Dropdown>
                                         <Dropdown.Trigger>
@@ -193,7 +193,7 @@ export default function Authenticated({ user, header, children }) {
                     </div>
 
                     <div className="pt-2 pb-3 space-y-1">
-                    {user.is_admin && (
+                    {(user.is_admin || user.accountant) && (
 
                                 <div className="">
                                     <Dropdown>
