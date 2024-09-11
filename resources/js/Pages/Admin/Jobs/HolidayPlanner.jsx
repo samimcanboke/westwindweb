@@ -35,7 +35,29 @@ export default function Planner({ auth }) {
     const [job, setJob] = useState(null);
     const [editingJob, setEditingJob] = useState({});
     const [users, setUsers] = useState([]);
-    const [userJobs, setUserJobs] = useState([]);
+    const [userJobs, setUserJobs] = useState([
+        {
+            id: 1,
+            group: 1,
+            title: 'item 1',
+            start_time: moment(),
+            end_time: moment().add(1, 'hour')
+          },
+          {
+            id: 2,
+            group: 2,
+            title: 'item 2',
+            start_time: moment().add(-0.5, 'hour'),
+            end_time: moment().add(0.5, 'hour')
+          },
+          {
+            id: 3,
+            group: 1,
+            title: 'item 3',
+            start_time: moment().add(2, 'hour'),
+            end_time: moment().add(3, 'hour')
+          }
+    ]);
 
     const [sickStartDate, setSickStartDate] = useState("");
     const [sickStartTime, setSickStartTime] = useState("");
@@ -187,6 +209,33 @@ export default function Planner({ auth }) {
             });
     };
 
+
+    const groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
+
+const items = [
+  {
+    id: 1,
+    group: 1,
+    title: 'item 1',
+    start_time: moment(),
+    end_time: moment().add(1, 'hour')
+  },
+  {
+    id: 2,
+    group: 2,
+    title: 'item 2',
+    start_time: moment().add(-0.5, 'hour'),
+    end_time: moment().add(0.5, 'hour')
+  },
+  {
+    id: 3,
+    group: 1,
+    title: 'item 3',
+    start_time: moment().add(2, 'hour'),
+    end_time: moment().add(3, 'hour')
+  }
+]
+
     useEffect(() => {
         console.log(userJobs);
     }, [userJobs]);
@@ -194,11 +243,11 @@ export default function Planner({ auth }) {
     useEffect(() => {
         getUsers();
         moment.locale("de");
-        setUserJobs([
+        /*setUserJobs([
             {
                 id: 1,
-                group: 4,
-                title: "U",
+                group: 3,
+                title: "ASDASDASD",
                 start: moment().startOf("day"),
                 end: moment().endOf("day"),
                 className: "jobs",
@@ -262,11 +311,8 @@ export default function Planner({ auth }) {
                     itemDivTitleKey: "id",
                 }
             },
-        ]);
-        axios.get(route("users.show")).then((response) => {
-            setDrivers(response.data);
-        });
 
+        ]);*/
     }, []);
 
     return (
@@ -280,9 +326,9 @@ export default function Planner({ auth }) {
         >
             <Head></Head>
 
-            <Head title="Planner" />
+            <Head title="Holiday Planner" />
 
-            <div className={window.innerWidth > 3000 ? "" : "py-12"}>
+            <div className={window.innerWidth > 3000 ? "w-full" : "py-12"}>
                 <div
                     className={
                         window.innerWidth > 3000
@@ -295,6 +341,15 @@ export default function Planner({ auth }) {
                         style={{ minHeight: "40rem" }}
                     >
                         <Timeline
+                            groups={users}
+                            items={items}
+                            defaultTimeStart={moment().add(-12, "hour")}
+                            defaultTimeEnd={moment().add(12, "hour")}
+                        />
+
+                        {
+                        /*
+                        <Timeline
                             groups={
                                 selectedUsers.length > 0 ? selectedUsers : users
                             }
@@ -303,7 +358,10 @@ export default function Planner({ auth }) {
                             unit="day"
                             defaultTimeStart={moment().add(-256, "hour")}
                             defaultTimeEnd={moment().add(256, "hour")}
-                            maxZoom={86400000} // Maksimum yakınlaştırma gün kadar
+                            minZoom={86400000} // Maksimum yakınlaştırma gün kadar
+                            onZoom={(event, timelineInfo) => {
+                                console.log(event, timelineInfo);
+                            }}
                             traditionalZoom={true}
                             sidebarWidth={250}
                             visibleTimeStart={visibleTimeStart}
@@ -353,11 +411,11 @@ export default function Planner({ auth }) {
                                     }
                                     return prevUserJobs;
                                 });
-                                setUserJobs((prevUserJobs) => [...prevUserJobs]); // Ekranı güncellemek için state'i yeniden ayarla
+
                             }}
                         >
                             <TimelineHeaders>
-                                <CustomHeader unit="month">
+                                <CustomHeader unit="year">
                                     {({
                                         headerContext: { intervals },
                                         getRootProps,
@@ -404,7 +462,7 @@ export default function Planner({ auth }) {
                                                         >
                                                             <div className="sticky">
                                                                 {interval.startTime.format(
-                                                                    "MMMM"
+                                                                    "YYYY"
                                                                 )}
                                                             </div>
                                                         </div>
@@ -414,7 +472,7 @@ export default function Planner({ auth }) {
                                         );
                                     }}
                                 </CustomHeader>
-                                <CustomHeader unit="week">
+                                <CustomHeader unit="month">
                                     {({
                                         headerContext: { intervals },
                                         getRootProps,
@@ -583,6 +641,7 @@ export default function Planner({ auth }) {
                                 </CustomHeader>
                             </TimelineHeaders>
                         </Timeline>
+                        */}
                     </div>
                 </div>
             </div>

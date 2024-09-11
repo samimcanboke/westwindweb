@@ -286,7 +286,7 @@ export default function DraftJobs({ auth }) {
                                             setSubmitting(false);
                                             Swal.fire({
                                                 icon: "error",
-                                                title: "Hata",
+                                                title: "Fehler",
                                                 text: err.response.data.message,
                                             });
                                         });
