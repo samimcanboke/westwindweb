@@ -215,21 +215,21 @@ export default function Planner({ auth }) {
 const items = [
   {
     id: 1,
-    group: 1,
+    group: 4,
     title: 'item 1',
     start_time: moment(),
     end_time: moment().add(1, 'hour')
   },
   {
     id: 2,
-    group: 2,
+    group: 3,
     title: 'item 2',
     start_time: moment().add(-0.5, 'hour'),
     end_time: moment().add(0.5, 'hour')
   },
   {
     id: 3,
-    group: 1,
+    group:4,
     title: 'item 3',
     start_time: moment().add(2, 'hour'),
     end_time: moment().add(3, 'hour')
@@ -237,8 +237,8 @@ const items = [
 ]
 
     useEffect(() => {
-        console.log(userJobs);
-    }, [userJobs]);
+        setUserJobs(items);
+    }, []);
 
     useEffect(() => {
         getUsers();
@@ -342,9 +342,11 @@ const items = [
                     >
                         <Timeline
                             groups={users}
-                            items={items}
-                            defaultTimeStart={moment().add(-12, "hour")}
-                            defaultTimeEnd={moment().add(12, "hour")}
+                            items={userJobs}
+                            defaultTimeStart={moment().add(-256, "hour")}
+                            defaultTimeEnd={moment().add(256, "hour")}
+
+
                         />
 
                         {
