@@ -69,6 +69,18 @@ Route::get('/admin/aggreements/edit/{id}', function ($id    ) {
     return Inertia::render('Admin/Aggreements/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('aggreements.edit');
 
+Route::get('/admin/programs', function () {
+    return Inertia::render('Admin/Programs/Index');
+})->middleware(['auth', 'verified'])->name('programs.view');
+
+Route::get('/admin/programs/create', function () {
+    return Inertia::render('Admin/Programs/Create');
+})->middleware(['auth', 'verified'])->name('programs.create');
+
+Route::get('/admin/programs/edit/{id}', function ($id    ) {
+    return Inertia::render('Admin/Programs/Edit', ['id' => $id]);
+})->middleware(['auth', 'verified'])->name('programs.edit');
+
 
 
 
