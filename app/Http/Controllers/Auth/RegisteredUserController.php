@@ -27,7 +27,6 @@ class RegisteredUserController extends Controller
 
     public function show()
     {
-        dd("asd");
         $users = User::where('is_active', 1)->withoutLeaveWorkingDate()->get();
         return response()->json($users);
     }
