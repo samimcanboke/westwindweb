@@ -307,11 +307,11 @@ export default function EditUser({ auth, user_id }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    {user ? user.name : "User"} Edit
+                    {user ? user.name : "User"} Bearbeiten
                 </h2>
             }
         >
-            <Head title={user ? user.name : "User  Edit"} />
+            <Head title={user ? user.name : "User Bearbeiten"} />
 
             {/* Bonus Modal */}
             <Modal
@@ -347,7 +347,7 @@ export default function EditUser({ auth, user_id }) {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="amount">Amount</Label>
+                            <Label htmlFor="amount">Betrag</Label>
                             <input
                                 type="number"
                                 id="amount"
@@ -409,7 +409,7 @@ export default function EditUser({ auth, user_id }) {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="amount">Amount</Label>
+                            <Label htmlFor="amount">Betrag</Label>
                             <input
                                 type="number"
                                 id="amount"
@@ -592,18 +592,18 @@ export default function EditUser({ auth, user_id }) {
                                     if (res.data.success) {
                                         Swal.fire({
                                             icon: "success",
-                                            title: "Başarılı",
-                                            text: "Kullanıcı başarıyla kaydedildi!",
+                                            title: "Erfolgreich",
+                                            text: "Benutzer erfolgreich gespeichert!",
                                         });
                                         window.location.href =
                                             route("users.index");
                                     } else {
                                         Swal.fire({
                                             icon: "error",
-                                            title: "Hata",
+                                            title: "Fehler",
                                             text:
                                                 data.data.message ||
-                                                "Kullanıcı kaydedilemedi!",
+                                                "Benutzer konnte nicht gespeichert werden!",
                                         });
                                     }
                                     setSubmitting(false);
@@ -612,10 +612,10 @@ export default function EditUser({ auth, user_id }) {
                                     console.log("error", error);
                                     Swal.fire({
                                         icon: "error",
-                                        title: "Hata",
+                                        title: "Fehler",
                                         text:
                                             error.response.data.message ||
-                                            "Bir hata oluştu!",
+                                            "Ein Fehler ist aufgetreten!",
                                     });
                                     setSubmitting(false);
                                 });
@@ -635,7 +635,7 @@ export default function EditUser({ auth, user_id }) {
                                 >
                                     <Tabs.Item
                                         active
-                                        title="Profile"
+                                        title="Profil"
                                         icon={HiUserCircle}
                                     >
                                         <div className="mb-4 mx-4 flex space-x-4">
@@ -644,7 +644,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="driver_id"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Sürücü ID
+                                                    Fahrer ID
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -666,7 +666,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="name"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    İsim Soyisim
+                                                    Name und Nachname
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -688,7 +688,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="identity_number"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Kimlik Numarası
+                                                    Identifikationsnummer
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -715,7 +715,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="phone"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Phone
+                                                    Telefon
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -736,7 +736,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="birth_date"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Doğum Tarihi
+                                                    Geburtsdatum
                                                 </label>
                                                 <Field
                                                     type="date"
@@ -757,7 +757,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="start_working_date"
                                                     className="block text-sm font-medium text-gray-7000"
                                                 >
-                                                    İşe Başlama Tarihi
+                                                    Arbeitsbeginn
                                                 </label>
                                                 <Datepicker
                                                     name="start_working_date"
@@ -795,7 +795,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="nationality"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Milliyet
+                                                    Nationalität
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -818,7 +818,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="kinder"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Çocuk Sayısı
+                                                    Anzahl der Kinder
                                                 </label>
                                                 <Field
                                                     type="number"
@@ -840,7 +840,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="is_retired"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Emekli mi?
+                                                    Rentner?
                                                 </label>
                                                 <ToggleSwitch
                                                     label=""
@@ -875,7 +875,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="street"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Sokak Adı
+                                                    Straße
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -896,7 +896,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="apartment"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Ev Numarası
+                                                    Hausnummer
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -917,7 +917,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="zip"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Posta Kodu
+                                                    Postleitzahl
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -937,7 +937,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="city"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Şehir
+                                                    Stadt
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -961,7 +961,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="urgency_contact_name"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Acil Durum İletişim Adı
+                                                    Notfallkontakt
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -985,7 +985,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="urgency_contact_phone"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Acil Durum İletişim Telefonu
+                                                    Notfallkontakt Telefon
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -1009,7 +1009,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="private_phone"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Özel Telefon
+                                                    Privattelefon
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -1057,7 +1057,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="password"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Password
+                                                    Passwort
                                                 </label>
                                                 <div className="relative">
                                                     <Field
@@ -1112,7 +1112,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="working_hours"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Çalışma Saati
+                                                    Arbeitsstunden
                                                 </label>
                                                 <Field
                                                     type="number"
@@ -1136,7 +1136,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="annual_leave_rights"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Yıllık İzin Hakkı (Saat)
+                                                    Jahresurlaubsanspruch (Stunden)
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -1161,7 +1161,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="salary"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Maaş (Saat)
+                                                    Gehalt (Stunden)
                                                 </label>
                                                 <Field
                                                     type="text"
@@ -1182,7 +1182,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="is_admin"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Admin Kullanıcısı mı ?
+                                                    Admin Benutzer?
                                                 </label>
 
                                                 <ToggleSwitch
@@ -1214,7 +1214,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="accountant"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Admin Kullanıcısı mı ?
+                                                    Buchhalter?
                                                 </label>
 
                                                 <ToggleSwitch
@@ -1247,7 +1247,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="profession_name"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Meslek
+                                                Beruf
                                             </label>
                                             <CreatableSelect
                                                 isClearable
@@ -1264,7 +1264,7 @@ export default function EditUser({ auth, user_id }) {
                                         </div>
                                     </Tabs.Item>
                                     <Tabs.Item
-                                        title="Banka Bilgileri"
+                                        title="Bankdaten"
                                         icon={MdOutlineWorkOutline}
                                     >
                                         <div className="mb-4 mx-4">
@@ -1272,7 +1272,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="bank_name"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Banka Adı
+                                                Bank
                                             </label>
                                             <Field
                                                 type="text"
@@ -1292,7 +1292,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="bank_account_number"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Banka Hesap Numarası
+                                                Bankkonto Nummer
                                             </label>
                                             <Field
                                                 type="text"
@@ -1315,7 +1315,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="bank_iban"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Banka IBAN
+                                                IBAN
                                             </label>
                                             <Field
                                                 type="text"
@@ -1366,7 +1366,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="bank_bic"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Banka BIC
+                                                BIC
                                             </label>
                                             <Field
                                                 type="text"
@@ -1386,7 +1386,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="bank_account_holder"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Banka Hesap Sahibi
+                                                Kontoinhaber
                                             </label>
                                             <Field
                                                 type="text"
@@ -1406,7 +1406,7 @@ export default function EditUser({ auth, user_id }) {
                                         </div>
                                     </Tabs.Item>
                                     <Tabs.Item
-                                        title="Sigorta Bilgileri"
+                                        title="Versicherungsinformationen"
                                         icon={HiShieldCheck}
                                     >
                                         <div className="mb-4 mx-4">
@@ -1414,7 +1414,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="insurance_number"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Sigorta Numarası
+                                                Versicherungsnummer
                                             </label>
                                             <Field
                                                 type="text"
@@ -1437,7 +1437,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="social_security_number"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Sosyal Güvenlik Numarası
+                                                Sozialversicherungsnummer
                                             </label>
                                             <Field
                                                 type="text"
@@ -1460,7 +1460,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="social_security_name"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Sosyal Güvenlik Adı
+                                                Sozialversicherungsname
                                             </label>
                                             <Field
                                                 type="text"
@@ -1484,7 +1484,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="tax_class"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Vergi Sınıfı
+                                                Steuerklasse
                                             </label>
                                             <Field
                                                 type="number"
@@ -1504,7 +1504,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="tax_class"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Vergi ID
+                                                Steuer-ID
                                             </label>
                                             <Field
                                                 type="number"
@@ -1522,7 +1522,7 @@ export default function EditUser({ auth, user_id }) {
                                     </Tabs.Item>
                                     {/* Bonuslar */}
                                     <Tabs.Item
-                                        title="Bonuslar"
+                                        title="Bonuses"
                                         icon={HiClipboardList}
                                     >
                                         <div className="container mx-auto mt-10">
@@ -1630,7 +1630,7 @@ export default function EditUser({ auth, user_id }) {
                                                                         className="text-center py-4"
                                                                     >
                                                                         Bonus
-                                                                        bulunamadı
+                                                                        nicht gefunden
                                                                     </td>
                                                                 </tr>
                                                             )}
@@ -1641,7 +1641,7 @@ export default function EditUser({ auth, user_id }) {
                                     </Tabs.Item>
                                     {/* Avanslar */}
                                     <Tabs.Item
-                                        title="Avanslar"
+                                        title="Vorauszahlungen"
                                         icon={HiUserCircle}
                                     >
                                         <div className="container mx-auto mt-10">
@@ -1754,8 +1754,8 @@ export default function EditUser({ auth, user_id }) {
                                                                         colSpan="3"
                                                                         className="text-center py-4"
                                                                     >
-                                                                        Avans
-                                                                        bulunamadı
+                                                                        Vorauszahlung
+                                                                        nicht gefunden
                                                                     </td>
                                                                 </tr>
                                                             )}
@@ -1766,7 +1766,7 @@ export default function EditUser({ auth, user_id }) {
                                     </Tabs.Item>
                                     {/* Saat Bankası */}
                                     <Tabs.Item
-                                        title="Saat Bankası"
+                                        title="Arbeitszeitkonto"
                                         icon={HiClipboardList}
                                     >
                                         <div className="container mx-auto mt-10">
@@ -1779,12 +1779,12 @@ export default function EditUser({ auth, user_id }) {
                                                                 {user
                                                                     ? user.name
                                                                     : "User"}{" "}
-                                                                - Hour Banks
+                                                                - Arbeitszeitkonto
                                                                 <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
                                                                     {user
                                                                         ? user.name
                                                                         : "User"}{" "}
-                                                                    - Hour Banks
+                                                                    - Arbeitszeitkonto
                                                                 </p>
                                                             </div>
                                                             <div>
@@ -1796,8 +1796,7 @@ export default function EditUser({ auth, user_id }) {
                                                                         );
                                                                     }}
                                                                 >
-                                                                    Neu Hour
-                                                                    Bank
+                                                                    Neu Arbeitszeitkonto
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -2008,7 +2007,7 @@ export default function EditUser({ auth, user_id }) {
                                     <Tabs.Item
                                         title={
                                             <div className="flex items-center">
-                                                Sertifikalar
+                                                Zertifikate
                                                 {alertCertificates && (
                                                     <span className="bg-red-500 text-white text-xs font-semibold ml-2 px-2.5 py-0.5 rounded">
                                                         {alertCertificates}
@@ -2025,21 +2024,21 @@ export default function EditUser({ auth, user_id }) {
                                     </Tabs.Item>
                                     {/* Sözleşmeler */}
                                     <Tabs.Item
-                                        title="Sözleşmeler"
+                                        title="Verträge"
                                         icon={HiClipboardList}
                                     >
                                         <UserAgreement agreements={aggreements} user={user} userAgreements={userAgreements} />
                                     </Tabs.Item>
                                     {/* Programlar */}
                                     <Tabs.Item
-                                        title="Programlar"
+                                        title="Programme"
                                         icon={MdDashboard}
                                     >
                                         Test
                                     </Tabs.Item>
                                     {/* Bahn Kart */}
                                     <Tabs.Item
-                                        title="Bahn Kart"
+                                        title="Bahnkarte"
                                         icon={HiCreditCard}
                                     >
                                         {userBahnCard && (
@@ -2052,7 +2051,7 @@ export default function EditUser({ auth, user_id }) {
                                         )}
                                     </Tabs.Item>
                                     <Tabs.Item
-                                        title="Gehaltsberichte"
+                                        title="Gehaltsabrechnungen"
                                         icon={HiDocumentReport}
                                     >
                                         <GehaltsBerichte  user={user} />
@@ -2065,7 +2064,7 @@ export default function EditUser({ auth, user_id }) {
                                             disabled={isSubmitting}
                                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                         >
-                                            Submit
+                                            Speichern
                                         </button>
                                     </div>
                                 </Form>

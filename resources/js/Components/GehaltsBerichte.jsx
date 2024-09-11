@@ -111,12 +111,12 @@ function GehaltsBerichte({user}) {
     return (
         <>
             <Modal show={showModal} onClose={() => setShowModal(false)}>
-                <Modal.Header>Gehaltsbericht Hinzufügen</Modal.Header>
+                <Modal.Header>Gehaltsabrechnung Hinzufügen</Modal.Header>
                 <Modal.Body>
 
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            Gehaltsbericht
+                            Gehaltsabrechnung
                         </p>
 
                         <input
@@ -187,14 +187,14 @@ function GehaltsBerichte({user}) {
                            setShowModal(true);
                         }}
                     >
-                        Yeni Ekle
+                        Neu hinzufügen
                     </Button>
                     <select
                         value={selectedYear}
                         onChange={(e) => setSelectedYear(e.target.value)}
                         className="border border-gray-300 rounded-md p-2"
                     >
-                        <option value="">Tüm Yıllar</option>
+                        <option value="">Alle Jahre</option>
                         {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
                             <option key={year} value={year}>
                                 {year}

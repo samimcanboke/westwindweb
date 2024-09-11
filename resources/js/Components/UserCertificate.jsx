@@ -160,14 +160,14 @@ function UserCertificate({user}) {
             });
             if(test.data.error){
                 Swal.fire(
-                    "Hata",
+                    "Fehler",
                     test.response.data.error,
                     "error"
                 );
             } else {
                 Swal.fire(
-                    "Başarılı",
-                    "Mail başarıyla gönderildi.",
+                    "Erfolgreich",
+                    "E-Mail erfolgreich gesendet.",
                     "success"
                 );
             }
@@ -182,7 +182,7 @@ function UserCertificate({user}) {
         } catch (error) {
             if(error.response.data.error){
                 Swal.fire(
-                    "Hata",
+                    "Fehler",
                     error.response.data.error,
                     "error"
                 );
@@ -195,7 +195,7 @@ function UserCertificate({user}) {
                 setSubject("");
                 setMessage("");
             }
-            console.error("Email gönderme hatası:", error);
+            console.error("Fehler beim Senden der E-Mail:", error);
         }
     };
 
@@ -401,8 +401,8 @@ function UserCertificate({user}) {
                     .map((cert) => cert.id);
                     if(selectedCertificates.length === 0){
                         Swal.fire(
-                            "Hata",
-                            "Lütfen önce bir sertifika seçiniz.",
+                            "Fehler",
+                            "Bitte wählen Sie zuerst ein Zertifikat aus.",
                             "error"
                         );
                         return;
@@ -411,15 +411,15 @@ function UserCertificate({user}) {
                     setShowEmailModal(true);
                 }}
             >
-                Seçilen Sertifikaları Mail At
+                Ausgewählte Zertifikate per E-Mail senden
             </Button>
 
             <Modal show={showEmailModal} onClose={() => setShowEmailModal(false)}>
-                <Modal.Header>Seçilen Sertifikaları Mail At</Modal.Header>
+                <Modal.Header>Ausgewählte Zertifikate per E-Mail senden</Modal.Header>
                 <Modal.Body>
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            Kime
+                            An
                         </p>
                         <input
                             className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -431,7 +431,7 @@ function UserCertificate({user}) {
                     </div>
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            Konu
+                            Betreff
                         </p>
                         <input
                             className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -443,7 +443,7 @@ function UserCertificate({user}) {
                     </div>
                     <div className="mt-2">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            Mesaj İçeriği
+                            Nachricht
                         </p>
                         <textarea
                             className="w-full border-2 border-gray-300 rounded-md p-2"
@@ -456,10 +456,10 @@ function UserCertificate({user}) {
                     {emailSending ? (
                         <Spinner aria-label="Gönderiliyor..." />
                     ) : (
-                        <Button onClick={sendEmail}>Gönder</Button>
+                        <Button onClick={sendEmail}>Senden</Button>
                     )}
                     <Button color="gray" onClick={() => setShowEmailModal(false)}>
-                        İptal
+                        Abbrechen
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -469,7 +469,7 @@ function UserCertificate({user}) {
                     <thead>
                         <tr>
                             <th className="py-2 px-4 border-b">
-                                Seç
+                                Auswählen
                             </th>
                             <th className="py-2 px-4 border-b">
                                 Zertifikat Name
