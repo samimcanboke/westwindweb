@@ -30,7 +30,6 @@ import {
 } from "react-icons/hi";
 import { MdDashboard, MdOutlineWorkOutline } from "react-icons/md";
 
-//TODO: Gehaltsabrechnungen Maaş Dökümanları ekle
 
 
 export default function EditUser({ auth, user_id }) {
@@ -267,9 +266,12 @@ export default function EditUser({ auth, user_id }) {
                 res.data.start_working_date = moment(
                     res.data.start_working_date
                 ).format("YYYY-MM-DD");
+                console.log(res.data);
                 if(auth.user.accountant){
                     if(res.data.is_admin ){
                         window.location.href = route("users.index");
+                    } else {
+                        setUser(res.data);
                     }
                 } else {
                     if(res.data.id){
