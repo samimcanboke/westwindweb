@@ -108,6 +108,7 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('bahn-cards')}>Bahnkarten</Dropdown.Link>
                                             <Dropdown.Link href={route('aggreements.view')}>Vertrag</Dropdown.Link>
                                             <Dropdown.Link href={route('certificates')}>Zertifikate</Dropdown.Link>
+                                            <Dropdown.Link href={route('programs.view')}>Programme</Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>
@@ -188,7 +189,7 @@ export default function Authenticated({ user, header, children }) {
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' xl:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
+                            Armaturenbrett
                         </ResponsiveNavLink>
                     </div>
 
@@ -231,6 +232,7 @@ export default function Authenticated({ user, header, children }) {
                                             <ResponsiveNavLink href={route('confirmed-jobs-to-client')}>Kunden Berichte</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('aggreements.view')}>Vertrag</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('certificates')}>Zertifikate</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('programs.view')}>Programme</ResponsiveNavLink>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>

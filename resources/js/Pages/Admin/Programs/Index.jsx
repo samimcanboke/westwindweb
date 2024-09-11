@@ -47,7 +47,7 @@ export default function Programs({ auth }) {
                                 <div>
                                     <a
                                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                        href={route("aggreements.create")}
+                                        href={route("programs.create")}
                                     >
                                         Neue Programm
                                     </a>
@@ -121,7 +121,7 @@ export default function Programs({ auth }) {
                                                             axios
                                                                 .delete(
                                                                     route(
-                                                                        "aggreements.destroy",
+                                                                        "programs.destroy",
                                                                         {
                                                                             id: program.id,
                                                                         }

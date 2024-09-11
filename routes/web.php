@@ -27,6 +27,7 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\UserCertificateController;
 use App\Http\Controllers\UsersAggreementsController;
 use App\Http\Controllers\UserSalaryReportController;
+use App\Http\Controllers\ProgramController;
 
 use App\Events\UserRegistered;
 
@@ -65,7 +66,7 @@ Route::get('/admin/aggreements/create', function () {
     return Inertia::render('Admin/Aggreements/Create');
 })->middleware(['auth', 'verified'])->name('aggreements.create');
 
-Route::get('/admin/aggreements/edit/{id}', function ($id    ) {
+Route::get('/admin/aggreements/edit/{id}', function ($id) {
     return Inertia::render('Admin/Aggreements/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('aggreements.edit');
 
@@ -77,7 +78,7 @@ Route::get('/admin/programs/create', function () {
     return Inertia::render('Admin/Programs/Create');
 })->middleware(['auth', 'verified'])->name('programs.create');
 
-Route::get('/admin/programs/edit/{id}', function ($id    ) {
+Route::get('/admin/programs/edit/{id}', function ($id) {
     return Inertia::render('Admin/Programs/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('programs.edit');
 
@@ -222,6 +223,18 @@ Route::get('/agreements/{id}', [AggreementController::class, 'show'])->middlewar
 Route::post('/agreements', [AggreementController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.store');
 Route::put('/agreements/{id}', [AggreementController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.update');
 Route::delete('/agreements/{id}', [AggreementController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.destroy');
+
+
+Route::get('/programs', [ProgramController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs');
+Route::post('/programs', [ProgramController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.store');
+Route::get('/programs/{id}', [ProgramController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.show');
+Route::put('/programs/{id}', [ProgramController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.update');
+Route::delete('/programs/{id}', [ProgramController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.destroy');
+
+
+
+
+
 
 Route::get('/certificates', [CertificateController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates');
 Route::get('/certificates-get', [CertificateController::class, 'getCertificates'])->middleware(['auth', 'verified',IsAdmin::class])->name('certificates-get');

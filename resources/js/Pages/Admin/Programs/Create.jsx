@@ -32,22 +32,23 @@ export default function CreatePrograms({ auth }) {
                         axios
                             .post(route("programs.store"), values)
                             .then((res) => {
-                                if (res.data.success) {
+                                console.log(res.data);
+                                if (res.data.status === "success") {
                                     resetForm();
                                     Swal.fire({
                                         icon: "success",
                                         title: "Erfolgreich",
-                                        text: "Vereinbarung erfolgreich hinzugefügt!",
+                                        text: "Programm erfolgreich hinzugefügt!",
                                     });
                                     setSubmitting(false);
-                                    window.location.href = "/admin/aggreements";
+                                    window.location.href = "/admin/programs";
                                 } else {
                                     Swal.fire({
                                         icon: "error",
                                         title: "Fehler",
                                         text:
                                             res.data.message ||
-                                            "Vereinbarung konnte nicht hinzugefügt werden!",
+                                            "Programm konnte nicht hinzugefügt werden!",
                                     });
                                 }
                                 setSubmitting(false);

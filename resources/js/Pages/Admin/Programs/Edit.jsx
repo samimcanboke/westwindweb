@@ -55,19 +55,19 @@ export default function EditPrograms({ auth,id }) {
                     onSubmit={(values, { setSubmitting, resetForm  }) => {
                         axios.put(route('programs.update',{id:values.id}), values)
                         .then(res => {
-                            if (res.data.success) {
+                            if (res.data.status === "success") {
                                 resetForm();
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Erfolgreich',
-                                    text: 'Programm erfolgreich bearbeitet!',
+                                    text: res.data.message,
                                 });
                                 window.location.href = '/admin/programs';
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Hata',
-                                    text: data.data.message || 'Programm konnte nicht bearbeitet werden!',
+                                    text: res.data.message || 'Programm konnte nicht bearbeitet werden!',
                                 });
                             }
                             setSubmitting(false);

@@ -1767,7 +1767,7 @@ export default function Planner({ auth }) {
                                                                                     }
                                                                                 )}
                                                                             >
-                                                                                <div className="sticky">
+                                                                                <div >
                                                                                     {interval.startTime.format(
                                                                                         "MMMM"
                                                                                     )}
@@ -1838,7 +1838,7 @@ export default function Planner({ auth }) {
                                                                                     }
                                                                                 )}
                                                                             >
-                                                                                <div className="sticky">
+                                                                                <div >
                                                                                     KW {interval.startTime.format(
                                                                                         "w"
                                                                                     )}
@@ -1911,7 +1911,7 @@ export default function Planner({ auth }) {
                                                                                     }
                                                                                 )}
                                                                             >
-                                                                                <div className="sticky">
+                                                                                <div >
                                                                                     {interval.startTime.format(
                                                                                         interval.labelWidth <
                                                                                             150
@@ -1990,7 +1990,7 @@ export default function Planner({ auth }) {
                                                                                     }
                                                                                 )}
                                                                             >
-                                                                                <div className="sticky">
+                                                                                <div >
                                                                                     {interval.startTime.format(
                                                                                         "HH"
                                                                                     )}

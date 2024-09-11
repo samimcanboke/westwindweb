@@ -26,7 +26,7 @@ class ProgramController extends Controller
             'name' => 'required|string|max:255',
         ]);
         $program = Program::create($request->all());
-        return redirect()->route('admin.programs.index');
+        return response()->json(["status" => "success", "message" => "Programm erfolgreich erstellt", "program" => $program]);
     }
 
     /**
@@ -44,7 +44,7 @@ class ProgramController extends Controller
     public function edit(Program $program,$id)
     {
         $program = Program::where('id', $id)->first();
-        return response()->json($program);
+        return response()->json(["status" => "success", "message" => "Programm erfolgreich erstellt", "program" => $program]);
     }
 
     /**
@@ -57,7 +57,7 @@ class ProgramController extends Controller
         ]);
         $program = Program::where('id', $id)->first();
         $program->update($request->all());
-        return redirect()->route('admin.programs.index');
+        return response()->json(["status" => "success", "message" => "Programm erfolgreich bearbeitet", "program" => $program]);
     }
 
     /**
@@ -67,6 +67,6 @@ class ProgramController extends Controller
     {
         $program = Program::where('id', $id)->first();
         $program->delete();
-        return redirect()->route('admin.programs.index');
+        return response()->json(["status" => "success", "message" => "Programm erfolgreich gelöscht", "program" => $program]);
     }
 }
