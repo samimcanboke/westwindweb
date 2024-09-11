@@ -33,6 +33,7 @@ class UsersAggreementsController extends Controller
         $userAgreement = new UsersAggreements();
         $userAgreement->user_id = $request->user_id;
         $userAgreement->agreement_id = $request->agreement_id ;
+        $userAgreement->aggreement_id = $request->agreement_id ;
         $userAgreement->agreement_file = $request->file;
         $userAgreement->agreement_type = $request->name;
         $userAgreement->save();
