@@ -567,6 +567,10 @@ export default function EditUser({ auth, user_id }) {
                                 user.is_admin != null && user.is_admin == 1
                                     ? true
                                     : false,
+                            accountant:
+                                user.accountant != null && user.accountant == 1
+                                    ? true
+                                    : false,
                         }}
                         //validationSchema={validationSchema}
                         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -1161,7 +1165,7 @@ export default function EditUser({ auth, user_id }) {
                                                         </p>
                                                     )}
                                             </div>
-                                            <div className="w-1/4">
+                                            <div className="w-1/5">
                                                 <label
                                                     htmlFor="is_admin"
                                                     className="block text-sm font-medium text-gray-700"
@@ -1190,6 +1194,38 @@ export default function EditUser({ auth, user_id }) {
                                                     touched.is_admin && (
                                                         <p className="text-red-500">
                                                             *{errors.is_admin}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                            <div className="w-1/5">
+                                                <label
+                                                    htmlFor="accountant"
+                                                    className="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Admin Kullanıcısı mı ?
+                                                </label>
+
+                                                <ToggleSwitch
+                                                    label=""
+                                                    id="accountant"
+                                                    name="accountant"
+                                                    className="mt-2"
+                                                    checked={
+                                                        values.accountant
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    onChange={(e) => {
+                                                        setFieldValue(
+                                                            "accountant",
+                                                            e
+                                                        );
+                                                    }}
+                                                />
+                                                {errors.accountant &&
+                                                    touched.accountant && (
+                                                        <p className="text-red-500">
+                                                            *{errors.accountant}
                                                         </p>
                                                     )}
                                             </div>

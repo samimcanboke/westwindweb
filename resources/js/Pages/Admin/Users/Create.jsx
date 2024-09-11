@@ -24,7 +24,7 @@ export default function CreateUsers({ auth }) {
 
             <div className="container mx-auto mt-10">
                 <Formik
-                    initialValues={{ email: "", password: "", driver_id: "", name: "", birth_date: "", phone: "", working_hours: 160,annual_leave_rights: 160, sick_holiday: 160,salary: 0.0, start_working_date: new Date(), is_admin: false }}
+                    initialValues={{ email: "", password: "", driver_id: "", name: "", birth_date: "", phone: "", working_hours: 160,annual_leave_rights: 160, sick_holiday: 160,salary: 0.0, start_working_date: new Date(), is_admin: false,accountant: false }}
                     validate={(values) => {
                         const errors = {};
                         if (!values.driver_id) {
@@ -206,6 +206,13 @@ export default function CreateUsers({ auth }) {
                                         name="is_admin"
                                         checked={values.is_admin}
                                         onChange={(e)=>{setFieldValue('is_admin',e)}}
+                                    />
+                                    <ToggleSwitch
+                                        label="Accountant ?"
+                                        id="accountant"
+                                        name="accountant"
+                                        checked={values.accountant}
+                                        onChange={(e)=>{setFieldValue('accountant',e)}}
                                     />
                             <div className="flex items-center justify-end mt-4 mx-4">
                                 <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

@@ -107,6 +107,7 @@ class RegisteredUserController extends Controller
             'sick_holiday' => $request->sick_holiday,
             'password' => Hash::make($request->password),
             'is_admin' => $request->is_admin,
+            'accountant' => $request->accountant,
             'private_phone' => $request->private_phone,
             'address' => $request->address,
             'nationality' => $request->nationality,

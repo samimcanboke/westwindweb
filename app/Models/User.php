@@ -63,6 +63,7 @@ class User extends Authenticatable
         'zip',
         'apartment',
         'tax_id',
+        'accountant',
     ];
 
     public function scopeWithLeaveWorkingDate($query)
@@ -75,6 +76,16 @@ class User extends Authenticatable
         return $query->whereNull('leave_working_date');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('excludeAdminsIfAccountant', function ($query) {
+            if (auth()->check() && auth()->user()->accountant) {
+                $query->where('is_admin', false);
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
