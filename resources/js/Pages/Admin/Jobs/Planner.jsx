@@ -63,6 +63,9 @@ export default function Planner({ auth }) {
     const [visibleTimeEnd, setVisibleTimeEnd] = useState(null);
     const [thisWeek, setThisWeek] = useState(false);
     const [nextWeek, setNextWeek] = useState(false);
+    const [selectedClients, setSelectedClients] = useState([]);
+    const [clients, setClients] = useState([]);
+
 
     const format = {
         year: {
@@ -135,6 +138,55 @@ export default function Planner({ auth }) {
     const showCurrentWeek = () => {
         setVisibleTimeStart(moment().startOf("week"));
         setVisibleTimeEnd(moment().endOf("week"));
+    };
+
+
+    useEffect(() => {
+        //console.log(selectedClients);
+        if (selectedClients.length > 0) {
+            let userIds = [];
+            for (const client of selectedClients) {
+                if (client.users) {
+                    for (const userClient of client.users) {
+                        if (!userIds.includes(userClient.user.id)) {
+                            userIds.push(userClient.user.id);
+                        }
+                    }
+                }
+            }
+            let users = [];
+            for (const userId of userIds) {
+                let user = usersForTime.find((u) => u.value === userId);
+                if (user) {
+                    users.push({
+                        value: user.value,
+                        label: user.label,
+                        id: user.value,
+                        title: user.label,
+                        height: 50,
+                    });
+                }
+            }
+            setSelectedUsersForTime(users);
+            setSelectedUsers(users);
+        } else {
+            getUsers();
+        }
+    }, [selectedClients]);
+
+    const getClientsUsers = async () => {
+        await axios.get(route("get-clients-users")).then((response) => {
+            let clients = response.data.clients;
+            let clients_users = [];
+            for(const client of clients){
+                clients_users.push({
+                    value: client.id,
+                    label: client.name,
+                    users: client.users_clients
+                });
+            }
+            setClients(clients_users);
+        });
     };
 
     const getPlansWithoutUser = async () => {
@@ -830,6 +882,7 @@ export default function Planner({ auth }) {
         getUsers();
         getUsersJobs();
         moment.locale("de");
+        getClientsUsers();
 
         axios.get(route("users.show")).then((response) => {
             setDrivers(response.data);
@@ -1636,6 +1689,7 @@ export default function Planner({ auth }) {
                                                                 return user;
                                                             }
                                                         });
+                                                        console.log(newUserList);
                                                     setSelectedUsers(
                                                         newUserList
                                                     );
@@ -1649,6 +1703,26 @@ export default function Planner({ auth }) {
                                                     maxWidth: 220,
                                                 }}
                                             />
+                                            {clients &&
+                                            <MultiSelect
+                                                placeholder="Auswählen"
+                                                options={clients}
+                                                value={selectedClients}
+                                                className="mt-5"
+                                                onChange={(e) => {
+                                                    setSelectedClients(e)
+                                                }}
+                                                labelledBy="Auswählen"
+                                                style={{
+                                                    width: "15%",
+                                                    position: "absolute",
+                                                    zIndex: 1000,
+                                                    maxWidth: 220,
+                                                }}
+                                            />
+                                            }
+
+
                                         </div>
                                     </div>
                                     {userJobs && (

@@ -189,4 +189,10 @@ class RegisteredUserController extends Controller
         $user_clients = $user->userClients;
         return response()->json($user_clients);
     }
+
+    public function get_clients_users()
+    {
+        $clients = Client::with('usersClients.user')->get();
+        return response()->json(['clients' => $clients]);
+    }
 }

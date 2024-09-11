@@ -219,6 +219,7 @@ Route::delete('/delete-user-professions/{user_id}/{profession_id}', [Professions
 
 Route::post('/add-user-clients/{user_id}', [RegisteredUserController::class,  'add_user_clients'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-user-clients');
 Route::get('/get-user-clients/{user_id}', [RegisteredUserController::class, 'show_user_clients'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-clients');
+Route::get('/get-clients-users', [RegisteredUserController::class, 'get_clients_users'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-clients-users');
 Route::delete('/delete-user-clients/{user_id}/{client_id}', [RegisteredUserController::class, 'delete_user_clients'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-user-clients');
 
 
