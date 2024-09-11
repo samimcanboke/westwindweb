@@ -1380,7 +1380,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="profession_name"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Clients
+                                                Kunden
                                             </label>
                                             <CreatableSelect
                                                 isClearable
