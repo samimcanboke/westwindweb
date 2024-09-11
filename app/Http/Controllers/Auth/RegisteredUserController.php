@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Client;
 use App\Events\UserRegistered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,7 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use Carbon\Carbon;
+use App\Models\UsersClient;
 
 class RegisteredUserController extends Controller
 {
@@ -158,5 +160,33 @@ class RegisteredUserController extends Controller
         $user->is_active = 0;
         $user->save();
         return response()->json(['success'=>true, 'message' => 'User left the job successfully']);
+    }
+
+
+    public function add_user_clients (Request $request,$user_id)
+    {
+        $user = User::where('id',$user_id)->first();
+        $client = Client::where('id',$request->client_id)->first();
+        $user_client = new UsersClient();
+        $user_client->user_id = $user->id;
+        $user_client->client_id = $client->id;
+        $user_client->save();
+        return response()->json(['success'=>true, 'message' => 'User clients added successfully']);
+    }
+
+    public function delete_user_clients (Request $request,$user_id,$client_id)
+    {
+        $user = User::where('id',$user_id)->first();
+        $client = Client::where('id',$request->client_id)->first();
+        $user_client = UsersClient::where('user_id',$user->id)->where('client_id',$client->id)->first();
+        $user_client->delete();
+        return response()->json(['success'=>true, 'message' => 'User clients removed successfully']);
+    }
+
+    public function show_user_clients ($user_id)
+    {
+        $user = User::where('id',$user_id)->first();
+        $user_clients = $user->userClients;
+        return response()->json($user_clients);
     }
 }

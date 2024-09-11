@@ -52,6 +52,8 @@ export default function EditUser({ auth, user_id }) {
     const [userAgreements, setUserAgreements] = useState([]);
     const [programs, setPrograms] = useState([]);
     const [userPrograms, setUserPrograms] = useState([]);
+    const [clients, setClients] = useState([]);
+    const [userClients, setUserClients] = useState([]);
 
     const [alertCertificates, setAlertCertificates] = useState(0);
 
@@ -236,6 +238,59 @@ export default function EditUser({ auth, user_id }) {
             });
     };
 
+
+
+    const getClients = () => {
+        axios
+            .get(route("admin-clients"))
+            .then((res) => {
+                setClients([
+                    ...res.data.map((client) => ({
+                        label: client.name,
+                        value: client.id,
+                    })),
+                ]);
+                return [...res.data];
+            })
+            .then((old_resp) => {
+                axios
+                    .get(route("get-user-clients", user_id))
+                    .then(async (res) => {
+                        let userClients = res.data;
+                        let selectedClients = [];
+                        for (const userClient of userClients) {
+                            let client = old_resp.find(
+                                (client) =>
+                                    client.id ===
+                                    userClient.client_id
+                            );
+
+                            selectedClients.push({
+                                label: client.name,
+                                value: client.id,
+                            });
+                        }
+                        setUserClients(selectedClients);
+                    });
+            });
+    }
+
+    const getUserClients = () => {
+        axios.get(route("get-user-clients", user_id)).then((res) => {
+            let userClients = res.data;
+            let selectedClients = [];
+            for (const userClient of userClients) {
+                let client = clients.find(client => client.value === userClient.client_id);
+                selectedClients.push({
+                    label: client.name,
+                    value: client.id,
+                });
+            }
+            setUserClients(selectedClients);
+
+        });
+    }
+
     const handleCreateProfession = (value) => {
         axios.post(route("professions-store"), { name: value }).then((res) => {
             let profession_id = res.data.id;
@@ -257,7 +312,7 @@ export default function EditUser({ auth, user_id }) {
                     profession_id: profession_id,
                 })
                 .then((res) => {
-                    getProfessions();
+                    setUserClients();
                 });
         } else if (process.action === "remove-value") {
             let profession_id = process.removedValue.value;
@@ -269,10 +324,48 @@ export default function EditUser({ auth, user_id }) {
                     })
                 )
                 .then((res) => {
-                    getProfessions();
+                    setUserClients();
                 });
         }
     };
+
+    const handleCreateClient = (value) => {
+        axios.post(route("add-user-clients", user_id), { name: value }).then((res) => {
+            let client_id = res.data.id;
+            axios
+                .post(route("add-user-clients", user_id), {
+                    client_id: client_id,
+                })
+                .then((res) => {
+                    getClients();
+                });
+        });
+    };
+
+    const handleSelectClient = async (selected, process) => {
+        if (process.action === "select-option") {
+            let client_id = process.option.value;
+            axios
+                .post(route("add-user-clients", user_id), {
+                    client_id: client_id,
+                })
+                .then((res) => {
+                    getClients();
+                });
+        } else if (process.action === "remove-value") {
+            let client_id = process.removedValue.value;
+            axios
+                .delete(route("delete-user-clients", {
+                    user_id: user_id,
+                    client_id: client_id,
+                }))
+                .then((res) => {
+                    getClients();
+
+                });
+        }
+    };
+
 
     useEffect(() => {
         axios
@@ -309,6 +402,8 @@ export default function EditUser({ auth, user_id }) {
         getUserCertificates();
         getPrograms();
         getUserPrograms();
+        getClients();
+        getUserClients();
         /*const interval = setInterval(() => {
             getBonus();
             getAdvances();
@@ -1276,6 +1371,26 @@ export default function EditUser({ auth, user_id }) {
                                                 value={userProfessions}
                                                 onChange={
                                                     handleSelectProfession
+                                                }
+                                            />
+                                        </div>
+                                        <div className="mb-4 mx-4">
+                                            <label
+                                                htmlFor="profession_name"
+                                                className="block text-sm font-medium text-gray-700"
+                                            >
+                                                Clients
+                                            </label>
+                                            <CreatableSelect
+                                                isClearable
+                                                isMulti
+                                                onCreateOption={
+                                                    handleCreateClient
+                                                }
+                                                options={clients}
+                                                value={userClients}
+                                                onChange={
+                                                    handleSelectClient
                                                 }
                                             />
                                         </div>

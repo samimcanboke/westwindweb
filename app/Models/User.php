@@ -19,6 +19,8 @@ use App\Models\UserCertificate;
 use App\Models\UserSalaryReport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UsersClient;
+
 
 
 
@@ -180,5 +182,15 @@ class User extends Authenticatable
     public function usersPrograms()
     {
         return $this->hasMany(UsersPrograms::class);
+    }
+
+    public function userClients()
+    {
+        return $this->hasMany(UsersClient::class);
+    }
+
+    public function clients()
+    {
+        return $this->belongsToMany(Client::class);
     }
 }

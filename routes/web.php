@@ -217,6 +217,13 @@ Route::post('/add-user-profession/{user_id}', [ProfessionsController::class, 'ad
 Route::get('/get-user-professions/{user_id}', [ProfessionsController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-professions');
 Route::delete('/delete-user-professions/{user_id}/{profession_id}', [ProfessionsController::class, 'delete_user_profession'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-user-professions');
 
+Route::post('/add-user-clients/{user_id}', [RegisteredUserController::class,  'add_user_clients'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-user-clients');
+Route::get('/get-user-clients/{user_id}', [RegisteredUserController::class, 'show_user_clients'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-clients');
+Route::delete('/delete-user-clients/{user_id}/{client_id}', [RegisteredUserController::class, 'delete_user_clients'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-user-clients');
+
+
+
+
 
 Route::get('/agreements', [AggreementController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements');
 Route::get('/agreements/{id}', [AggreementController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('aggreements.show');
