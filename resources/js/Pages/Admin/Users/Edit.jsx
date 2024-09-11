@@ -55,6 +55,7 @@ export default function EditUser({ auth, user_id }) {
     const [clients, setClients] = useState([]);
     const [userClients, setUserClients] = useState([]);
 
+
     const [alertCertificates, setAlertCertificates] = useState(0);
 
     useEffect(() => {
