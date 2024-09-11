@@ -226,10 +226,13 @@ Route::delete('/agreements/{id}', [AggreementController::class, 'destroy'])->mid
 
 
 Route::get('/programs', [ProgramController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs');
+Route::get('/user-programs/{user_id}', [ProgramController::class, 'user_programs'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.programs');
 Route::post('/programs', [ProgramController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.store');
+Route::post('/user-programs/{user_id}', [ProgramController::class, 'user_programs_store'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.programs.store');
 Route::get('/programs/{id}', [ProgramController::class, 'show'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.show');
 Route::put('/programs/{id}', [ProgramController::class, 'update'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.update');
 Route::delete('/programs/{id}', [ProgramController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('programs.destroy');
+Route::delete('/user-programs/{id}', [ProgramController::class, 'user_programs_destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.programs.destroy');
 
 
 

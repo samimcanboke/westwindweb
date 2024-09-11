@@ -176,4 +176,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSalaryReport::class);
     }
+
+    public function usersPrograms()
+    {
+        return $this->hasMany(UsersPrograms::class);
+    }
 }

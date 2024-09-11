@@ -7,6 +7,7 @@ import BahnCard from "@/Components/BahnCard";
 import Select from "react-select";
 import UserCertificate from "@/Components/UserCertificate";
 import UserAgreement from "@/Components/UserAgreement";
+import UserProgram from "@/Components/UserProgram";
 import GehaltsBerichte from "@/Components/GehaltsBerichte";
 import {
     Datepicker,
@@ -49,6 +50,8 @@ export default function EditUser({ auth, user_id }) {
     const [certificates, setCertificates] = useState([]);
     const [userCertificates, setUserCertificates] = useState([]);
     const [userAgreements, setUserAgreements] = useState([]);
+    const [programs, setPrograms] = useState([]);
+    const [userPrograms, setUserPrograms] = useState([]);
 
     const [alertCertificates, setAlertCertificates] = useState(0);
 
@@ -173,6 +176,18 @@ export default function EditUser({ auth, user_id }) {
             setHourBanks(hourBanks.filter((item) => item.id !== hourBank.id));
         });
     };
+
+    const getPrograms = () => {
+        axios.get(route("programs")).then((res) => {
+            setPrograms(res.data);
+        });
+    };
+
+    const getUserPrograms = () => {
+        axios.get(route("user.programs", user_id)).then((res) => {
+            setUserPrograms(res.data);
+        });
+    };
 /*
     const validationSchema = yup.object().shape({
         driver_id: yup.string().required(),
@@ -292,6 +307,8 @@ export default function EditUser({ auth, user_id }) {
         getAggreements();
         getCertificates();
         getUserCertificates();
+        getPrograms();
+        getUserPrograms();
         /*const interval = setInterval(() => {
             getBonus();
             getAdvances();
@@ -2034,7 +2051,7 @@ export default function EditUser({ auth, user_id }) {
                                         title="Programme"
                                         icon={MdDashboard}
                                     >
-                                        Test
+                                        <UserProgram programs={programs} user={user} userPrograms={userPrograms} />
                                     </Tabs.Item>
                                     {/* Bahn Kart */}
                                     <Tabs.Item

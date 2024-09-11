@@ -15,4 +15,9 @@ class Program extends Model
         'password',
         'extra_info',
     ];
+
+    public function usersPrograms()
+    {
+        return $this->hasMany(UsersPrograms::class);
+    }
 }
