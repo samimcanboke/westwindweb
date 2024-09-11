@@ -1460,7 +1460,7 @@ export default function EditUser({ auth, user_id }) {
                                                 htmlFor="social_security_name"
                                                 className="block text-sm font-medium text-gray-700"
                                             >
-                                                Sozialversicherungsname
+                                                Krankenkasse
                                             </label>
                                             <Field
                                                 type="text"
