@@ -320,18 +320,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 );
                                                                 setFieldValue(
                                                                     "initialDate",
-                                                                    moment
-                                                                        .utc(
-                                                                            date
-                                                                        )
-                                                                    .subtract(
-                                                                        1,
-                                                                        "days"
-                                                                    )
-                                                                    .startOf(
-                                                                        "00:00"
-                                                                    )
-                                                                        .format()
+                                                                    moment(date).add(2, 'hours').format()
                                                                 );
                                                             }}
                                                         />
