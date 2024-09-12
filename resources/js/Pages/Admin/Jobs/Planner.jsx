@@ -65,6 +65,7 @@ export default function Planner({ auth }) {
     const [nextWeek, setNextWeek] = useState(false);
     const [selectedClients, setSelectedClients] = useState([]);
     const [clients, setClients] = useState([]);
+    const [selectedDrivers, setSelectedDrivers] = useState([]);
 
 
     const format = {
@@ -864,6 +865,18 @@ export default function Planner({ auth }) {
             });
     };
 
+    const handleDrivers = async (job) => {
+        let drivers = await clients.find((client) => {
+            return client.value === job.client_id
+        });
+
+        setSelectedDrivers(drivers.users.map((user) => {
+            return {
+                value: user.id,
+                label: user.name
+            }
+        }));
+    }
     const handleItemMove = (itemId, dragTime, newGroupOrder) => {
         const item = userJobs.find((item) => item.id === itemId);
         console.log(moment(dragTime).format("YYYY-MM-DD HH:mm:ss"), moment(item.start_date + " " + item.start_time).format("YYYY-MM-DD HH:mm:ss"), moment(item.end_date + " " + item.end_time).format("YYYY-MM-DD HH:mm:ss"));
@@ -957,8 +970,8 @@ export default function Planner({ auth }) {
                             onChange={(e) => setDriver(e.target.value)}
                         >
                             <option>Wählen</option>
-                            {drivers &&
-                                drivers.map((driver) => (
+                            {selectedDrivers &&
+                                selectedDrivers.map((driver) => (
                                     <option key={driver.id} value={driver.id}>
                                         {driver.name}
                                     </option>
@@ -1433,7 +1446,7 @@ export default function Planner({ auth }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {withoutUserJobs &&
+                                    {withoutUserJobs && clients &&
                                         withoutUserJobs.length > 0 &&
                                         withoutUserJobs.map((job) => (
                                             <tr
@@ -1466,6 +1479,7 @@ export default function Planner({ auth }) {
                                                     {job.user_id == null ? (
                                                         <button
                                                             onClick={() => {
+                                                                handleDrivers(job);
                                                                 setJob(job);
                                                                 setOpenModal(
                                                                     true
