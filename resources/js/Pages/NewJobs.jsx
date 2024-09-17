@@ -62,14 +62,14 @@ const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
     client: Yup.number().required("Required"),
     zugNummer: Yup.string().when(['bereitschaft', 'cancel'], {
-        is: (bereitschaft, cancel) => !bereitschaft || !cancel,
-        then: () => Yup.string().required("Required"),
-        otherwise: () => Yup.string()
+        is: (bereitschaft, cancel) => bereitschaft || cancel,
+        then: () => Yup.string(),
+        otherwise: () => Yup.string().required("Required")
     }),
     tourName: Yup.string().when(['bereitschaft', 'cancel'], {
-        is: (bereitschaft, cancel) => !bereitschaft || !cancel,
-        then: () => Yup.string().required("Required"),
-        otherwise: () => Yup.string()
+        is: (bereitschaft, cancel) => bereitschaft || cancel,
+        then: () => Yup.string(),
+        otherwise: () => Yup.string().required("Required")
     }),
     workStartPlace: Yup.string().required("Required"),
     workEndPlace: Yup.string().required("Required"),
@@ -241,9 +241,9 @@ export default function NewJobs({ auth }) {
                             setSubmitting(false);
                         });
                 }}
-                validateOnBlur={false}
-                validateOnChange={false}
-                validateOnMount={false}
+                validateOnBlur={true}
+                validateOnChange={true}
+                validateOnMount={true}
             >
                 {({
                     values,
