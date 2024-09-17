@@ -1291,7 +1291,7 @@ export default function NewJobs({ auth }) {
                                         id="lateEnter"
                                         name="lateEnter"
                                         onChange={(value) => {
-                                            setFieldValue("earlyExit", value);
+                                            setFieldValue("lateEnter", value);
                                         }}
                                     />
                                     <br />
