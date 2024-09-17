@@ -77,6 +77,7 @@ export default function ConfirmedToEdit({ auth }) {
             cancelButtonText: "Abbrechen",
         }).then((result) => {
             if (result.isConfirmed) {
+                console.log(draft);
                 axios
                     .delete(route("jobs-unconfirmed-destroy", { id: draft.id }))
                     .then((res) => {
@@ -121,11 +122,9 @@ export default function ConfirmedToEdit({ auth }) {
     useEffect(() => {
         axios.get(route("users.show")).then((res) => {
             setDrivers(res.data);
-            console.log("drivers",res.data);
         });
         axios.get("/clients").then((res) => {
             setClients(res.data);
-            console.log("clients",res.data);
         });
 
     }, []);
