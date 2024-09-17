@@ -62,12 +62,12 @@ const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
     client: Yup.number().required("Required"),
     zugNummer: Yup.string().when(['bereitschaft', 'cancel'], {
-        is: (bereitschaft, cancel) => bereitschaft || cancel,
+        is: (bereitschaft, cancel) => !bereitschaft || !cancel,
         then: () => Yup.string().required("Required"),
         otherwise: () => Yup.string()
     }),
     tourName: Yup.string().when(['bereitschaft', 'cancel'], {
-        is: (bereitschaft, cancel) => bereitschaft || cancel,
+        is: (bereitschaft, cancel) => !bereitschaft || !cancel,
         then: () => Yup.string().required("Required"),
         otherwise: () => Yup.string()
     }),
