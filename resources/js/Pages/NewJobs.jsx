@@ -626,6 +626,11 @@ export default function NewJobs({ auth }) {
                                                         Schweiz
                                                     </option>
                                                 </Select>
+                                                {errors.country  && (
+                                                <p className="text-red-500">
+                                                    *{errors.country}
+                                                </p>
+                                            )}
                                             </div>
                                         )}
                                     </div>
@@ -662,7 +667,13 @@ export default function NewJobs({ auth }) {
                                                         </option>
                                                     ))}
                                             </Select>
+                                            {errors.user  && (
+                                                <p className="text-red-500">
+                                                    *{errors.user}
+                                                </p>
+                                            )}
                                         </div>
+
                                     )}
 
                                     <br />
