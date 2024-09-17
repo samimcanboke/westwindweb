@@ -253,27 +253,27 @@ export default function ConfirmedToEdit({ auth }) {
                                         </Table.Cell>
                                         <Table.Cell>
                                             {draft.user_id &&
-                                            draft.user_id != "" &&
-                                            drivers
+                                                draft.user_id != "" &&
+                                                drivers
                                                 ? drivers
-                                                      .find(
-                                                          (driver) =>
-                                                              driver.id ==
-                                                              draft.user_id
-                                                      )
-                                                      .id.toString()
-                                                      .padStart(3, "0")
+                                                    .find(
+                                                        (driver) =>
+                                                            driver.id ==
+                                                            draft.user_id
+                                                    )
+                                                    .id.toString()
+                                                    .padStart(3, "0")
                                                 : "Fahrer nicht gefunden"}
                                         </Table.Cell>
                                         <Table.Cell>
                                             {draft.user_id &&
-                                            draft.user_id != "" &&
-                                            drivers
+                                                draft.user_id != "" &&
+                                                drivers
                                                 ? drivers.find(
-                                                      (driver) =>
-                                                          driver.id ==
-                                                          draft.user_id
-                                                  ).name
+                                                    (driver) =>
+                                                        driver.id ==
+                                                        draft.user_id
+                                                ).name
                                                 : "Fahrer nicht gefunden"}
                                         </Table.Cell>
                                         <Table.Cell className=" text-center ">
@@ -387,7 +387,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         name="zugNummer"
                                                         className={
                                                             errors.zugNummer &&
-                                                            touched.zugNummer
+                                                                touched.zugNummer
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -424,7 +424,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.tourName &&
-                                                            touched.tourName
+                                                                touched.tourName
                                                                 ? "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -453,7 +453,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.locomotiveNumber &&
-                                                            touched.locomotiveNumber
+                                                                touched.locomotiveNumber
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -560,7 +560,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         rows={4}
                                                         className={
                                                             errors.comment &&
-                                                            touched.comment
+                                                                touched.comment
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -692,6 +692,18 @@ export default function ConfirmedToEdit({ auth }) {
                                                     Gastfahrt
                                                 </AccordionTitle>
                                                 <AccordionContent>
+                                                    <ToggleSwitch
+                                                        checked={
+                                                            values.late_enter
+                                                        }
+                                                        label="Spät Eintreffen"
+                                                        id="lateEnter"
+                                                        name="lateEnter"
+                                                        onChange={(value) => {
+                                                            setFieldValue("late_enter", value);
+                                                        }}
+                                                    />
+                                                    <br />
                                                     <Label>
                                                         Gastfahrt Beginn
                                                     </Label>
@@ -708,7 +720,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.guestStartPlace &&
-                                                            touched.guestStartPlace
+                                                                touched.guestStartPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -740,7 +752,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             name="guestStartTime"
                                                             className={
                                                                 errors.guestStartTime &&
-                                                                touched.guestStartTime
+                                                                    touched.guestStartTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -794,7 +806,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.guestStartEndPlace &&
-                                                            touched.guestStartEndPlace
+                                                                touched.guestStartEndPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -825,7 +837,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             name="guestStartEndTime"
                                                             className={
                                                                 errors.guestStartEndTime &&
-                                                                touched.guestStartEndTime
+                                                                    touched.guestStartEndTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -888,7 +900,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.workStartPlace &&
-                                                            touched.workStartPlace
+                                                                touched.workStartPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -916,7 +928,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             id="workStartTime"
                                                             className={
                                                                 errors.workStartTime &&
-                                                                touched.workStartTime
+                                                                    touched.workStartTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -980,7 +992,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.trainStartPlace &&
-                                                            touched.trainStartPlace
+                                                                touched.trainStartPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -1010,7 +1022,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             name="trainStartTime"
                                                             className={
                                                                 errors.trainStartTime &&
-                                                                touched.trainStartTime
+                                                                    touched.trainStartTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -1063,7 +1075,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.trainEndPlace &&
-                                                            touched.trainEndPlace
+                                                                touched.trainEndPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -1093,7 +1105,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             name="trainEndTime"
                                                             className={
                                                                 errors.trainEndTime &&
-                                                                touched.trainEndTime
+                                                                    touched.trainEndTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -1151,7 +1163,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             <div className="">
                                                                 {values.breaks &&
                                                                     typeof values.breaks !==
-                                                                        "string" &&
+                                                                    "string" &&
                                                                     values.breaks.map(
                                                                         (
                                                                             breakItem,
@@ -1221,7 +1233,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                                     )}
                                                                 {values.breaks &&
                                                                     typeof values.breaks !==
-                                                                        "object" &&
+                                                                    "object" &&
                                                                     JSON.parse(
                                                                         values.breaks
                                                                     ).map(
@@ -1343,7 +1355,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.workEndPlace &&
-                                                            touched.workEndPlace
+                                                                touched.workEndPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -1372,7 +1384,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             id="workEndTime"
                                                             className={
                                                                 errors.workEndTime &&
-                                                                touched.workEndTime
+                                                                    touched.workEndTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -1423,6 +1435,18 @@ export default function ConfirmedToEdit({ auth }) {
                                                     <Label>
                                                         Gastfahrt Start Ort
                                                     </Label>
+                                                    <ToggleSwitch
+                                                        checked={
+                                                            values.early_exit
+                                                        }
+                                                        label="Frühzeitiges Verlassen"
+                                                        id="earlyExit"
+                                                        name="earlyExit"
+                                                        onChange={(value) => {
+                                                            setFieldValue("early_exit", value);
+                                                        }}
+                                                    />
+                                                    <br />
                                                     <input
                                                         id="guestEndPlace"
                                                         type="text"
@@ -1435,7 +1459,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.guestEndPlace &&
-                                                            touched.guestEndPlace
+                                                                touched.guestEndPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -1464,7 +1488,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             id="guestEndTime"
                                                             className={
                                                                 errors.guestEndTime &&
-                                                                touched.guestEndTime
+                                                                    touched.guestEndTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }
@@ -1517,7 +1541,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                         }}
                                                         className={
                                                             errors.guestEndEndPlace &&
-                                                            touched.guestEndEndPlace
+                                                                touched.guestEndEndPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
@@ -1546,7 +1570,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                             id="guestEndEndTime"
                                                             className={
                                                                 errors.guestEndEndTime &&
-                                                                touched.guestEndEndTime
+                                                                    touched.guestEndEndTime
                                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             }

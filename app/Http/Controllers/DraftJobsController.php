@@ -51,6 +51,8 @@ class DraftJobsController extends Controller
         $draftJob->guest_start_time = $request->guestStartTime;
         $draftJob->guest_start_end_place = $request->guestStartEndPlace;
         $draftJob->guest_start_end_time = $request->guestStartEndTime;
+        $draftJob->early_exit = $request->earlyExit;
+        $draftJob->late_enter = $request->lateEnter;
         $draftJob->work_start_place = $request->workStartPlace;
         $draftJob->work_start_time = $request->workStartTime;
         $draftJob->train_start_place = $request->trainStartPlace;
@@ -103,6 +105,8 @@ class DraftJobsController extends Controller
         $draftJob->locomotive_number = $request->locomotive_number;
         $draftJob->cancel = $request->cancel;
         $draftJob->accomodation = $request->accomodation;
+        $draftJob->early_exit = $request->earlyExit;
+        $draftJob->late_enter = $request->lateEnter;
         $draftJob->bereitschaft = $request->bereitschaft;
         $draftJob->comment = $request->comment;
         $draftJob->learning = $request->learning;
@@ -149,6 +153,8 @@ class DraftJobsController extends Controller
         $draftJob->comment = $request->comment ?? $draftJob->comment;
         $draftJob->learning = $request->learning ?? $draftJob->learning;
         $draftJob->feeding_fee = $request->feeding_fee ?? $draftJob->feeding_fee;
+        $draftJob->early_exit = $request->earlyExit ?? $draftJob->early_exit;
+        $draftJob->late_enter = $request->lateEnter ?? $draftJob->late_enter;
         $draftJob->guest_start_place = $request->guest_start_place ?? $draftJob->guest_start_place;
         $draftJob->guest_start_time = $request->guest_start_time ?? $draftJob->guest_start_time;
         $draftJob->guest_start_end_place = $request->guest_start_end_place ?? $draftJob->guest_start_end_place;
@@ -195,6 +201,8 @@ class DraftJobsController extends Controller
         $finalized->accomodation = $draft->accomodation;
         $finalized->bereitschaft = $draft->bereitschaft;
         $finalized->comment = $draft->comment;
+        $finalized->early_exit = $draft->early_exit;
+        $finalized->late_enter = $draft->late_enter;
         $finalized->feeding_fee = $draft->feeding_fee;
         $finalized->guest_start_place = $draft->guest_start_place;
         $finalized->guest_start_time = $draft->guest_start_time;

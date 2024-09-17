@@ -839,6 +839,18 @@ export default function DraftJobs({ auth }) {
                                                         Gastfahrt
                                                     </AccordionTitle>
                                                     <AccordionContent>
+                                                        <Label>Frühzeitiges Verlassen</Label>
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.early_exit
+                                                            }
+                                                            label="Frühzeitiges Verlassen"
+                                                            id="earlyExit"
+                                                            name="earlyExit"
+                                                            onChange={(value) => {
+                                                                setFieldValue("early_exit", value);
+                                                            }}
+                                                        />
                                                         <Label>
                                                             Gastfahrt Begin
                                                         </Label>
@@ -1544,6 +1556,18 @@ export default function DraftJobs({ auth }) {
                                                         Gastfahrt Zürück
                                                     </AccordionTitle>
                                                     <AccordionContent>
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.late_enter
+                                                            }
+                                                            label="Spät Eintreffen"
+                                                            id="lateEnter"
+                                                            name="lateEnter"
+                                                            onChange={(value) => {
+                                                                setFieldValue("late_enter", value);
+                                                            }}
+                                                        />
+                                                        <br />
                                                         <Label>
                                                             Gastfahrt Zürück Ort
                                                         </Label>

@@ -1602,6 +1602,8 @@ class FinalizedJobsController extends Controller
         $finalizedJob->guest_start_time = $request->guest_start_time;
         $finalizedJob->guest_start_end_place = $request->guest_start_end_place;
         $finalizedJob->guest_start_end_time = $request->guest_start_end_time;
+        $finalizedJob->early_exit = $request->earlyExit;
+        $finalizedJob->late_enter = $request->lateEnter;
         $finalizedJob->work_start_place = $request->work_start_place;
         $finalizedJob->work_start_time = $request->work_start_time;
         $finalizedJob->train_start_place = $request->train_start_place;
@@ -1632,6 +1634,8 @@ class FinalizedJobsController extends Controller
         $finalizedJob->extra = $request->extra;
         $finalizedJob->accomodation = $request->accomodation;
         $finalizedJob->bereitschaft = $request->bereitschaft;
+        $finalizedJob->early_exit = $request->earlyExit;
+        $finalizedJob->late_enter = $request->lateEnter;
         $finalizedJob->comment = $request->comment;
         $finalizedJob->feeding_fee = $request->feeding_fee;
         $finalizedJob->guest_start_place = $request->guest_start_place;

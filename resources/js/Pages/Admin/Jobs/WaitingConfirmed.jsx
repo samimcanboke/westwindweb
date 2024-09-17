@@ -934,6 +934,18 @@ export default function WaitingConfirmed({ auth }) {
                                                         Gastfahrt
                                                     </AccordionTitle>
                                                     <AccordionContent>
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.early_exit
+                                                            }
+                                                            label="Frühzeitiges Verlassen"
+                                                            id="earlyExit"
+                                                            name="earlyExit"
+                                                            onChange={(value) => {
+                                                                setFieldValue("early_exit", value);
+                                                            }}
+                                                        />
+                                                        <br />
                                                         <Label>
                                                             Gastfahrt Beginn
                                                         </Label>
@@ -1682,6 +1694,18 @@ export default function WaitingConfirmed({ auth }) {
                                                         Hause
                                                     </AccordionTitle>
                                                     <AccordionContent>
+                                                        <ToggleSwitch
+                                                            checked={
+                                                                values.late_enter
+                                                            }
+                                                            label="Spät Eintreffen"
+                                                            id="lateEnter"
+                                                            name="lateEnter"
+                                                            onChange={(value) => {
+                                                                setFieldValue("late_enter", value);
+                                                            }}
+                                                        />
+                                                        <br />
                                                         <Label>
                                                             Gastfahrt Start Ort
                                                         </Label>

@@ -36,6 +36,8 @@ const initialValues = {
     client: "",
     user: "",
     ausland: false,
+    earlyExit: false,
+    lateEnter: false,
     country: "nl",
     feedingFee: "",
     guestStartPlace: "",
@@ -789,6 +791,17 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle className={Object.keys(errors).some(key => ['guestStartPlace', 'guestStartTime', 'guestStartEndPlace', 'guestStartEndTime'].includes(key)) ? "text-red-500" : ""}>Gastfahrt</AccordionTitle>
                                 <AccordionContent>
+                                    <Label>Frühzeitiges Verlassen</Label>
+                                    <ToggleSwitch
+                                        checked={values.earlyExit}
+                                        label="Frühzeitiges Verlassen"
+                                        id="earlyExit"
+                                        name="earlyExit"
+                                        onChange={(value) => {
+                                            setFieldValue("earlyExit", value);
+                                        }}
+                                    />
+                                    <br />
                                     <Label>GF Standort Beginn</Label>
                                     <Field
                                         id="guestStartPlace"
@@ -1271,6 +1284,17 @@ export default function NewJobs({ auth }) {
                                     Gastfahrt Zürück
                                 </AccordionTitle>
                                 <AccordionContent>
+                                    <Label>Spät Eintreffen</Label>
+                                    <ToggleSwitch
+                                        checked={values.lateEnter}
+                                        label="Spät Eintreffen"
+                                        id="lateEnter"
+                                        name="lateEnter"
+                                        onChange={(value) => {
+                                            setFieldValue("earlyExit", value);
+                                        }}
+                                    />
+                                    <br />
                                     <Label>Gastfahrt Zürück Ort</Label>
                                     <input
                                         id="guestEndPlace"
