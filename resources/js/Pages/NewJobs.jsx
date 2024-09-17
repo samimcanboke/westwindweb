@@ -185,8 +185,7 @@ export default function NewJobs({ auth }) {
         >
             <Head title="New Jobs" />
             <Label className="p-3 flex justify-center ">
-                Der gesamte Plan von der Abfahrt bis zur Rückkehr wird hier
-                geschrieben.
+            Der gesamte Plan, von der Abfahrt bis zur Rückkehr, wird hier geschrieben. Bitte beachten Sie, dass, wenn die Optionen ‘storniert’ und ‘Bereitschaft’ ausgewählt werden, die Felder ‘Zugnummer’ und ‘Tourname’ nicht mehr obligatorisch sind. Die Bereitschaft darf maximal 8 Stunden betragen.
             </Label>
 
             <Formik
