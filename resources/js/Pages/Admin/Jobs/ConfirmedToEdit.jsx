@@ -77,7 +77,6 @@ export default function ConfirmedToEdit({ auth }) {
             cancelButtonText: "Abbrechen",
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log(draft);
                 axios
                     .delete(route("jobs-unconfirmed-destroy", { id: draft.id }))
                     .then((res) => {
@@ -115,19 +114,20 @@ export default function ConfirmedToEdit({ auth }) {
             .then((res) => {
                 setData(res.data);
                 setLoading(false);
-                console.log(res.data);
+               
             });
     };
 
     useEffect(() => {
         axios.get(route("users.show")).then((res) => {
             setDrivers(res.data);
-            //console.log(res.data);
+            console.log("drivers",res.data);
         });
         axios.get("/clients").then((res) => {
             setClients(res.data);
-            //console.log(res.data);
+            console.log("clients",res.data);
         });
+
     }, []);
 
     function handleConfirm(e) {
