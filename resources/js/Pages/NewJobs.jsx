@@ -134,9 +134,9 @@ export default function NewJobs({ auth }) {
     const timeString = (e) =>
         e[0]
             ? e[0].toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-              })
+                hour: "2-digit",
+                minute: "2-digit",
+            })
             : "";
     useEffect(() => {
         axios.get("/clients").then((res) => {
@@ -281,7 +281,7 @@ export default function NewJobs({ auth }) {
                                     Allgemeine Informationen
                                 </AccordionTitle>
                                 <AccordionContent>
-                                    <Label className={errors.initialDate && touched.initialDate ? "text-red-500" : ""}>Startdatum</Label>
+                                    <Label className={errors.initialDate ? "text-red-500" : ""}>Startdatum</Label>
 
                                     <Datepicker
                                         language="de-DE"
@@ -292,9 +292,9 @@ export default function NewJobs({ auth }) {
                                         value={
                                             values.initialDate
                                                 ? moment(values.initialDate)
-                                                      .utc()
-                                                      .startOf("day")
-                                                      .format("DD-MM-YYYY")
+                                                    .utc()
+                                                    .startOf("day")
+                                                    .format("DD-MM-YYYY")
                                                 : ""
                                         }
                                         onSelectedDateChanged={(date) => {
@@ -310,18 +310,19 @@ export default function NewJobs({ auth }) {
                                         }}
                                     />
                                     {errors.initialDate &&
-                                        touched.initialDate &&
-                                        errors.initialDate}
+                                        (<p className="text-red-500">
+                                            *{errors.initialDate}
+                                        </p>)
+                                    }
                                     <br />
-                                    <Label className={errors.zugNummer && touched.zugNummer ? "text-red-500" : ""}>Zug Nummer</Label>
+                                    <Label className={errors.zugNummer ? "text-red-500" : ""}>Zug Nummer</Label>
                                     <Field
                                         id="zugNummer"
                                         type="text"
                                         placeholder="Zug Nummer"
                                         name="zugNummer"
                                         className={
-                                            errors.zugNummer &&
-                                            touched.zugNummer
+                                            errors.zugNummer
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
@@ -333,14 +334,14 @@ export default function NewJobs({ auth }) {
                                         }}
                                         value={values.zugNummer}
                                     />
-                                    {errors.zugNummer && touched.zugNummer && (
+                                    {errors.zugNummer && (
                                         <p className="text-red-500">
                                             *{errors.zugNummer}
                                         </p>
                                     )}
 
                                     <br />
-                                    <Label className={errors.tourName && touched.tourName ? "text-red-500" : ""}>Tour Name</Label>
+                                    <Label className={errors.tourName? "text-red-500" : ""}>Tour Name</Label>
                                     <Field
                                         id="tourName"
                                         name="tourName"
@@ -353,18 +354,18 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.tourName && touched.tourName
+                                            errors.tourName 
                                                 ? "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                     />
-                                    {errors.tourName && touched.tourName && (
+                                    {errors.tourName  && (
                                         <p className="text-red-500">
                                             *{errors.tourName}
                                         </p>
                                     )}
                                     <br />
-                                    <Label className={errors.locomotiveNumber && touched.locomotiveNumber ? "text-red-500" : ""}>Lokomotivnummer</Label>
+                                    <Label className={errors.locomotiveNumber ? "text-red-500" : ""}>Lokomotivnummer</Label>
                                     <Field
                                         id="locomotiveNumber"
                                         name="locomotiveNumber"
@@ -377,14 +378,12 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.locomotiveNumber &&
-                                            touched.locomotiveNumber
+                                            errors.locomotiveNumber 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                     />
-                                    {errors.locomotiveNumber &&
-                                        touched.locomotiveNumber && (
+                                    {errors.locomotiveNumber && (
                                             <p className="text-red-500">
                                                 *{errors.locomotiveNumber}
                                             </p>
@@ -465,9 +464,9 @@ export default function NewJobs({ auth }) {
                                                         }
                                                     }
                                                 } else {
-                                                    if(values.accomodation){
+                                                    if (values.accomodation) {
 
-                                                            setFieldValue("feedingFee", 32);
+                                                        setFieldValue("feedingFee", 32);
 
 
                                                     } else {
@@ -593,7 +592,7 @@ export default function NewJobs({ auth }) {
                                     <div className="max-w-md mt-5">
                                         {values.ausland && (
                                             <div>
-                                                <Label className={errors.country && touched.country ? "text-red-500" : ""}>Land</Label>
+                                                <Label className={errors.country  ? "text-red-500" : ""}>Land</Label>
                                                 <Select
                                                     id="country"
                                                     name="country"
@@ -635,7 +634,7 @@ export default function NewJobs({ auth }) {
                                         <div className="max-w-md mt-5">
                                             <div className="mb-2 block">
                                                 <Label
-                                                    className={errors.user && touched.user ? "text-red-500" : ""}
+                                                    className={errors.user ? "text-red-500" : ""}
                                                     htmlFor="user"
                                                     value="Wählen Sie Lockführer"
                                                 />
@@ -667,7 +666,7 @@ export default function NewJobs({ auth }) {
                                     )}
 
                                     <br />
-                                    <Label className={errors.comment && touched.comment ? "text-red-500" : ""}>Kommenter</Label>
+                                    <Label className={errors.comment  ? "text-red-500" : ""}>Kommenter</Label>
                                     <Textarea
                                         id="comment"
                                         name="comment"
@@ -675,7 +674,7 @@ export default function NewJobs({ auth }) {
                                         value={values.comment}
                                         rows={4}
                                         className={
-                                            errors.comment && touched.comment
+                                            errors.comment 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
@@ -686,14 +685,14 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                     />
-                                    {errors.comment && touched.comment && (
+                                    {errors.comment && (
                                         <p className="text-red-500">
                                             *{errors.comment}
                                         </p>
                                     )}
 
                                     <div className="mt-5 w-full">
-                                        <Label className={errors.images && touched.images ? "text-red-500" : ""}>Foto hinzufügen</Label>
+                                        <Label className={errors.images  ? "text-red-500" : ""}>Foto hinzufügen</Label>
                                         <MultipleFileUpload
                                             images={files}
                                             setImages={setFiles}
@@ -703,7 +702,7 @@ export default function NewJobs({ auth }) {
                                     <div className="max-w-md">
                                         <div className="mb-2 block">
                                             <Label
-                                                className={errors.client && touched.client ? "text-red-500" : ""}
+                                                className={errors.client  ? "text-red-500" : ""}
                                                 htmlFor="client"
                                                 value="Wählen Sie Ihren Kunden"
                                             />
@@ -732,7 +731,7 @@ export default function NewJobs({ auth }) {
                                                 ))}
                                         </Select>
                                     </div>
-                                    {errors.client && touched.client && (
+                                    {errors.client  && (
                                         <p className="text-red-500">
                                             *{errors.client}
                                         </p>
@@ -742,7 +741,7 @@ export default function NewJobs({ auth }) {
                                     <div className="max-w-md">
                                         <div className="mb-2 block">
                                             <Label
-                                                className={errors.feedingFee && touched.feedingFee ? "text-red-500" : ""}
+                                                className={errors.feedingFee  ? "text-red-500" : ""}
                                                 htmlFor="feedingFee"
                                                 value="Wählen Sie Ihre Verpflegungspauschale"
                                             />
@@ -793,16 +792,14 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.guestStartPlace &&
-                                            touched.guestStartPlace
+                                            errors.guestStartPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.guestStartPlace}
                                     />
 
-                                    {errors.guestStartPlace &&
-                                        touched.guestStartPlace && (
+                                    {errors.guestStartPlace && (
                                             <p className="text-red-500">
                                                 *{errors.guestStartPlace}
                                             </p>
@@ -816,8 +813,7 @@ export default function NewJobs({ auth }) {
                                             id="guestStartTime"
                                             name="guestStartTime"
                                             className={
-                                                errors.guestStartTime &&
-                                                touched.guestStartTime
+                                                errors.guestStartTime 
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -832,8 +828,7 @@ export default function NewJobs({ auth }) {
                                             pattern="[0-9]*"
                                         />
                                     </div>
-                                    {errors.guestStartTime &&
-                                        touched.guestStartTime && (
+                                    {errors.guestStartTime && (
                                             <p className="text-red-500">
                                                 *{errors.guestStartTime}
                                             </p>
@@ -852,15 +847,13 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.guestStartEndPlace &&
-                                            touched.guestStartEndPlace
+                                            errors.guestStartEndPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.guestStartEndPlace}
                                     />
-                                    {errors.guestStartEndPlace &&
-                                        touched.guestStartEndPlace && (
+                                    {errors.guestStartEndPlace && (
                                             <p className="text-red-500">
                                                 *{errors.guestStartEndPlace}
                                             </p>
@@ -875,8 +868,7 @@ export default function NewJobs({ auth }) {
                                             id="guestStartEndTime"
                                             name="guestStartEndTime"
                                             className={
-                                                errors.guestStartEndTime &&
-                                                touched.guestStartEndTime
+                                                errors.guestStartEndTime 
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -889,8 +881,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
                                     </div>
-                                    {errors.guestStartEndTime &&
-                                        touched.guestStartEndTime && (
+                                    {errors.guestStartEndTime && (
                                             <p className="text-red-500">
                                                 *{errors.guestStartEndTime}
                                             </p>
@@ -904,7 +895,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle className={Object.keys(errors).some(key => ['workStartPlace', 'workStartTime'].includes(key)) ? "text-red-500" : ""}>Dienst Beginn</AccordionTitle>
                                 <AccordionContent>
-                                    <Label className={errors.workStartPlace && touched.workStartPlace ? "text-red-500" : ""}>Start Ort</Label>
+                                    <Label className={errors.workStartPlace ? "text-red-500" : ""}>Start Ort</Label>
                                     <input
                                         id="workStartPlace"
                                         name="workStartPlace"
@@ -917,30 +908,27 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.workStartPlace &&
-                                            touched.workStartPlace
+                                            errors.workStartPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.workStartPlace}
                                     />
-                                    {errors.workStartPlace &&
-                                        touched.workStartPlace && (
+                                    {errors.workStartPlace && (
                                             <p className="text-red-500">
                                                 *{errors.workStartPlace}
                                             </p>
                                         )}
                                     <br />
 
-                                    <Label className={errors.workStartTime && touched.workStartTime ? "text-red-500" : ""}>Anfangszeit</Label>
+                                    <Label className={errors.workStartTime ? "text-red-500" : ""}>Anfangszeit</Label>
                                     <div className="flex">
                                         <TimePicker
                                             type="time"
                                             name="workStartTime"
                                             id="workStartTime"
                                             className={
-                                                errors.workStartTime &&
-                                                touched.workStartTime
+                                                errors.workStartTime 
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -953,8 +941,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
                                     </div>
-                                    {errors.workStartTime &&
-                                        touched.workStartTime && (
+                                    {errors.workStartTime && (
                                             <p className="text-red-500">
                                                 *{errors.workStartTime}
                                             </p>
@@ -969,7 +956,7 @@ export default function NewJobs({ auth }) {
                                     Zug Abfahrt und Ankunft
                                 </AccordionTitle>
                                 <AccordionContent>
-                                    <Label className={errors.trainStartPlace && touched.trainStartPlace ? "text-red-500" : ""}>Zug Abfahrtsort</Label>
+                                    <Label className={errors.trainStartPlace ? "text-red-500" : ""}>Zug Abfahrtsort</Label>
                                     <input
                                         id="trainStartPlace"
                                         name="trainStartPlace"
@@ -982,30 +969,29 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.trainStartPlace &&
-                                            touched.trainStartPlace
+                                            errors.trainStartPlace
+
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.trainStartPlace}
                                     />
                                     {errors.trainStartPlace &&
-                                        touched.trainStartPlace && (
+                                        (
                                             <p className="text-red-500">
                                                 *{errors.trainStartPlace}
                                             </p>
                                         )}
                                     <br />
 
-                                    <Label className={errors.trainStartTime && touched.trainStartTime ? "text-red-500" : ""}>Zug Abfahrtszeit</Label>
+                                    <Label className={errors.trainStartTime ? "text-red-500" : ""}>Zug Abfahrtszeit</Label>
                                     <div className="flex">
                                         <input
                                             type="time"
                                             id="trainStartTime"
                                             name="trainStartTime"
                                             className={
-                                                errors.trainStartTime &&
-                                                touched.trainStartTime
+                                                errors.trainStartTime
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -1018,13 +1004,12 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
                                     </div>
-                                    {errors.trainStartTime &&
-                                        touched.trainStartTime && (
+                                    {errors.trainStartTime && (
                                             <p className="text-red-500">
                                                 *{errors.trainStartTime}
                                             </p>
                                         )}
-                                    <Label className={errors.trainEndPlace && touched.trainEndPlace ? "text-red-500" : ""}>Zug Ankunftsort</Label>
+                                    <Label className={errors.trainEndPlace ? "text-red-500" : ""}>Zug Ankunftsort</Label>
                                     <input
                                         id="trainEndPlace"
                                         name="trainEndPlace"
@@ -1037,30 +1022,27 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.trainEndPlace &&
-                                            touched.trainEndPlace
+                                            errors.trainEndPlace
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.trainEndPlace}
                                     />
-                                    {errors.trainEndPlace &&
-                                        touched.trainEndPlace && (
-                                            <p className="text-red-500">
-                                                *{errors.trainEndPlace}
-                                            </p>
-                                        )}
+                                    {errors.trainEndPlace && (
+                                        <p className="text-red-500">
+                                            *{errors.trainEndPlace}
+                                        </p>
+                                    )}
                                     <br />
 
-                                    <Label className={errors.trainEndTime && touched.trainEndTime ? "text-red-500" : ""}>Zug Ankunftszeit</Label>
+                                    <Label className={errors.trainEndTime ? "text-red-500" : ""}>Zug Ankunftszeit</Label>
                                     <div className="flex">
                                         <input
                                             type="time"
                                             id="trainEndTime"
                                             name="trainEndTime"
                                             className={
-                                                errors.trainEndTime &&
-                                                touched.trainEndTime
+                                                errors.trainEndTime 
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -1073,8 +1055,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
                                     </div>
-                                    {errors.trainEndTime &&
-                                        touched.trainEndTime && (
+                                    {errors.trainEndTime && (
                                             <p className="text-red-500">
                                                 *{errors.trainEndTime}
                                             </p>
@@ -1219,7 +1200,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle className={Object.keys(errors).some(key => ['workEndPlace', 'workEndTime'].includes(key)) ? "text-red-500" : ""}>Dienst Ende</AccordionTitle>
                                 <AccordionContent>
-                                    <Label className={errors.workEndPlace && touched.workEndPlace ? "text-red-500" : ""}>Dienst Ende Ort</Label>
+                                    <Label className={errors.workEndPlace ? "text-red-500" : ""}>Dienst Ende Ort</Label>
                                     <input
                                         id="workEndPlace"
                                         type="text"
@@ -1231,37 +1212,33 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.workEndPlace &&
-                                            touched.workEndPlace
+                                            errors.workEndPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.workEndPlace}
                                     />
-                                    {errors.workEndPlace &&
-                                        touched.workEndPlace && (
-                                            <p className="text-red-500">
-                                                *{errors.workEndPlace}
-                                            </p>
-                                        )}
+                                    {errors.workEndPlace && (
+                                        <p className="text-red-500">
+                                            *{errors.workEndPlace}
+                                        </p>
+                                    )}
                                     <br />
 
-                                    <Label className={errors.workEndTime && touched.workEndTime ? "text-red-500" : ""}>
+                                    <Label className={errors.workEndTime ? "text-red-500" : ""}>
                                         Dienst Ende Zeit{" "}
-                                        {errors.workEndTime &&
-                                            touched.workEndTime && (
-                                                <p className="text-red-500">
-                                                    *{errors.workEndTime}
-                                                </p>
-                                            )}
+                                        {errors.workEndTime && (
+                                            <p className="text-red-500">
+                                                *{errors.workEndTime}
+                                            </p>
+                                        )}
                                     </Label>
                                     <div className="flex">
                                         <TimePicker
                                             type="time"
                                             id="workEndTime"
                                             className={
-                                                errors.workEndTime &&
-                                                touched.workEndTime
+                                                errors.workEndTime
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-red-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-red-300 p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-re-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -1296,15 +1273,13 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.guestEndPlace &&
-                                            touched.guestEndPlace
+                                            errors.guestEndPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.guestEndPlace}
                                     />
-                                    {errors.guestEndPlace &&
-                                        touched.guestEndPlace && (
+                                    {errors.guestEndPlace && (
                                             <p className="text-red-500">
                                                 *{errors.guestEndPlace}
                                             </p>
@@ -1317,8 +1292,7 @@ export default function NewJobs({ auth }) {
                                             type="time"
                                             id="guestEndTime"
                                             className={
-                                                errors.guestEndTime &&
-                                                touched.guestEndTime
+                                                errors.guestEndTime 
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -1331,8 +1305,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
 
-                                        {errors.guestStartPlace &&
-                                            touched.guestStartPlace && (
+                                        {errors.guestStartPlace && (
                                                 <p className="text-red-500">
                                                     *{errors.guestStartPlace}
                                                 </p>
@@ -1351,15 +1324,13 @@ export default function NewJobs({ auth }) {
                                             );
                                         }}
                                         className={
-                                            errors.guestEndEndPlace &&
-                                            touched.guestEndEndPlace
+                                            errors.guestEndEndPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
                                         value={values.guestEndEndPlace}
                                     />
-                                    {errors.guestEndEndPlace &&
-                                        touched.guestEndEndPlace && (
+                                    {errors.guestEndEndPlace && (
                                             <p className="text-red-500">
                                                 *{errors.guestEndEndPlace}
                                             </p>
@@ -1372,8 +1343,7 @@ export default function NewJobs({ auth }) {
                                             type="time"
                                             id="guestEndEndTime"
                                             className={
-                                                errors.guestEndEndTime &&
-                                                touched.guestEndEndTime
+                                                errors.guestEndEndTime 
                                                     ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             }
@@ -1386,8 +1356,7 @@ export default function NewJobs({ auth }) {
                                             }}
                                         />
 
-                                        {errors.guestEndEndTime &&
-                                            touched.guestEndEndTime && (
+                                        {errors.guestEndEndTime && (
                                                 <p className="text-red-500">
                                                     *{errors.guestEndEndTime}
                                                 </p>
