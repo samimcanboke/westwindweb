@@ -105,6 +105,7 @@ export default function DraftJobs({ auth }) {
         editingDraft.breaks = JSON.parse(draft.breaks);
         setFiles(JSON.parse(draft.files));
         setValues(camelCase(editingDraft));
+        console.log(camelCase(editingDraft));
         setShowEdit(true);
     };
 
