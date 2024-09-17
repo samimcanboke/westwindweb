@@ -936,13 +936,13 @@ export default function WaitingConfirmed({ auth }) {
                                                     <AccordionContent>
                                                         <ToggleSwitch
                                                             checked={
-                                                                values.early_exit
+                                                                values.earlyExit
                                                             }
                                                             label="Frühzeitiges Verlassen"
                                                             id="earlyExit"
                                                             name="earlyExit"
                                                             onChange={(value) => {
-                                                                setFieldValue("early_exit", value);
+                                                                setFieldValue("earlyExit", value);
                                                             }}
                                                         />
                                                         <br />
@@ -1696,13 +1696,13 @@ export default function WaitingConfirmed({ auth }) {
                                                     <AccordionContent>
                                                         <ToggleSwitch
                                                             checked={
-                                                                values.late_enter
+                                                                values.lateEnter
                                                             }
                                                             label="Spät Eintreffen"
                                                             id="lateEnter"
                                                             name="lateEnter"
                                                             onChange={(value) => {
-                                                                setFieldValue("late_enter", value);
+                                                                setFieldValue("lateEnter", value);
                                                             }}
                                                         />
                                                         <br />
