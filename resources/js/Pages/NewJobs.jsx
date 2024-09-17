@@ -111,6 +111,16 @@ const validationSchema = Yup.object().shape({
                 return true;
             }
         ),
+    user: Yup.number().when('learning', {
+        is: true,
+        then: () => Yup.number().required("Required"),
+        otherwise: () => Yup.number().notRequired(),
+    }),
+    country: Yup.string().when('ausland', {
+        is: true,
+        then: () => Yup.string().required("Required"),
+        otherwise: () => Yup.string().notRequired(),
+    }),
 });
 
 export default function NewJobs({ auth }) {
@@ -271,7 +281,7 @@ export default function NewJobs({ auth }) {
                                     Allgemeine Informationen
                                 </AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Startdatum</Label>
+                                    <Label className={errors.initialDate && touched.initialDate ? "text-red-500" : ""}>Startdatum</Label>
 
                                     <Datepicker
                                         language="de-DE"
@@ -303,7 +313,7 @@ export default function NewJobs({ auth }) {
                                         touched.initialDate &&
                                         errors.initialDate}
                                     <br />
-                                    <Label>Zug Nummer</Label>
+                                    <Label className={errors.zugNummer && touched.zugNummer ? "text-red-500" : ""}>Zug Nummer</Label>
                                     <Field
                                         id="zugNummer"
                                         type="text"
@@ -330,7 +340,7 @@ export default function NewJobs({ auth }) {
                                     )}
 
                                     <br />
-                                    <Label>Tour Name</Label>
+                                    <Label className={errors.tourName && touched.tourName ? "text-red-500" : ""}>Tour Name</Label>
                                     <Field
                                         id="tourName"
                                         name="tourName"
@@ -354,7 +364,7 @@ export default function NewJobs({ auth }) {
                                         </p>
                                     )}
                                     <br />
-                                    <Label>Lokomotivnummer</Label>
+                                    <Label className={errors.locomotiveNumber && touched.locomotiveNumber ? "text-red-500" : ""}>Lokomotivnummer</Label>
                                     <Field
                                         id="locomotiveNumber"
                                         name="locomotiveNumber"
@@ -583,7 +593,7 @@ export default function NewJobs({ auth }) {
                                     <div className="max-w-md mt-5">
                                         {values.ausland && (
                                             <div>
-                                                <Label>Land</Label>
+                                                <Label className={errors.country && touched.country ? "text-red-500" : ""}>Land</Label>
                                                 <Select
                                                     id="country"
                                                     name="country"
@@ -625,6 +635,7 @@ export default function NewJobs({ auth }) {
                                         <div className="max-w-md mt-5">
                                             <div className="mb-2 block">
                                                 <Label
+                                                    className={errors.user && touched.user ? "text-red-500" : ""}
                                                     htmlFor="user"
                                                     value="Wählen Sie Lockführer"
                                                 />
@@ -656,7 +667,7 @@ export default function NewJobs({ auth }) {
                                     )}
 
                                     <br />
-                                    <Label>Kommenter</Label>
+                                    <Label className={errors.comment && touched.comment ? "text-red-500" : ""}>Kommenter</Label>
                                     <Textarea
                                         id="comment"
                                         name="comment"
@@ -682,7 +693,7 @@ export default function NewJobs({ auth }) {
                                     )}
 
                                     <div className="mt-5 w-full">
-                                        <Label>Foto hinzufügen</Label>
+                                        <Label className={errors.images && touched.images ? "text-red-500" : ""}>Foto hinzufügen</Label>
                                         <MultipleFileUpload
                                             images={files}
                                             setImages={setFiles}
@@ -692,6 +703,7 @@ export default function NewJobs({ auth }) {
                                     <div className="max-w-md">
                                         <div className="mb-2 block">
                                             <Label
+                                                className={errors.client && touched.client ? "text-red-500" : ""}
                                                 htmlFor="client"
                                                 value="Wählen Sie Ihren Kunden"
                                             />
@@ -730,6 +742,7 @@ export default function NewJobs({ auth }) {
                                     <div className="max-w-md">
                                         <div className="mb-2 block">
                                             <Label
+                                                className={errors.feedingFee && touched.feedingFee ? "text-red-500" : ""}
                                                 htmlFor="feedingFee"
                                                 value="Wählen Sie Ihre Verpflegungspauschale"
                                             />
@@ -891,7 +904,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle className={Object.keys(errors).some(key => ['workStartPlace', 'workStartTime'].includes(key)) ? "text-red-500" : ""}>Dienst Beginn</AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Start Ort</Label>
+                                    <Label className={errors.workStartPlace && touched.workStartPlace ? "text-red-500" : ""}>Start Ort</Label>
                                     <input
                                         id="workStartPlace"
                                         name="workStartPlace"
@@ -919,7 +932,7 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label>Anfangszeit</Label>
+                                    <Label className={errors.workStartTime && touched.workStartTime ? "text-red-500" : ""}>Anfangszeit</Label>
                                     <div className="flex">
                                         <TimePicker
                                             type="time"
@@ -956,7 +969,7 @@ export default function NewJobs({ auth }) {
                                     Zug Abfahrt und Ankunft
                                 </AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Zug Abfahrtsort</Label>
+                                    <Label className={errors.trainStartPlace && touched.trainStartPlace ? "text-red-500" : ""}>Zug Abfahrtsort</Label>
                                     <input
                                         id="trainStartPlace"
                                         name="trainStartPlace"
@@ -984,7 +997,7 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label>Zug Abfahrtszeit</Label>
+                                    <Label className={errors.trainStartTime && touched.trainStartTime ? "text-red-500" : ""}>Zug Abfahrtszeit</Label>
                                     <div className="flex">
                                         <input
                                             type="time"
@@ -1011,7 +1024,7 @@ export default function NewJobs({ auth }) {
                                                 *{errors.trainStartTime}
                                             </p>
                                         )}
-                                    <Label>Zug Ankunftsort</Label>
+                                    <Label className={errors.trainEndPlace && touched.trainEndPlace ? "text-red-500" : ""}>Zug Ankunftsort</Label>
                                     <input
                                         id="trainEndPlace"
                                         name="trainEndPlace"
@@ -1039,7 +1052,7 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label>Zug Ankunftszeit</Label>
+                                    <Label className={errors.trainEndTime && touched.trainEndTime ? "text-red-500" : ""}>Zug Ankunftszeit</Label>
                                     <div className="flex">
                                         <input
                                             type="time"
@@ -1206,7 +1219,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle className={Object.keys(errors).some(key => ['workEndPlace', 'workEndTime'].includes(key)) ? "text-red-500" : ""}>Dienst Ende</AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Dienst Ende Ort</Label>
+                                    <Label className={errors.workEndPlace && touched.workEndPlace ? "text-red-500" : ""}>Dienst Ende Ort</Label>
                                     <input
                                         id="workEndPlace"
                                         type="text"
@@ -1233,7 +1246,7 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label>
+                                    <Label className={errors.workEndTime && touched.workEndTime ? "text-red-500" : ""}>
                                         Dienst Ende Zeit{" "}
                                         {errors.workEndTime &&
                                             touched.workEndTime && (
