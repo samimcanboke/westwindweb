@@ -1292,14 +1292,14 @@ class FinalizedJobsController extends Controller
                 }
                 if ($breaks) {
                     foreach ($breaks as $break) {
-
-                        $start = $this->convertTimeToDatetime($initial_date, $break->start);
-                        $end = $this->convertTimeToDatetime($initial_date, $break->end);
-
-                        $diff = $end->diff($start);
-                        $break_total->h += $diff->h;
-                        $break_total->i += $diff->i;
-                        $break_total->s += $diff->s;
+                        if($break->start && $break->end){   
+                            $start = $this->convertTimeToDatetime($initial_date, $break->start);
+                            $end = $this->convertTimeToDatetime($initial_date, $break->end);
+                            $diff = $end->diff($start);
+                            $break_total->h += $diff->h;
+                            $break_total->i += $diff->i;
+                            $break_total->s += $diff->s;
+                        }
                     }
 
                     if ($break_total->s >= 60) {
