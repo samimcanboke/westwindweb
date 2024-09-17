@@ -7,7 +7,7 @@ export default function Dashboard({ auth }) {
     const [users, setUsers] = useState([]);
 
     const getUsers = () => {
-        axios.get(route('users.show_all')).then((res) => {
+        axios.get(route('users.show_exclude_admins')).then((res) => {
             let usersUnsorted = res.data;
             let usersSorted = usersUnsorted.sort((a, b) => {
                 if(a.driver_id == null || b.driver_id == null) return 1;
