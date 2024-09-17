@@ -23,4 +23,13 @@ class UserSalaryReport extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('order', function ($query) {
+            $query->orderBy('date', 'desc');
+        });
+    }
 }
