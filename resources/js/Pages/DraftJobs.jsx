@@ -843,13 +843,13 @@ export default function DraftJobs({ auth }) {
                                                         <Label>Frühzeitiges Verlassen</Label>
                                                         <ToggleSwitch
                                                             checked={
-                                                                values.early_exit
+                                                                values.earlyExit
                                                             }
                                                             label="Frühzeitiges Verlassen"
                                                             id="earlyExit"
                                                             name="earlyExit"
                                                             onChange={(value) => {
-                                                                setFieldValue("early_exit", value);
+                                                                setFieldValue("earlyExit", value);
                                                             }}
                                                         />
                                                         <Label>
@@ -1559,13 +1559,13 @@ export default function DraftJobs({ auth }) {
                                                     <AccordionContent>
                                                         <ToggleSwitch
                                                             checked={
-                                                                values.late_enter
+                                                                values.lateEnter
                                                             }
                                                             label="Spät Eintreffen"
                                                             id="lateEnter"
                                                             name="lateEnter"
                                                             onChange={(value) => {
-                                                                setFieldValue("late_enter", value);
+                                                                setFieldValue("lateEnter", value);
                                                             }}
                                                         />
                                                         <br />
