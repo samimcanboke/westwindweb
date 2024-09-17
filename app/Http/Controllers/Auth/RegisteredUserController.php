@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
 
     public function show_exclude_admins()
     {
-        $users = User::where('is_active', 1)->withoutLeaveWorkingDate()->excludeAdminsIfAccountant()->get();
+        $users = User::excludeAdminsIfAccountant()->get();
         return response()->json($users);
     }
 
