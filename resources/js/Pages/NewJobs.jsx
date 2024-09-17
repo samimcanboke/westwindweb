@@ -61,8 +61,16 @@ const initialValues = {
 const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
     client: Yup.number().required("Required"),
-    zugNummer: Yup.string().required("Required"),
-    tourName: Yup.string().required("Required"),
+    zugNummer: Yup.string().when(['bereitschaft', 'cancel'], {
+        is: (bereitschaft, cancel) => bereitschaft || cancel,
+        then: () => Yup.string().required("Required"),
+        otherwise: () => Yup.string()
+    }),
+    tourName: Yup.string().when(['bereitschaft', 'cancel'], {
+        is: (bereitschaft, cancel) => bereitschaft || cancel,
+        then: () => Yup.string().required("Required"),
+        otherwise: () => Yup.string()
+    }),
     workStartPlace: Yup.string().required("Required"),
     workEndPlace: Yup.string().required("Required"),
     workStartTime: Yup.string()
@@ -259,7 +267,7 @@ export default function NewJobs({ auth }) {
                     >
                         <Accordion>
                             <AccordionPanel isOpen={false}>
-                                <AccordionTitle>
+                                <AccordionTitle className={Object.keys(errors).some(key => ['initialDate', 'zugNummer', 'tourName', 'locomotiveNumber', 'cancel', 'accomodation', 'bereitschaft', 'ausbildung', 'learning', 'comment', 'client', 'user', 'ausland', 'country', 'feedingFee'].includes(key)) ? "text-red-500" : ""}>
                                     Allgemeine Informationen
                                 </AccordionTitle>
                                 <AccordionContent>
@@ -757,7 +765,7 @@ export default function NewJobs({ auth }) {
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
-                                <AccordionTitle>Gastfahrt</AccordionTitle>
+                                <AccordionTitle className={Object.keys(errors).some(key => ['guestStartPlace', 'guestStartTime', 'guestStartEndPlace', 'guestStartEndTime'].includes(key)) ? "text-red-500" : ""}>Gastfahrt</AccordionTitle>
                                 <AccordionContent>
                                     <Label>GF Standort Beginn</Label>
                                     <Field
@@ -881,7 +889,7 @@ export default function NewJobs({ auth }) {
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
-                                <AccordionTitle>Dienst Beginn</AccordionTitle>
+                                <AccordionTitle className={Object.keys(errors).some(key => ['workStartPlace', 'workStartTime'].includes(key)) ? "text-red-500" : ""}>Dienst Beginn</AccordionTitle>
                                 <AccordionContent>
                                     <Label>Start Ort</Label>
                                     <input
@@ -944,7 +952,7 @@ export default function NewJobs({ auth }) {
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
-                                <AccordionTitle>
+                                <AccordionTitle className={Object.keys(errors).some(key => ['trainStartPlace', 'trainStartTime', 'trainEndPlace', 'trainEndTime'].includes(key)) ? "text-red-500" : ""}>
                                     Zug Abfahrt und Ankunft
                                 </AccordionTitle>
                                 <AccordionContent>
@@ -1196,7 +1204,7 @@ export default function NewJobs({ auth }) {
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
-                                <AccordionTitle>Dienst Ende</AccordionTitle>
+                                <AccordionTitle className={Object.keys(errors).some(key => ['workEndPlace', 'workEndTime'].includes(key)) ? "text-red-500" : ""}>Dienst Ende</AccordionTitle>
                                 <AccordionContent>
                                     <Label>Dienst Ende Ort</Label>
                                     <input
