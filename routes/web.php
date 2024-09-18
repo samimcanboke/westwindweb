@@ -28,6 +28,7 @@ use App\Http\Controllers\UserCertificateController;
 use App\Http\Controllers\UsersAggreementsController;
 use App\Http\Controllers\UserSalaryReportController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\JobNotesController;
 
 use App\Events\UserRegistered;
 
@@ -291,6 +292,13 @@ Route::put('/planner/jobs/update/{job}', [JobPlansController::class, 'update'])-
 Route::put('/planner/jobs/{id}', [JobPlansController::class, 'leave_job'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-leave');
 Route::delete('/planner/jobs', [JobPlansController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('planner-jobs-destroy');
 Route::get('/planner/jobs/get-users-jobs', [JobPlansController::class, 'get_users_jobs'])->middleware(['auth', 'verified'])->name('get-users-jobs');
+
+
+Route::get('/planner/jobs/job-notes', [JobNotesController::class, 'index'])->middleware(['auth', 'verified'])->name('job-notes');
+Route::get('/planner/jobs/job-notes/{id}', [JobNotesController::class, 'show'])->middleware(['auth', 'verified'])->name('job-notes-show');
+Route::post('/planner/jobs/job-notes', [JobNotesController::class, 'store'])->middleware(['auth', 'verified'])->name('job-notes-store');
+Route::put('/planner/jobs/job-notes/{id}', [JobNotesController::class, 'update'])->middleware(['auth', 'verified'])->name('job-notes-update');
+Route::delete('/planner/jobs/job-notes/{id}', [JobNotesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('job-notes-destroy');
 
 Route::get('/planner/jobs/edit/{id}', function ($id) {
     return Inertia::render('Admin/Jobs/Edit', ['id' => $id]);

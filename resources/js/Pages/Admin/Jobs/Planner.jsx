@@ -41,11 +41,20 @@ export default function Planner({ auth }) {
     const [openSickModal, setOpenSickModal] = useState(false);
     const [openAnnualLeaveModal, setOpenAnnualLeaveModal] = useState(false);
     const [openAdminExtraModal, setOpenAdminExtraModal] = useState(false);
+    const [openEditNotesModal, setOpenEditNotesModal] = useState(false);
+    const [openNotesModal, setOpenNotesModal] = useState(false);
+    const [editingNote, setEditingNote] = useState({});
     const [sickStartDate, setSickStartDate] = useState("");
     const [sickStartTime, setSickStartTime] = useState("");
     const [sickEndDate, setSickEndDate] = useState("");
     const [sickEndTime, setSickEndTime] = useState("");
     const [sickDriver, setSickDriver] = useState(0);
+    const [notesStartDate, setNotesStartDate] = useState("");
+    const [notesStartTime, setNotesStartTime] = useState("");
+    const [notesEndDate, setNotesEndDate] = useState("");
+    const [notesEndTime, setNotesEndTime] = useState("");
+    const [notesDriver, setNotesDriver] = useState(0);
+    const [noteDetails, setNoteDetails] = useState("");
     const [annualLeaveStartDate, setAnnualLeaveStartDate] = useState("");
     const [annualLeaveStartTime, setAnnualLeaveStartTime] = useState("");
     const [annualLeaveEndDate, setAnnualLeaveEndDate] = useState("");
@@ -209,6 +218,9 @@ export default function Planner({ auth }) {
             case "adminExtra":
                 setOpenAdminExtraModal(true);
                 break;
+            case "notes":
+                setOpenNotesModal(true);
+                break;
             default:
                 console.log(type);
         }
@@ -220,6 +232,7 @@ export default function Planner({ auth }) {
         let newAnnualLeaveList = [];
         let newAdminExtraList = [];
         let userFinalizedJobs = [];
+        let newJobNotesList = [];
         await axios
             .get("/planner/jobs/get-users-jobs")
             .then(async (response) => {
@@ -255,7 +268,7 @@ export default function Planner({ auth }) {
                                         );
                                         if (job.status === 200) {
                                             setOpenDetailModal(true);
-                                            setEditingJob(job.data);
+                                            setEditingJob(job.data[0]);
                                         }
                                     } catch (e) {
                                         console.log(e);
@@ -516,6 +529,89 @@ export default function Planner({ auth }) {
                 newAdminExtraList.push(newAdminExtra);
             }
         });
+
+        await axios.get("/planner/jobs/job-notes").then(async (response) => {
+            for (const note of response.data) {
+                let newJobNotes = {
+                    id: note.id,
+                    group: note.user_id,
+                    start_time: moment(note.start_date).set({
+                        hour: note.start_time.split(":")[0],
+                        minute: note.start_time.split(":")[1],
+                    }), 
+                    end_time: moment(note.end_date).set({
+                        hour: note.end_time.split(":")[0],
+                        minute: note.end_time.split(":")[1],
+                    }),
+                    title: note.notes.substring(0, 10),
+                    canMove: false,
+                    canResize: false,
+                    itemProps: {
+                        type: "notes",
+                        className: "weekend",
+                        style: {
+                            background: "brown",
+                            color: "white",
+                            height: 100,
+                            zIndex: 50,
+                        },
+                        onContextMenu: async (itemId) => {
+                            try {
+                                let id =
+                                    itemId.target.parentElement.getAttribute(
+                                        "dataitemid"
+                                    );
+                                let note = await axios.get(
+                                    "/planner/jobs/job-notes/" + id
+                                );
+                                if (note.status === 200) {
+                                    setOpenEditNotesModal(true);
+                                    setEditingNote(note.data[0]);
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
+                        onClick: async (itemId) => {
+                            try {
+                                let id =
+                                    itemId.target.parentElement.getAttribute(
+                                        "dataitemid"
+                                    );
+                                let note = await axios.get(
+                                    "/planner/jobs/job-notes/" + id
+                                );
+                                if (note.status === 200) {
+                                    setOpenEditNotesModal(true);
+                                    setEditingNote(note.data[0]);
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
+                        onDoubleClick: async (itemId) => {
+                            try {
+                                let id =
+                                    itemId.target.parentElement.getAttribute(
+                                        "dataitemid"
+                                    );
+                                let note = await axios.get(
+                                    "/planner/jobs/job-notes/" + id
+                                );
+                                if (note.status === 200) {
+                                    setOpenEditNotesModal(true);
+                                    setEditingNote(note.data[0]);
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
+                       
+                    },
+                };
+                newJobNotesList.push(newJobNotes);
+            }
+        });
         await axios.get("/user-confirmed-jobs").then(async (response) => {
             for (const job of response.data) {
                 let workStartTime = job.work_start_time.split(":");
@@ -558,6 +654,7 @@ export default function Planner({ auth }) {
             ...newAnnualLeaveList,
             ...newAdminExtraList,
             ...userFinalizedJobs,
+            ...newJobNotesList,
         ];
 
         if (plan) {
@@ -706,6 +803,7 @@ export default function Planner({ auth }) {
                 ...newJobList,
                 ...newSickList,
                 ...newAnnualLeaveList,
+                ...newJobNotesList,
                 ...newAdminExtraList,
                 ...userFinalizedJobs,
                 ...newFilledPlan,
@@ -790,6 +888,45 @@ export default function Planner({ auth }) {
                 });
             });
     };
+    const setNotes = async () => {
+        await axios
+            .post("/planner/jobs/job-notes", {
+                start_date: notesStartDate,
+                start_time: notesStartTime,
+                end_date: notesEndDate,
+                end_time: notesEndTime,
+                user_id: notesDriver,
+                notes: noteDetails,
+                
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    setOpenNotesModal(false);
+                    getPlans();
+                    getPlansWithoutUser();
+                    getUsersJobs();
+                    setNotesStartDate("");
+                    setNotesStartTime("");
+                    setNotesEndDate("");
+                    setNotesEndTime("");
+                    setNotesDriver(0);
+                    setNoteDetails("");
+                    Swal.fire({
+                        icon: "success",
+                        title: "Notiz Hinzufügen",
+                        text: "Notiz Hinzufügen Başarılı",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Notiz Hinzufügen Hatası",
+                    text: error.response.data.message,
+                });
+            });
+    };
     const setAnnualLeave = async () => {
         await axios
             .post("/annual-leaves", {
@@ -864,7 +1001,6 @@ export default function Planner({ auth }) {
                 });
             });
     };
-
     const handleDrivers = async (job) => {
         let drivers = await clients.find((client) => {
             return client.value === job.client_id
@@ -890,6 +1026,16 @@ export default function Planner({ auth }) {
             console.log(response);
         });*/
     };
+
+    const deleteNotes = async () => {
+        await axios.delete('/planner/jobs/job-notes/'+editingNote.id).then((response) => {
+            setOpenEditNotesModal(false);
+            getPlans();
+            getPlansWithoutUser();
+            getUsersJobs();
+            setEditingNote({});
+        });
+    }
 
     useEffect(() => {
         getPlans();
@@ -925,7 +1071,7 @@ export default function Planner({ auth }) {
             getPlans();
             getPlansWithoutUser();
             getUsersJobs();
-        }, 25000);
+        }, 50000);
         return () => clearInterval(id);
     }, []);
 
@@ -1031,6 +1177,165 @@ export default function Planner({ auth }) {
                     <Button
                         color="gray"
                         onClick={() => setOpenDetailModal(false)}
+                    >
+                        Abbrechen
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            {/* Not ekleme modalı*/}
+            <Modal
+                show={openNotesModal}
+                size={"5xl"}
+                onClose={() => setOpenNotesModal(false)}
+            >
+                <Modal.Header>Notiz Hinzufügen</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-2">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Datum
+                        </p>
+                        <div className="flex justify-between">
+                            <Datepicker
+                                inline
+                                language="de-DE"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                id="notesStartDate"
+                                name="notesStartDate"
+                                type="date"
+                                value={notesStartDate}
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setNotesStartDate(
+                                        datenew.reverse().join("-")
+                                    );
+                                    setNotesEndDate(datenew.reverse().join("-"));
+                                    setNotesEndTime("00:00");
+                                    setNotesStartTime("00:00");
+                                }}
+                            />
+
+                            <div
+                                className="flex flex-row gap-2 justify-center"
+                                style={{ maxHeight: 50 }}
+                            >
+                                <input
+                                    type="time"
+                                    id="notesStartTime"
+                                    name="notesStartTime"
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={notesStartTime}
+                                    onChange={(e) => {
+                                        setNotesStartTime(e.target.value);
+                                    }}
+                                />
+                                <p className="justify-self-center">bis</p>
+                                <input
+                                    type="time"
+                                    id="notesEndTime"
+                                    name="notesEndTime"
+                                    className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-6000 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value={notesEndTime}
+                                    onChange={(e) => {
+                                        setNotesEndTime(e.target.value);
+                                    }}
+                                />
+                            </div>
+
+                            <Datepicker
+                                inline
+                                language="de-DE"
+                                id="notesEndDate"
+                                name="notesEndDate"
+                                showTodayButton={false}
+                                showClearButton={false}
+                                value={notesEndDate}
+                                type="date"
+                                onSelectedDateChanged={(date) => {
+                                    let datenew = new Date(date)
+                                        .toLocaleDateString()
+                                        .split(".");
+                                    datenew[0] = datenew[0].padStart(2, "0");
+                                    datenew[1] = datenew[1].padStart(2, "0");
+                                    setNotesEndDate(datenew.reverse().join("-"));
+                                }}
+                            />
+                        </div>
+                        <br />
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Lokführer
+                        </p>
+                        <Select
+                            className="w-full mb-10"
+                            onChange={(e) => setNotesDriver(e.target.value)}
+                            value={notesDriver}
+                        >
+                            <option>Wählen Sie</option>
+                            {drivers &&
+                                drivers.map((driver) => (
+                                    <option key={driver.id} value={driver.id}>
+                                        {driver.name}
+                                    </option>
+                                ))}
+                        </Select>
+
+                        <br />
+                        <textarea type="text" className="w-full" placeholder="Notiz" onChange={(e) => setNoteDetails(e.target.value)} ></textarea>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={setNotes}>
+                        Notiz Hinzufügen
+                    </Button>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenNotesModal(false)}
+                    >
+                        Abbrechen
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            {/* Notları gösteren modal*/}
+            <Modal
+                show={openEditNotesModal}
+                onClose={() => setOpenEditNotesModal(false)}
+            >
+                <Modal.Header>Notiz</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-6">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                            Startdatum :{" "}
+                            {moment(editingNote.start_date).format("DD.MM.YYYY")}
+                            <br />
+                            Startzeit : {editingNote.start_time}
+                            <br />
+                            Enddatum :{" "}
+                            {moment(editingNote.end_date).format("DD.MM.YYYY")}
+                            <br />
+                            Endzeit : {editingNote.end_time}
+                            <br />
+                            Notiz : {editingNote.notes}
+                        </p>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        color="red"
+                        onClick={() => deleteNotes(editingJob.id)}
+                    >
+                        Löschen
+                    </Button>
+                    <Button
+                        color="gray"
+                        onClick={() => setOpenEditNotesModal(false)}
                     >
                         Abbrechen
                     </Button>
@@ -1629,6 +1934,14 @@ export default function Planner({ auth }) {
                                             }
                                         >
                                             Ruhe Tag
+                                        </Button>
+                                        <Button
+                                            className="bg-yellow-500"
+                                            onClick={() =>
+                                                showModal("notes")
+                                            }
+                                        >
+                                            Notiz
                                         </Button>
                                         <ToggleSwitch
                                             label="Diese Woche anzeigen"
