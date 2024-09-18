@@ -872,7 +872,7 @@ export default function Planner({ auth }) {
         
         setSelectedDrivers(drivers.users.map((user) => {
             return {
-                value: user.id,
+                value: user.user.id,
                 label: user.user.name
             }
         }));
