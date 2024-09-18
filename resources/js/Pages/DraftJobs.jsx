@@ -845,7 +845,7 @@ export default function DraftJobs({ auth }) {
                                                             checked={
                                                                 values.earlyExit
                                                             }
-                                                            label="Frühzeitiges Verlassen"
+                                                            label="Anreise Vortag"
                                                             id="earlyExit"
                                                             name="earlyExit"
                                                             onChange={(value) => {
@@ -1561,7 +1561,7 @@ export default function DraftJobs({ auth }) {
                                                             checked={
                                                                 values.lateEnter
                                                             }
-                                                            label="Spät Eintreffen"
+                                                            label="Abreise Folgetag"
                                                             id="lateEnter"
                                                             name="lateEnter"
                                                             onChange={(value) => {
