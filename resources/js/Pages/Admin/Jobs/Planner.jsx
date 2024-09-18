@@ -268,7 +268,7 @@ export default function Planner({ auth }) {
                                         );
                                         if (job.status === 200) {
                                             setOpenDetailModal(true);
-                                            setEditingJob(job.data[0]);
+                                            setEditingJob(job.data);
                                         }
                                     } catch (e) {
                                         console.log(e);
@@ -529,7 +529,6 @@ export default function Planner({ auth }) {
                 newAdminExtraList.push(newAdminExtra);
             }
         });
-
         await axios.get("/planner/jobs/job-notes").then(async (response) => {
             for (const note of response.data) {
                 let newJobNotes = {
