@@ -1266,14 +1266,15 @@ class FinalizedJobsController extends Controller
                 if ($work_sum == "00:00") {
                     $work_sum = "24:00";
                 }
+                
                 $guest_start_total = "00:00";
-
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
                     $guest_start_total = $this->guest_diffrence($finalized_job->guest_start_time, $finalized_job->guest_start_end_time, $initial_date);
                     if ($guest_start_total != "00:00") {
                         $total_guest_sum = $this->calculateTotalSum($guest_start_total, $total_guest_sum);
                     }
                 }
+
                 $guest_end_total = "00:00";
                 if ($finalized_job->guest_end_time && $finalized_job->guest_end_end_time) {
                     $guest_end_total = $this->guest_diffrence($finalized_job->guest_end_time, $finalized_job->guest_end_end_time, $initial_date);
@@ -1287,9 +1288,11 @@ class FinalizedJobsController extends Controller
 
                 $break_total = new DateInterval('PT0S');
                 $breaks = json_decode($finalized_job->breaks);
+                
                 if (gettype($breaks) == "string") {
                     $breaks = json_decode($breaks);
                 }
+
                 if ($breaks) {
                     foreach ($breaks as $break) {
                         if($break->start && $break->end){   
@@ -1692,4 +1695,5 @@ class FinalizedJobsController extends Controller
         $finalized_job->delete();
         return response()->json(["status" => true]);
     }
+    
 }

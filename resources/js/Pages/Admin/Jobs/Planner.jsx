@@ -487,7 +487,7 @@ export default function Planner({ auth }) {
                                 }).then(async (willDelete) => {
                                     if (willDelete.isConfirmed) {
                                         await axios.delete(
-                                            "/admin-extras/" + id
+                                            "/admin-extras/" + adminExtra.id
                                         );
                                         getPlans();
                                         getPlansWithoutUser();
@@ -869,11 +869,11 @@ export default function Planner({ auth }) {
         let drivers = await clients.find((client) => {
             return client.value === job.client_id
         });
-
+        
         setSelectedDrivers(drivers.users.map((user) => {
             return {
                 value: user.id,
-                label: user.name
+                label: user.user.name
             }
         }));
     }
@@ -972,8 +972,8 @@ export default function Planner({ auth }) {
                             <option>Wählen</option>
                             {selectedDrivers &&
                                 selectedDrivers.map((driver) => (
-                                    <option key={driver.id} value={driver.id}>
-                                        {driver.name}
+                                    <option key={driver.value} value={driver.value}>
+                                        {driver.label}
                                     </option>
                                 ))}
                         </Select>
