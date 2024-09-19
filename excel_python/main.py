@@ -331,22 +331,17 @@ def create_total_excel():
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
         os.chmod("/tmp/result_total.xlsx", 0o666)
-        if not os.path.exists("/tmp/result_total.xlsx"):
-            app.logger.error("Excel dosyası oluşturulamadı.")
-            return "Excel dosyası oluşturulamadı", 500
         result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_total.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
-            if not os.path.exists("/tmp/result_total.pdf"):
-                app.logger.error("PDF dosyası oluşturulamadı.")
-                return "PDF dosyası oluşturulamadı", 500
+            subprocess.run(["chown", "www-data:www-data", "/tmp/result_total.pdf"])
             os.chmod("/tmp/result_total.pdf", 0o666)
             return send_file('/tmp/result_total.pdf', as_attachment=True)
         finally:
-            if os.path.exists('/tmp/result_total.pdf'):
-                os.remove('/tmp/result_total.pdf')
-                os.remove('/tmp/result_total.xlsx')
+            if os.path.exists('/tmp/result.pdf'):
+                os.remove('/tmp/result.pdf')
+                os.remove('/tmp/result.xlsx')
     else:
         return "Content type is not supported."
 
@@ -370,7 +365,7 @@ def main_excel_client():
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
         wb.save("/tmp/result_client.xlsx")
-        
+
         try:
             return send_file('/tmp/result_client.xlsx', as_attachment=True)
         finally:
@@ -497,7 +492,6 @@ def main_excel_client_pdf():
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
             subprocess.run(["chown", "www-data:www-data", "/tmp/result_client.pdf"])
-            
             os.chmod("/tmp/result_client.pdf", 0o666)
             return send_file('/tmp/result_client.pdf', as_attachment=True)
         finally:
