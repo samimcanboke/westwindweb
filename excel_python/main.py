@@ -42,7 +42,7 @@ def main_excel():
                        shell=True,
                        capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
-app.logger.error(f"LibreOffice error: {result.stderr}")
+        app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
             return send_file('/tmp/result.pdf', as_attachment=True)
         finally:
