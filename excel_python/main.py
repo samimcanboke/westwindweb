@@ -481,21 +481,18 @@ def main_excel_client_pdf():
                             used_data["client"]
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
+
         wb.save("/tmp/result_client.xlsx")
         os.chmod("/tmp/result_client.xlsx", 0o666)
         result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_client.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
-            subprocess.run(["chown", "www-data:www-data", "/tmp/result_client.pdf"])
-            os.chmod("/tmp/result_client.pdf", 0o666)
             return send_file('/tmp/result_client.pdf', as_attachment=True)
         finally:
             if os.path.exists('/tmp/result_client.pdf'):
                 os.remove('/tmp/result_client.pdf')
                 os.remove('/tmp/result_client.xlsx')
-        
-
     else:
         return "Content type is not supported."
 
