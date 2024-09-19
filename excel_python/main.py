@@ -37,19 +37,16 @@ def main_excel():
         #img2 = drawing.image.Image('./logo.jpg')
         #img2.anchor = 'N39'
         #ws.add_image(img2)
-        wb.save("/tmp/result.xlsx")
-        os.chmod("/tmp/result.xlsx", 0o666)
-        result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result.xlsx"], capture_output=True, text=True)
+        wb.save("../storage/tmp/result_total.xlsx")
+        result = subprocess.run(["unoconv", "-f", "pdf", "../storage/tmp/result_total.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
-            subprocess.run(["chown", "www-data:www-data", "/tmp/result.pdf"])
-            os.chmod("/tmp/result.pdf", 0o666)
-            return send_file('/tmp/result.pdf', as_attachment=True)
+            return send_file('../storage/tmp/result_total.pdf', as_attachment=True)
         finally:
-            if os.path.exists('/tmp/result.pdf'):
-                os.remove('/tmp/result.pdf')
-                os.remove('/tmp/result.xlsx')
+            if os.path.exists('../storage/tmp/result_total.pdf'):
+                os.remove('../storage/tmp/result_total.pdf')
+                os.remove('../storage/tmp/result_total.xlsx')
     else:
         return "Content type is not supported."
 
