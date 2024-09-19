@@ -38,7 +38,8 @@ def main_excel():
         #img2.anchor = 'N39'
         #ws.add_image(img2)
         wb.save("../storage/tmp/result_total.xlsx")
-        result = subprocess.run(["unoconv", "-f", "pdf", "../storage/tmp/result_total.xlsx"], capture_output=True, text=True)
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        result = subprocess.run(["unoconv", "-f", "pdf", os.path.join(current_path, "../storage/tmp/result_total.xlsx")], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
