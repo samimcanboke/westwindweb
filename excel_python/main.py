@@ -43,6 +43,7 @@ def main_excel():
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
+            os.chmod("/tmp/result.pdf", 0o666)
             return send_file('/tmp/result.pdf', as_attachment=True)
         finally:
             if os.path.exists('/tmp/result.pdf'):
@@ -336,6 +337,7 @@ def create_total_excel():
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
+            os.chmod("/tmp/result_total.pdf", 0o666)
             return send_file('/tmp/result_total.pdf', as_attachment=True)
         finally:
             if os.path.exists('/tmp/result_total.pdf'):
@@ -489,6 +491,7 @@ def main_excel_client_pdf():
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
+            os.chmod("/tmp/result_client.pdf", 0o666)
             return send_file('/tmp/result_client.pdf', as_attachment=True)
         finally:
             if os.path.exists('/tmp/result_client.pdf'):
