@@ -9,7 +9,7 @@ from PIL import Image
 
 
 app = Flask(__name__)
-
+os.umask(0)
 @app.route('/create-excel', methods=['POST'])
 def main_excel():
     content_type = request.headers.get('Content-Type')
@@ -494,6 +494,7 @@ def main_excel_client_pdf():
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
             subprocess.run(["chown", "www-data:www-data", "/tmp/result_client.pdf"])
+            
             os.chmod("/tmp/result_client.pdf", 0o666)
             return send_file('/tmp/result_client.pdf', as_attachment=True)
         finally:
