@@ -43,7 +43,6 @@ def main_excel():
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
-            subprocess.run(["chown", "www-data:www-data", "/tmp/result.pdf"])
             os.chmod("/tmp/result.pdf", 0o666)
             return send_file('/tmp/result.pdf', as_attachment=True)
         finally:
