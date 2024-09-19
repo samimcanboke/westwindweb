@@ -38,9 +38,11 @@ def main_excel():
         #img2.anchor = 'N39'
         #ws.add_image(img2)
         wb.save("/tmp/result.xlsx")
-        subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result.xlsx"],
+        result = subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result.xlsx"],
                        shell=True,
                        capture_output=True, text=True)
+        app.logger.info(f"LibreOffice output: {result.stdout}")
+app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
             return send_file('/tmp/result.pdf', as_attachment=True)
         finally:
@@ -327,9 +329,11 @@ def create_total_excel():
                     ws[f'Q{row_num}'] = row_data['user_advance']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
-        subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
+        result =subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
                        shell=True,
                        capture_output=True, text=True)
+        app.logger.info(f"LibreOffice output: {result.stdout}")
+        app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
             return send_file('/tmp/result_total.pdf', as_attachment=True)
         finally:
@@ -479,9 +483,11 @@ def main_excel_client_pdf():
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
         wb.save("/tmp/result_client.xlsx")
-        subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_client.xlsx"],
+        result = subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_client.xlsx"],
                        shell=True,
                        capture_output=True, text=True)
+        app.logger.info(f"LibreOffice output: {result.stdout}")
+        app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
             return send_file('/tmp/result_client.pdf', as_attachment=True)
         finally:
