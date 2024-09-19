@@ -38,9 +38,7 @@ def main_excel():
         #img2.anchor = 'N39'
         #ws.add_image(img2)
         wb.save("/tmp/result.xlsx")
-        result = subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result.xlsx"],
-                       shell=True,
-                       capture_output=True, text=True)
+        result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_total.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
@@ -332,9 +330,10 @@ def create_total_excel():
         if not os.path.exists("/tmp/result_total.xlsx"):
             app.logger.error("Excel dosyası oluşturulamadı.")
             return "Excel dosyası oluşturulamadı", 500
-        result = subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
-                       shell=True,
-                       capture_output=True, text=True)
+        result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_total.xlsx"], capture_output=True, text=True)
+        if not os.path.exists("/tmp/result_total.pdf"):
+            app.logger.error("PDF dosyası oluşturulamadı.")
+            return "PDF dosyası oluşturulamadı", 500
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
@@ -486,9 +485,7 @@ def main_excel_client_pdf():
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
         wb.save("/tmp/result_client.xlsx")
-        result = subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_client.xlsx"],
-                       shell=True,
-                       capture_output=True, text=True)
+        result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_total.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
