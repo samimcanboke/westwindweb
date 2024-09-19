@@ -338,7 +338,9 @@ def create_total_excel():
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
-            subprocess.run(["chown", "www-data:www-data", "/tmp/result_total.pdf"])
+            if not os.path.exists("/tmp/result_total.pdf"):
+                app.logger.error("PDF dosyası oluşturulamadı.")
+                return "PDF dosyası oluşturulamadı", 500
             os.chmod("/tmp/result_total.pdf", 0o666)
             return send_file('/tmp/result_total.pdf', as_attachment=True)
         finally:
@@ -368,6 +370,7 @@ def main_excel_client():
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
         wb.save("/tmp/result_client.xlsx")
+        
         try:
             return send_file('/tmp/result_client.xlsx', as_attachment=True)
         finally:
