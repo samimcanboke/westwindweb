@@ -329,7 +329,10 @@ def create_total_excel():
                     ws[f'Q{row_num}'] = row_data['user_advance']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
-        result =subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
+        if not os.path.exists("/tmp/result_total.xlsx"):
+            app.logger.error("Excel dosyası oluşturulamadı.")
+            return "Excel dosyası oluşturulamadı", 500
+        result = subprocess.run(["soffice --headless --convert-to pdf:calc_pdf_Export --outdir /tmp /tmp/result_total.xlsx"],
                        shell=True,
                        capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
