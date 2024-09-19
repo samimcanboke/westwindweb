@@ -38,6 +38,7 @@ def main_excel():
         #img2.anchor = 'N39'
         #ws.add_image(img2)
         wb.save("/tmp/result.xlsx")
+        os.chmod("/tmp/result.xlsx", 0o666)
         result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
@@ -327,6 +328,7 @@ def create_total_excel():
                     ws[f'Q{row_num}'] = row_data['user_advance']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
+        os.chmod("/tmp/result_total.xlsx", 0o666)
         if not os.path.exists("/tmp/result_total.xlsx"):
             app.logger.error("Excel dosyası oluşturulamadı.")
             return "Excel dosyası oluşturulamadı", 500
@@ -482,7 +484,7 @@ def main_excel_client_pdf():
                             )
         ws = add_lines_client_multiple_user(ws, used_data)
         wb.save("/tmp/result_client.xlsx")
-
+        os.chmod("/tmp/result_client.xlsx", 0o666)
         result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_client.xlsx"], capture_output=True, text=True)
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
