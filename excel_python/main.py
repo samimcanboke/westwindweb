@@ -333,13 +333,11 @@ def create_total_excel():
         app.logger.info(f"LibreOffice output: {result.stdout}")
         app.logger.error(f"LibreOffice error: {result.stderr}")
         try:
-            subprocess.run(["chown", "www-data:www-data", "/tmp/result_total.pdf"])
-            os.chmod("/tmp/result_total.pdf", 0o666)
             return send_file('/tmp/result_total.pdf', as_attachment=True)
         finally:
-            if os.path.exists('/tmp/result.pdf'):
-                os.remove('/tmp/result.pdf')
-                os.remove('/tmp/result.xlsx')
+            if os.path.exists('/tmp/result_total.pdf'):
+                os.remove('/tmp/result_total.pdf')
+                os.remove('/tmp/result_total.xlsx')
     else:
         return "Content type is not supported."
 
