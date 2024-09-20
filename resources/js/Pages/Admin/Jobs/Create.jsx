@@ -15,6 +15,8 @@ import Swal from "sweetalert2";
 import moment from "moment";
 
 const initialValues = {
+    start_pause_time: "",
+    end_pause_time: "",
     start_date: "",
     start_time: "",
     end_date: "",
@@ -45,6 +47,9 @@ const validationSchema = Yup.object().shape({
     description: Yup.string(),
 });
 
+
+
+
 export default function Dashboard({ auth }) {
     const [clients, setClients] = useState([]);
     useEffect(() => {
@@ -52,6 +57,52 @@ export default function Dashboard({ auth }) {
             setClients(res.data);
         });
     }, []);
+
+    const calculateFinishTime = (start_date,start_time) => {
+        let date = moment(start_date);
+        let breakDate = moment(start_date);
+        let breakDateEnd = moment(start_date);
+        let time = start_time.split(':');
+        if(start_date){
+            date.set({
+                hour: time[0],
+                minute: time[1],
+            });
+            breakDate.set({
+                hour: time[0],
+                minute: time[1],
+            });
+            breakDateEnd.set({
+                hour: time[0],
+                minute: time[1],
+            });
+        }
+        let dtfn = date;
+        let finishDateTime = dtfn.add(10, 'hours').format('YYYY-MM-DD HH:mm');
+       return {finishDateTime: finishDateTime, breakStart: breakDate.add(5, 'hours').format('HH:mm'), breakEnd: breakDateEnd.add(5.75, 'hours').format('HH:mm')};
+    }
+
+    const calculateBreakTime = (start_date,start_time,end_date,end_time) => {
+        let startDate = moment(start_date);
+        let finishDate = moment(end_date);
+        let time = start_time.split(':');
+        let timeEnd = end_time.split(':');
+        if(start_date){
+            startDate.set({
+                hour: time[0],
+                minute: time[1],
+            });
+            finishDate.set({
+                hour: timeEnd[0],
+                minute: timeEnd[1],
+            });
+        }
+        if(finishDate.diff(startDate, 'hours') <= 8){
+            return {breakStart: startDate.add(5, 'hours').format('HH:mm'), breakEnd: startDate.add(0.5, 'hours').format('HH:mm')};
+        }else{
+            return {breakStart: startDate.add(5, 'hours').format('HH:mm'), breakEnd: startDate.add(0.75, 'hours').format('HH:mm')};
+        }
+    }
 
     return (
         <AuthenticatedLayout
@@ -130,27 +181,12 @@ export default function Dashboard({ auth }) {
                                         value={values.start_time}
                                         onChange={(e) => {
                                             setFieldValue("start_time", e.target.value);
-                                        }}
-                                        onBlur={(e) => {
-                                            const startTime = e.target.value;
-                                            setFieldValue("start_time", startTime);
-
-                                            const [hours, minutes] = startTime.split(':');
-                                            const endTime = new Date();
-                                            endTime.setHours(parseInt(hours) + 10);
-                                            endTime.setMinutes(parseInt(minutes));
-
-                                            const endHours = endTime.getHours().toString().padStart(2, '0');
-                                            const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
-                                            setFieldValue("end_time", `${endHours}:${endMinutes}`);
-                                            const startDateTime = moment(`${values.start_date}T${values.start_time}`);
-                                            const endDateTime = moment(`${values.start_date}T${values.end_time}`);
-                                            if (endDateTime.isBefore(startDateTime)) {
-                                                endDateTime.add(1, 'day');
-                                            }
-                                            console.log(startDateTime.toDate(), endDateTime.toDate());
-
-                                            setFieldValue("end_date", endDateTime.toISOString().split('T')[0]);
+                                            const {finishDateTime, breakStart,breakEnd} = calculateFinishTime(values.start_date, e.target.value);
+                                            const [finishDate, finishHour] = finishDateTime.split(' ');
+                                            setFieldValue("end_date", finishDate);
+                                            setFieldValue("end_time", finishHour);
+                                            setFieldValue("start_pause_time", breakStart);
+                                            setFieldValue("end_pause_time", breakEnd);
                                         }}
                                     />
                                     <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
@@ -198,12 +234,15 @@ export default function Dashboard({ auth }) {
                                         name="end_time"
                                         className={
                                             errors.end_time && touched.end_time
-                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-50 ml-2"
+                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-2"
                                         }
                                         value={values.end_time}
                                         onChange={(e) => {
                                             setFieldValue("end_time", e.target.value);
+                                            const {breakStart,breakEnd} = calculateBreakTime(values.start_date,values.start_time,values.end_date,e.target.value);
+                                            setFieldValue("start_pause_time", breakStart);
+                                            setFieldValue("end_pause_time", breakEnd);
                                         }}
                                     />
                                     <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
@@ -226,6 +265,77 @@ export default function Dashboard({ auth }) {
                                 </p>
                             </div>
                         </div>
+
+                        <div className="container mx-auto mt-10 flex flex-row justify-center">
+                            <div className="">
+                                <Label>Start Pausenzeit</Label>
+                                <div className="flex">
+                                    <input
+                                        type="time"
+                                        id="start_pause_time"
+                                        name="start_pause_time"
+                                        className={
+                                            errors.start_pause_time && touched.start_pause_time
+                                                ? "rounded-none rounded-s-lg bg-gray-50 ml-2 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                : "rounded-none rounded-s-lg bg-gray-50 ml-2 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        }
+                                        value={values.start_pause_time}
+                                        onChange={(e) => {
+                                            setFieldValue("start_pause_time", e.target.value);
+                                        }}
+                                    />
+                                    <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <svg
+                                            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <p className="text-red-500">
+                                    {errors.start_pause_time && touched.start_pause_time && errors.start_pause_time}
+                                </p>
+                            </div>
+                            <span className="mx-4 mt-9 text-gray-500">bis</span>
+                            <div className="">
+                                <Label>End Pausenzeit</Label>
+                                <div className="flex">
+                                    <input
+                                        type="time"
+                                        id="end_pause_time"
+                                        name="end_pause_time"
+                                        className={
+                                            errors.end_pause_time && touched.end_pause_time
+                                                ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        }
+                                        value={values.end_pause_time}
+                                        onChange={(e) => {
+                                            setFieldValue("end_pause_time", e.target.value);
+                                        }}
+                                    />
+                                    <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <svg
+                                            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <p className="text-red-500">
+                                    {errors.end_pause_time && touched.end_pause_time && errors.end_pause_time}
+                                </p>
+                            </div>
+                        </div>
+                        
 
                         <div className="container mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>

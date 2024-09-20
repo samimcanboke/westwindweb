@@ -13,6 +13,7 @@ export default function Authenticated({ user, header, children }) {
         const response = await axios.get(route('wait-confirmed-jobs-count'));
         setWaitConfirmedCount(response.data.count);
     }
+    window.userId = user.id;
 
     useEffect(()=>{
         getWaitConfirmedCount();
