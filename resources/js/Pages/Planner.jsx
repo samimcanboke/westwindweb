@@ -128,6 +128,16 @@ export default function Planner({ auth }) {
                                                 <br />
                                                 <Label>Kommentar : </Label>
                                                 {job.description}
+                                                {job.start_pause_time &&
+                                                job.end_pause_time && (
+                                                    <div>
+                                                    <br />
+                                                        <Label>
+                                                            Pausenzeit :
+                                                        </Label>
+                                                        {job.start_pause_time} - {job.end_pause_time}
+                                                    </div>
+                                                )}  
                                             </AccordionContent>
                                         </AccordionPanel>
                                     </Accordion>

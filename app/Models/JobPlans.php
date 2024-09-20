@@ -20,6 +20,8 @@ class JobPlans extends Model
         'description',
         'to',
         'from',
+        'start_pause_time',
+        'end_pause_time',
     ];
 
     public function user()
