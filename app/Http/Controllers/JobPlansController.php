@@ -108,6 +108,8 @@ class JobPlansController extends Controller
         $jobPlan->locomotive_nummer = $request->locomotive_nummer;
         $jobPlan->tour_name = $request->tour_name;
         $jobPlan->description = $request->description;
+        $jobPlan->start_pause_time = $request->start_pause_time;
+        $jobPlan->end_pause_time = $request->end_pause_time;
         $jobPlan->to = $request->to;
         $jobPlan->from = $request->from;
         $jobPlan->client_id = $request->client_id;
