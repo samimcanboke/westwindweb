@@ -153,8 +153,12 @@ class DraftJobsController extends Controller
         $draftJob->comment = $request->comment ?? $draftJob->comment;
         $draftJob->learning = $request->learning ?? $draftJob->learning;
         $draftJob->feeding_fee = $request->feeding_fee ?? $draftJob->feeding_fee;
-        $draftJob->early_exit = $request->earlyExit ?? $draftJob->early_exit;
-        $draftJob->late_enter = $request->lateEnter ?? $draftJob->late_enter;
+        if ($request->early_exit !== $draftJob->early_exit) {
+            $draftJob->early_exit = $request->early_exit;
+        }
+        if ($request->late_enter !== $draftJob->late_enter) {
+            $draftJob->late_enter = $request->late_enter;
+        }
         $draftJob->guest_start_place = $request->guest_start_place ?? $draftJob->guest_start_place;
         $draftJob->guest_start_time = $request->guest_start_time ?? $draftJob->guest_start_time;
         $draftJob->guest_start_end_place = $request->guest_start_end_place ?? $draftJob->guest_start_end_place;

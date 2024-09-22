@@ -254,6 +254,7 @@ export default function WaitingConfirmed({ auth }) {
                                 onSubmit={(values, { setSubmitting }) => {
                                     setSubmitting(true);
                                     setLoading(true);
+         
                                     axios
                                         .post(
                                             route("update-draft-job-inside"),
