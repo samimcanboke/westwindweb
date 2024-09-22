@@ -198,4 +198,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(JobNotes::class);
     }
+
+    public function gpsLocations()
+    {
+        return $this->hasMany(GPSLocation::class);
+    }
 }

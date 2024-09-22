@@ -29,6 +29,7 @@ use App\Http\Controllers\UsersAggreementsController;
 use App\Http\Controllers\UserSalaryReportController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\JobNotesController;
+use App\Http\Controllers\GPSLocationController;
 
 use App\Events\UserRegistered;
 
@@ -361,6 +362,18 @@ Route::get('/hour-banks/{user_id}', [HourBankController::class, 'index'])->middl
 Route::post('/add-hour-bank/{user_id}', [HourBankController::class, 'store'])->middleware(['auth', 'verified',IsAdmin::class])->name('add-hour-bank');
 Route::delete('/delete-hour-bank/{hour_bank_id}', [HourBankController::class, 'destroy'])->middleware(['auth', 'verified',IsAdmin::class])->name('delete-hour-bank');
 Route::get('/hour-banks/{user_id}', [HourBankController::class, 'index'])->middleware(['auth', 'verified',IsAdmin::class])->name('get-user-hour-banks');
+
+
+
+Route::get('/gps-locations', [GPSLocationController::class, 'index'])->withoutMiddleware([IsAdmin::class,'auth', 'verified'])->name('gps-locations');
+Route::put('/gps-locations', [GPSLocationController::class, 'store'])->withoutMiddleware([IsAdmin::class,'auth', 'verified'])->name('gps-locations-store');
+/*Route::put('/gps-locations', function() {
+    dd('deneme');
+})->withoutMiddleware([IsAdmin::class,'auth', 'verified'])->name('gps-locations-store');*/
+Route::delete('/gps-locations/{id}', [GPSLocationController::class, 'destroy'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('gps-locations-destroy');
+Route::get('/gps-locations/{id}', [GPSLocationController::class, 'show'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('gps-locations-show');
+Route::put('/gps-locations/{id}', [GPSLocationController::class, 'update'])->middleware(['auth', 'verified'])->name('gps-locations-update');
+Route::delete('/gps-locations/{id}', [GPSLocationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('gps-locations-destroy');
 
 Route::get('/testroute', function() {
     $name = "Funny Coder";
