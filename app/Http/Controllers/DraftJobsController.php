@@ -159,10 +159,10 @@ class DraftJobsController extends Controller
         if ($request->late_enter !== $draftJob->late_enter) {
             $draftJob->late_enter = $request->late_enter;
         }
-        $draftJob->guest_start_place = $request->guest_start_place ?? $draftJob->guest_start_place;
-        $draftJob->guest_start_time = $request->guest_start_time ?? $draftJob->guest_start_time;
-        $draftJob->guest_start_end_place = $request->guest_start_end_place ?? $draftJob->guest_start_end_place;
-        $draftJob->guest_start_end_time = $request->guest_start_end_time ?? $draftJob->guest_start_end_time;
+        $draftJob->guest_start_place = $request->guest_start_place;
+        $draftJob->guest_start_time = $request->guest_start_time;
+        $draftJob->guest_start_end_place = $request->guest_start_end_place ;
+        $draftJob->guest_start_end_time = $request->guest_start_end_time;
         $draftJob->work_start_place = $request->work_start_place ?? $draftJob->work_start_place;
         $draftJob->work_start_time = $request->work_start_time ?? $draftJob->work_start_time;
         $draftJob->train_start_place = $request->train_start_place ?? $draftJob->train_start_place;
@@ -172,10 +172,10 @@ class DraftJobsController extends Controller
         $draftJob->breaks = json_encode($request->breaks) ?? $draftJob->breaks;
         $draftJob->work_end_place = $request->work_end_place ?? $draftJob->work_end_place;
         $draftJob->work_end_time = $request->work_end_time ?? $draftJob->work_end_time;
-        $draftJob->guest_end_place = $request->guest_end_place ?? $draftJob->guest_end_place;
-        $draftJob->guest_end_time = $request->guest_end_time ?? $draftJob->guest_end_time;
-        $draftJob->guest_end_end_place = $request->guest_end_end_place ?? $draftJob->guest_end_end_place;
-        $draftJob->guest_end_end_time = $request->guest_end_end_time ?? $draftJob->guest_end_end_time;
+        $draftJob->guest_end_place = $request->guest_end_place ;
+        $draftJob->guest_end_time = $request->guest_end_time;
+        $draftJob->guest_end_end_place = $request->guest_end_end_place ;
+        $draftJob->guest_end_end_time = $request->guest_end_end_time ;
         $draftJob->ausland = $request->ausland ?? $draftJob->ausland;
         $draftJob->country = $request->country ?? $draftJob->country;
         if($request->images && json_encode($request->images) !== $draftJob->files){
