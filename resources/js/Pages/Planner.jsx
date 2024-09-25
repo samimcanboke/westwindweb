@@ -23,9 +23,9 @@ export default function Planner({ auth }) {
                             response.data.sort((a, b) => {
                                 return (
                                     new Date(
-                                        a.start_date + " " + a.start_time
+                                        b.start_date + " " + b.start_time
                                     ) -
-                                    new Date(b.start_date + " " + b.start_time)
+                                    new Date(a.start_date + " " + a.start_time)
                                 );
                             });
                             setJobs(response.data);
