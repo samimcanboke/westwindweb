@@ -9,7 +9,6 @@ import * as yup from "yup";
 
 const validationSchema = yup.object().shape({
     name: yup.string().required("Name ist erforderlich"),
-    reminder_period_days: yup.number().required("Tage sind erforderlich"),
     is_mandatory: yup.boolean().required("Ist verpflichtend ist erforderlich"),
 });
 
