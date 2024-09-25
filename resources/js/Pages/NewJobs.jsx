@@ -1090,6 +1090,7 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle>Pause</AccordionTitle>
+                                {/** TODO: Pause  girişlerinde JSON.stringify kullanılacak. */}
                                 <AccordionContent>
                                     <br />
                                     <FieldArray name="breaks">
