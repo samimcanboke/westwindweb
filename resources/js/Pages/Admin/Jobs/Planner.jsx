@@ -1906,6 +1906,9 @@ export default function Planner({ auth }) {
                                         <ToggleSwitch
                                             label="Letzte Woche anzeigen"
                                             checked={prevWeek}
+                                            style={{
+                                                border: "1px solid white",
+                                            }}
                                             onChange={(e) => {
                                                 setPrevWeek(e);
                                                 if (e) {
