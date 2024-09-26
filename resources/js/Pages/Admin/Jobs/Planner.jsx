@@ -676,66 +676,25 @@ export default function Planner({ auth }) {
 
                 for (let i = 0; i < groupedPlans[group].length - 1; i++) {
                     if (groupedPlans[group][i + 1]) {
-                        let title =
-                            moment
-                                .duration(
-                                    groupedPlans[group][i + 1].start_time.diff(
-                                        groupedPlans[group][i].end_time
-                                    )
-                                )
-                                .days() > 0
-                                ? moment
-                                      .duration(
-                                          groupedPlans[group][
-                                              i + 1
-                                          ].start_time.diff(
-                                              groupedPlans[group][i].end_time
-                                          )
-                                      )
-                                      .days() *
-                                  24 +
-                                  moment
-                                      .duration(
-                                          groupedPlans[group][
-                                              i + 1
-                                          ].start_time.diff(
-                                              groupedPlans[group][i].end_time
-                                          )
-                                      )
-                                      .hours() +
-                                  ":" +
-                                  moment
-                                      .duration(
-                                          groupedPlans[group][
-                                              i + 1
-                                          ].start_time.diff(
-                                              groupedPlans[group][i].end_time
-                                          )
-                                      )
-                                      .minutes()
-                                      .toString()
-                                      .padStart(2, "0")
-                                : moment
-                                      .duration(
-                                          groupedPlans[group][
-                                              i + 1
-                                          ].start_time.diff(
-                                              groupedPlans[group][i].end_time
-                                          )
-                                      )
-                                      .hours() +
-                                  ":" +
-                                  moment
-                                      .duration(
-                                          groupedPlans[group][
-                                              i + 1
-                                          ].start_time.diff(
-                                              groupedPlans[group][i].end_time
-                                          )
-                                      )
-                                      .minutes()
-                                      .toString()
-                                      .padStart(2, "0");
+                        let duration = moment.duration(
+                            groupedPlans[group][i + 1].start_time.diff(
+                                                               groupedPlans[group][i].end_time
+                            )
+                        );
+
+                        let hours = duration.days() > 0
+                            ? duration.days() * 24 + duration.hours()
+                            : duration.hours();
+
+                        let minutes = duration.minutes().toString().padStart(2, "0");
+
+                        let title = hours + ":" + minutes;
+
+                        if (hours < 9) {
+                            title = title + "❗";
+                        } else if (hours >= 9 && hours < 10) {
+                            title = title + "⚠️";
+                        }
                         let newPlan = {
                             id: `${group}-${i}`,
                             group: groupedPlans[group][i].group,
