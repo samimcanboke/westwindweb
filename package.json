@@ -32,6 +32,7 @@
         "pdf-lib": "^1.17.1",
         "photoswipe": "^5.4.4",
         "photoswipe-react": "^0.2.0",
+        "react-awesome-calendar": "^1.0.14",
         "react-calendar-timeline": "^0.28.0",
         "react-dropzone": "^14.2.3",
         "react-multi-select-component": "^4.3.4",

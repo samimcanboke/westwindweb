@@ -30,6 +30,7 @@ use App\Http\Controllers\UserSalaryReportController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\JobNotesController;
 use App\Http\Controllers\GPSLocationController;
+use App\Http\Controllers\ToDoController;
 
 use App\Events\UserRegistered;
 
@@ -84,6 +85,9 @@ Route::get('/admin/programs/edit/{id}', function ($id) {
     return Inertia::render('Admin/Programs/Edit', ['id' => $id]);
 })->middleware(['auth', 'verified'])->name('programs.edit');
 
+Route::get('/admin/todo', function () {
+    return Inertia::render('Admin/Todo/Index');
+})->middleware(['auth', 'verified'])->name('todo.view');
 
 
 
@@ -211,6 +215,11 @@ Route::post('/jobs-editing', [FinalizedJobsController::class, 'edit'])->middlewa
 Route::post('/jobs-confirmation', [FinalizedJobsController::class, 'confirm_jobs'])->middleware(['auth', 'verified',IsAdmin::class])->name('jobs-confirmation');
 Route::get('/admin/wait-confirmed-jobs-count', [FinalizedJobsController::class, 'wait_confirmed_jobs'])->middleware(['auth', 'verified', IsAdmin::class])->name('wait-confirmed-jobs-count');
 Route::get('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
+
+Route::get('/todo', [ToDoController::class, 'index'])->middleware(['auth', 'verified'])->name('todo');
+Route::post('/todo', [ToDoController::class, 'store'])->middleware(['auth', 'verified'])->name('todo.store');
+Route::put('/todo/{id}', [ToDoController::class, 'update'])->middleware(['auth', 'verified'])->name('todo.update');
+Route::delete('/todo/{id}', [ToDoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('todo.destroy');
 
 
 Route::get('/professions', [ProfessionsController::class, 'index'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('professions');

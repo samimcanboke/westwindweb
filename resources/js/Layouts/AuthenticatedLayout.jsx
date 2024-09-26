@@ -111,6 +111,7 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('aggreements.view')}>Vertrag</Dropdown.Link>
                                             <Dropdown.Link href={route('certificates')}>Zertifikate</Dropdown.Link>
                                             <Dropdown.Link href={route('programs.view')}>Programme</Dropdown.Link>
+                                            <Dropdown.Link href={route('todo.view')}>ToDo Liste</Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>

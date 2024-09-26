@@ -4924,6 +4924,15 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-awesome-calendar@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.npmjs.org/react-awesome-calendar/-/react-awesome-calendar-1.0.14.tgz"
+  integrity sha512-AlwFVoECJo7H9z4anVYrb21HVnrEE1iHtoh9V0Emi0dFKf5PGARzQX/8z/lPAB3cuwM/5rME81KqhU5ruiMVxQ==
+  dependencies:
+    classnames "^2.2.6"
+    react "^16.13.1"
+    react-dom "^16.13.1"
+
 react-calendar-timeline@^0.28.0:
   version "0.28.0"
   resolved "https://registry.npmjs.org/react-calendar-timeline/-/react-calendar-timeline-0.28.0.tgz"
@@ -4942,6 +4951,16 @@ react-calendar-timeline@^0.28.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-dom@^16.13.1:
+  version "16.14.0"
+  resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.14.0.tgz"
+  integrity sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.19.1"
 
 react-dom@^16.2.0:
   version "16.14.0"
@@ -5038,7 +5057,7 @@ react@*, "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^16 || ^17 || ^18", "reac
   dependencies:
     loose-envify "^1.1.0"
 
-react@^16.14.0, react@^16.2.0:
+react@^16.13.1, react@^16.14.0, react@^16.2.0:
   version "16.14.0"
   resolved "https://registry.npmjs.org/react/-/react-16.14.0.tgz"
   integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
