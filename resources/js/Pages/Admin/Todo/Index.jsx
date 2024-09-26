@@ -25,6 +25,12 @@ export default function Programs({ auth }) {
             let user = "Unbekannt";
             if(users.data.find(user => user.id === todo.user_id)){
                 user = users.data.find(user => user.id === todo.user_id).name;
+            } else {
+                if(todo.user_id === 21){
+                    user = "Anett Pätz";
+                } else if(todo.user_id === 16){
+                    user = "Samimcan BÖKE";
+                }
             }
             lastEvents.push({
                 id: todo.id,
