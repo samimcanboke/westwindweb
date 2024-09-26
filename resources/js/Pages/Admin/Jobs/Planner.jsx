@@ -693,7 +693,7 @@ export default function Planner({ auth }) {
                         if (hours < 9) {
                             title = title + "❗";
                         } else if (hours >= 9 && hours < 10) {
-                            title = title + "⚠️";
+                            title = title + "<span style='color: yellow;' title='Uyarı'>⚠️</span>";
                         }
                         let newPlan = {
                             id: `${group}-${i}`,
