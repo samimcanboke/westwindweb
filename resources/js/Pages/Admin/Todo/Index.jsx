@@ -102,6 +102,14 @@ export default function Programs({ auth }) {
 
     useEffect(() => {
         getToDos();
+
+    }, []);
+
+    useEffect(() => {
+        let interval =  setInterval(() => {
+            getToDos();
+        }, 5000);
+        return () => clearInterval(interval);
     }, []);
     return (
         <AuthenticatedLayout
