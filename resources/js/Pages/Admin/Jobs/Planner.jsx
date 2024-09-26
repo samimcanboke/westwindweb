@@ -72,6 +72,7 @@ export default function Planner({ auth }) {
     const [visibleTimeEnd, setVisibleTimeEnd] = useState(null);
     const [thisWeek, setThisWeek] = useState(false);
     const [nextWeek, setNextWeek] = useState(false);
+    const [prevWeek, setPrevWeek] = useState(false);
     const [selectedClients, setSelectedClients] = useState([]);
     const [clients, setClients] = useState([]);
     const [selectedDrivers, setSelectedDrivers] = useState([]);
@@ -1902,6 +1903,30 @@ export default function Planner({ auth }) {
                                         >
                                             Notiz
                                         </Button>
+                                        <ToggleSwitch
+                                            label="Letzte Woche anzeigen"
+                                            checked={prevWeek}
+                                            onChange={(e) => {
+                                                setPrevWeek(e);
+                                                if (e) {
+                                                    setThisWeek(false);
+                                                    setVisibleTimeStart(
+                                                        moment()
+                                                            .subtract(7, "day")
+                                                            .startOf("week")
+
+                                                    );
+                                                    setVisibleTimeEnd(
+                                                        moment()
+                                                            .subtract(7, "day")
+                                                            .endOf("week")
+                                                    );
+                                                } else {
+                                                    setVisibleTimeStart(null);
+                                                    setVisibleTimeEnd(null);
+                                                }
+                                            }}
+                                        />
                                         <ToggleSwitch
                                             label="Diese Woche anzeigen"
                                             checked={thisWeek}
