@@ -1910,6 +1910,7 @@ export default function Planner({ auth }) {
                                                 setPrevWeek(e);
                                                 if (e) {
                                                     setThisWeek(false);
+                                                    setNextWeek(false);
                                                     setVisibleTimeStart(
                                                         moment()
                                                             .subtract(7, "day")
@@ -1934,6 +1935,7 @@ export default function Planner({ auth }) {
                                                 setThisWeek(e);
                                                 if (e) {
                                                     setNextWeek(false);
+                                                    setPrevWeek(false);
                                                     setVisibleTimeStart(
                                                         moment()
                                                             .startOf("week")
@@ -1956,6 +1958,7 @@ export default function Planner({ auth }) {
                                                 setNextWeek(e);
                                                 if (e) {
                                                     setThisWeek(false);
+                                                    setPrevWeek(false);
                                                     setVisibleTimeStart(
                                                         moment()
                                                             .add(7, "day")
