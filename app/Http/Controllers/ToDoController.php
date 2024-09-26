@@ -12,7 +12,7 @@ class ToDoController extends Controller
      */
     public function index()
     {
-        $toDos = ToDo::where('user_id', auth()->user()->id)->get();
+        $toDos = ToDo::all();
         return response()->json($toDos);    
     }
 
