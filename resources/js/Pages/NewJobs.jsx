@@ -791,7 +791,6 @@ export default function NewJobs({ auth }) {
                             <AccordionPanel isOpen={false}>
                                 <AccordionTitle className={Object.keys(errors).some(key => ['guestStartPlace', 'guestStartTime', 'guestStartEndPlace', 'guestStartEndTime'].includes(key)) ? "text-red-500" : ""}>Gastfahrt</AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Frühzeitiges Verlassen</Label>
                                     <ToggleSwitch
                                         checked={values.earlyExit}
                                         label="Anreise Vortag"
@@ -1285,7 +1284,7 @@ export default function NewJobs({ auth }) {
                                     Gastfahrt Zürück
                                 </AccordionTitle>
                                 <AccordionContent>
-                                    <Label>Spät Eintreffen</Label>
+                                   
                                     <ToggleSwitch
                                         checked={values.lateEnter}
                                         label="Abreise Folgetag"

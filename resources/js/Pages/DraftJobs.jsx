@@ -840,7 +840,6 @@ export default function DraftJobs({ auth }) {
                                                         Gastfahrt
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>Frühzeitiges Verlassen</Label>
                                                         <ToggleSwitch
                                                             checked={
                                                                 values.earlyExit
