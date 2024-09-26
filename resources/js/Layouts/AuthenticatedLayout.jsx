@@ -236,6 +236,7 @@ export default function Authenticated({ user, header, children }) {
                                             <ResponsiveNavLink href={route('aggreements.view')}>Vertrag</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('certificates')}>Zertifikate</ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('programs.view')}>Programme</ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('todo.view')}>ToDo Liste</ResponsiveNavLink>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>
