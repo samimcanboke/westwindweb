@@ -446,7 +446,7 @@ class FinalizedJobsController extends Controller
     {
         $request->validate([
             'user' => 'nullable',
-            'client' => 'required',
+            'client' => 'nullable',
             'month' => 'required',
             'year' => 'required',
         ]);
@@ -454,7 +454,9 @@ class FinalizedJobsController extends Controller
         $startDate = Carbon::create($request->year, $request->month, 1)->startOfMonth();
         $endDate = Carbon::create($request->year, $request->month, 1)->endOfMonth()->addMinute();
         $query = FinalizedJobs::where('confirmation', 1);
-        $query->where('client_id', $request->client);
+        if ($request->client) {
+            $query->where('client_id', $request->client);
+        }
         if ($request->user) {
             $query->where('user_id', $request->user);
         }
