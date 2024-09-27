@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { Button, Modal, Select, Datepicker, ToggleSwitch } from "flowbite-react";
+import { Button, Modal, Select, Datepicker, ToggleSwitch,Textarea } from "flowbite-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Calendar from 'react-awesome-calendar';
@@ -136,17 +136,18 @@ export default function Programs({ auth }) {
                 <Modal.Header>Neuer Task</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-2">
-                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                        <p style={{display:"none"}} className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
                             Datum
                         </p>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between" style={{display:"none"}}>
                             <Datepicker
-                                inline
+                                
                                 language="de-DE"
                                 showTodayButton={false}
                                 showClearButton={false}
                                 id="notesStartDate"
                                 name="notesStartDate"
+                                visible={false}
                                 type="date"
                                 defaultDate={event.startDate}
                                 value={event.startDate}
@@ -165,6 +166,7 @@ export default function Programs({ auth }) {
                                     type="time"
                                     id="notesStartTime"
                                     name="notesStartTime"
+                                    style={{display: "none"}}
                                     className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     value={event.startTime}
                                     onChange={(e) => {
@@ -175,6 +177,7 @@ export default function Programs({ auth }) {
                                 <input
                                     type="time"
                                     id="notesEndTime"
+                                    style={{display: "none"}}
                                     name="notesEndTime"
                                     className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-6000 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     value={event.endTime}
@@ -185,9 +188,9 @@ export default function Programs({ auth }) {
                             </div>
 
                             <Datepicker
-                                inline
                                 language="de-DE"
                                 id="notesEndDate"
+                                style={{display: "none"}}
                                 name="notesEndDate"
                                 defaultDate={event.endDate}
                                 selectedDate={event.endDate}
@@ -203,7 +206,7 @@ export default function Programs({ auth }) {
                         </div>
                         <br />
                       
-                        <textarea type="text" className="w-full" placeholder="Task Title" onChange={(e) => setEvent({...event, title: e.target.value})} >{event.title}</textarea>
+                        <Textarea type="text" rows={20} placeholder="Task Title" onChange={(e) => setEvent({...event, title: e.target.value})} >{event.title}</Textarea>
 
                         <ToggleSwitch
                             label="Wichtig?"
@@ -243,10 +246,10 @@ export default function Programs({ auth }) {
                 <Modal.Header>Task bearbeiten</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-2">
-                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-4000" style={{display:"none"}}>
                             Datum
                         </p>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between" style={{display:"none"}}>
                             <Datepicker
                                 inline
                                 language="de-DE"
@@ -309,7 +312,7 @@ export default function Programs({ auth }) {
                         </div>
                         <br />
                       
-                        <textarea type="text" className="w-full" placeholder="Task Title" onChange={(e) => setEvent({...event, title: e.target.value})}  defaultValue={event.title}></textarea>
+                        <Textarea type="text" rows={20} className="w-full" placeholder="Task Title" onChange={(e) => setEvent({...event, title: e.target.value})}  defaultValue={event.title}></Textarea>
 
                         <ToggleSwitch
                             label="Wichtig?"
@@ -366,7 +369,15 @@ export default function Programs({ auth }) {
             <div className="container mx-auto mt-10">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <Calendar
-                        
+                        current={{
+                            year: moment().year(),
+                            month: moment().month(),
+                            day: moment().date(),
+                        }}
+                        mode="month"
+                        onClickDay={(event) => {
+                            console.log(event);
+                        }}
                         onClickEvent={(event) => {
                             handleEditEvent(event);
                         }}
