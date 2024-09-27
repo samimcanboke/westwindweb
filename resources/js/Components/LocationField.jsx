@@ -12,9 +12,9 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
     const [inputValue, setInputValue] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
-    const promiseOptions = (search) =>{        
+    const promiseOptions = async (search) =>{        
         if(search.length > 0){
-            return axios.get(route('stations-search', {search: search}))
+            let stations = await axios.get(route('stations-search', {search: search}))
                 .then((response) => {
                     const formattedStations = [];
                     for(const station of response.data){
@@ -26,6 +26,25 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
                     }
                     return formattedStations;
                 });
+            if(stations.length > 0){
+                return stations;
+            } else {
+                let stations = await axios.get('https://api.openrailwaymap.org/v2/facility?q=' + search)
+                if(stations.data.length > 0){
+                    const formattedStations = [];
+                    console.log(stations.data);
+                    for(const station of stations.data){
+                        formattedStations.push({
+                            label: station.name + " (" + station['railway:ref'] + ")",
+                            value: station.osm_id,
+                            short_name: station['railway:ref']
+                        });
+                    }
+                    return formattedStations;
+                } else {
+                    return [];
+                }
+            }
         } else  {
             return [];
         }
