@@ -50,6 +50,24 @@ class StationController extends Controller
                     };
                 }
             }
+            $response = Http::get('https://api.openrailwaymap.org/v2/ref?q=' . $request->input('search'));
+            $railwayStations = $response->json();        
+            foreach ($railwayStations as $railwayStation) {
+                if ($railwayStation['railway'] == 'station') {
+                    if(isset($railwayStation['railway:ref']) && isset($railwayStation['name'])){
+                        $station = Station::where('osm_id', $railwayStation['osm_id'])->first();
+                        if(!$station){
+                            Station::create([
+                                'osm_id' => $railwayStation['osm_id'],
+                                'name' => $railwayStation['name'],
+                                'short_name' => $railwayStation['railway:ref'],
+                                'latitude' => $railwayStation['latitude'],
+                                'longitude' => $railwayStation['longitude'],
+                            ]);
+                        }
+                    };
+                }
+            }
 
             $railwayStations = Station::where('name', 'like', '%'.$request->input('search').'%')->orWhere('short_name', 'like', '%'.$request->input('search').'%')->get();
             return response()->json($railwayStations);
