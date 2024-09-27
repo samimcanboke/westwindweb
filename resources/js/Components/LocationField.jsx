@@ -13,7 +13,7 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
     const [timeoutId, setTimeoutId] = useState(null);
 
     const promiseOptions = (search) =>{        
-        if(search.length > 1){
+        if(search.length > 0){
             return axios.get(route('stations-search', {search: search}))
                 .then((response) => {
                     const formattedStations = [];
