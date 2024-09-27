@@ -29,10 +29,15 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
             if(stations.length > 0){
                 return stations;
             } else {
-                let stations = await axios.get('https://api.openrailwaymap.org/v2/facility?q=' + search)
+                let stations = await axios.get('https://api.openrailwaymap.org/v2/facility?q=' + search,{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Origin': 'https://openrailwaymap.org'
+                    }  
+                })
                 if(stations.data.length > 0){
                     const formattedStations = [];
-                    console.log(stations.data);
+                  
                     for(const station of stations.data){
                         formattedStations.push({
                             label: station.name + " (" + station['railway:ref'] + ")",
