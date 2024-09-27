@@ -33,21 +33,23 @@ class StationController extends Controller
             return response()->json($railwayStations);
         } else {
             $response = Http::get('https://api.openrailwaymap.org/v2/facility?q=' . $request->input('search'));
-            $railwayStations = $response->json();        
-            foreach ($railwayStations as $railwayStation) {
-                if ($railwayStation['railway'] == 'station') {
-                    if(isset($railwayStation['railway:ref']) && isset($railwayStation['name'])){
-                        $station = Station::where('osm_id', $railwayStation['osm_id'])->first();
-                        if(!$station){
-                            Station::create([
-                                'osm_id' => $railwayStation['osm_id'],
-                                'name' => $railwayStation['name'],
-                                'short_name' => $railwayStation['railway:ref'],
-                                'latitude' => $railwayStation['latitude'],
-                                'longitude' => $railwayStation['longitude'],
-                            ]);
-                        }
-                    };
+            $railwayStations = $response->json();    
+            if(isset($railwayStations)){
+                foreach ($railwayStations as $railwayStation) {
+                    if ($railwayStation['railway'] == 'station') {
+                        if(isset($railwayStation['railway:ref']) && isset($railwayStation['name'])){
+                            $station = Station::where('osm_id', $railwayStation['osm_id'])->first();
+                            if(!$station){
+                                Station::create([
+                                    'osm_id' => $railwayStation['osm_id'],
+                                    'name' => $railwayStation['name'],
+                                    'short_name' => $railwayStation['railway:ref'],
+                                    'latitude' => $railwayStation['latitude'],
+                                    'longitude' => $railwayStation['longitude'],
+                                ]);
+                            }
+                        };
+                    }
                 }
             }
             $response = Http::get('https://api.openrailwaymap.org/v2/ref?q=' . $request->input('search'));
