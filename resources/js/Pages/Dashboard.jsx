@@ -60,7 +60,7 @@ export default function Dashboard({ auth }) {
                                 <p>Loading...</p>
                             )
                         ) : (
-                            <p>Willkommen! Sie sind nicht berechtigt, diese Seite zu sehen.</p>
+                            <p>Willkommen!</p>
                         )}
                     </div>
                 </div>
