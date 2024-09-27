@@ -78,6 +78,7 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            menuPortalTarget={document.body} // Chrome tarayıcılarda sayfa kilitlenmesini önlemek için eklendi
         />
         
 
