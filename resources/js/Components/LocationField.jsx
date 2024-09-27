@@ -37,7 +37,7 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
             clearTimeout(timeoutId);
         }
         setTimeoutId(setTimeout(() => {
-            promiseOptions(newValue);
+            promiseOptions(inputValue);
         }, 1000));
     };
 
