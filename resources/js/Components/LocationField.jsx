@@ -14,21 +14,18 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
 
     const promiseOptions = (search) =>{        
         if(search.length > 1){
-            return axios.get(route('stations-search'), {
-                params: {
-                search: search
-            }
-            }).then((response) => {
-                const formattedStations = [];
-                for(const station of response.data){
-                    formattedStations.push({
-                        label: station.name + " (" + station.short_name + ")",
-                        value: station.id,
-                        short_name: station.short_name
-                    });
-                }
-                return formattedStations;
-            });
+            return axios.get(route('stations-search', {search: search}))
+                .then((response) => {
+                    const formattedStations = [];
+                    for(const station of response.data){
+                        formattedStations.push({
+                            label: station.name + " (" + station.short_name + ")",
+                            value: station.id,
+                            short_name: station.short_name
+                        });
+                    }
+                    return formattedStations;
+                });
         } else  {
             return [];
         }
@@ -36,13 +33,12 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
 
     const handleInputChange = (newValue) => {
         setInputValue(newValue);
-        console.log("inputValue: " + inputValue);
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
         setTimeoutId(setTimeout(() => {
             promiseOptions(newValue);
-        }, 500));
+        }, 1000));
     };
 
     return (

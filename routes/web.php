@@ -224,8 +224,8 @@ Route::put('/todo/{id}', [ToDoController::class, 'update'])->middleware(['auth',
 Route::delete('/todo/{id}', [ToDoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('todo.destroy');
 
 
-Route::get('/stations', [StationsController::class, 'index'])->middleware(['auth', 'verified'])->name('stations');  
-Route::get('/stations/search', [StationController::class, 'search'])->middleware(['auth', 'verified'])->name('stations-search');   
+Route::get('/stations', [StationsController::class, 'index'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('stations');  
+Route::get('/stations/search', [StationController::class, 'search'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('stations-search');   
 
 
 Route::get('/professions', [ProfessionsController::class, 'index'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('professions');
