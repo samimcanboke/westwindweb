@@ -21,7 +21,7 @@ import * as Yup from "yup";
 import moment from "moment";
 import TimePicker from "@/Components/TimePicker";
 import MultipleFileUpload from "@/Components/MultipleFileUpload";
-
+import LocationField from "@/Components/LocationField";
 const initialValues = {
     initialDate: "",
     zugNummer: "",
@@ -801,31 +801,27 @@ export default function NewJobs({ auth }) {
                                         }}
                                     />
                                     <br />
-                                    <Label>GF Standort Beginn</Label>
-                                    <Field
+                                    <LocationField
                                         id="guestStartPlace"
                                         name="guestStartPlace"
                                         type="text"
                                         placeholder="Gastfahrt Beginn "
-                                        onChange={(e) => {
-                                            setFieldValue(
-                                                "guestStartPlace",
-                                                e.target.value
-                                            );
-                                        }}
                                         className={
                                             errors.guestStartPlace 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        value={values.guestStartPlace}
+                                        label="GF Standort Beginn"
+                                        selected={values.guestStartPlace}
+                                        onChange={(e) => {
+                                            setFieldValue(
+                                                "guestStartPlace",
+                                                e.value
+                                            );
+                                        }}
+                                        error={errors.guestStartPlace}
                                     />
-
-                                    {errors.guestStartPlace && (
-                                            <p className="text-red-500">
-                                                *{errors.guestStartPlace}
-                                            </p>
-                                        )}
+                                   
 
                                     <br />
 
@@ -856,8 +852,9 @@ export default function NewJobs({ auth }) {
                                             </p>
                                         )}
                                     <br />
+
                                     <Label>GF Standort Ende</Label>
-                                    <input
+                                    <LocationField
                                         id="guestStartEndPlace"
                                         name="guestStartEndPlace"
                                         type="text"
@@ -865,7 +862,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestStartEndPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={
@@ -873,7 +870,7 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        value={values.guestStartEndPlace}
+                                        selected={values.guestStartEndPlace}
                                     />
                                     {errors.guestStartEndPlace && (
                                             <p className="text-red-500">
@@ -918,7 +915,7 @@ export default function NewJobs({ auth }) {
                                 <AccordionTitle className={Object.keys(errors).some(key => ['workStartPlace', 'workStartTime'].includes(key)) ? "text-red-500" : ""}>Dienst Beginn</AccordionTitle>
                                 <AccordionContent>
                                     <Label className={errors.workStartPlace ? "text-red-500" : ""}>Start Ort</Label>
-                                    <input
+                                    <LocationField
                                         id="workStartPlace"
                                         name="workStartPlace"
                                         type="text"
@@ -926,7 +923,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "workStartPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={
@@ -934,7 +931,7 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        value={values.workStartPlace}
+                                        selected={values.workStartPlace}
                                     />
                                     {errors.workStartPlace && (
                                             <p className="text-red-500">
@@ -979,7 +976,7 @@ export default function NewJobs({ auth }) {
                                 </AccordionTitle>
                                 <AccordionContent>
                                     <Label className={errors.trainStartPlace ? "text-red-500" : ""}>Zug Abfahrtsort</Label>
-                                    <input
+                                    <LocationField
                                         id="trainStartPlace"
                                         name="trainStartPlace"
                                         type="text"
@@ -987,7 +984,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "trainStartPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={
@@ -996,7 +993,7 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        value={values.trainStartPlace}
+                                        selected={values.trainStartPlace}
                                     />
                                     {errors.trainStartPlace &&
                                         (
@@ -1032,7 +1029,7 @@ export default function NewJobs({ auth }) {
                                             </p>
                                         )}
                                     <Label className={errors.trainEndPlace ? "text-red-500" : ""}>Zug Ankunftsort</Label>
-                                    <input
+                                    <LocationField
                                         id="trainEndPlace"
                                         name="trainEndPlace"
                                         type="text"
@@ -1040,7 +1037,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "trainEndPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={
@@ -1048,7 +1045,7 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        value={values.trainEndPlace}
+                                        selected={values.trainEndPlace}
                                     />
                                     {errors.trainEndPlace && (
                                         <p className="text-red-500">
@@ -1224,14 +1221,14 @@ export default function NewJobs({ auth }) {
                                 <AccordionTitle className={Object.keys(errors).some(key => ['workEndPlace', 'workEndTime'].includes(key)) ? "text-red-500" : ""}>Dienst Ende</AccordionTitle>
                                 <AccordionContent>
                                     <Label className={errors.workEndPlace ? "text-red-500" : ""}>Dienst Ende Ort</Label>
-                                    <input
+                                    <LocationField
                                         id="workEndPlace"
                                         type="text"
                                         placeholder="Dienst Ort"
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "workEndPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={
@@ -1239,7 +1236,7 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        value={values.workEndPlace}
+                                        selected={values.workEndPlace}
                                     />
                                     {errors.workEndPlace && (
                                         <p className="text-red-500">
@@ -1296,14 +1293,14 @@ export default function NewJobs({ auth }) {
                                     />
                                     <br />
                                     <Label>Gastfahrt Zürück Ort</Label>
-                                    <input
+                                    <LocationField
                                         id="guestEndPlace"
                                         type="text"
                                         placeholder="Gastfahrt Zürück Ort"
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestEndPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={
@@ -1347,14 +1344,14 @@ export default function NewJobs({ auth }) {
                                     </div>
                                     <br />
                                     <Label>Gastfahrt Zürück Ende Ort</Label>
-                                    <input
+                                    <LocationField
                                         id="guestEndEndPlace"
                                         type="text"
                                         placeholder="Gastfahrt Zürück Ende Ort"
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestEndEndPlace",
-                                                e.target.value
+                                                e.value
                                             );
                                         }}
                                         className={

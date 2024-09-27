@@ -56,8 +56,3 @@
     left: 0px !important;
   }
 
-  .after\:w-5::after {
-    content: var(--tw-content);
-    width: 1.25rem;
-    top: 11px !important;
-}

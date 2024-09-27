@@ -31,6 +31,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\JobNotesController;
 use App\Http\Controllers\GPSLocationController;
 use App\Http\Controllers\ToDoController;
+use App\Http\Controllers\StationController;
 
 use App\Events\UserRegistered;
 
@@ -221,6 +222,10 @@ Route::get('/get-weekly-todos', [ToDoController::class, 'get_weekly_todos'])->mi
 Route::post('/todo', [ToDoController::class, 'store'])->middleware(['auth', 'verified'])->name('todo.store');
 Route::put('/todo/{id}', [ToDoController::class, 'update'])->middleware(['auth', 'verified'])->name('todo.update');
 Route::delete('/todo/{id}', [ToDoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('todo.destroy');
+
+
+Route::get('/stations', [StationsController::class, 'index'])->middleware(['auth', 'verified'])->name('stations');  
+Route::get('/stations/search', [StationController::class, 'search'])->middleware(['auth', 'verified'])->name('stations-search');   
 
 
 Route::get('/professions', [ProfessionsController::class, 'index'])->middleware(['auth', 'verified'])->withoutMiddleware([IsAdmin::class])->name('professions');
