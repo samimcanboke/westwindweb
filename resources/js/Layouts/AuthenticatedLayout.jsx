@@ -21,16 +21,18 @@ export default function Authenticated({ user, header, children }) {
 
     window.userId = user.id;
 
-    useEffect(()=>{
-        getWaitConfirmedCount();
-        getWeeklyTodos();
-        let id = setInterval(getWaitConfirmedCount, 10000);
-        let id2 = setInterval(getWeeklyTodos, 10000);
-        return () => {
-            clearInterval(id);
-            clearInterval(id2);
-        }
-    },[])
+    if(user.is_admin || user.accountant){
+        useEffect(()=>{
+            getWaitConfirmedCount();
+            getWeeklyTodos();
+            let id = setInterval(getWaitConfirmedCount, 10000);
+            let id2 = setInterval(getWeeklyTodos, 10000);
+            return () => {
+                clearInterval(id);
+                clearInterval(id2);
+            }
+        },[])
+    }
 
     return (
 

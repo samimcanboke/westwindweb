@@ -13,23 +13,6 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
     const [timeoutId, setTimeoutId] = useState(null);
 
     const promiseOptions = (search) =>{        
-        if(search == ""){
-           return axios.get(route('stations-search'), {
-            params: {
-                search: search
-            }
-            }).then((response) => {
-                const formattedStations = [];
-                for(const station of response.data){
-                    formattedStations.push({
-                        label: station.name + " (" + station.short_name + ")",
-                        value: station.id,
-                        color: '#FF0000'
-                    });
-                }
-                return formattedStations;
-            });
-        }
         if(search.length > 1){
             return axios.get(route('stations-search'), {
                 params: {
