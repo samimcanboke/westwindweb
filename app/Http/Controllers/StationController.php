@@ -32,6 +32,9 @@ class StationController extends Controller
             $railwayStations = Station::all()->take(10);
             return response()->json($railwayStations);
         } else {
+
+
+            
             $response = Http::get('https://api.openrailwaymap.org/v2/facility?q=' . $request->input('search'));
             $railwayStations = $response->json();    
             if(isset($railwayStations)){
