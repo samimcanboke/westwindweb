@@ -217,6 +217,7 @@ Route::get('/admin/wait-confirmed-jobs-count', [FinalizedJobsController::class, 
 Route::get('/admin/show-user/{user_id}', [RegisteredUserController::class, 'show_user'])->middleware(['auth', 'verified',IsAdmin::class])->name('user.show');
 
 Route::get('/todo', [ToDoController::class, 'index'])->middleware(['auth', 'verified'])->name('todo');
+Route::get('/get-weekly-todos', [ToDoController::class, 'get_weekly_todos'])->middleware(['auth', 'verified'])->name('get-weekly-todos');
 Route::post('/todo', [ToDoController::class, 'store'])->middleware(['auth', 'verified'])->name('todo.store');
 Route::put('/todo/{id}', [ToDoController::class, 'update'])->middleware(['auth', 'verified'])->name('todo.update');
 Route::delete('/todo/{id}', [ToDoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('todo.destroy');

@@ -8,17 +8,28 @@ import { Link } from '@inertiajs/react';
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [waitConfirmedCount, setWaitConfirmedCount] = useState(0);
-
+    const [weeklyTodos, setWeeklyTodos] = useState(0);
     const getWaitConfirmedCount = async () => {
         const response = await axios.get(route('wait-confirmed-jobs-count'));
         setWaitConfirmedCount(response.data.count);
     }
+
+    const getWeeklyTodos = async () => {
+        const response = await axios.get(route('get-weekly-todos'));
+        setWeeklyTodos(response.data.count);
+    }
+
     window.userId = user.id;
 
     useEffect(()=>{
         getWaitConfirmedCount();
-        let id = setInterval(getWaitConfirmedCount, 60000);
-        return () => clearInterval(id);
+        getWeeklyTodos();
+        let id = setInterval(getWaitConfirmedCount, 10000);
+        let id2 = setInterval(getWeeklyTodos, 10000);
+        return () => {
+            clearInterval(id);
+            clearInterval(id2);
+        }
     },[])
 
     return (
@@ -47,7 +58,7 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
                                 <NavLink href={route('draft-jobs')} active={route().current('draft-jobs')}>
-                                Bericht Entwrfe
+                                Bericht Entwürfe
                                 </NavLink>
                             </div>
                                 <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
@@ -111,7 +122,14 @@ export default function Authenticated({ user, header, children }) {
                                             <Dropdown.Link href={route('aggreements.view')}>Vertrag</Dropdown.Link>
                                             <Dropdown.Link href={route('certificates')}>Zertifikate</Dropdown.Link>
                                             <Dropdown.Link href={route('programs.view')}>Programme</Dropdown.Link>
-                                            <Dropdown.Link href={route('todo.view')}>ToDo Liste</Dropdown.Link>
+                                            <Dropdown.Link href={route('todo.view')}>
+                                                ToDo Liste
+                                                {weeklyTodos > 0 && (
+                                                    <span className="bg-red-600 text-red-100 px-2 py-1 text-xs font-bold rounded-full ms-2">
+                                                        {weeklyTodos}
+                                                    </span>
+                                                )}
+                                            </Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
                                 </div>

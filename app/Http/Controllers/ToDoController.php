@@ -33,6 +33,12 @@ class ToDoController extends Controller
         return response()->json($toDo, 201);
     }
 
+
+    public function get_weekly_todos()
+    {
+        $toDos = ToDo::where('is_done',0)->whereBetween('from', [now()->startOfWeek(), now()->endOfWeek()])->whereBetween('to', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        return response()->json(['count' => $toDos]);
+    }
     /**
      * Store a newly created resource in storage.
      */
