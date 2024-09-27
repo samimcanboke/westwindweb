@@ -33,9 +33,11 @@ class StationController extends Controller
             return response()->json($railwayStations);
         } else {
 
+            $railwayStations = Station::where('name', 'like', '%'.$request->input('search').'%')->orWhere('short_name', 'like', '%'.$request->input('search').'%')->get();
+            return response()->json($railwayStations);
 
-            
-            $response = Http::get('https://api.openrailwaymap.org/v2/facility?q=' . $request->input('search'));
+
+            /*$response = Http::get('https://api.openrailwaymap.org/v2/facility?q=' . $request->input('search'));
             $railwayStations = $response->json();    
             if(isset($railwayStations)){
                 foreach ($railwayStations as $railwayStation) {
@@ -76,8 +78,7 @@ class StationController extends Controller
                 }
             }
 
-            $railwayStations = Station::where('name', 'like', '%'.$request->input('search').'%')->orWhere('short_name', 'like', '%'.$request->input('search').'%')->get();
-            return response()->json($railwayStations);
+           */
         }
     }
 
