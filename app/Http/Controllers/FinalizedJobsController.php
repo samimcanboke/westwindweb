@@ -934,9 +934,6 @@ class FinalizedJobsController extends Controller
             }
 
 
-            if($user->id != 6){
-                continue;
-            }
 
             $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
             $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
