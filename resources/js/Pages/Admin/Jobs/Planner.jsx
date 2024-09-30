@@ -625,7 +625,7 @@ export default function Planner({ auth }) {
                     minute: workEndTime[1],
                 });
                 
-                if (workEndTime[0] < workStartTime[0]) {
+                if (endDate < startDate) {
                     endDate.add(1, "day");
                 }
                 if(job.id==447){
