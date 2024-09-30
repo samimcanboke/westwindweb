@@ -1310,7 +1310,7 @@ class FinalizedJobsController extends Controller
 
                 if ($breaks) {
                     foreach ($breaks as $break) {
-                        if(isset($break->start) && isset($break->end)){   
+                        if($break->start && $break->end){   
                             $start = $this->convertTimeToDatetime($initial_date, $break->start);
                             $end = $this->convertTimeToDatetime($initial_date, $break->end);
                             if($end < $start){
