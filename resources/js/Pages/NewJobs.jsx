@@ -801,6 +801,7 @@ export default function NewJobs({ auth }) {
                                         }}
                                     />
                                     <br />
+                                    <Label className={errors.guestStartPlace ? "text-red-500" : ""}>GF Standort Beginn</Label>
                                     <Field
                                         id="guestStartPlace"
                                         name="guestStartPlace"
@@ -811,12 +812,11 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        label="GF Standort Beginn"
-                                        selected={values.guestStartPlace}
+                                        value={values.guestStartPlace}
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestStartPlace",
-                                                e.value
+                                                e.target.value
                                             );
                                         }}
                                         error={errors.guestStartPlace}
@@ -853,7 +853,7 @@ export default function NewJobs({ auth }) {
                                         )}
                                     <br />
 
-                                    <Label>GF Standort Ende</Label>
+                                    <Label className={errors.guestStartEndPlace ? "text-red-500" : ""}>GF Standort Ende</Label>
                                     <Field
                                         id="guestStartEndPlace"
                                         name="guestStartEndPlace"
@@ -862,7 +862,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestStartEndPlace",
-                                                e.value
+                                                e.target.value
                                             );
                                         }}
                                         className={
@@ -870,7 +870,7 @@ export default function NewJobs({ auth }) {
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                         }
-                                        selected={values.guestStartEndPlace}
+                                        value={values.guestStartEndPlace}
                                     />
                                     {errors.guestStartEndPlace && (
                                             <p className="text-red-500">
@@ -1292,7 +1292,7 @@ export default function NewJobs({ auth }) {
                                         }}
                                     />
                                     <br />
-                                    <Label>Gastfahrt Zürück Ort</Label>
+                                    <Label className={errors.guestEndPlace ? "text-red-500" : ""}>Gastfahrt Zürück Ort</Label>
                                     <Field
                                         id="guestEndPlace"
                                         type="text"
@@ -1300,7 +1300,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestEndPlace",
-                                                e.value
+                                                e.target.value
                                             );
                                         }}
                                         className={
@@ -1343,7 +1343,7 @@ export default function NewJobs({ auth }) {
                                             )}
                                     </div>
                                     <br />
-                                    <Label>Gastfahrt Zürück Ende Ort</Label>
+                                    <Label className={errors.guestEndEndPlace ? "text-red-500" : ""}>Gastfahrt Zürück Ende Ort</Label>
                                     <Field
                                         id="guestEndEndPlace"
                                         type="text"
@@ -1351,7 +1351,7 @@ export default function NewJobs({ auth }) {
                                         onChange={(e) => {
                                             setFieldValue(
                                                 "guestEndEndPlace",
-                                                e.value
+                                                e.target.value
                                             );
                                         }}
                                         className={
