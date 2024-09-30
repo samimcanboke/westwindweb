@@ -941,7 +941,7 @@ class FinalizedJobsController extends Controller
             $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
             $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
 
-            dd($hour_banks, $total_hours);
+            dd($hour_banks, $total_hours,$startDate->toDateString(), $endDate->toDateString());
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
 
             $total_work_hours += $total_hours * 60;
