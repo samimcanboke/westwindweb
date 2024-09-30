@@ -1196,6 +1196,7 @@ class FinalizedJobsController extends Controller
 
         $hour_banks_this_year = $user->hourBanks()->whereBetween('date', [Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString(), Carbon::create($year, 12, 31)->endOfDay()->toDateTimeString()])->get();
         $total_hours_this_year = $hour_banks_this_year->where('type', 'withdraw')->sum('hours') - $hour_banks_this_year->where('type', 'deposit')->sum('hours');
+        dd($total_hours_this_year);
         $data['hour_bank_this_year'] = sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
 
