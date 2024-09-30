@@ -1265,7 +1265,6 @@ class FinalizedJobsController extends Controller
 
                 $initial_date = $finalized_job->initial_date;
 
-                dd($initial_date, $finalized_job->work_start_time, $finalized_job->work_end_time,$this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time),$this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time),$this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time)));
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
                 if ($work_sum == "00:00") {
                     $work_sum = "24:00";
@@ -1323,6 +1322,8 @@ class FinalizedJobsController extends Controller
                 } else {
                     $total_breaks = "00:00";
                 }
+
+                dd($breaks,$work_sum, $this->calculateTotalExtract($work_sum, $total_breaks) );
                 $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
                 $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
 
