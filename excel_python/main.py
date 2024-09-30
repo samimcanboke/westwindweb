@@ -222,8 +222,8 @@ def color_cell(file_path, sheet_name, cell_coordinates, color):
 
 def sum_lines(ws,used_data, total_height):
     ws['E35'].value = str(used_data['totals']['dates']) + " Tage"
-    for row in range(35, 46):
-        ws.row_dimensions[row].height = 60
+    for row in range(40, 51):
+        ws.row_dimensions[row].height = 30
     ws['E36'].value = str(used_data['totals']['workhours']) + " St"
     ws['E37'].value = str(used_data['totals']['breaks']) + " St"
     ws['E38'].value = str(used_data['totals']['sub_total']) + " St"
