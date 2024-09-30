@@ -1303,6 +1303,7 @@ class FinalizedJobsController extends Controller
                             $start = $this->convertTimeToDatetime($initial_date, $break->start);
                             $end = $this->convertTimeToDatetime($initial_date, $break->end);
                             $diff = $end->diff($start);
+                            dd($diff);
                             $break_total->h += $diff->h;
                             $break_total->i += $diff->i;
                             $break_total->s += $diff->s;
