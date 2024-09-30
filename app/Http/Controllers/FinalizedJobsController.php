@@ -1212,6 +1212,8 @@ class FinalizedJobsController extends Controller
                 return $leaveStart->diffInDays($leaveEnd) + 1;
             })
             ->sum() ?? 0;
+
+        dd($annual_leave_rights,$startDate);
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
         $annual_leave_days = $user->annualLeaves()
@@ -1230,7 +1232,6 @@ class FinalizedJobsController extends Controller
                 return $overlapStart->diffInDays($overlapEnd);
             })
             ->sum() ?? 0;
-        dd($annual_leave_days, $annual_leave_rights);
         $data['annual_leave_days'] = number_format($annual_leave_days, 2, ',', '');
         $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
 
