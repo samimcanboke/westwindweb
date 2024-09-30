@@ -951,7 +951,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
             } else {
                 $hours = $total_work_sum->h + $total_break_time->h + floor($total_hours);
-                $minutes = $total_work_sum->i + $total_break_time->i + floor(($total_hours * 60 % 60) / 60);
+                $minutes = $total_work_sum->i + $total_break_time->i + ($total_hours % 60);
                 $decimal_hours = $hours + ($minutes / 60);
                 $data['rows'][$user->id]['workhours'] = number_format($decimal_hours, 2, ',', '');
             }
