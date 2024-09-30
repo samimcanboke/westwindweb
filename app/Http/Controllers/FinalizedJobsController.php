@@ -725,9 +725,16 @@ class FinalizedJobsController extends Controller
                     }
                     if ($breaks) {
                         foreach ($breaks as $break) {
-
-                            $start = $this->convertTimeToDatetime($initial_date, $break->start);
-                            $end = $this->convertTimeToDatetime($initial_date, $break->end);
+                            if(!empty($break->start)){
+                                $start = $this->convertTimeToDatetime($initial_date, $break->start);
+                            }else{
+                                continue;
+                            }
+                            if(!empty($break->end)){
+                                $end = $this->convertTimeToDatetime($initial_date, $break->end);
+                            }else{
+                                continue;
+                            }
 
                             $diff = $end->diff($start);
                             $break_total->h += $diff->h;
