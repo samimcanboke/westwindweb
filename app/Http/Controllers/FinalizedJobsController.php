@@ -463,7 +463,6 @@ class FinalizedJobsController extends Controller
         }
 
         $query->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
-        dd($query->toSql(), $query->getBindings());
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
         return response()->json(["status" => true, "data" => $finalized_jobs]);
     }
