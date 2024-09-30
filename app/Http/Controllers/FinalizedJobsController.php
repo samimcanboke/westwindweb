@@ -1320,6 +1320,8 @@ class FinalizedJobsController extends Controller
                             $break_total->h += $diff->h;
                             $break_total->i += $diff->i;
                             $break_total->s += $diff->s;
+                        } else {
+                            continue;
                         }
                     }
 
