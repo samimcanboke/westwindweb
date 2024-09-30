@@ -755,7 +755,7 @@ class FinalizedJobsController extends Controller
 
                     $total_work_sum = $this->calculateTotalSum($work_sum, $total_work_sum);
                 } catch (\Exception $ex) {
-                    dd($ex);
+                    dd($finalized_job,$ex);
                 }
 
 
