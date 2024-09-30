@@ -1302,6 +1302,9 @@ class FinalizedJobsController extends Controller
                         if($break->start && $break->end){   
                             $start = $this->convertTimeToDatetime($initial_date, $break->start);
                             $end = $this->convertTimeToDatetime($initial_date, $break->end);
+                            if($end < $start){
+                                $end->modify('+1 day');
+                            }
                             $diff = $end->diff($start);
                             dd($diff);
                             $break_total->h += $diff->h;
