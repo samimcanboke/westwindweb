@@ -1466,7 +1466,7 @@ class FinalizedJobsController extends Controller
                 "night_shift" => $self_night_hours != "00:00" ? $self_night_hours : "-",
                 "feeding_fee" => $feeding_fee_text,
                 "comment" => $finalized_job->comment,
-                "places" => $from_place && $to_place ? $from_place->name . " - " . $to_place->name : $from . " - " . $to,
+                "places" => $from_place && $to_place ? $from_place->short_name . " - " . $to_place->short_name : $from . " - " . $to,
                 "client" => $finalized_job->client->name,
             ];
             $i++;
