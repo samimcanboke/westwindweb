@@ -125,6 +125,7 @@ class UserCertificateController extends Controller
             foreach ($recipients as $recipient) {
                 $mail->to(trim($recipient));
             }
+            $mail->to('sadettin.gokcen@westwind-eisenbahnservice.de');
             $mail->subject($data['subject'])
                 ->html($data['message']);
             foreach ($attachments as $attachment) {
