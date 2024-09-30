@@ -934,16 +934,19 @@ class FinalizedJobsController extends Controller
             }
 
 
-
+            if($user->id != 6){
+                continue;
+            }
 
             $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
             $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
 
+            
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
-
+            dd($total_work_hours,$total_hours );
             $total_work_hours += $total_hours * 60;
 
-
+            
             if ($total_work_hours > 160 * 60) {
                 $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
                 $hours = floor($remaining_hours);
