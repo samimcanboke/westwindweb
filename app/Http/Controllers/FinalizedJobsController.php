@@ -1555,8 +1555,7 @@ class FinalizedJobsController extends Controller
         $query = FinalizedJobs::where("confirmation", true);
         if($request->month && $request->year){
             $startDate = Carbon::createFromDate($request->year, $request->month, 1)->startOfMonth();
-            $endDate = Carbon::createFromDate($request->year, $request->month, 1)->endOfMonth()->addDays(1);
-            dd($startDate, $endDate);
+            $endDate = Carbon::createFromDate($request->year, $request->month, 1)->endOfMonth()->addMinutes(1);
             $query = $query->whereBetween("initial_date", [$startDate, $endDate]);
         }
         if($request->text){
