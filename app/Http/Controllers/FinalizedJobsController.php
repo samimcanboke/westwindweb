@@ -934,7 +934,7 @@ class FinalizedJobsController extends Controller
             }
 
 
-            if($user->id == 6){
+            if($user->id != 6){
                 continue;
             }
 
