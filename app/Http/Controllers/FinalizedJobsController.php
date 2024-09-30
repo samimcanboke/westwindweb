@@ -1204,7 +1204,7 @@ class FinalizedJobsController extends Controller
 
 
         dd($user->annualLeaves()
-        ->where('end_date', '>', $startDate->toDateString())
+        ->where('end_date', '<', $startDate->toDateString())
         ->get()
         ->map(function($leave) {
             $leaveStart = Carbon::parse($leave->start_date);
@@ -1213,7 +1213,7 @@ class FinalizedJobsController extends Controller
         })
         ->sum());
         $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
-            ->where('end_date', '>', $startDate->toDateString())
+            ->where('end_date', '<', $startDate->toDateString())
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
