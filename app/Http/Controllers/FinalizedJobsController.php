@@ -454,7 +454,6 @@ class FinalizedJobsController extends Controller
 
         $startDate = Carbon::create($request->year, $request->month, 1)->startOfMonth();
         $endDate = Carbon::create($request->year, $request->month, 1)->endOfMonth()->addMinute();
-        dd($startDate,$endDate);
         $query = FinalizedJobs::where('confirmation', 1);
         if ($request->client && $request->client != "Suchen...") {
             $query->where('client_id', $request->client);
@@ -1556,7 +1555,7 @@ class FinalizedJobsController extends Controller
         $query = FinalizedJobs::where("confirmation", true);
         if($request->month && $request->year){
             $startDate = Carbon::createFromDate($request->year, $request->month, 1)->startOfMonth();
-            $endDate = Carbon::createFromDate($request->year, $request->month, 1)->endOfMonth();
+            $endDate = Carbon::createFromDate($request->year, $request->month, 1)->endOfMonth()->addDays(1);
 
             $query = $query->whereBetween("initial_date", [$startDate, $endDate]);
         }
