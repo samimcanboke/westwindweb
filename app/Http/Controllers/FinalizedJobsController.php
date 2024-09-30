@@ -943,7 +943,7 @@ class FinalizedJobsController extends Controller
 
             
             $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
-            dd($total_work_hours,$total_hours );
+            dd($total_work_hours,$total_hours * 60 );
             $total_work_hours += $total_hours * 60;
 
             
