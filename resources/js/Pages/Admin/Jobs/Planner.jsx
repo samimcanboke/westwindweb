@@ -624,11 +624,12 @@ export default function Planner({ auth }) {
                     hour: workEndTime[0],
                     minute: workEndTime[1],
                 });
-                if(job.id==447){
-                    console.log(startDate,endDate);
-                }
+                
                 if (workEndTime[0] < workStartTime[0]) {
                     endDate.add(1, "day");
+                }
+                if(job.id==447){
+                    console.log(job,startDate,endDate);
                 }
                 let newUserFinalizedJob = {
                     id: "u" + job.id,
