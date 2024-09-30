@@ -801,7 +801,7 @@ export default function NewJobs({ auth }) {
                                         }}
                                     />
                                     <br />
-                                    <LocationField
+                                    <Field
                                         id="guestStartPlace"
                                         name="guestStartPlace"
                                         type="text"
@@ -854,7 +854,7 @@ export default function NewJobs({ auth }) {
                                     <br />
 
                                     <Label>GF Standort Ende</Label>
-                                    <LocationField
+                                    <Field
                                         id="guestStartEndPlace"
                                         name="guestStartEndPlace"
                                         type="text"
@@ -1293,7 +1293,7 @@ export default function NewJobs({ auth }) {
                                     />
                                     <br />
                                     <Label>Gastfahrt Zürück Ort</Label>
-                                    <LocationField
+                                    <Field
                                         id="guestEndPlace"
                                         type="text"
                                         placeholder="Gastfahrt Zürück Ort"
@@ -1344,7 +1344,7 @@ export default function NewJobs({ auth }) {
                                     </div>
                                     <br />
                                     <Label>Gastfahrt Zürück Ende Ort</Label>
-                                    <LocationField
+                                    <Field
                                         id="guestEndEndPlace"
                                         type="text"
                                         placeholder="Gastfahrt Zürück Ende Ort"
