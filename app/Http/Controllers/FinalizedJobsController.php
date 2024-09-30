@@ -946,7 +946,7 @@ class FinalizedJobsController extends Controller
             
             $total_work_hours += $total_hours * 60;
 
-            dd($total_work_hours > 160 * 60 );
+            
             if ($total_work_hours > 160 * 60) {
                 $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
                 $hours = floor($remaining_hours);
