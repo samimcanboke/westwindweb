@@ -735,6 +735,9 @@ class FinalizedJobsController extends Controller
                             }else{
                                 continue;
                             }
+                            if($start > $end){
+                                $end->modify('+1 day');
+                            }
 
                             $diff = $end->diff($start);
                             $break_total->h += $diff->h;
