@@ -1259,12 +1259,13 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
-                //if($finalized_job->id !=  59){
-                //    continue;
-                //}
+                if($finalized_job->id !=  447){
+                    continue;
+                }
 
                 $initial_date = $finalized_job->initial_date;
 
+                dd($initial_date, $finalized_job->work_start_time, $finalized_job->work_end_time,$this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time),$this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time),$this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time)));
                 $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
                 if ($work_sum == "00:00") {
                     $work_sum = "24:00";
