@@ -33,7 +33,6 @@ class DraftJobsController extends Controller
      */
     public function store(Request $request)
     {
-
         $draftJob = new DraftJobs();
         $draftJob->user_id = $request->user()->id;
         $draftJob->client_id = $request->client;

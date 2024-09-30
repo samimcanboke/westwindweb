@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import moment from "moment";
 import Swal from "sweetalert2";
 import PhotoGallery from "@/Components/PhotoGallery";
+import LocationField from "@/Components/LocationField";
 
 const camelCase = (obj) => {
     var newObj = {};
@@ -1135,28 +1136,28 @@ export default function WaitingConfirmed({ auth }) {
                                                         Dienst Beginn
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>Startort</Label>
-                                                        <input
+                                                        <LocationField
                                                             id="workStartPlace"
                                                             name="workStartPlace"
                                                             type="text"
-                                                            placeholder="Startort"
+                                                            label="Startort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "workStartPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
+                                                            selected={
+                                                                values.workStartPlace
+                                                            }
                                                             className={
                                                                 errors.workStartPlace &&
                                                                 touched.workStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                            value={
-                                                                values.workStartPlace ??
-                                                                undefined
+                                                            error={
+                                                                errors.workStartPlace
                                                             }
                                                         />
                                                         {errors.workStartPlace &&
@@ -1230,19 +1231,19 @@ export default function WaitingConfirmed({ auth }) {
                                                         Zug Abfahrt und Ankunft
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>
-                                                            Zug Abfahrtsort
-                                                        </Label>
-                                                        <input
+                                                        <LocationField
                                                             id="trainStartPlace"
                                                             name="trainStartPlace"
                                                             type="text"
                                                             placeholder="Zug Abfahrtsort"
+                                                            error={
+                                                                errors.trainStartPlace
+                                                            }
+                                                            label={"Zug Abfahrtsort"}
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainStartPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
                                                             className={
@@ -1251,7 +1252,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                            value={
+                                                            selected={
                                                                 values.trainStartPlace ??
                                                                 undefined
                                                             }
@@ -1319,11 +1320,11 @@ export default function WaitingConfirmed({ auth }) {
                                                         <Label>
                                                             Zug Ankunftsort
                                                         </Label>
-                                                        <input
+                                                        <LocationField
                                                             id="trainEndPlace"
                                                             name="trainEndPlace"
-                                                            type="text"
-                                                            placeholder="Zug Ankunftsort"
+                                                            
+                                                            label={"Zug Ankunftsort"}
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainEndPlace",
@@ -1331,13 +1332,16 @@ export default function WaitingConfirmed({ auth }) {
                                                                         .value
                                                                 );
                                                             }}
+                                                            error={
+                                                                errors.trainEndPlace
+                                                            }
                                                             className={
                                                                 errors.trainEndPlace &&
                                                                 touched.trainEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                            value={
+                                                            selected={
                                                                 values.trainEndPlace ??
                                                                 undefined
                                                             }
@@ -1600,27 +1604,27 @@ export default function WaitingConfirmed({ auth }) {
                                                         Arbeitsende
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>
-                                                            Arbeitsende Ort
-                                                        </Label>
-                                                        <input
+                                                        
+                                                        <LocationField
                                                             id="workEndPlace"
+                                                            name="workEndPlace"
+                                                            label={"Arbeitsende Ort"}
                                                             type="text"
                                                             placeholder="Arbeitsende Ort"
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "workEndPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
+                                                            error={errors.workEndPlace}
                                                             className={
                                                                 errors.workEndPlace &&
                                                                 touched.workEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                            value={
+                                                            selected={
                                                                 values.workEndPlace ??
                                                                 undefined
                                                             }

@@ -21,6 +21,7 @@ import { Formik, Field, FieldArray, Form } from "formik";
 import * as Yup from "yup";
 import MultipleFileUpload from "@/Components/MultipleFileUpload";
 import moment from "moment";
+import LocationField from "@/Components/LocationField";
 
 export default function DraftJobs({ auth }) {
     const [data, setData] = useState([]);
@@ -893,7 +894,7 @@ export default function DraftJobs({ auth }) {
                                                             Gastfahrt Start
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="guestStartTime"
                                                                 name="guestStartTime"
@@ -904,7 +905,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestStartTime
+                                                                    values.guestStartTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -941,7 +942,7 @@ export default function DraftJobs({ auth }) {
                                                         <Label>
                                                             Gastfahrt Ende
                                                         </Label>
-                                                        <input
+                                                        <Field
                                                             id="guestStartEndPlace"
                                                             name="guestStartEndPlace"
                                                             type="text"
@@ -960,7 +961,7 @@ export default function DraftJobs({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestStartEndPlace
+                                                                values.guestStartEndPlace || ""
                                                             }
                                                         />
                                                         {errors.guestStartEndPlace &&
@@ -979,7 +980,7 @@ export default function DraftJobs({ auth }) {
                                                             Gastfahrt Ende
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="guestStartEndTime"
                                                                 name="guestStartEndTime"
@@ -990,7 +991,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestStartEndTime
+                                                                    values.guestStartEndTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1035,17 +1036,17 @@ export default function DraftJobs({ auth }) {
                                                         Dienst Beginn
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>Start Ort</Label>
-                                                        <input
+                                                        <LocationField
                                                             id="workStartPlace"
                                                             name="workStartPlace"
                                                             type="text"
+                                                            label={"Start Ort"}
                                                             placeholder="Start Ort"
+                                                            error={errors.workStartPlace}
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "workStartPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
                                                             className={
@@ -1054,7 +1055,7 @@ export default function DraftJobs({ auth }) {
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                            value={
+                                                            selected={
                                                                 values.workStartPlace
                                                             }
                                                         />
@@ -1082,7 +1083,7 @@ export default function DraftJobs({ auth }) {
                                                                 )}
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 name="workStartTime"
                                                                 id="workStartTime"
@@ -1093,7 +1094,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.workStartTime
+                                                                    values.workStartTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1128,19 +1129,20 @@ export default function DraftJobs({ auth }) {
                                                         Zug Abfahrt und Ankunft
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>
-                                                            Tren Kalkış Yeri
-                                                        </Label>
-                                                        <input
+                                                      
+                                                        <LocationField
                                                             id="trainStartPlace"
                                                             name="trainStartPlace"
-                                                            type="text"
                                                             placeholder="Zug Abfahrtsort"
+                                                            label={"Zug Abfahrtsort"}
+                                                            error={errors.trainStartPlace}
+                                                            selected={
+                                                                values.trainStartPlace
+                                                            }
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainStartPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
                                                             className={
@@ -1149,9 +1151,7 @@ export default function DraftJobs({ auth }) {
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                            value={
-                                                                values.trainStartPlace
-                                                            }
+                                                           
                                                         />
                                                         {errors.trainStartPlace &&
                                                             touched.trainStartPlace && (
@@ -1168,7 +1168,7 @@ export default function DraftJobs({ auth }) {
                                                             Zug Abfahrtszeit
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="trainStartTime"
                                                                 name="trainStartTime"
@@ -1179,7 +1179,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.trainStartTime
+                                                                    values.trainStartTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1212,14 +1212,16 @@ export default function DraftJobs({ auth }) {
                                                                     }
                                                                 </p>
                                                             )}
-                                                        <Label>
-                                                            Zug Ankunftsort
-                                                        </Label>
-                                                        <input
+                                                       
+                                                        <LocationField
                                                             id="trainEndPlace"
                                                             name="trainEndPlace"
-                                                            type="text"
+                                                            label={"Zug Ankunftsort"}
                                                             placeholder="Zug Ankunftsort"
+                                                            error={errors.trainEndPlace}
+                                                            selected={
+                                                                values.trainEndPlace
+                                                            }
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainEndPlace",
@@ -1232,9 +1234,6 @@ export default function DraftJobs({ auth }) {
                                                                 touched.trainEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                            }
-                                                            value={
-                                                                values.trainEndPlace
                                                             }
                                                         />
                                                         {errors.trainEndPlace &&
@@ -1252,7 +1251,7 @@ export default function DraftJobs({ auth }) {
                                                             Zug Ankunftszeit
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="trainEndTime"
                                                                 name="trainEndTime"
@@ -1263,7 +1262,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.trainEndTime
+                                                                    values.trainEndTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1341,7 +1340,7 @@ export default function DraftJobs({ auth }) {
                                                                                                 name={`breaks.${index}.start`}
                                                                                                 type="time"
                                                                                                 value={
-                                                                                                    breakItem.start
+                                                                                                    breakItem.start || ""
                                                                                                 }
                                                                                                 className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                                                 onChange={(
@@ -1365,7 +1364,7 @@ export default function DraftJobs({ auth }) {
                                                                                                                 index
                                                                                                             }
                                                                                                             value={
-                                                                                                                timeOption
+                                                                                                                timeOption || ""
                                                                                                             }
                                                                                                         >
                                                                                                             {
@@ -1385,7 +1384,7 @@ export default function DraftJobs({ auth }) {
                                                                                                 name={`breaks.${index}.end`}
                                                                                                 type="time"
                                                                                                 value={
-                                                                                                    breakItem.end
+                                                                                                    breakItem.end || ""
                                                                                                 }
                                                                                                 className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                                                 onChange={(
@@ -1409,7 +1408,7 @@ export default function DraftJobs({ auth }) {
                                                                                                                 index
                                                                                                             }
                                                                                                             value={
-                                                                                                                timeOption
+                                                                                                                timeOption || ""
                                                                                                             }
                                                                                                         >
                                                                                                             {
@@ -1464,18 +1463,19 @@ export default function DraftJobs({ auth }) {
                                                         Dienst Ende
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        <Label>
-                                                            Dienst Ende Ort
-                                                        </Label>
-                                                        <input
+                                                      
+                                                        <LocationField
                                                             id="workEndPlace"
-                                                            type="text"
                                                             placeholder="Dienst Ende Ort"
+                                                            label="Dienst Ende Ort"
+                                                            error={errors.workEndPlace}
+                                                            selected={
+                                                                values.workEndPlace
+                                                            }
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "workEndPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
                                                             className={
@@ -1483,9 +1483,6 @@ export default function DraftJobs({ auth }) {
                                                                 touched.workEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                            }
-                                                            value={
-                                                                values.workEndPlace
                                                             }
                                                         />
                                                         {errors.workEndPlace &&
@@ -1512,7 +1509,7 @@ export default function DraftJobs({ auth }) {
                                                                 )}
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="workEndTime"
                                                                 className={
@@ -1522,7 +1519,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.workEndTime
+                                                                    values.workEndTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1571,7 +1568,7 @@ export default function DraftJobs({ auth }) {
                                                         <Label>
                                                             Gastfahrt Zürück Ort
                                                         </Label>
-                                                        <input
+                                                        <Field
                                                             id="guestEndPlace"
                                                             type="text"
                                                             placeholder="Gastfahrt Zürück Ort"
@@ -1589,7 +1586,7 @@ export default function DraftJobs({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestEndPlace
+                                                                values.guestEndPlace || ""
                                                             }
                                                         />
                                                         {errors.guestEndPlace &&
@@ -1608,7 +1605,7 @@ export default function DraftJobs({ auth }) {
                                                             Zeit
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="guestEndTime"
                                                                 className={
@@ -1618,7 +1615,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestEndTime
+                                                                    values.guestEndTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e
@@ -1656,7 +1653,7 @@ export default function DraftJobs({ auth }) {
                                                             Gastfahrt Zürück End
                                                             Ort
                                                         </Label>
-                                                        <input
+                                                        <Field
                                                             id="guestEndEndPlace"
                                                             type="text"
                                                             placeholder="Gastfahrt Zürück End Ort"
@@ -1674,7 +1671,7 @@ export default function DraftJobs({ auth }) {
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
                                                             value={
-                                                                values.guestEndEndPlace
+                                                                values.guestEndEndPlace || ""
                                                             }
                                                         />
                                                         {errors.guestEndEndPlace &&
@@ -1693,7 +1690,7 @@ export default function DraftJobs({ auth }) {
                                                             Zeit
                                                         </Label>
                                                         <div className="flex">
-                                                            <input
+                                                            <Field
                                                                 type="time"
                                                                 id="guestEndEndTime"
                                                                 className={
@@ -1703,7 +1700,7 @@ export default function DraftJobs({ auth }) {
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
                                                                 value={
-                                                                    values.guestEndEndTime
+                                                                    values.guestEndEndTime || ""
                                                                 }
                                                                 onChange={(
                                                                     e

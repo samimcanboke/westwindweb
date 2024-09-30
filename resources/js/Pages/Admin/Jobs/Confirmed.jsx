@@ -19,6 +19,7 @@ import {
 import * as Yup from "yup";
 import moment from "moment";
 import Swal from "sweetalert2";
+import LocationField from "@/Components/LocationField";
 
 export default function Dashboard({ auth }) {
     const [filterActive, setFilterActive] = useState(true);
@@ -997,22 +998,22 @@ export default function Dashboard({ auth }) {
                                                 Dienst Beginn
                                             </AccordionTitle>
                                             <AccordionContent>
-                                                <Label>Startort</Label>
-                                                <input
+                                                
+                                                <LocationField
                                                     id="workStartPlace"
                                                     name="workStartPlace"
-                                                    type="text"
+                                                    label="Startort"
                                                     placeholder="Startort"
                                                     onChange={(e) => {
                                                         setinputValue(
                                                             "workStartPlace",
-                                                            e.target.value
+                                                            e.value
                                                         );
                                                     }}
                                                     className={
                                                         "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border  rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                     }
-                                                    value={
+                                                    selected={
                                                         values.workStartPlace ??
                                                         undefined
                                                     }
@@ -1062,22 +1063,21 @@ export default function Dashboard({ auth }) {
                                                 Zug Abfahrt und Ankunft
                                             </AccordionTitle>
                                             <AccordionContent>
-                                                <Label>Zug Abfahrtsort</Label>
-                                                <input
+                                                <LocationField
                                                     id="trainStartPlace"
                                                     name="trainStartPlace"
-                                                    type="text"
+                                                    label="Zug Abfahrtsort"
                                                     placeholder="Zug Abfahrtsort"
                                                     onChange={(e) => {
                                                         setinputValue(
                                                             "trainStartPlace",
-                                                            e.target.value
+                                                            e.value
                                                         );
                                                     }}
                                                     className={
                                                         "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border  rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                     }
-                                                    value={
+                                                    selected={
                                                         values.trainStartPlace ??
                                                         undefined
                                                     }
@@ -1116,22 +1116,21 @@ export default function Dashboard({ auth }) {
                                                         </svg>
                                                     </span>
                                                 </div>
-                                                <Label>Zug Ankunftsort</Label>
-                                                <input
+                                                <LocationField
                                                     id="trainEndPlace"
                                                     name="trainEndPlace"
-                                                    type="text"
+                                                    label="Zug Ankunftsort"
                                                     placeholder="Zug Ankunftsort"
                                                     onChange={(e) => {
                                                         setinputValue(
                                                             "trainEndPlace",
-                                                            e.target.value
+                                                            e.value
                                                         );
                                                     }}
                                                     className={
                                                         "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border  rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                     }
-                                                    value={
+                                                    selected={
                                                         values.trainEndPlace ??
                                                         undefined
                                                     }
@@ -1366,21 +1365,21 @@ export default function Dashboard({ auth }) {
                                                 Arbeitsende
                                             </AccordionTitle>
                                             <AccordionContent>
-                                                <Label>Arbeitsende Ort</Label>
-                                                <input
+                                                
+                                                <LocationField
                                                     id="workEndPlace"
-                                                    type="text"
+                                                    label="Arbeitsende Ort"
                                                     placeholder="Arbeitsende Ort"
                                                     onChange={(e) => {
                                                         setinputValue(
                                                             "workEndPlace",
-                                                            e.target.value
+                                                            e.value
                                                         );
                                                     }}
                                                     className={
                                                         "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border  rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                     }
-                                                    value={
+                                                    selected={
                                                         values.workEndPlace ??
                                                         undefined
                                                     }

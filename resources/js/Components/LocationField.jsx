@@ -8,21 +8,26 @@ import axios from 'axios';
 
 
 
-const LocationField = ({ id,name,type,placeholder,label, value, onChange, className,error }) => {
+const LocationField = ({ id,name,type,placeholder,label, value, onChange, className,error, selected }) => {
     const [inputValue, setInputValue] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
+    const [station, setStation] = useState(null);
 
     const promiseOptions = async (search) =>{        
         if(search.length > 0){
+            console.log(route('stations-search', {search: search}));
             let stations = await axios.get(route('stations-search', {search: search}))
                 .then((response) => {
                     const formattedStations = [];
-                    for(const station of response.data){
-                        formattedStations.push({
-                            label: station.name + " (" + station.short_name + ")",
-                            value: station.id,
-                            short_name: station.short_name
-                        });
+                    console.log(response.data);
+                    if(response.data.length > 0){
+                        for(const station of response.data){
+                            formattedStations.push({
+                                label: station.name + " (" + station.short_name + ")",
+                                value: station.id,
+                                short_name: station.short_name
+                            });
+                        }
                     }
                     return formattedStations;
                 });
@@ -42,6 +47,16 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
         }, 1000));
     };
 
+    
+    useEffect(() => {
+        axios.get(route('stations.show', {id: selected})).then((response) => {
+            setStation({label: response.data.name + " (" + response.data.short_name + ")", value: response.data.id, short_name: response.data.short_name});
+        });
+    }, [selected]);
+    
+
+
+
     return (
         <>
         <Label className="flex justify-start ">
@@ -56,27 +71,13 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
             loadingMessage={() => 'Daten werden vom Server abgerufen, bitte warten...'}
             noOptionsMessage={() => 'Keine Optionen gefunden'}
             placeholder={placeholder}
-            value={value}
+            value={station ? station : value}
             onChange={onChange}
             menuPortalTarget={document.body} // Chrome tarayıcılarda sayfa kilitlenmesini önlemek için eklendi
         />
         
 
-        {/*<div>
-            <label htmlFor="location">{label}</label>
-            <Field
-                type={type}
-                id={id}
-                name={name}
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange} 
-                className={className}
-            />
-            {error && <p className="text-red-500">{error}</p>}
-        </div>
-
-        */}
+       
         </>
     );
 };

@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import moment from "moment";
 import Swal from "sweetalert2";
 import PhotoGallery from "@/Components/PhotoGallery";
+import LocationField from "@/Components/LocationField";
 
 const validationSchema = Yup.object().shape({
     initialDate: Yup.date().required("Required"),
@@ -885,16 +886,19 @@ export default function ConfirmedToEdit({ auth }) {
                                                     Dienst Beginn
                                                 </AccordionTitle>
                                                 <AccordionContent>
-                                                    <Label>Startort</Label>
-                                                    <input
+                                                    
+                                                    <LocationField
                                                         id="workStartPlace"
                                                         name="workStartPlace"
-                                                        type="text"
+                                                        label="Startort"
+                                                        error={errors.workStartPlace}
+                                                        touched={touched.workStartPlace}
+                                                        selected={values.workStartPlace}
                                                         placeholder="Startort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "workStartPlace",
-                                                                e.target.value
+                                                                e.value
                                                             );
                                                         }}
                                                         className={
@@ -902,10 +906,6 @@ export default function ConfirmedToEdit({ auth }) {
                                                                 touched.workStartPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                        }
-                                                        value={
-                                                            values.workStartPlace ??
-                                                            undefined
                                                         }
                                                     />
                                                     {errors.workStartPlace &&
@@ -975,18 +975,18 @@ export default function ConfirmedToEdit({ auth }) {
                                                     Zug Abfahrt und Ankunft
                                                 </AccordionTitle>
                                                 <AccordionContent>
-                                                    <Label>
-                                                        Zug Abfahrtsort
-                                                    </Label>
-                                                    <input
+                                                    
+                                                    <LocationField
                                                         id="trainStartPlace"
                                                         name="trainStartPlace"
-                                                        type="text"
+                                                        label="Zug Abfahrtsort"
+                                                        error={errors.trainStartPlace}
+                                                        selected={values.trainStartPlace}
                                                         placeholder="Zug Abfahrtsort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "trainStartPlace",
-                                                                e.target.value
+                                                                e.value
                                                             );
                                                         }}
                                                         className={
@@ -995,10 +995,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
-                                                        value={
-                                                            values.trainStartPlace ??
-                                                            undefined
-                                                        }
+                                                       
                                                     />
                                                     {errors.trainStartPlace &&
                                                         touched.trainStartPlace && (
@@ -1058,18 +1055,18 @@ export default function ConfirmedToEdit({ auth }) {
                                                                 }
                                                             </p>
                                                         )}
-                                                    <Label>
-                                                        Zug Ankunftsort
-                                                    </Label>
-                                                    <input
+                                                    <br />
+                                                    <LocationField
                                                         id="trainEndPlace"
                                                         name="trainEndPlace"
-                                                        type="text"
+                                                        label="Zug Ankunftsort"
+                                                        error={errors.trainEndPlace}
+                                                        selected={values.trainEndPlace}
                                                         placeholder="Zug Ankunftsort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "trainEndPlace",
-                                                                e.target.value
+                                                                e.value
                                                             );
                                                         }}
                                                         className={
@@ -1077,10 +1074,6 @@ export default function ConfirmedToEdit({ auth }) {
                                                                 touched.trainEndPlace
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                        }
-                                                        value={
-                                                            values.trainEndPlace ??
-                                                            undefined
                                                         }
                                                     />
                                                     {errors.trainEndPlace &&
@@ -1339,17 +1332,16 @@ export default function ConfirmedToEdit({ auth }) {
                                                     Arbeitsende
                                                 </AccordionTitle>
                                                 <AccordionContent>
-                                                    <Label>
-                                                        Arbeitsende Ort
-                                                    </Label>
-                                                    <input
+                                                    
+                                                    <LocationField
                                                         id="workEndPlace"
-                                                        type="text"
+                                                        label="Arbeitsende Ort"
+                                                        error={errors.workEndPlace}
                                                         placeholder="Arbeitsende Ort"
                                                         onChange={(e) => {
                                                             setFieldValue(
                                                                 "workEndPlace",
-                                                                e.target.value
+                                                                e.value
                                                             );
                                                         }}
                                                         className={
@@ -1358,7 +1350,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                 : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                         }
-                                                        value={
+                                                        selected={
                                                             values.workEndPlace ??
                                                             undefined
                                                         }

@@ -1445,6 +1445,13 @@ class FinalizedJobsController extends Controller
                 $feeding_fee_text = $finalized_job->accomodation ? "Hotel" : "Heim";
             }
 
+
+            $from = $finalized_job->work_start_place;
+            $to = $finalized_job->work_end_place;
+
+            $from_place = Station::where("id", $from)->first();
+            $to_place = Station::where("id", $to)->first();
+
             $data['rows'][] = [
                 "date" => (new DateTime($finalized_job->initial_date))->format('d/m/Y'),
                 "times" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
@@ -1459,7 +1466,7 @@ class FinalizedJobsController extends Controller
                 "night_shift" => $self_night_hours != "00:00" ? $self_night_hours : "-",
                 "feeding_fee" => $feeding_fee_text,
                 "comment" => $finalized_job->comment,
-                "places" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
+                "places" => $from_place && $to_place ? $from_place->name . " - " . $to_place->name : $from . " - " . $to,
                 "client" => $finalized_job->client->name,
             ];
             $i++;
