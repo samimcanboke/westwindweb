@@ -455,7 +455,7 @@ class FinalizedJobsController extends Controller
         $startDate = Carbon::create($request->year, $request->month, 1)->startOfMonth();
         $endDate = Carbon::create($request->year, $request->month, 1)->endOfMonth()->addMinute();
         $query = FinalizedJobs::where('confirmation', 1);
-        if ($request->client || $request->client != "Suchen...") {
+        if ($request->client && $request->client != "Suchen...") {
             $query->where('client_id', $request->client);
         }
         if ($request->user) {
