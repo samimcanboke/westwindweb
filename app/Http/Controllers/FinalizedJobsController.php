@@ -946,15 +946,15 @@ class FinalizedJobsController extends Controller
             
             $total_work_hours += $total_hours * 60;
 
-            dd($total_work_hours);
+            dd($total_work_hours > 160 * 60 );
             if ($total_work_hours > 160 * 60) {
                 $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
                 $hours = floor($remaining_hours);
                 $minutes = ($remaining_hours * 60) % 60;
                 $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
             } else {
-                $hours = $total_work_sum->h + $total_break_time->h;
-                $minutes = $total_work_sum->i + $total_break_time->i;
+                $hours = $total_work_sum->h + $total_break_time->h + floor($total_work_hours / 60);
+                $minutes = $total_work_sum->i + $total_break_time->i + floor(($total_work_hours % 60) / 60);
                 $decimal_hours = $hours + ($minutes / 60);
                 $data['rows'][$user->id]['workhours'] = number_format($decimal_hours, 2, ',', '');
             }
