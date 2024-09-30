@@ -1259,9 +1259,9 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
-                if($finalized_job->id !=  447){
-                    continue;
-                }
+                //if($finalized_job->id !=  447){
+                  //  continue;
+                //}
 
                 $initial_date = $finalized_job->initial_date;
 
@@ -1323,7 +1323,6 @@ class FinalizedJobsController extends Controller
                     $total_breaks = "00:00";
                 }
 
-                dd($breaks,$work_sum, $this->calculateTotalExtract($work_sum, $total_breaks) );
                 $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
                 $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
 
