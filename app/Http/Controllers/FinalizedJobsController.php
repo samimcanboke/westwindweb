@@ -1203,9 +1203,11 @@ class FinalizedJobsController extends Controller
         $data['hour_bank_this_year'] = sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
 
+        dd($user->annualLeaves()
+        ->where('end_date', '>', $startDate->toDateString())
+        ->get());
         $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '>', $startDate->toDateString())
-            ->where('start_date', '<', $endDate->toDateString())
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
