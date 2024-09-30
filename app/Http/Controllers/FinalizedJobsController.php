@@ -1204,7 +1204,7 @@ class FinalizedJobsController extends Controller
 
 
         dd($user->annualLeaves()
-        ->where('end_date', '>', $startDate->toDateString())
+        ->where('end_date', '<', $startDate->toDateString())
         ->get());
         $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '>', $startDate->toDateString())
