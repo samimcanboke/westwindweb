@@ -244,9 +244,6 @@ export default function Planner({ auth }) {
                         }else{
                             job.extra = 0;
                         }
-                        if(job.id=447){
-                            console.log(job);
-                        }
                         let newJobs = {
                             id: job.id,
                             group: job.user_id,
