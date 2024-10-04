@@ -24,7 +24,14 @@ class JobPlansController extends Controller
 
     public function index_without_user()
     {
-        $draftJobs = JobPlans::whereNull('user_id')->get();
+        $draftJobs = JobPlans::whereNull('user_id')
+            ->with(['toStation:id,short_name', 'fromStation:id,short_name'])
+            ->get();
+
+        foreach($draftJobs as $job){
+            $job->to = $job->toStation->short_name ?? $job->to;
+            $job->from = $job->fromStation->short_name ?? $job->from;
+        }
         return response()->json($draftJobs);
     }
 
