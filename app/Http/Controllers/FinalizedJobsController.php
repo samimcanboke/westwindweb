@@ -1267,9 +1267,9 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
-                if($finalized_job->id !=  475){
-                    continue;
-                }
+                //if($finalized_job->id !=  475){
+                //    continue;
+                //}
 
                 $initial_date = $finalized_job->initial_date;
 
