@@ -419,6 +419,13 @@ Route::get('/check-certificates', function () {
     }
 });
 
+Route::get('/check-bahn-cards', function () {
+    $expiredBahnCards = \App\Models\BahnCard::whereRaw('DATE_SUB(valid_to, INTERVAL 10 DAY) <= CURDATE()')->with('user')->get();
+    foreach ($expiredBahnCards as $bahnCard) {
+        Mail::to('sadettin.gokcen@westwind-eisenbahnservice.de')->send(new \App\Mail\CertificateExpired($bahnCard->number, $bahnCard->user->name));
+    }
+});
+
 
 
 require __DIR__.'/auth.php';
