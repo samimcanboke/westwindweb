@@ -113,7 +113,7 @@ const validationSchema = Yup.object().shape({
                 return true;
             }
         ),
-    user: Yup.number().when('learning', {
+    user: Yup.number().when('ausbildung', {
         is: true,
         then: () => Yup.number().required("Required"),
         otherwise: () => Yup.number().notRequired(),
