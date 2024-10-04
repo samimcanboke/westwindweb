@@ -15,7 +15,6 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
 
     const promiseOptions = async (search) =>{        
         if(search.length > 0){
-            console.log(route('stations-search', {search: search}));
             let stations = await axios.get(route('stations-search', {search: search}))
                 .then((response) => {
                     const formattedStations = [];
@@ -49,9 +48,11 @@ const LocationField = ({ id,name,type,placeholder,label, value, onChange, classN
 
     
     useEffect(() => {
-        axios.get(route('stations.show', {id: selected})).then((response) => {
-            setStation({label: response.data.name + " (" + response.data.short_name + ")", value: response.data.id, short_name: response.data.short_name});
-        });
+        if(selected){
+            axios.get(route('stations.show', {id: selected})).then((response) => {
+                setStation({label: response.data.name + " (" + response.data.short_name + ")", value: response.data.id, short_name: response.data.short_name});
+            });
+        }
     }, [selected]);
     
 

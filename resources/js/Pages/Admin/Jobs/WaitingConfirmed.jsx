@@ -120,7 +120,7 @@ export default function WaitingConfirmed({ auth }) {
         } catch (e) {
             console.log(e);
         }
-        console.log(editingDraft);
+        console.log(camelCase(editingDraft));
         setValues(camelCase(editingDraft));
         setShowEdit(true);
     };
@@ -1328,8 +1328,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             onChange={(e) => {
                                                                 setFieldValue(
                                                                     "trainEndPlace",
-                                                                    e.target
-                                                                        .value
+                                                                    e.value
                                                                 );
                                                             }}
                                                             error={
