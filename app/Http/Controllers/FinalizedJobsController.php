@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Station;
-
+use DateTimeZone;
 class FinalizedJobsController extends Controller
 {
     /**
@@ -28,7 +28,7 @@ class FinalizedJobsController extends Controller
     private function convertTimeToDatetime($initial_date, $time)
     {
         $initial_datetime = new DateTime($initial_date);
-
+        $initial_datetime->setTimezone(new DateTimeZone('Europe/Berlin'));
         list($hour, $minute) = explode(':', $time);
         $new_datetime = clone $initial_datetime;
         if ($hour == "00" && $minute == "00") {
@@ -229,7 +229,6 @@ class FinalizedJobsController extends Controller
         if ($endTime < $startTime) {
             $endTime->modify('+1 day');
         }
-
         $publicHolidayHours = new DateInterval('PT0H0M');
         foreach ($publicHolidays as $holiday) {
             $date_holiday = Carbon::createFromFormat('d/m/Y H:i:s', $holiday . " 00:00:00");
@@ -1268,9 +1267,9 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
-                //if($finalized_job->id !=  407){
-                    //continue;
-                //}
+                if($finalized_job->id !=  475){
+                    continue;
+                }
 
                 $initial_date = $finalized_job->initial_date;
 
@@ -1353,7 +1352,6 @@ class FinalizedJobsController extends Controller
                 list($pblhrs, $pblmnt) = explode(':', $public_holiday_hours);
                 $test_public_holiday = new DateInterval("PT{$pblhrs}H{$pblmnt}M");
                 if ($test_public_holiday->h == 0 && $test_public_holiday->i == 0 && $test_public_holiday->s == 0) {
-
                     $midnight_hours = $this->calculateMidNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
                     //dd($midnight_hours);
                     if ($midnight_hours != 0) {
