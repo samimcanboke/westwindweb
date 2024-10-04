@@ -10,7 +10,7 @@ use App\Mail\JobPlanMail;
 use App\Mail\JobPlanDeleteMail;
 use App\Mail\JobPlanChangeMail;
 use Illuminate\Support\Facades\Mail;
-
+use App\Models\Station;
 class JobPlansController extends Controller
 {
     /**
@@ -30,7 +30,14 @@ class JobPlansController extends Controller
 
     public function get_users_jobs()
     {
-        $jobs = JobPlans::whereNotNull('user_id')->get();
+        $jobs = JobPlans::whereNotNull('user_id')
+            ->with(['toStation:id,short_name', 'fromStation:id,short_name'])
+            ->get();
+
+        foreach($jobs as $job){
+            $job->to = $job->toStation->short_name ?? $job->to;
+            $job->from = $job->fromStation->short_name ?? $job->from;
+        }
         return response()->json($jobs);
     }
 

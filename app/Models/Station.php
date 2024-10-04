@@ -16,4 +16,9 @@ class Station extends Model
         'latitude',
         'longitude',
     ];
+
+    public function jobPlans()
+    {
+        return $this->hasMany(JobPlans::class);
+    }
 }

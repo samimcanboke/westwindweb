@@ -28,4 +28,14 @@ class JobPlans extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function toStation()
+    {
+        return $this->belongsTo(Station::class, 'to', 'id');
+    }
+
+    public function fromStation()
+    {
+        return $this->belongsTo(Station::class, 'from', 'id');
+    }
 }
