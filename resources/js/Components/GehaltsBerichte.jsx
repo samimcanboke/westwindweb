@@ -74,11 +74,12 @@ function GehaltsBerichte({user}) {
             route("user.salary.store"),
             report
         );
-        console.log(response.data);
         if (response.data.status === "success") {
             setReport({});
             setShowModal(false);
+            getReports();
         }
+      
     };
 
     const addNewReport = (report_new) => {
