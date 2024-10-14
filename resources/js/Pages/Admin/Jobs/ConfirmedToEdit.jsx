@@ -1822,7 +1822,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                     setShowEdit(false);
                                                 }}
                                             >
-                                                İptal
+                                                Zurück
                                             </Button>
                                             <Button
                                                 type="submit"
@@ -1831,12 +1831,7 @@ export default function ConfirmedToEdit({ auth }) {
                                             >
                                                 Speichern
                                             </Button>
-                                            <Button
-                                                onClick={handleConfirm}
-                                                className="ml-4 bg-green-500"
-                                            >
-                                                Bestätigen
-                                            </Button>
+                                          
                                         </div>
                                     </Form>
                                 );
