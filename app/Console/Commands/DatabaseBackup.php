@@ -21,19 +21,14 @@ class DatabaseBackup extends Command
 
     public function handle()
     {
-        // Yedeğin kaydedileceği dosya ismi
         $fileName = 'backup_' . Carbon::now()->format('Y_m_d_H_i_s') . '.sql';
 
-        // Veritabanı bağlantı bilgileri
         $dbHost = env('DB_HOST');
         $dbName = env('DB_DATABASE');
         $dbUser = env('DB_USERNAME');
         $dbPassword = env('DB_PASSWORD');
 
-        // mysqldump komutunu çalıştırarak yedek alıyoruz
-        $command = "mysqldump --user={$dbUser} --password={$dbPassword} --host={$dbHost} {$dbName} > " . storage_path("app/backup/{$fileName}");
-
-        // Komutu çalıştırıyoruz
+        $command = "mysqldump --user={$dbUser} --password={$dbPassword} --host={$dbHost} {$dbName} > " . storage_path("app/backup/{$fileName}"). " 2>/dev/null";
         $output = null;
         $resultCode = null;
         exec($command, $output, $resultCode);
