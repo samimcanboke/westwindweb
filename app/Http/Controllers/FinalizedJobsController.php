@@ -1271,12 +1271,20 @@ class FinalizedJobsController extends Controller
                 //    continue;
                 //}
 
-                $initial_date = $finalized_job->initial_date;
 
-                $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+
+                $initial_date = $finalized_job->initial_date;
+                $finish_date = $initial_date;
+
+                if($finalized_job->id == 567){
+                    $finish_date = Carbon::parse($initial_date)->addDay()->toISOString();
+                }
+
+                $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($finish_date, $finalized_job->work_end_time));
                 if ($work_sum == "00:00") {
                     $work_sum = "24:00";
                 }
+  
                 
                 $guest_start_total = "00:00";
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
