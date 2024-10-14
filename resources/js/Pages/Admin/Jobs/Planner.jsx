@@ -191,7 +191,7 @@ export default function Planner({ auth }) {
         await axios.get(route("get-clients-users")).then((response) => {
             let clients = response.data.clients;
             let clients_users = [];
-            for(const client of clients){
+            for (const client of clients) {
                 clients_users.push({
                     value: client.id,
                     label: client.name,
@@ -239,9 +239,9 @@ export default function Planner({ auth }) {
             .then(async (response) => {
                 for (const job of response.data) {
                     if (job.user_id !== null) {
-                        if(job.extra == 1 || job.extra == "1"){
+                        if (job.extra == 1 || job.extra == "1") {
                             job.extra = 1;
-                        }else{
+                        } else {
                             job.extra = 0;
                         }
                         let newJobs = {
@@ -420,9 +420,9 @@ export default function Planner({ auth }) {
                     canMove: false,
                     canResize: false,
                     itemProps: {
-                        onContextMenu: async (event,itemId) => {
+                        onContextMenu: async (event, itemId) => {
                             try {
-                                let id = event.target.getAttribute("dataitemid").replace("a","");
+                                let id = event.target.getAttribute("dataitemid").replace("a", "");
 
                                 Swal.fire({
                                     title: "Eminmisin?",
@@ -538,7 +538,7 @@ export default function Planner({ auth }) {
                     start_time: moment(note.start_date).set({
                         hour: note.start_time.split(":")[0],
                         minute: note.start_time.split(":")[1],
-                    }), 
+                    }),
                     end_time: moment(note.end_date).set({
                         hour: note.end_time.split(":")[0],
                         minute: note.end_time.split(":")[1],
@@ -606,7 +606,7 @@ export default function Planner({ auth }) {
                                 console.log(e);
                             }
                         },
-                       
+
                     },
                 };
                 newJobNotesList.push(newJobNotes);
@@ -624,12 +624,12 @@ export default function Planner({ auth }) {
                     hour: workEndTime[0],
                     minute: workEndTime[1],
                 });
-                
+
                 if (endDate < startDate) {
                     endDate.add(1, "day");
                 }
-                if(job.id==447){
-                    console.log(job,startDate,endDate);
+                if (job.id == 447) {
+                    console.log(job, startDate, endDate);
                 }
                 let newUserFinalizedJob = {
                     id: "u" + job.id,
@@ -683,7 +683,7 @@ export default function Planner({ auth }) {
                     if (groupedPlans[group][i + 1]) {
                         let duration = moment.duration(
                             groupedPlans[group][i + 1].start_time.diff(
-                                                               groupedPlans[group][i].end_time
+                                groupedPlans[group][i].end_time
                             )
                         );
 
@@ -700,7 +700,7 @@ export default function Planner({ auth }) {
                         } else if (hours >= 9 && hours < 10) {
                             title = title + "⚠️";
                         }
-                        
+
                         let newPlan = {
                             id: `${group}-${i}`,
                             group: groupedPlans[group][i].group,
@@ -861,7 +861,7 @@ export default function Planner({ auth }) {
                 end_time: notesEndTime,
                 user_id: notesDriver,
                 notes: noteDetails,
-                
+
             })
             .then((response) => {
                 if (response.status === 200) {
@@ -969,7 +969,7 @@ export default function Planner({ auth }) {
         let drivers = await clients.find((client) => {
             return client.value === job.client_id
         });
-        
+
         setSelectedDrivers(drivers.users.map((user) => {
             return {
                 value: user.user.id,
@@ -992,7 +992,7 @@ export default function Planner({ auth }) {
     };
 
     const deleteNotes = async () => {
-        await axios.delete('/planner/jobs/job-notes/'+editingNote.id).then((response) => {
+        await axios.delete('/planner/jobs/job-notes/' + editingNote.id).then((response) => {
             setOpenEditNotesModal(false);
             getPlans();
             getPlansWithoutUser();
@@ -1907,81 +1907,96 @@ export default function Planner({ auth }) {
                                         >
                                             Notiz
                                         </Button>
-                                        <ToggleSwitch
-                                            label="Letzte Woche anzeigen"
-                                            checked={prevWeek}
-                                            style={{
-                                                border: "1px solid white",
-                                            }}
-                                            onChange={(e) => {
-                                                setPrevWeek(e);
-                                                if (e) {
-                                                    setThisWeek(false);
-                                                    setNextWeek(false);
-                                                    setVisibleTimeStart(
-                                                        moment()
-                                                            .subtract(7, "day")
-                                                            .startOf("week")
+                                        <div className="relative">
+                                            <ToggleSwitch
+                                                label="Letzte Woche anzeigen"
+                                                checked={prevWeek}
+                                                color="cyan"
+                                                style={{
+                                                    border: "1px solid white",
+                                                    '::after': {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        width: '100%',
+                                                        height: '20px',
+                                                        backgroundColor: 'white',
+                                                    },
+                                                }}
+                                                onChange={(e) => {
+                                                    setPrevWeek(e);
+                                                    if (e) {
+                                                        setThisWeek(false);
+                                                        setNextWeek(false);
+                                                        setVisibleTimeStart(
+                                                            moment()
+                                                                .subtract(7, "day")
+                                                                .startOf("week")
 
-                                                    );
-                                                    setVisibleTimeEnd(
-                                                        moment()
-                                                            .subtract(7, "day")
-                                                            .endOf("week")
-                                                    );
-                                                } else {
-                                                    setVisibleTimeStart(null);
-                                                    setVisibleTimeEnd(null);
-                                                }
-                                            }}
-                                        />
-                                        <ToggleSwitch
-                                            label="Diese Woche anzeigen"
-                                            checked={thisWeek}
-                                            onChange={(e) => {
-                                                setThisWeek(e);
-                                                if (e) {
-                                                    setNextWeek(false);
-                                                    setPrevWeek(false);
-                                                    setVisibleTimeStart(
-                                                        moment()
-                                                            .startOf("week")
+                                                        );
+                                                        setVisibleTimeEnd(
+                                                            moment()
+                                                                .subtract(7, "day")
+                                                                .endOf("week")
+                                                        );
+                                                    } else {
+                                                        setVisibleTimeStart(null);
+                                                        setVisibleTimeEnd(null);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <ToggleSwitch
+                                                label="Diese Woche anzeigen"
+                                                checked={thisWeek}
+                                                onChange={(e) => {
+                                                    setThisWeek(e);
+                                                    if (e) {
+                                                        setNextWeek(false);
+                                                        setPrevWeek(false);
+                                                        setVisibleTimeStart(
+                                                            moment()
+                                                                .startOf("week")
 
-                                                    );
-                                                    setVisibleTimeEnd(
-                                                        moment()
-                                                            .endOf("week")
-                                                    );
-                                                } else {
-                                                    setVisibleTimeStart(null);
-                                                    setVisibleTimeEnd(null);
-                                                }
-                                            }}
-                                        />
-                                        <ToggleSwitch
-                                            label="Nächste Woche anzeigen"
-                                            checked={nextWeek}
-                                            onChange={(e) => {
-                                                setNextWeek(e);
-                                                if (e) {
-                                                    setThisWeek(false);
-                                                    setPrevWeek(false);
-                                                    setVisibleTimeStart(
-                                                        moment()
-                                                            .add(7, "day")
-                                                            .startOf("week")
-                                                    );
-                                                    setVisibleTimeEnd(
-                                                        moment()
-                                                            .add(7, "day")
-                                                            .endOf("week")
-                                                    );
-                                                } else {
-                                                    setVisibleTimeStart(null);
-                                                    setVisibleTimeEnd(null);
-                                                }
-                                            }}
-                                        />
+                                                        );
+                                                        setVisibleTimeEnd(
+                                                            moment()
+                                                                .endOf("week")
+                                                        );
+                                                    } else {
+                                                        setVisibleTimeStart(null);
+                                                        setVisibleTimeEnd(null);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <ToggleSwitch
+                                                label="Nächste Woche anzeigen"
+                                                checked={nextWeek}
+                                                color="green"
+                                                onChange={(e) => {
+                                                    setNextWeek(e);
+                                                    if (e) {
+                                                        setThisWeek(false);
+                                                        setPrevWeek(false);
+                                                        setVisibleTimeStart(
+                                                            moment()
+                                                                .add(7, "day")
+                                                                .startOf("week")
+                                                        );
+                                                        setVisibleTimeEnd(
+                                                            moment()
+                                                                .add(7, "day")
+                                                                .endOf("week")
+                                                        );
+                                                    } else {
+                                                        setVisibleTimeStart(null);
+                                                        setVisibleTimeEnd(null);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="relative">
@@ -2012,7 +2027,7 @@ export default function Planner({ auth }) {
                                                                 return user;
                                                             }
                                                         });
-                                                        console.log(newUserList);
+                                                    console.log(newUserList);
                                                     setSelectedUsers(
                                                         newUserList
                                                     );
@@ -2027,22 +2042,22 @@ export default function Planner({ auth }) {
                                                 }}
                                             />
                                             {clients &&
-                                            <MultiSelect
-                                                placeholder="Auswählen"
-                                                options={clients}
-                                                value={selectedClients}
-                                                className="mt-5"
-                                                onChange={(e) => {
-                                                    setSelectedClients(e)
-                                                }}
-                                                labelledBy="Auswählen"
-                                                style={{
-                                                    width: "15%",
-                                                    position: "absolute",
-                                                    zIndex: 1000,
-                                                    maxWidth: 220,
-                                                }}
-                                            />
+                                                <MultiSelect
+                                                    placeholder="Auswählen"
+                                                    options={clients}
+                                                    value={selectedClients}
+                                                    className="mt-5"
+                                                    onChange={(e) => {
+                                                        setSelectedClients(e)
+                                                    }}
+                                                    labelledBy="Auswählen"
+                                                    style={{
+                                                        width: "15%",
+                                                        position: "absolute",
+                                                        zIndex: 1000,
+                                                        maxWidth: 220,
+                                                    }}
+                                                />
                                             }
 
 
@@ -2061,26 +2076,27 @@ export default function Planner({ auth }) {
                                                 itemContext,
                                                 getItemProps,
                                                 getResizeProps
-                                              }) => {
+                                            }) => {
                                                 const { left: leftResizeProps, right: rightResizeProps } = getResizeProps()
 
 
                                                 return (
-                                                  <div {...getItemProps(item.itemProps)} key={item.id} dataitemid={item.id} >
-                                                    {itemContext.useResizeHandle ? <div {...leftResizeProps} /> : ''}
+                                                    <div {...getItemProps(item.itemProps)} key={item.id} dataitemid={item.id} >
+                                                        {itemContext.useResizeHandle ? <div {...leftResizeProps} /> : ''}
 
-                                                    <div
-                                                      className="rct-item-content"
-                                                      style={{ maxHeight: `${itemContext.dimensions.height}` }}
-                                                    >
-                                                      {itemContext.title}
+                                                        <div
+                                                            className="rct-item-content"
+                                                            style={{ maxHeight: `${itemContext.dimensions.height}` }}
+                                                        >
+                                                            {itemContext.title}
+                                                        </div>
+
+                                                        {itemContext.useResizeHandle ? <div {...rightResizeProps} /> : ''}
                                                     </div>
+                                                )
+                                            }
 
-                                                    {itemContext.useResizeHandle ? <div {...rightResizeProps} /> : ''}
-                                                  </div>
-                                                )}
-
-                                              }
+                                            }
                                             unit="day"
                                             defaultTimeStart={moment().add(
                                                 -256,
@@ -2125,26 +2141,26 @@ export default function Planner({ auth }) {
                                                                         interval
                                                                     ) => {
                                                                         const displayNone =
-                                                                            {
-                                                                                display:
-                                                                                    "none",
-                                                                                height: "0px",
-                                                                            };
+                                                                        {
+                                                                            display:
+                                                                                "none",
+                                                                            height: "0px",
+                                                                        };
                                                                         const intervalStyle =
-                                                                            {
-                                                                                lineHeight:
-                                                                                    "30px",
-                                                                                textAlign:
+                                                                        {
+                                                                            lineHeight:
+                                                                                "30px",
+                                                                            textAlign:
                                                                                 "center",
-                                                                                borderLeft:
-                                                                                    "1px solid black",
-                                                                                cursor: "pointer",
-                                                                                backgroundColor:
-                                                                                    "#c51f21",
-                                                                                color: "white",
-                                                                                border: "1px solid #bababa",
+                                                                            borderLeft:
+                                                                                "1px solid black",
+                                                                            cursor: "pointer",
+                                                                            backgroundColor:
+                                                                                "#c51f21",
+                                                                            color: "white",
+                                                                            border: "1px solid #bababa",
 
-                                                                            };
+                                                                        };
                                                                         return (
                                                                             <div
                                                                                 onClick={() => {
@@ -2158,7 +2174,7 @@ export default function Planner({ auth }) {
                                                                                         interval,
                                                                                         style:
                                                                                             interval.labelWidth <=
-                                                                                            19
+                                                                                                19
                                                                                                 ? displayNone
                                                                                                 : intervalStyle,
                                                                                     }
@@ -2197,25 +2213,25 @@ export default function Planner({ auth }) {
                                                                     ) => {
 
                                                                         const displayNone =
-                                                                            {
-                                                                                display:
-                                                                                    "none",
-                                                                                height: "0px",
-                                                                            };
+                                                                        {
+                                                                            display:
+                                                                                "none",
+                                                                            height: "0px",
+                                                                        };
                                                                         const intervalStyle =
-                                                                            {
-                                                                                lineHeight:
-                                                                                    "30px",
-                                                                                textAlign:
-                                                                                    "center",
-                                                                                borderLeft:
-                                                                                    "1px solid black",
-                                                                                cursor: "pointer",
-                                                                                backgroundColor:
-                                                                                moment(interval.startTime).week() % 2 > 0? "blue" : "pink",
-                                                                                color: moment(interval.startTime).week() % 2 > 0? "pink" : "blue",
-                                                                                border: "1px solid #bababa",
-                                                                            };
+                                                                        {
+                                                                            lineHeight:
+                                                                                "30px",
+                                                                            textAlign:
+                                                                                "center",
+                                                                            borderLeft:
+                                                                                "1px solid black",
+                                                                            cursor: "pointer",
+                                                                            backgroundColor:
+                                                                                moment(interval.startTime).week() % 2 > 0 ? "blue" : "pink",
+                                                                            color: moment(interval.startTime).week() % 2 > 0 ? "pink" : "blue",
+                                                                            border: "1px solid #bababa",
+                                                                        };
                                                                         return (
                                                                             <div
                                                                                 onClick={() => {
@@ -2229,7 +2245,7 @@ export default function Planner({ auth }) {
                                                                                         interval,
                                                                                         style:
                                                                                             interval.labelWidth <=
-                                                                                            19
+                                                                                                19
                                                                                                 ? displayNone
                                                                                                 : intervalStyle,
                                                                                     }
@@ -2273,26 +2289,26 @@ export default function Planner({ auth }) {
                                                                         interval
                                                                     ) => {
                                                                         const intervalStyle =
-                                                                            {
-                                                                                lineHeight:
-                                                                                    "30px",
-                                                                                textAlign:
-                                                                                    "center",
-                                                                                borderLeft:
-                                                                                    "1px solid black",
-                                                                                cursor: "pointer",
-                                                                                backgroundColor:
-                                                                                moment(interval.startTime).day() === 0 ? "gray":
-                                                                                moment(interval.startTime).day() === 1 ? "red":
-                                                                                moment(interval.startTime).day() === 2 ? "green":
-                                                                                moment(interval.startTime).day() === 3 ? "red":
-                                                                                moment(interval.startTime).day() === 4 ? "green":
-                                                                                moment(interval.startTime).day() === 5 ? "red":
-                                                                                moment(interval.startTime).day() === 6 ? "green":
-                                                                                "black",
-                                                                                color: moment(interval.startTime).day() === 0 ? "black" : "white",
-                                                                                border: "1px solid #bababa",
-                                                                            };
+                                                                        {
+                                                                            lineHeight:
+                                                                                "30px",
+                                                                            textAlign:
+                                                                                "center",
+                                                                            borderLeft:
+                                                                                "1px solid black",
+                                                                            cursor: "pointer",
+                                                                            backgroundColor:
+                                                                                moment(interval.startTime).day() === 0 ? "gray" :
+                                                                                    moment(interval.startTime).day() === 1 ? "red" :
+                                                                                        moment(interval.startTime).day() === 2 ? "green" :
+                                                                                            moment(interval.startTime).day() === 3 ? "red" :
+                                                                                                moment(interval.startTime).day() === 4 ? "green" :
+                                                                                                    moment(interval.startTime).day() === 5 ? "red" :
+                                                                                                        moment(interval.startTime).day() === 6 ? "green" :
+                                                                                                            "black",
+                                                                            color: moment(interval.startTime).day() === 0 ? "black" : "white",
+                                                                            border: "1px solid #bababa",
+                                                                        };
                                                                         return (
                                                                             <div
                                                                                 onClick={() => {
@@ -2349,25 +2365,25 @@ export default function Planner({ auth }) {
                                                                         interval
                                                                     ) => {
                                                                         const displayNone =
-                                                                            {
-                                                                                display:
-                                                                                    "none",
-                                                                                height: "0px",
-                                                                            };
+                                                                        {
+                                                                            display:
+                                                                                "none",
+                                                                            height: "0px",
+                                                                        };
                                                                         const intervalStyle =
-                                                                            {
-                                                                                lineHeight:
-                                                                                    "30px",
-                                                                                textAlign:
-                                                                                    "center",
-                                                                                borderLeft:
-                                                                                    "1px solid black",
-                                                                                cursor: "pointer",
-                                                                                backgroundColor:
-                                                                                    moment(interval.startTime).hour() % 2 > 0 ? "black" : "white",
-                                                                                color:  moment(interval.startTime).hour() % 2 > 0 ? "white" : "black",
-                                                                                border: "1px solid #bababa",
-                                                                            };
+                                                                        {
+                                                                            lineHeight:
+                                                                                "30px",
+                                                                            textAlign:
+                                                                                "center",
+                                                                            borderLeft:
+                                                                                "1px solid black",
+                                                                            cursor: "pointer",
+                                                                            backgroundColor:
+                                                                                moment(interval.startTime).hour() % 2 > 0 ? "black" : "white",
+                                                                            color: moment(interval.startTime).hour() % 2 > 0 ? "white" : "black",
+                                                                            border: "1px solid #bababa",
+                                                                        };
                                                                         return (
                                                                             <div
                                                                                 onClick={() => {
@@ -2381,7 +2397,7 @@ export default function Planner({ auth }) {
                                                                                         interval,
                                                                                         style:
                                                                                             interval.labelWidth <=
-                                                                                            19
+                                                                                                19
                                                                                                 ? displayNone
                                                                                                 : intervalStyle,
                                                                                     }
