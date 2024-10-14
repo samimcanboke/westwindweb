@@ -392,6 +392,9 @@ class FinalizedJobsController extends Controller
                 } else {
                     $guest_back_sum = "00:00";
                 }
+                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first() : $finalized_job->work_start_place;
+                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first() : $finalized_job->work_end_place;
+
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
@@ -404,7 +407,7 @@ class FinalizedJobsController extends Controller
                     "accomodation" => ($finalized_job->feeding_fee == 32  ? "X" : "") . ($finalized_job->ausland ? $finalized_job->country : ""),
                     "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
                     "train_number" => $finalized_job->zug_nummer,
-                    "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
+                    "from_to" => $start_station . " - " . $end_station,
                     "client" => $finalized_job->client->name,
                     "learning" => $finalized_job->learning,
                     "fill" => (strtotime($guest_start_sum) > strtotime('04:00')) || (strtotime($guest_back_sum) > strtotime('04:00')) ? "true" : "false",
@@ -558,6 +561,10 @@ class FinalizedJobsController extends Controller
                 } else {
                     $guest_back_sum = "00:00";
                 }
+
+                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first() : $finalized_job->work_start_place;
+                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first() : $finalized_job->work_end_place;
+
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
@@ -570,7 +577,7 @@ class FinalizedJobsController extends Controller
                     "accomodation" => ($finalized_job->feeding_fee == 32 ? "X" : "") . ($finalized_job->ausland ? $finalized_job->country : ""),
                     "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
                     "train_number" => $finalized_job->zug_nummer,
-                    "from_to" => $finalized_job->work_start_place . " - " . $finalized_job->work_end_place,
+                    "from_to" => $start_station . " - " . $end_station,
                     "client" => $finalized_job->client->name,
                     "learning" => $finalized_job->learning,
                     "fill" => (strtotime($guest_start_sum) > strtotime('04:00')) || (strtotime($guest_back_sum) > strtotime('04:00')) ? "true" : "false",
