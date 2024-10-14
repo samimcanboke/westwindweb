@@ -392,8 +392,8 @@ class FinalizedJobsController extends Controller
                 } else {
                     $guest_back_sum = "00:00";
                 }
-                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first() : $finalized_job->work_start_place;
-                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first() : $finalized_job->work_end_place;
+                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
+                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
 
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
@@ -562,8 +562,8 @@ class FinalizedJobsController extends Controller
                     $guest_back_sum = "00:00";
                 }
 
-                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first() : $finalized_job->work_start_place;
-                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first() : $finalized_job->work_end_place;
+                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
+                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
 
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
