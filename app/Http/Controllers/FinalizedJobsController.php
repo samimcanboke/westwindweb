@@ -853,7 +853,9 @@ class FinalizedJobsController extends Controller
 
                         $sunday_hours = $this->calculateSundayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $initial_date);
                         $total_sunday_holiday_hours = $this->calculateTotalSum($sunday_hours, $total_sunday_holiday_hours);
-
+                        if($deep_morning_hours_tmp == 0){
+                            $deep_morning_hours_tmp = "00:00";
+                        }
                         $night_hours = $this->calculateTotalTimesSum($deep_morning_hours_tmp, $night_hours_tmp);
                         $self_night_hours = sprintf('%02d:%02d', $night_hours->h, $night_hours->i);
                         $total_night_shift = $this->calculateTotalSum($self_night_hours, $total_night_shift);
