@@ -11,9 +11,9 @@ Tourname:  {{$jobPlan->tour_name}}
 <br/>
 Zugnummer: {{$jobPlan->zug_nummer}}
 <br/>
-Von : {{$jobPlan->from}}
+Von : {{$jobPlan->fromStation->short_name}}
 <br/>
-Bis : {{$jobPlan->to}}
+Bis : {{$jobPlan->toStation->short_name}}
 <br/>
 Lok Nummer : {{$jobPlan->locomotive_nummer}}
 <br/>

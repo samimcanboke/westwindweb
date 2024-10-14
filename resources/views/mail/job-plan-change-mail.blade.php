@@ -14,9 +14,9 @@ Zugnummer :  {{$jobPlan->zug_nummer}}
 <br/>
 Lokomotivnummer : {{$jobPlan->locomotive_nummer}}
 <br/>
-Von : {{$jobPlan->from}}
+Von : {{$jobPlan->fromStation->short_name}}
 <br/>
-Nach : {{$jobPlan->to}}
+Nach : {{$jobPlan->toStation->short_name}}
 <br/>
 <br/>
 Mit freundlichen Grüßen,
