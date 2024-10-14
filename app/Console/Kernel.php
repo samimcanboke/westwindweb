@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('backup:database')->hourly();
         $schedule->job(new \App\Jobs\CheckUserCertificatesValidity)->daily();
         $schedule->job(new \App\Jobs\CheckUserBahnCardValidity)->daily();
     }
