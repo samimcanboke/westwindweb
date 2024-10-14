@@ -131,6 +131,8 @@ class JobPlansController extends Controller
         $jobPlan->extra = $request->extra;
         $jobPlan->save();
         if($jobPlan->user_id != null){
+            $jobPlan->from = $jobPlan->fromStation->short_name ?? $jobPlan->from;
+            $jobPlan->to = $jobPlan->toStation->short_name ?? $jobPlan->to;
             Mail::to($jobPlan->user->email)->send(new JobPlanChangeMail($jobPlan, $oldJobPlane));
         }
         return response()->json(["status" => true, "jobPlan" => $jobPlan]);
