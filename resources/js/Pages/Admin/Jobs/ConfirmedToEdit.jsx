@@ -41,7 +41,10 @@ export default function ConfirmedToEdit({ auth }) {
     const [loading, setLoading] = useState(true);
     const [showEdit, setShowEdit] = useState(false);
     const [values, setValues] = useState({});
+    const [showLockführer, setShowLockführer] = useState(false);
     const [drivers, setDrivers] = useState("");
+    const [users, setUsers] = useState([]);
+
     const [clients, setClients] = useState("");
 
     const camelCase = (obj) => {
@@ -123,11 +126,11 @@ export default function ConfirmedToEdit({ auth }) {
     useEffect(() => {
         axios.get(route("users.show")).then((res) => {
             setDrivers(res.data);
+            setUsers(res.data);
         });
         axios.get("/clients").then((res) => {
             setClients(res.data);
         });
-
     }, []);
 
     function handleConfirm(e) {
@@ -469,84 +472,292 @@ export default function ConfirmedToEdit({ auth }) {
                                                         )}
                                                     <br />
 
-                                                    <ToggleSwitch
-                                                        checked={values.cancel}
-                                                        label="Storniert"
-                                                        id="cancel"
-                                                        name="cancel"
-                                                        onChange={(value) => {
+                                                    <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
+                                        <ToggleSwitch
+                                            checked={values.cancel}
+                                            label="Storniert"
+                                            id="cancel"
+                                            name="cancel"
+                                            onChange={(value) => {
+                                                setFieldValue("cancel", value);
+                                            }}
+                                        />
+                                        {/*
+                                        <ToggleSwitch
+                                            checked={values.ausland}
+                                            label="Ausland"
+                                            id="ausland"
+                                            name="ausland"
+                                            onChange={(value) => {
+
+                                                setFieldValue(
+                                                    "ausland",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        */}
+                                        <ToggleSwitch
+                                            checked={values.ausland}
+                                            label="Ausland"
+                                            id="ausland"
+                                            name="ausland"
+                                            onChange={(value) => {
+                                                if (value) {
+                                                    if (values.accomodation) {
+                                                        if (
+                                                            values.country ===
+                                                            "nl"
+                                                        ) {
                                                             setFieldValue(
-                                                                "cancel",
-                                                                value
+                                                                "feedingFee",
+                                                                47
                                                             );
-                                                        }}
-                                                    />
-
-                                                    <br />
-
-                                                    <ToggleSwitch
-                                                        checked={
-                                                            values.accomodation
+                                                        } else if (
+                                                            values.country ===
+                                                            "ch"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                64
+                                                            );
+                                                        } else {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                32
+                                                            );
                                                         }
-                                                        label="Unterkunft"
-                                                        id="accomodation"
-                                                        name="accomodation"
-                                                        onChange={(value) => {
-                                                            if (value) {
-                                                                setFieldValue(
-                                                                    "feedingFee",
-                                                                    32
-                                                                );
+                                                    } else {
+                                                        if (
+                                                            values.country ===
+                                                            "nl"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                32
+                                                            );
+                                                        } else if (
+                                                            values.country ===
+                                                            "ch"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                43
+                                                            );
+                                                        }
+                                                    }
+                                                } else {
+                                                    if (values.accomodation) {
+
+                                                        setFieldValue("feedingFee", 32);
+
+
+                                                    } else {
+                                                        setFieldValue("feedingFee", 16);
+                                                    }
+                                                }
+                                                setFieldValue("ausland", value);
+                                            }}
+                                        />
+
+                                        <ToggleSwitch
+                                            checked={values.accomodation}
+                                            label="Unterkunft"
+                                            id="accomodation"
+                                            name="accomodation"
+                                            onChange={(value) => {
+
+                                                setFieldValue(
+                                                    "accomodation",
+                                                    value
+                                                );
+                                                if (value) {
+                                                    if (values.ausland) {
+                                                        if (
+                                                            values.country ===
+                                                            "nl"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                47
+                                                            );
+                                                        } else if (
+                                                            values.country ===
+                                                            "ch"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                64
+                                                            );
+                                                        }
+                                                    } else {
+                                                        setFieldValue(
+                                                            "feedingFee",
+                                                            32
+                                                        );
+                                                    }
+                                                } else {
+                                                    if (values.ausland) {
+                                                        if (
+                                                            values.country ===
+                                                            "nl"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                32
+                                                            );
+                                                        } else if (
+                                                            values.country ===
+                                                            "ch"
+                                                        ) {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                43
+                                                            );
+                                                        } else {
+                                                            setFieldValue(
+                                                                "feedingFee",
+                                                                0
+                                                            );
+                                                        }
+                                                    } else {
+                                                        setFieldValue(
+                                                            "feedingFee",
+                                                            16
+                                                        );
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.bereitschaft}
+                                            label="Bereitschaft"
+                                            id="bereitschaft"
+                                            name="bereitschaft"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "bereitschaft",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.ausbildung}
+                                            label="Ausbildung"
+                                            id="ausbildung"
+                                            name="ausbildung"
+                                            onChange={(value) => {
+                                                if (value) {
+                                                    setShowLockführer(true);
+                                                } else {
+                                                    setShowLockführer(false);
+                                                }
+                                                setFieldValue(
+                                                    "ausbildung",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.learning}
+                                            label="Streckenkunde"
+                                            id="learning"
+                                            name="learning"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "learning",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="max-w-md mt-5">
+                                        {values.ausland && (
+                                            <div>
+                                                <Label className={errors.country  ? "text-red-500" : ""}>Land</Label>
+                                                <Select
+                                                    id="country"
+                                                    name="country"
+                                                    placeholder="Land"
+                                                    onChange={(e) => {
+                                                        setFieldValue("country", e.target.value);
+                                                        if (values.accomodation) {
+                                                            if (e.target.value === "nl") {
+                                                                setFieldValue("feedingFee", 47);
+                                                            } else if (e.target.value === "ch") {
+                                                                setFieldValue("feedingFee", 64);
+                                                            } else {
+                                                                setFieldValue("feedingFee", 32);
                                                             }
-                                                            setFieldValue(
-                                                                "accomodation",
-                                                                value
-                                                            );
-                                                        }}
-                                                    />
-                                                    <br />
-                                                    <ToggleSwitch
-                                                        checked={
-                                                            values.bereitschaft
+                                                        } else {
+                                                            if (e.target.value === "nl") {
+                                                                setFieldValue("feedingFee", 32);
+                                                            } else if (e.target.value === "ch") {
+                                                                setFieldValue("feedingFee", 43);
+                                                            } else {
+                                                                setFieldValue("feedingFee", 16);
+                                                            }
                                                         }
-                                                        label="Bereitschaft"
-                                                        id="bereitschaft"
-                                                        name="bereitschaft"
-                                                        onChange={(value) => {
-                                                            setFieldValue(
-                                                                "bereitschaft",
-                                                                value
-                                                            );
-                                                        }}
-                                                    />
-                                                    <br />
-                                                    <ToggleSwitch
-                                                        checked={
-                                                            values.learning
-                                                        }
-                                                        label="Streckenkunde"
-                                                        id="learning"
-                                                        name="learning"
-                                                        onChange={(value) => {
-                                                            setFieldValue(
-                                                                "learning",
-                                                                value
-                                                            );
-                                                        }}
-                                                    />
-                                                    <br />
-                                                    <ToggleSwitch
-                                                        checked={values.extra}
-                                                        label="Extra"
-                                                        id="extra"
-                                                        name="extra"
-                                                        onChange={(value) => {
-                                                            setFieldValue(
-                                                                "extra",
-                                                                value
-                                                            );
-                                                        }}
-                                                    />
+                                                    }}
+                                                    value={values.country}
+                                                >
+                                                    <option value="nl">
+                                                        Niederlande
+                                                    </option>
+                                                    <option value="ch">
+                                                        Schweiz
+                                                    </option>
+                                                </Select>
+                                                {errors.country  && (
+                                                <p className="text-red-500">
+                                                    *{errors.country}
+                                                </p>
+                                            )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {showLockführer && (
+                                        <div className="max-w-md mt-5">
+                                            <div className="mb-2 block">
+                                                <Label
+                                                    className={errors.user ? "text-red-500" : ""}
+                                                    htmlFor="user"
+                                                    value="Wählen Sie Lockführer"
+                                                />
+                                            </div>
+                                            <Select
+                                                id="user"
+                                                name="user"
+                                                required
+                                                onChange={(e) => {
+                                                    setFieldValue(
+                                                        "user",
+                                                        e.target.value
+                                                    );
+                                                }}
+                                            >
+                                                <option>Wählen Sie...</option>
+                                                {users &&
+                                                    users.length > 0 &&
+                                                    users.map((user) => (
+                                                        <option
+                                                            key={user.id}
+                                                            value={user.id}
+                                                        >
+                                                            {user.name}
+                                                        </option>
+                                                    ))}
+                                            </Select>
+                                            {errors.user  && (
+                                                <p className="text-red-500">
+                                                    *{errors.user}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                    )}
                                                     <br />
                                                     <Label>Kommentar</Label>
                                                     <Textarea
@@ -670,15 +881,17 @@ export default function ConfirmedToEdit({ auth }) {
                                                                 ""
                                                             }
                                                         >
-                                                            <option value={0}>
-                                                                0€
-                                                            </option>
-                                                            <option value={16}>
-                                                                16€
-                                                            </option>
-                                                            <option value={32}>
-                                                                32€
-                                                            </option>
+                                                            <option value={0}>0€</option>
+                                            <option value={16}>16€</option>
+                                            <option value={43} disabled={!values.ausland}>43€</option>
+                                            <option value={47} disabled={!values.ausland}>47€</option>
+                                            <option value={64} disabled={!values.ausland}>64€</option>
+                                            <option
+                                                value={32}
+                                                disabled={!values.accomodation && !values.ausland}
+                                            >
+                                                32€
+                                            </option>
                                                         </Select>
                                                     </div>
                                                 </AccordionContent>
