@@ -28,7 +28,7 @@ const initialValues = {
     from: "",
     to: "",
     description: "",
-    client: 1,
+    client: 0,
     extra: false,
 };
 
