@@ -269,6 +269,7 @@ export default function Planner({ auth }) {
                                         );
                                         if (job.status === 200) {
                                             setOpenDetailModal(true);
+                                            console.log(job.data);
                                             setEditingJob(job.data);
                                         }
                                     } catch (e) {

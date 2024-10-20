@@ -40,10 +40,12 @@ class JobPlansController extends Controller
         $jobs = JobPlans::whereNotNull('user_id')
             ->with(['toStation:id,short_name', 'fromStation:id,short_name'])
             ->get();
-
+        
         foreach($jobs as $job){
             $job->to = $job->toStation->short_name ?? $job->to;
             $job->from = $job->fromStation->short_name ?? $job->from;
+            $job->toStation = $job->toStation->short_name ?? "";
+            $job->fromStation = $job->fromStation->short_name ?? "";
         }
         return response()->json($jobs);
     }
@@ -94,7 +96,9 @@ class JobPlansController extends Controller
      */
     public function show(Request $request)
     {
-        $jobPlan = JobPlans::where('id',$request->id)->first();
+        $jobPlan = JobPlans::where('id',$request->id)->with(['toStation:id,short_name', 'fromStation:id,short_name'])->first();
+        $jobPlan->to = $jobPlan->toStation->short_name ?? $jobPlan->to;
+        $jobPlan->from = $jobPlan->fromStation->short_name ?? $jobPlan->from;
         return response()->json($jobPlan);
     }
 
