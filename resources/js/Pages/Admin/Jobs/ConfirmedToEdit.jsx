@@ -327,6 +327,7 @@ export default function ConfirmedToEdit({ auth }) {
                                             getUnconfirmed();
                                             setShowEdit(false);
                                             setSubmitting(false);
+                                            location.reload();
                                         }
                                     });
                             }}
@@ -642,6 +643,7 @@ export default function ConfirmedToEdit({ auth }) {
                                             }}
                                         />
                                         <ToggleSwitch
+                                            
                                             checked={values.ausbildung}
                                             label="Ausbildung"
                                             id="ausbildung"
@@ -657,7 +659,8 @@ export default function ConfirmedToEdit({ auth }) {
                                                     value
                                                 );
                                             }}
-                                        />
+                                        />      
+                                     
                                         <ToggleSwitch
                                             checked={values.learning}
                                             label="Streckenkunde"
@@ -666,6 +669,19 @@ export default function ConfirmedToEdit({ auth }) {
                                             onChange={(value) => {
                                                 setFieldValue(
                                                     "learning",
+                                                    value
+                                                );
+                                            }}
+                                        />
+
+                                        <ToggleSwitch
+                                            checked={values.extra}
+                                            label="Extra"
+                                            id="extra"
+                                            name="extra"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "extra",
                                                     value
                                                 );
                                             }}
@@ -730,6 +746,7 @@ export default function ConfirmedToEdit({ auth }) {
                                             <Select
                                                 id="user"
                                                 name="user"
+                                                value={values.user}
                                                 required
                                                 onChange={(e) => {
                                                     setFieldValue(
