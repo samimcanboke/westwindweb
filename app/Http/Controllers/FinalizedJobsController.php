@@ -1638,7 +1638,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->locomotive_number = $request->locomotive_number;
         $finalizedJob->cancel = $request->cancel;
         $finalizedJob->ausbildung = $request->ausbildung;
-        $finalizedJob->user = (int) $request->user;
+        $finalizedJob->ausbilder = (int) $request->ausbilder;
         $finalizedJob->extra = $request->extra;
         $finalizedJob->accomodation = $request->accomodation;
         $finalizedJob->bereitschaft = $request->bereitschaft;
