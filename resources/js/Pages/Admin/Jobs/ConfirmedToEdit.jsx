@@ -734,7 +734,7 @@ export default function ConfirmedToEdit({ auth }) {
                                         )}
                                     </div>
 
-                                    {showLockführer && (
+                                    {values.ausbildung && (
                                         <div className="max-w-md mt-5">
                                             <div className="mb-2 block">
                                                 <Label
