@@ -785,7 +785,7 @@ class FinalizedJobsController extends Controller
 
 
                 $feeding_fee += $finalized_job->feeding_fee;
-                if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel && $finalized_job->guest) {
+                if ((!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel) || $finalized_job->guest) {
                     $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
                     $total_public_holiday_hours = $this->calculateTotalSum($public_holiday_hours, $total_public_holiday_hours);
 
