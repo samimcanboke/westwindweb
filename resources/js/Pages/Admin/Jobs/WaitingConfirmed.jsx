@@ -255,7 +255,6 @@ export default function WaitingConfirmed({ auth }) {
                                 onSubmit={(values, { setSubmitting }) => {
                                     setSubmitting(true);
                                     setLoading(true);
-         
                                     axios
                                         .post(
                                             route("update-draft-job-inside"),
@@ -640,6 +639,25 @@ export default function WaitingConfirmed({ auth }) {
                                                                         setFieldValue(
                                                                             "learning",
                                                                             value
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
+                                                                        values.guest
+                                                                    }
+                                                                    label="Gastfahrt Tour"
+                                                                    id="guest"
+                                                                    name="guest"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        console.log(value);
+                                                                        setFieldValue(
+                                                                            "guest",
+                                                                            value ? 1 : 0
                                                                         );
                                                                     }}
                                                                 />

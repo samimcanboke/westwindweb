@@ -267,6 +267,11 @@ export default function DraftJobs({ auth }) {
                                     );
                                     setSubmitting(true);
                                     setLoading(true);
+                                    values.guest = values.guest ? 1 : 0;
+                                    values.cancel = values.cancel ? 1 : 0;
+                                    values.ausland = values.ausland ? 1 : 0;
+                                    values.accomodation = values.accomodation ? 1 : 0;
+                                    values.learning = values.learning ? 1 : 0;
                                     axios
                                         .post(
                                             "/update-draft-jobs",
@@ -627,6 +632,22 @@ export default function DraftJobs({ auth }) {
                                                                 ) => {
                                                                     setFieldValue(
                                                                         "learning",
+                                                                        value
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <ToggleSwitch
+                                                                checked={
+                                                                    values.learning
+                                                                }
+                                                                label="Gastfahr Tour"
+                                                                id="guest"
+                                                                name="guest"
+                                                                onChange={(
+                                                                    value
+                                                                ) => {
+                                                                    setFieldValue(
+                                                                        "guest",
                                                                         value
                                                                     );
                                                                 }}

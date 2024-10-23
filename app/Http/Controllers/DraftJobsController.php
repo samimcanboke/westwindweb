@@ -41,6 +41,7 @@ class DraftJobsController extends Controller
         $draftJob->tour_name = $request->tourName;
         $draftJob->locomotive_number = $request->locomotiveNumber;
         $draftJob->cancel = $request->cancel;
+        $draftJob->guest = $request->guest;
         $draftJob->accomodation = $request->accomodation;
         $draftJob->bereitschaft = $request->bereitschaft;
         $draftJob->comment = $request->comment;
@@ -100,6 +101,7 @@ class DraftJobsController extends Controller
         $draftJob->client_id = $request->client_id;
         $draftJob->initial_date = $request->initial_date;
         $draftJob->zug_nummer = $request->zug_nummer;
+        $draftJob->guest = $request->guest;
         $draftJob->tour_name = $request->tour_name;
         $draftJob->locomotive_number = $request->locomotive_number;
         $draftJob->cancel = $request->cancel;
@@ -144,6 +146,7 @@ class DraftJobsController extends Controller
         $draftJob->initial_date = $request->initial_date ?? $draftJob->initial_date;
         $draftJob->zug_nummer = $request->zug_nummer ?? $draftJob->zug_nummer;
         $draftJob->tour_name = $request->tour_name ?? $draftJob->tour_name;
+        $draftJob->guest = $request->guest ?? $draftJob->guest;
         $draftJob->locomotive_number = $request->locomotive_number ?? $draftJob->locomotive_number;
         $draftJob->cancel = $request->cancel ?? $draftJob->cancel;
         $draftJob->extra = $request->extra ?? $draftJob->extra;
@@ -195,6 +198,7 @@ class DraftJobsController extends Controller
         $finalized->user_id = $user_id;
         $finalized->client_id = $draft->client_id;
         $finalized->initial_date = $draft->initial_date;
+        $finalized->guest = $draft->guest;
         $finalized->zug_nummer = $draft->zug_nummer;
         $finalized->tour_name = $draft->tour_name;
         $finalized->locomotive_number = $draft->locomotive_number;

@@ -673,6 +673,18 @@ export default function ConfirmedToEdit({ auth }) {
                                                 );
                                             }}
                                         />
+                                         <ToggleSwitch
+                                            checked={values.guest}
+                                            label="Gastfahrt Tour"
+                                            id="guest"
+                                            name="guest"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "guest",
+                                                    value ? 1 : 0
+                                                );
+                                            }}
+                                        />
 
                                         <ToggleSwitch
                                             checked={values.extra}

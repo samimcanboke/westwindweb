@@ -1632,6 +1632,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->client_id = $request->client_id;
         $finalizedJob->initial_date = $request->initial_date;
         $finalizedJob->zug_nummer = $request->zug_nummer;
+        $finalizedJob->guest = $request->guest;
         $finalizedJob->tour_name = $request->tour_name;
         $finalizedJob->learning = $request->learning;
         $finalizedJob->ausland = $request->ausland;
@@ -1681,6 +1682,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->accomodation = $request->accomodation;
         $finalizedJob->bereitschaft = $request->bereitschaft;
         $finalizedJob->early_exit = $request->early_exit;
+        $finalizedJob->guest = $request->guest;
         $finalizedJob->late_enter = $request->late_enter;
         $finalizedJob->comment = $request->comment;
         $finalizedJob->feeding_fee = $request->feeding_fee;

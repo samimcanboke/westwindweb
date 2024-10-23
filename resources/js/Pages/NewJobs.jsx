@@ -27,6 +27,7 @@ const initialValues = {
     zugNummer: "",
     tourName: "",
     locomotiveNumber: "",
+    guest: false,
     cancel: false,
     accomodation: false,
     bereitschaft: false,
@@ -196,7 +197,6 @@ export default function NewJobs({ auth }) {
                 onSubmit={(values, { setSubmitting, setFieldValue }) => {
                     setSubmitting(true);
                     values.images = files;
-                    console.log(values.images);
                     values.initialDate = moment(values.initialDate)
                         .utcOffset(0)
                         .toDate();
@@ -229,6 +229,7 @@ export default function NewJobs({ auth }) {
                     values.bereitschaft = values.bereitschaft ? 1 : 0;
                     values.learning = values.learning ? 1 : 0;
                     values.ausland = values.ausland ? 1 : 0;
+                    values.guest = values.guest ? 1 : 0;
                     axios
                         .post("/save-draft-jobs", values)
                         .then((res) => {
@@ -584,6 +585,18 @@ export default function NewJobs({ auth }) {
                                             onChange={(value) => {
                                                 setFieldValue(
                                                     "learning",
+                                                    value
+                                                );
+                                            }}
+                                        />
+                                        <ToggleSwitch
+                                            checked={values.guest}
+                                            label="Gastfahrt Tour"
+                                            id="guest"
+                                            name="guest"
+                                            onChange={(value) => {
+                                                setFieldValue(
+                                                    "guest",
                                                     value
                                                 );
                                             }}
