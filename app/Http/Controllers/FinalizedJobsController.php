@@ -380,7 +380,11 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $finalized_job) {
             try {
                 $initial_date = $finalized_job->initial_date;
-                $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                if ($finalized_job->guest) {
+                    $work_sum = "00:00";
+                } else {
+                    $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                }
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
                     $guest_start_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->guest_start_end_time));
                 } else {
@@ -398,7 +402,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
-                    "work_start_end_time" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
+                    "work_start_end_time" => $finalized_job->guest ? "GF Tour" : $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
                     "work_total" => $work_sum,
                     "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
                     "guest_total_time" => $guest_start_sum,
@@ -546,8 +550,12 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $finalized_job) {
             try {
                 $initial_date = $finalized_job->initial_date;
-                $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-                if ($work_sum == "00:00") {
+                if ($finalized_job->guest) {
+                    $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                } else {
+                    $work_sum = "00:00";
+                }
+                if ($work_sum == "00:00" && !$finalized_job->guest) {
                     $work_sum = "24:00";
                 }
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
@@ -568,7 +576,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
-                    "work_start_end_time" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
+                    "work_start_end_time" => $finalized_job->guest ? "GF Tour" : $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
                     "work_total" => $work_sum,
                     "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
                     "guest_total_time" => $guest_start_sum,
@@ -701,8 +709,8 @@ class FinalizedJobsController extends Controller
 
                     $initial_date = $finalized_job->initial_date;
 
-                    $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-                    if ($work_sum == "00:00") {
+                    $work_sum = $finalized_job->guest ? "00:00" : $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                    if ($work_sum == "00:00" && !$finalized_job->guest) {
                         $work_sum = "24:00";
                     }
                     $guest_start_total = "00:00";
@@ -777,7 +785,7 @@ class FinalizedJobsController extends Controller
 
 
                 $feeding_fee += $finalized_job->feeding_fee;
-                if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel) {
+                if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel && !$finalized_job->guest) {
                     $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
                     $total_public_holiday_hours = $this->calculateTotalSum($public_holiday_hours, $total_public_holiday_hours);
 
@@ -1289,8 +1297,8 @@ class FinalizedJobsController extends Controller
                     $finish_date = Carbon::parse($initial_date)->addDay()->toISOString();
                 }
 
-                $work_sum = $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($finish_date, $finalized_job->work_end_time));
-                if ($work_sum == "00:00") {
+                $work_sum = $finalized_job->guest ? "00:00" : $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($finish_date, $finalized_job->work_end_time));
+                if ($work_sum == "00:00" && !$finalized_job->guest) {
                     $work_sum = "24:00";
                 }
   
@@ -1362,7 +1370,7 @@ class FinalizedJobsController extends Controller
             }
 
             $feeding_fee += $finalized_job->feeding_fee;
-            if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel) {
+            if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel && !$finalized_job->guest) {
                 $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
                 $total_public_holiday_hours = $this->calculateTotalSum($public_holiday_hours, $total_public_holiday_hours);
 
@@ -1486,7 +1494,7 @@ class FinalizedJobsController extends Controller
 
             $data['rows'][] = [
                 "date" => (new DateTime($finalized_job->initial_date))->format('d/m/Y'),
-                "times" => $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
+                "times" => $finalized_job->guest ? "GF Tour" : $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
                 "work_sum" => $work_sum ,
                 "guest_start_times" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
                 "guest_end_times" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
