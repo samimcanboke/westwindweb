@@ -74,46 +74,62 @@ const validationSchema = Yup.object().shape({
         then: () => Yup.string(),
         otherwise: () => Yup.string().required("Required")
     }),
-    workStartPlace: Yup.string().required("Required"),
-    workEndPlace: Yup.string().required("Required"),
-    workStartTime: Yup.string()
-        .required("Required")
-        .test(
-            "is-valid-time",
-            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
-            function (value) {
-                const time = moment(value, "HH:mm");
-                return time.isValid() && time.minute() % 15 === 0;
-            }
-        ),
-    workEndTime: Yup.string()
-        .required("Required")
-        .test(
-            "is-valid-time",
-            "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
-            function (value) {
-                const time = moment(value, "HH:mm");
-                return time.isValid() && time.minute() % 15 === 0;
-            }
-        )
-        .test(
-            "is-valid-duration",
-            "Bei Bereitschafts- oder stornierten Arbeiten darf die Arbeitsendzeit 8 Stunden nicht überschreiten",
-            function (value) {
-                const { cancel, bereitschaft, workStartTime } = this.parent;
-                if (cancel || bereitschaft) {
-                    const start = moment(workStartTime, "HH:mm");
-                    let end = moment(value, "HH:mm");
-                    if (end.isBefore(start)) {
-                        end.add(1, "day");
-                    }
-                    const duration = moment.duration(end.diff(start));
-                    const hours = duration.asHours();
-                    return hours <= 8;
+    workStartPlace: Yup.string().when('guest', {
+        is: true,
+        then: () => Yup.string().notRequired(),
+        otherwise: () => Yup.string().required("Required")
+    }),
+    workEndPlace: Yup.string().when('guest', {
+        is: true,
+        then: () => Yup.string().notRequired(),
+        otherwise: () => Yup.string().required("Required")
+    }),
+    workStartTime: Yup.string().when('guest', {
+        is: true,
+        then: () => Yup.string().notRequired(),
+        otherwise: () => Yup.string()
+            .required("Required")
+            .test(
+                "is-valid-time",
+                "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+                function (value) {
+                    const time = moment(value, "HH:mm");
+                    return time.isValid() && time.minute() % 15 === 0;
                 }
-                return true;
-            }
-        ),
+            )
+    }),
+    workEndTime: Yup.string().when('guest', {
+        is: true,
+        then: () => Yup.string().notRequired(),
+        otherwise: () => Yup.string()
+            .required("Required")
+            .test(
+                "is-valid-time",
+                "Ungültiges Zeitformat. Die Zeit muss ein Vielfaches von 15 Minuten sein.",
+                function (value) {
+                    const time = moment(value, "HH:mm");
+                    return time.isValid() && time.minute() % 15 === 0;
+                }
+            )
+            .test(
+                "is-valid-duration",
+                "Bei Bereitschafts- oder stornierten Arbeiten darf die Arbeitsendzeit 8 Stunden nicht überschreiten",
+                function (value) {
+                    const { cancel, bereitschaft, workStartTime } = this.parent;
+                    if (cancel || bereitschaft) {
+                        const start = moment(workStartTime, "HH:mm");
+                        let end = moment(value, "HH:mm");
+                        if (end.isBefore(start)) {
+                            end.add(1, "day");
+                        }
+                        const duration = moment.duration(end.diff(start));
+                        const hours = duration.asHours();
+                        return hours <= 8;
+                    }
+                    return true;
+                }
+            )
+    }),
     user: Yup.number().when('ausbildung', {
         is: true,
         then: () => Yup.number().required("Required"),
