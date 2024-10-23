@@ -1515,7 +1515,9 @@ class FinalizedJobsController extends Controller
                 "places" => $from_place && $to_place ? $from_place->short_name . " - " . $to_place->short_name : $from . " - " . $to,
                 "client" => $finalized_job->client->name,
             ];
-            $i++;
+            if(!$finalized_job->guest){
+                $i++;
+            }
         }
 
         $hours = floor($total_hours);
