@@ -1891,13 +1891,7 @@ export default function DraftJobs({ auth }) {
                                                     </Button>
                                                 )}
 
-                                                {Object.keys(errors).length > 0 && (
-                                                    <p className="text-red-500">
-                                                        *
-                                                        {JSON.stringify(errors)}
-                                                    </p>
-                                                )}
-
+                                                
                                             </div>
                                         </Form>
                                     );
