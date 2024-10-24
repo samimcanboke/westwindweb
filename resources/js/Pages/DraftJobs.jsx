@@ -1887,8 +1887,16 @@ export default function DraftJobs({ auth }) {
                                                         type="submit"
                                                         className="ml-4"
                                                     >
+
                                                         Speichern
                                                     </Button>
+                                                )}
+
+                                                {Object.keys(errors).length > 0 && (
+                                                    <p className="text-red-500">
+                                                        *
+                                                        {errors}
+                                                    </p>
                                                 )}
 
                                             </div>
