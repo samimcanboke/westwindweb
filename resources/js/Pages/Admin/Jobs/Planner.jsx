@@ -599,9 +599,9 @@ export default function Planner({ auth }) {
                         type: "job",
                         className: "weekend",
                         style: {
-                            background: "#80808080",
+                            background: job.guest ? "red" : "#80808080",
                             zIndex: 50,
-                            color: job.guest ? "red" : "white",
+                            color: "white",
                         },
                     },
 
