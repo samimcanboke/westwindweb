@@ -78,51 +78,6 @@ export default function Planner({ auth }) {
     const [selectedDrivers, setSelectedDrivers] = useState([]);
 
 
-    const format = {
-        year: {
-            long: "",
-            mediumLong: "",
-            medium: "",
-            short: "",
-        },
-        month: {
-            long: "MMMM",
-            mediumLong: "MMMM",
-            medium: "MMMM",
-            short: "MM",
-        },
-        week: {
-            long: "w",
-            mediumLong: "w",
-            medium: "w",
-            short: "w",
-        },
-        day: {
-            long: "dddd, LL",
-            mediumLong: "dddd, LL",
-            medium: "dd D",
-            short: "D",
-        },
-        hour: {
-            long: "dddd, LL, HH:00",
-            mediumLong: "L, HH:00",
-            medium: "HH:00",
-            short: "HH",
-        },
-        minute: {
-            long: "HH:mm",
-            mediumLong: "HH:mm",
-            medium: "HH:mm",
-            short: "mm",
-        },
-        second: {
-            long: "mm:ss",
-            mediumLong: "mm:ss",
-            medium: "mm:ss",
-            short: "ss",
-        },
-    };
-
     const deleteFromuser = async (id) => {
         let oldJob = jobs.find((job) => job.id === id);
         await axios
@@ -615,8 +570,8 @@ export default function Planner({ auth }) {
         });
         await axios.get("/user-confirmed-jobs").then(async (response) => {
             for (const job of response.data) {
-                let workStartTime = job.work_start_time.split(":");
-                let workEndTime = job.work_end_time.split(":");
+                let workStartTime = job.guest ? "00:00" : job.work_start_time.split(":");
+                let workEndTime = job.guest ? "00:01" : job.work_end_time.split(":");
                 let startDate = moment(job.initial_date).set({
                     hour: workStartTime[0],
                     minute: workStartTime[1],
