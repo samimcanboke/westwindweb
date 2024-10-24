@@ -30,6 +30,7 @@ export default function DraftJobs({ auth }) {
     const [showEdit, setShowEdit] = useState(false);
     const [values, setValues] = useState({});
     const [client, setClient] = useState([]);
+    const [showLockführer, setShowLockführer] = useState(false);
 
     const validationSchema = Yup.object().shape({
         initialDate: Yup.date().required("Required"),
@@ -744,6 +745,49 @@ export default function DraftJobs({ auth }) {
                                                                         </option>
                                                                     </Select>
                                                                 </div>
+                                                            )}
+                                                        </div>
+                                                        <div className={showLockführer ? "" : "hidden"}>
+                                                            <Label>Lockführer</Label>
+                                                            {showLockführer && (
+                                                                <div className="max-w-md mt-5">
+                                                                    <div className="mb-2 block">
+                                                                        <Label
+                                                                            className={errors.user ? "text-red-500" : ""}
+                                                                            htmlFor="user"
+                                                                            value="Wählen Sie Lockführer"
+                                                                        />
+                                                                    </div>
+                                                                    <Select
+                                                                        id="user"
+                                                                        name="user"
+                                                                        required
+                                                                        onChange={(e) => {
+                                                                            setFieldValue(
+                                                                                "user",
+                                                                                e.target.value
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <option>Wählen Sie...</option>
+                                                                        {users &&
+                                                                            users.length > 0 &&
+                                                                            users.map((user) => (
+                                                                                <option
+                                                                                    key={user.id}
+                                                                                    value={user.id}
+                                                                                >
+                                                                                    {user.name}
+                                                                                </option>
+                                                                            ))}
+                                                                    </Select>
+                                                                    {errors.user && (
+                                                                        <p className="text-red-500">
+                                                                            *{errors.user}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+
                                                             )}
                                                         </div>
                                                         <Label>Kommenter</Label>
