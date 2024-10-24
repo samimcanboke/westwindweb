@@ -48,17 +48,17 @@ export default function DraftJobs({ auth }) {
             otherwise: () => Yup.string().required("Required")
         }),
         workStartPlace: Yup.string().when('guest', {
-            is: true,
+            is: 1,
             then: () => Yup.string().notRequired(),
             otherwise: () => Yup.string().required("Required")
         }),
         workEndPlace: Yup.string().when('guest', {
-            is: true,
+            is: 1,
             then: () => Yup.string().notRequired(),
             otherwise: () => Yup.string().required("Required")
         }),
         workStartTime: Yup.string().when('guest', {
-            is: true,
+            is: 1,
             then: () => Yup.string().notRequired(),
             otherwise: () => Yup.string()
                 .required("Required")
@@ -72,7 +72,7 @@ export default function DraftJobs({ auth }) {
                 )
         }),
         workEndTime: Yup.string().when('guest', {
-            is: true,
+            is: 1,
             then: () => Yup.string().notRequired(),
             otherwise: () => Yup.string()
                 .required("Required")
@@ -142,9 +142,10 @@ export default function DraftJobs({ auth }) {
     const edit = (draft) => {
         let editingDraft = draft;
         editingDraft.breaks = JSON.parse(draft.breaks);
+        editingDraft.client = draft.client_id;
         setFiles(JSON.parse(draft.files));
         setValues(camelCase(editingDraft));
-        console.log(camelCase(editingDraft));
+
         setShowEdit(true);
     };
 
@@ -305,10 +306,6 @@ export default function DraftJobs({ auth }) {
                                 validationSchema={validationSchema}
                                 onSubmit={(values, { setSubmitting }) => {
                                     values.images = files;
-                                    console.log(
-                                        "düzenlemeye giden",
-                                        values.images
-                                    );
                                     setSubmitting(true);
                                     setLoading(true);
                                     values.guest = values.guest ? 1 : 0;
@@ -316,6 +313,7 @@ export default function DraftJobs({ auth }) {
                                     values.ausland = values.ausland ? 1 : 0;
                                     values.accomodation = values.accomodation ? 1 : 0;
                                     values.learning = values.learning ? 1 : 0;
+                                    values.ausbildung = values.ausbildung ? 1 : 0;
                                     axios
                                         .post(
                                             "/update-draft-jobs",
@@ -713,6 +711,7 @@ export default function DraftJobs({ auth }) {
                                                                     );
                                                                 }}
                                                             />
+                                                         
                                                         </div>
                                                         <br />
                                                         <div className="max-w-md mt-5">
