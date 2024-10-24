@@ -363,8 +363,8 @@ export default function DraftJobs({ auth }) {
                                                             value={
                                                                 values.initialDate
                                                                     ? new Date(
-                                                                          values.initialDate
-                                                                      ).toDateString()
+                                                                        values.initialDate
+                                                                    ).toDateString()
                                                                     : new Date().toDateString()
                                                             }
                                                             onSelectedDateChanged={(
@@ -390,7 +390,7 @@ export default function DraftJobs({ auth }) {
                                                             name="zugNummer"
                                                             className={
                                                                 errors.zugNummer &&
-                                                                touched.zugNummer
+                                                                    touched.zugNummer
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -431,7 +431,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.tourName &&
-                                                                touched.tourName
+                                                                    touched.tourName
                                                                     ? "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -463,7 +463,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.locomotiveNumber &&
-                                                                touched.locomotiveNumber
+                                                                    touched.locomotiveNumber
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -550,9 +550,9 @@ export default function DraftJobs({ auth }) {
                                                                             }
                                                                         }
                                                                     } else {
-                                                                        if(values.accomodation){
+                                                                        if (values.accomodation) {
 
-                                                                                setFieldValue("feedingFee", 32);
+                                                                            setFieldValue("feedingFee", 32);
 
 
                                                                         } else {
@@ -656,6 +656,23 @@ export default function DraftJobs({ auth }) {
                                                                 }}
                                                             />
                                                             <ToggleSwitch
+                                                                checked={values.ausbildung}
+                                                                label="Ausbildung"
+                                                                id="ausbildung"
+                                                                name="ausbildung"
+                                                                onChange={(value) => {
+                                                                    if (value) {
+                                                                        setShowLockführer(true);
+                                                                    } else {
+                                                                        setShowLockführer(false);
+                                                                    }
+                                                                    setFieldValue(
+                                                                        "ausbildung",
+                                                                        value
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <ToggleSwitch
                                                                 checked={
                                                                     values.learning
                                                                 }
@@ -673,7 +690,7 @@ export default function DraftJobs({ auth }) {
                                                             />
                                                             <ToggleSwitch
                                                                 checked={
-                                                                    values.learning
+                                                                    values.guest
                                                                 }
                                                                 label="Gastfahr Tour"
                                                                 id="guest"
@@ -690,45 +707,45 @@ export default function DraftJobs({ auth }) {
                                                         </div>
                                                         <br />
                                                         <div className="max-w-md mt-5">
-                                        {values.ausland && (
-                                            <div>
-                                                <Label>Land</Label>
-                                                <Select
-                                                    id="country"
-                                                    name="country"
-                                                    placeholder="Land"
-                                                    onChange={(e) => {
-                                                        setFieldValue("country", e.target.value);
-                                                        if (values.accomodation) {
-                                                            if (e.target.value === "nl") {
-                                                                setFieldValue("feedingFee", 47);
-                                                            } else if (e.target.value === "ch") {
-                                                                setFieldValue("feedingFee", 64);
-                                                            } else {
-                                                                setFieldValue("feedingFee", 32);
-                                                            }
-                                                        } else {
-                                                            if (e.target.value === "nl") {
-                                                                setFieldValue("feedingFee", 32);
-                                                            } else if (e.target.value === "ch") {
-                                                                setFieldValue("feedingFee", 43);
-                                                            } else {
-                                                                setFieldValue("feedingFee", 16);
-                                                            }
-                                                        }
-                                                    }}
-                                                    value={values.country}
-                                                >
-                                                    <option value="nl">
-                                                        Niederlande
-                                                    </option>
-                                                    <option value="ch">
-                                                        Schweiz
-                                                    </option>
-                                                </Select>
-                                            </div>
-                                        )}
-                                    </div>
+                                                            {values.ausland && (
+                                                                <div>
+                                                                    <Label>Land</Label>
+                                                                    <Select
+                                                                        id="country"
+                                                                        name="country"
+                                                                        placeholder="Land"
+                                                                        onChange={(e) => {
+                                                                            setFieldValue("country", e.target.value);
+                                                                            if (values.accomodation) {
+                                                                                if (e.target.value === "nl") {
+                                                                                    setFieldValue("feedingFee", 47);
+                                                                                } else if (e.target.value === "ch") {
+                                                                                    setFieldValue("feedingFee", 64);
+                                                                                } else {
+                                                                                    setFieldValue("feedingFee", 32);
+                                                                                }
+                                                                            } else {
+                                                                                if (e.target.value === "nl") {
+                                                                                    setFieldValue("feedingFee", 32);
+                                                                                } else if (e.target.value === "ch") {
+                                                                                    setFieldValue("feedingFee", 43);
+                                                                                } else {
+                                                                                    setFieldValue("feedingFee", 16);
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                        value={values.country}
+                                                                    >
+                                                                        <option value="nl">
+                                                                            Niederlande
+                                                                        </option>
+                                                                        <option value="ch">
+                                                                            Schweiz
+                                                                        </option>
+                                                                    </Select>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                         <Label>Kommenter</Label>
                                                         <Textarea
                                                             id="comment"
@@ -737,7 +754,7 @@ export default function DraftJobs({ auth }) {
                                                             rows={4}
                                                             className={
                                                                 errors.comment &&
-                                                                touched.comment
+                                                                    touched.comment
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -925,7 +942,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestStartPlace &&
-                                                                touched.guestStartPlace
+                                                                    touched.guestStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -956,7 +973,7 @@ export default function DraftJobs({ auth }) {
                                                                 name="guestStartTime"
                                                                 className={
                                                                     errors.guestStartTime &&
-                                                                    touched.guestStartTime
+                                                                        touched.guestStartTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1012,7 +1029,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestStartEndPlace &&
-                                                                touched.guestStartEndPlace
+                                                                    touched.guestStartEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1042,7 +1059,7 @@ export default function DraftJobs({ auth }) {
                                                                 name="guestStartEndTime"
                                                                 className={
                                                                     errors.guestStartEndTime &&
-                                                                    touched.guestStartEndTime
+                                                                        touched.guestStartEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1107,7 +1124,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.workStartPlace &&
-                                                                touched.workStartPlace
+                                                                    touched.workStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1145,7 +1162,7 @@ export default function DraftJobs({ auth }) {
                                                                 id="workStartTime"
                                                                 className={
                                                                     errors.workStartTime &&
-                                                                    touched.workStartTime
+                                                                        touched.workStartTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-red-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-red-300 p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1185,7 +1202,7 @@ export default function DraftJobs({ auth }) {
                                                         Zug Abfahrt und Ankunft
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                      
+
                                                         <LocationField
                                                             id="trainStartPlace"
                                                             name="trainStartPlace"
@@ -1203,11 +1220,11 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.trainStartPlace &&
-                                                                touched.trainStartPlace
+                                                                    touched.trainStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
-                                                           
+
                                                         />
                                                         {errors.trainStartPlace &&
                                                             touched.trainStartPlace && (
@@ -1230,7 +1247,7 @@ export default function DraftJobs({ auth }) {
                                                                 name="trainStartTime"
                                                                 className={
                                                                     errors.trainStartTime &&
-                                                                    touched.trainStartTime
+                                                                        touched.trainStartTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1268,7 +1285,7 @@ export default function DraftJobs({ auth }) {
                                                                     }
                                                                 </p>
                                                             )}
-                                                       
+
                                                         <LocationField
                                                             id="trainEndPlace"
                                                             name="trainEndPlace"
@@ -1287,7 +1304,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.trainEndPlace &&
-                                                                touched.trainEndPlace
+                                                                    touched.trainEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1313,7 +1330,7 @@ export default function DraftJobs({ auth }) {
                                                                 name="trainEndTime"
                                                                 className={
                                                                     errors.trainEndTime &&
-                                                                    touched.trainEndTime
+                                                                        touched.trainEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1374,7 +1391,7 @@ export default function DraftJobs({ auth }) {
                                                                         values
                                                                             .breaks
                                                                             .length >
-                                                                            0 &&
+                                                                        0 &&
                                                                         values.breaks.map(
                                                                             (
                                                                                 breakItem,
@@ -1519,7 +1536,7 @@ export default function DraftJobs({ auth }) {
                                                         Dienst Ende
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                      
+
                                                         <LocationField
                                                             id="workEndPlace"
                                                             placeholder="Dienst Ende Ort"
@@ -1536,7 +1553,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.workEndPlace &&
-                                                                touched.workEndPlace
+                                                                    touched.workEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1570,7 +1587,7 @@ export default function DraftJobs({ auth }) {
                                                                 id="workEndTime"
                                                                 className={
                                                                     errors.workEndTime &&
-                                                                    touched.workEndTime
+                                                                        touched.workEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-red-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-red-300 p-2.5 dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1637,7 +1654,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestEndPlace &&
-                                                                touched.guestEndPlace
+                                                                    touched.guestEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1666,7 +1683,7 @@ export default function DraftJobs({ auth }) {
                                                                 id="guestEndTime"
                                                                 className={
                                                                     errors.guestEndTime &&
-                                                                    touched.guestEndTime
+                                                                        touched.guestEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1722,7 +1739,7 @@ export default function DraftJobs({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestEndEndPlace &&
-                                                                touched.guestEndEndPlace
+                                                                    touched.guestEndEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1751,7 +1768,7 @@ export default function DraftJobs({ auth }) {
                                                                 id="guestEndEndTime"
                                                                 className={
                                                                     errors.guestEndEndTime &&
-                                                                    touched.guestEndEndTime
+                                                                        touched.guestEndEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
