@@ -31,6 +31,8 @@ export default function DraftJobs({ auth }) {
     const [values, setValues] = useState({});
     const [client, setClient] = useState([]);
     const [showLockführer, setShowLockführer] = useState(false);
+    const [users, setUsers] = useState([]);
+
 
     const validationSchema = Yup.object().shape({
         initialDate: Yup.date().required("Required"),
@@ -203,7 +205,13 @@ export default function DraftJobs({ auth }) {
                 setClient(res.data);
             }
         });
+        axios.get(route("users.show")).then((res) => {
+            if (res.status == 200) {
+                setUsers(res.data);
+            }
+        });
     }, []);
+
 
     return (
         <AuthenticatedLayout
