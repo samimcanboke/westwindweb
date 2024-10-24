@@ -677,7 +677,7 @@ export default function DraftJobs({ auth }) {
                                                                     }
                                                                     setFieldValue(
                                                                         "ausbildung",
-                                                                        value
+                                                                        value ? 1 : 0
                                                                     );
                                                                 }}
                                                             />
