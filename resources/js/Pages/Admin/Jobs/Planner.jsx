@@ -601,8 +601,10 @@ export default function Planner({ auth }) {
                         style: {
                             background: "#80808080",
                             zIndex: 50,
+                            color: job.guest ? "red" : "white",
                         },
                     },
+
                 };
                 userFinalizedJobs.push(newUserFinalizedJob);
             }
