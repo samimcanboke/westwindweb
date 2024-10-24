@@ -571,7 +571,7 @@ export default function Planner({ auth }) {
         await axios.get("/user-confirmed-jobs").then(async (response) => {
             for (const job of response.data) {
                 let workStartTime = job.guest ? "00:00" : job.work_start_time.split(":");
-                let workEndTime = job.guest ? "00:01" : job.work_end_time.split(":");
+                let workEndTime = job.guest ? "04:00" : job.work_end_time.split(":");
                 let startDate = moment(job.initial_date).set({
                     hour: workStartTime[0],
                     minute: workStartTime[1],
@@ -592,7 +592,7 @@ export default function Planner({ auth }) {
                     group: job.user_id,
                     start_time: startDate,
                     end_time: endDate,
-                    title: "",
+                    title: job.guest ? "GF Tour" : "",
                     canMove: false,
                     canResize: false,
                     itemProps: {
