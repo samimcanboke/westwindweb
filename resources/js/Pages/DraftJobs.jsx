@@ -1895,7 +1895,7 @@ export default function DraftJobs({ auth }) {
                                                 {Object.keys(errors).length > 0 && (
                                                     <p className="text-red-500">
                                                         *
-                                                        {errors}
+                                                        {JSON.stringify(errors)}
                                                     </p>
                                                 )}
 
