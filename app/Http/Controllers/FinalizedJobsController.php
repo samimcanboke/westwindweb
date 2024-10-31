@@ -1284,7 +1284,7 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
-                //if($finalized_job->id !=  509){
+                //if($finalized_job->id !=  664){
                 //    continue;
                 //}
 
@@ -1328,10 +1328,9 @@ class FinalizedJobsController extends Controller
                 if (gettype($breaks) == "string") {
                     $breaks = json_decode($breaks);
                 }
-
                 if ($breaks) {
                     foreach ($breaks as $break) {
-                        if(isset($break->start) && isset($break->end)){   
+                        if(isset($break->start) && isset($break->end)){ 
                             $start = $this->convertTimeToDatetime($initial_date, $break->start);
                             $end = $this->convertTimeToDatetime($initial_date, $break->end);
                             if($end < $start){
@@ -1363,7 +1362,6 @@ class FinalizedJobsController extends Controller
 
                 $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
                 $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
-
                 $total_work_sum = $this->calculateTotalSum($work_sum, $total_work_sum);
             } catch (\Exception $ex) {
                 dd($finalized_job,$ex);

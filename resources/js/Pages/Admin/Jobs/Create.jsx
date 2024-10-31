@@ -14,11 +14,13 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import moment from "moment";
 import LocationField from "@/Components/LocationField";
+import MultipleFileUpload from "@/Components/MultipleFileUpload";
 
 const initialValues = {
+    guest: 0,
     start_pause_time: "",
     end_pause_time: "",
-    start_date: "",
+    start_date: moment().format("YYYY-MM-DD"),
     start_time: "",
     end_date: "",
     end_time: "",
@@ -30,13 +32,14 @@ const initialValues = {
     description: "",
     client: 0,
     extra: false,
+    files: [],
 };
 
 const validationSchema = Yup.object().shape({
     client: Yup.number().required("Required"),
-    start_date: Yup.date().required("Required"),
+    start_date: Yup.date().nullable().required("Required"),
     start_time: Yup.string().required("Required"),
-    end_date: Yup.date().required("Required").when(
+    end_date: Yup.date().nullable().required("Required").when(
         "start_date",
         (eventStartDate, schema) => eventStartDate && schema.min(eventStartDate, "Enddatum muss grßer als Startdatum sein")),
     end_time: Yup.string().required("Required"),
@@ -53,13 +56,18 @@ const validationSchema = Yup.object().shape({
 
 export default function Dashboard({ auth }) {
     const [clients, setClients] = useState([]);
+    const [files, setFiles] = useState([]);
     useEffect(() => {
         axios.get("/clients").then((res) => {
             setClients(res.data);
         });
     }, []);
 
-    const calculateFinishTime = (start_date,start_time) => {
+    useEffect(() => {
+        console.log(files);
+    }, [files]);
+
+    const calculateFinishTime = (start_date,start_time,guest) => {
         let date = moment(start_date);
         let breakDate = moment(start_date);
         let breakDateEnd = moment(start_date);
@@ -79,8 +87,8 @@ export default function Dashboard({ auth }) {
             });
         }
         let dtfn = date;
-        let finishDateTime = dtfn.add(10, 'hours').format('YYYY-MM-DD HH:mm');
-       return {finishDateTime: finishDateTime, breakStart: breakDate.add(5, 'hours').format('HH:mm'), breakEnd: breakDateEnd.add(5.75, 'hours').format('HH:mm')};
+        let finishDateTime = dtfn.add(guest ? 8 : 10, 'hours').format('YYYY-MM-DD HH:mm');
+       return {finishDateTime: finishDateTime, breakStart: breakDate.add(5, 'hours').format('HH:mm'), breakEnd: breakDateEnd.add(guest ? 5.75 : 5, 'hours').format('HH:mm')};
     }
 
     const calculateBreakTime = (start_date,start_time,end_date,end_time) => {
@@ -119,8 +127,13 @@ export default function Dashboard({ auth }) {
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting, resetForm  }) => {
+                validate={(v)=>{
+                    console.log("validate",v);
+                }}
+                onSubmit={(values, { setSubmitting, resetForm,setFieldValue  }) => {
                     setSubmitting(true);
+                    setFieldValue("files", files);
+
                     axios.post("/planner/jobs", values).then((res) => {
                         if (res.data.status) {
                             Swal.fire(
@@ -129,6 +142,7 @@ export default function Dashboard({ auth }) {
                                 "success"
                             );
                             setSubmitting(false);
+                            setFiles([]);
                             resetForm();
                         } else {
                             Swal.fire(
@@ -138,6 +152,7 @@ export default function Dashboard({ auth }) {
                             );
                         }
                     });
+
                     setSubmitting(false);
                 }}
             >
@@ -150,7 +165,23 @@ export default function Dashboard({ auth }) {
                     isSubmitting,
                 }) => (
                     <Form onSubmit={handleSubmit}>
+                        <div className="flex justify-center mt-10">
+                                <ToggleSwitch
+                                    checked={values.guest}
+                                    label="Gastfahrt Tour"
+                                    id="guest"
+                                    name="guest"
+                                    onChange={(value) => {
+                                        setFieldValue("guest", value ? 1 : 0);
+                                        setFieldValue("tour_name", value ? "GF TOUR" : values.tour_name);
+                                        setFieldValue("zug_nummer", value ? "GF" : values.zug_nummer);
+                                        setFieldValue("locomotive_nummer", value ? "GF" : values.locomotive_nummer);
+                                       
+                                    }}
+                                />
+                            </div>
                         <div className="container mx-auto mt-10 flex flex-row justify-center">
+                            
                             <div className="">
                                 <Label>Startdatum</Label>
                                 <div className="flex">
@@ -182,7 +213,7 @@ export default function Dashboard({ auth }) {
                                         value={values.start_time}
                                         onChange={(e) => {
                                             setFieldValue("start_time", e.target.value);
-                                            const {finishDateTime, breakStart,breakEnd} = calculateFinishTime(values.start_date, e.target.value);
+                                            const {finishDateTime, breakStart,breakEnd} = calculateFinishTime(values.start_date, e.target.value, values.guest);
                                             const [finishDate, finishHour] = finishDateTime.split(' ');
                                             setFieldValue("end_date", finishDate);
                                             setFieldValue("end_time", finishHour);
@@ -267,6 +298,7 @@ export default function Dashboard({ auth }) {
                             </div>
                         </div>
 
+                        {!values.guest && (
                         <div className="container mx-auto mt-10 flex flex-row justify-center">
                             <div className="">
                                 <Label>Start Pausenzeit</Label>
@@ -336,6 +368,7 @@ export default function Dashboard({ auth }) {
                                 </p>
                             </div>
                         </div>
+                        )}
                         
 
                         <div className="container mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -402,7 +435,7 @@ export default function Dashboard({ auth }) {
                                     onChange={(e) => {
                                         setFieldValue("tour_name", e.target.value);
                                     }}
-                                    value={values.tour_name}
+                                    value={values.tour_name }
                                 />
                                 {errors.tour_name && touched.tour_name && (
                                     <p className="text-red-500">
@@ -528,6 +561,9 @@ export default function Dashboard({ auth }) {
                                     <p className="text-red-500">*{errors.client}</p>
                                 )}
                             </div>
+                        </div>
+                        <div className="container mx-auto mt-10">
+                            <MultipleFileUpload images={files} setImages={setFiles} type="pdf" />
                         </div>
 
 

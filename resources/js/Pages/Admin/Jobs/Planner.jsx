@@ -1678,7 +1678,7 @@ export default function Planner({ auth }) {
                                         withoutUserJobs.map((job) => (
                                             <tr
                                                 key={job.id}
-                                                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                                className={`border-b dark:bg-gray-800 dark:border-gray-700 ${job.guest == "1" ? "bg-gray-200" : "bg-white"}`}
                                             >
                                                 <th
                                                     scope="row"

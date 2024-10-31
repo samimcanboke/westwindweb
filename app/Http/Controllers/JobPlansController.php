@@ -63,9 +63,11 @@ class JobPlansController extends Controller
      */
     public function store(Request $request)
     {
+
         $jobPlan = new JobPlans();
         $jobPlan->start_date = Carbon::createFromDate($request->start_date)->format('Y-m-d');
         $jobPlan->end_date = Carbon::createFromDate($request->end_date)->format('Y-m-d');
+        $jobPlan->guest = $request->guest;
         $jobPlan->start_time = $request->start_time;
         $jobPlan->end_time = $request->end_time;
         $jobPlan->zug_nummer = $request->zug_nummer;
@@ -78,6 +80,7 @@ class JobPlansController extends Controller
         $jobPlan->from = $request->from;
         $jobPlan->client_id = $request->client;
         $jobPlan->extra = $request->extra;
+        $jobPlan->files = json_encode($request->files);
         $jobPlan->save();
 
         return response()->json(["status" => true, "jobPlan" => $jobPlan]);
