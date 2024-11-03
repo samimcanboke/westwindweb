@@ -704,10 +704,15 @@ class FinalizedJobsController extends Controller
             $i = 0;
             $feeding_fee = 0;
 
+            $ausbildung_hours = 0;
             foreach ($finalized_jobs as $index => $finalized_job) {
                 try {
 
                     $initial_date = $finalized_job->initial_date;
+
+                    if($finalized_job->ausbildung){
+                        $ausbildung_hours += 1;
+                    }
 
                     $work_sum = $finalized_job->guest ? "00:00" : $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
                     if ($work_sum == "00:00" && !$finalized_job->guest) {
@@ -1034,7 +1039,7 @@ class FinalizedJobsController extends Controller
                     $total_user_advance += $advance->amount;
                 }
             }
-
+            $data['rows'][$user->id]['ausbildung_hours'] = $ausbildung_hours != 0 ? $ausbildung_hours * 22 : "-";
             $data['rows'][$user->id]['user_advance'] = $total_user_advance ? $total_user_advance : null;
 
             $total_user_bonus = 0;
@@ -1050,6 +1055,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['annual_leave_hours'] = $total_annual_leave_hours > 0 ? number_format($total_annual_leave_hours, 2, ',', '') : "-";
                 $data['rows'][$user->id]['sick_leave_hours'] = $total_sick_leave_hours > 0 ? number_format($total_sick_leave_hours, 2, ',', '') : "-";
                 $data['rows'][$user->id]['total_day'] = 0;
+                $data['rows'][$user->id]['ausbildung_hours'] = "-";
                 $data['rows'][$user->id]['name'] = $user->name;
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
                 $data['rows'][$user->id]['total_day'] = 0;
@@ -1067,6 +1073,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['total_work_day_amount'] = "-";
                 $data['rows'][$user->id]['guests'] = "-";
                 $data['rows'][$user->id]['breaks'] = "-";
+                $data['rows'][$user->id]['ausbildung_hours'] = "-";
                 $data['rows'][$user->id]['midnight_shift'] = "-";
                 $data['rows'][$user->id]['night_shift'] = "-";
                 $data['rows'][$user->id]['sub_total'] = "-";
@@ -1078,6 +1085,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['workhours'] = "Aushilfe";
                 $data['rows'][$user->id]['total_work_day_amount'] = "-";
                 $data['rows'][$user->id]['guests'] = "-";
+                $data['rows'][$user->id]['ausbildung_hours'] = "-";
                 $data['rows'][$user->id]['breaks'] = "-";
                 $data['rows'][$user->id]['midnight_shift'] = "-";
                 $data['rows'][$user->id]['night_shift'] = "-";

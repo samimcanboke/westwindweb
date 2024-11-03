@@ -306,27 +306,28 @@ def create_total_excel():
                 ws[f'E{row_num}'] = f"{row_data['workhours']}"
                 ws[f'F{row_num}'] = f"{row_data['guests']}"
                 ws[f'G{row_num}'] = f"{row_data['total_work_day_amount']}"
-                ws[f'H{row_num}'] = f"{row_data['extra_work']}"
-                ws[f'I{row_num}'] = f"{row_data['night_shift']}"
-                ws[f'J{row_num}'] = f"{row_data['midnight_shift']}"
-                ws[f'K{row_num}'] = f"{row_data['sunday_holidays']}"
-                ws[f'L{row_num}'] = f"{row_data['public_holidays']}"
-                ws[f'M{row_num}'] = f"{row_data['annual_leave_hours']}"
-                ws[f'N{row_num}'] = f"{row_data['sick_leave_hours']}"
-                ws[f'O{row_num}'] = f"{row_data['accomodations']}"
+                ws[f'H{row_num}'] = f"{row_data['ausbildung_hours']}"
+                ws[f'I{row_num}'] = f"{row_data['extra_work']}"
+                ws[f'J{row_num}'] = f"{row_data['night_shift']}"
+                ws[f'K{row_num}'] = f"{row_data['midnight_shift']}"
+                ws[f'L{row_num}'] = f"{row_data['sunday_holidays']}"
+                ws[f'M{row_num}'] = f"{row_data['public_holidays']}"
+                ws[f'N{row_num}'] = f"{row_data['annual_leave_hours']}"
+                ws[f'O{row_num}'] = f"{row_data['sick_leave_hours']}"
+                ws[f'P{row_num}'] = f"{row_data['accomodations']}"
 
                 if row_data['user_bonus']:
-                    ws[f'P{row_num}'] = f"+{row_data['user_bonus']} €"
-                    ws[f'P{row_num}'].font = Font(color="00FF00")
-                    ws[f'P{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
+                    ws[f'Q{row_num}'] = f"+{row_data['user_bonus']} €"
+                    ws[f'Q{row_num}'].font = Font(color="00FF00")
+                    ws[f'Q{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
                 else:
-                    ws[f'P{row_num}'] = row_data['user_bonus']
+                    ws[f'Q{row_num}'] = row_data['user_bonus']
                 if row_data['user_advance']:
-                    ws[f'Q{row_num}'] = f"-{row_data['user_advance']} €"
-                    ws[f'Q{row_num}'].font = Font(color="FF0000")
-                    ws[f'Q{row_num}'].fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
+                    ws[f'R{row_num}'] = f"-{row_data['user_advance']} €"
+                    ws[f'R{row_num}'].font = Font(color="FF0000")
+                    ws[f'R{row_num}'].fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
                 else:
-                    ws[f'Q{row_num}'] = row_data['user_advance']
+                    ws[f'R{row_num}'] = row_data['user_advance']
                 row_num += 1
         wb.save("/tmp/result_total.xlsx")
         os.chmod("/tmp/result_total.xlsx", 0o666)
