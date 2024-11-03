@@ -758,11 +758,11 @@ export default function ConfirmedToEdit({ auth }) {
                                             <Select
                                                 id="user"
                                                 name="user"
-                                                value={values.user}
+                                                value={values.ausbilder}
                                                 required
                                                 onChange={(e) => {
                                                     setFieldValue(
-                                                        "user",
+                                                        "ausbilder",
                                                         e.target.value
                                                     );
                                                 }}
