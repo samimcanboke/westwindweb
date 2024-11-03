@@ -287,11 +287,11 @@ def create_total_excel():
             row_num = 10
             for row_data in used_data['rows']:
                 if row_num % 2 != 0:
-                    for col in range(2, 18):  # B to M columns
+                    for col in range(2, 19):  # B to M columns
                         cell = ws.cell(row=row_num, column=col)
                         cell.fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
 
-                for col in range(2, 18):  # B to M columns
+                for col in range(2, 19):  # B to M columns
                     cell = ws.cell(row=row_num, column=col)
                     ws.row_dimensions[row_num].height = 30
                     cell.font = Font(name='Montserrat', size=12, bold=False)
@@ -306,7 +306,7 @@ def create_total_excel():
                 ws[f'E{row_num}'] = f"{row_data['workhours']}"
                 ws[f'F{row_num}'] = f"{row_data['guests']}"
                 ws[f'G{row_num}'] = f"{row_data['total_work_day_amount']}"
-                ws[f'H{row_num}'] = f"{row_data['ausbildung_hours']}"
+                ws[f'H{row_num}'] = f"{row_data['ausbildung_hours']} €"
                 ws[f'I{row_num}'] = f"{row_data['extra_work']}"
                 ws[f'J{row_num}'] = f"{row_data['night_shift']}"
                 ws[f'K{row_num}'] = f"{row_data['midnight_shift']}"
