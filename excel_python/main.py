@@ -317,7 +317,7 @@ def create_total_excel():
                 ws[f'P{row_num}'] = f"{row_data['accomodations']}"
 
                 if row_data['user_bonus']:
-                    ws[f'Q{row_num}'] = f"+{row_data['user_bonus']} €"
+                    ws[f'Q{row_num}'] = f"+{row_data['user_bonus']}"
                     ws[f'Q{row_num}'].font = Font(color="00FF00")
                     ws[f'Q{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
                 else:

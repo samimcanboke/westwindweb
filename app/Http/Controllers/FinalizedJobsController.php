@@ -1039,7 +1039,7 @@ class FinalizedJobsController extends Controller
                     $total_user_advance += $advance->amount;
                 }
             }
-            $data['rows'][$user->id]['ausbildung_hours'] = $ausbildung_hours != 0 ? $ausbildung_hours * 22 : "-";
+            $data['rows'][$user->id]['ausbildung_hours'] = $ausbildung_hours != 0 ? $ausbildung_hours * 22 . " €" : "-";
             $data['rows'][$user->id]['user_advance'] = $total_user_advance ? $total_user_advance : null;
 
             $total_user_bonus = 0;
