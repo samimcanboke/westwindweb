@@ -1554,7 +1554,6 @@ class FinalizedJobsController extends Controller
         $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
         $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $annual_leave_days * 8), (($sub_total + $annual_leave_days * 8) - floor($sub_total + $annual_leave_days * 8)) * 60);
         $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8))) * 60);
-        dd($data);
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
