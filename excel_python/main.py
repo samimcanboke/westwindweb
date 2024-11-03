@@ -226,7 +226,7 @@ def sum_lines(ws,used_data, total_height):
         ws.row_dimensions[row].height = 40
     ws['E36'].value = str(used_data['totals']['workhours']) + " St"
     ws['E37'].value = str(used_data['totals']['breaks']) + " St"
-    ws['E38'].value = str(used_data['totals']['ausbildung_hours']) + " St"
+    ws['E38'].value = str(used_data['totals']['ausbildung_hours']) + " €"
     ws['E39'].value = str(used_data['totals']['sub_total']) + " St"
     ws['E40'].value = str(used_data['totals']['night_shift']) + " St"
     ws['E41'].value = str(used_data['totals']['midnight_shift']) + " St"
