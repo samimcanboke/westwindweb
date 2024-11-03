@@ -226,14 +226,15 @@ def sum_lines(ws,used_data, total_height):
         ws.row_dimensions[row].height = 40
     ws['E36'].value = str(used_data['totals']['workhours']) + " St"
     ws['E37'].value = str(used_data['totals']['breaks']) + " St"
-    ws['E38'].value = str(used_data['totals']['sub_total']) + " St"
-    ws['E39'].value = str(used_data['totals']['night_shift']) + " St"
-    ws['E40'].value = str(used_data['totals']['midnight_shift']) + " St"
-    ws['E41'].value = str(used_data['totals']['sunday_holidays']) + " St"
-    ws['E42'].value = str(used_data['totals']['public_holidays']) + " St"
-    ws['E43'].value = str(used_data['totals']['guests']) + " St"
-    ws['E44'].value = str(used_data['totals']['total_work_day_amount']) + " €"
-    ws['E45'].value = str(used_data['totals']['accomodations'])
+    ws['E38'].value = str(used_data['totals']['ausbildung_hours']) + " St"
+    ws['E39'].value = str(used_data['totals']['sub_total']) + " St"
+    ws['E40'].value = str(used_data['totals']['night_shift']) + " St"
+    ws['E41'].value = str(used_data['totals']['midnight_shift']) + " St"
+    ws['E42'].value = str(used_data['totals']['sunday_holidays']) + " St"
+    ws['E43'].value = str(used_data['totals']['public_holidays']) + " St"
+    ws['E44'].value = str(used_data['totals']['guests']) + " St"
+    ws['E45'].value = str(used_data['totals']['total_work_day_amount']) + " €"
+    ws['E46'].value = str(used_data['totals']['accomodations'])
     ws['K35'].value = str(used_data['hour_bank_this_month'])
     ws['K35'].alignment = Alignment(horizontal='center', vertical='center')
     ws['K36'].value = str(used_data['hour_bank_this_year'])
