@@ -1281,6 +1281,7 @@ class FinalizedJobsController extends Controller
         $i = 0;
         $feeding_fee = 0;
 
+        $ausbildung_hours = 0;
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
@@ -1289,6 +1290,9 @@ class FinalizedJobsController extends Controller
                 //}
 
 
+                if($finalized_job->ausbildung){
+                    $ausbildung_hours += 22;
+                }
 
                 $initial_date = $finalized_job->initial_date;
                 $finish_date = $initial_date;
@@ -1302,7 +1306,6 @@ class FinalizedJobsController extends Controller
                     $work_sum = "24:00";
                 }
   
-                
                 $guest_start_total = "00:00";
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
                     $guest_start_total = $this->guest_diffrence($finalized_job->guest_start_time, $finalized_job->guest_start_end_time, $initial_date);
@@ -1536,6 +1539,7 @@ class FinalizedJobsController extends Controller
         $data['totals']['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
         $data['totals']['accomodations'] = $feeding_fee . " €";
         $data['totals']['total_work_day_amount'] = $i >= 20 ? 20 * $i : $i * 6;
+        $data['totals']['ausbildung_hours'] = $ausbildung_hours;
 
         $bahn_card = $user->bahnCard;
 
@@ -1550,7 +1554,7 @@ class FinalizedJobsController extends Controller
         $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
         $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $annual_leave_days * 8), (($sub_total + $annual_leave_days * 8) - floor($sub_total + $annual_leave_days * 8)) * 60);
         $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8))) * 60);
-
+        dd($data);
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([

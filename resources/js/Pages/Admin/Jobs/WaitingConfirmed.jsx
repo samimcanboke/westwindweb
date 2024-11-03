@@ -81,6 +81,7 @@ export default function WaitingConfirmed({ auth }) {
     const [values, setValues] = useState({});
     const [drivers, setDrivers] = useState("");
     const [clients, setClients] = useState("");
+    const [users, setUsers] = useState([]);
 
 
 
@@ -148,6 +149,11 @@ export default function WaitingConfirmed({ auth }) {
 
     useEffect(() => {
         getUnconfirmed();
+        axios.get(route("users.show")).then((res) => {
+            if (res.status == 200) {
+                setUsers(res.data);
+            }
+        });
     }, []);
 
 
@@ -628,6 +634,24 @@ export default function WaitingConfirmed({ auth }) {
                                                             <div className="w-1/6 p-2">
                                                                 <ToggleSwitch
                                                                     checked={
+                                                                        values.ausbildung
+                                                                    }
+                                                                    label="Ausbildung"
+                                                                    id="ausbildung"
+                                                                    name="ausbildung"
+                                                                    onChange={(
+                                                                        value
+                                                                    ) => {
+                                                                        setFieldValue(
+                                                                            "ausbildung",
+                                                                            value
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-1/6 p-2">
+                                                                <ToggleSwitch
+                                                                    checked={
                                                                         values.learning
                                                                     }
                                                                     label="Streckenkunde"
@@ -683,6 +707,28 @@ export default function WaitingConfirmed({ auth }) {
                                                             </div>
                                                         </div>
                                                         <br />
+                                                        <br />
+                                                        {values.ausbildung && (
+                                                            <div className="max-w-md">
+                                                                <Label>Ausbilder</Label>
+                                                                <Select
+                                                                    id="ausbilder"
+                                                                    name="ausbilder"
+                                                                    placeholder="Ausbilder"
+                                                                    value={values.ausbilder ?? ''}
+                                                                    onChange={(e) => {
+                                                                        setFieldValue("ausbilder", e.target.value);
+                                                                    }}
+                                                                >
+                                                                    <option value="">Wählen Sie...</option>
+                                                                    {users.map(user => (
+                                                                        <option key={user.id} value={user.id}>{user.name}</option>
+                                                                    ))}
+                                                                </Select>
+                                                            </div>
+                                                        )}
+
+
                                                         <div className="max-w-md">
                                                             {values.ausland && (
                                                                 <div className="my-5">

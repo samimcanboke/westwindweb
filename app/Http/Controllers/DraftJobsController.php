@@ -46,6 +46,8 @@ class DraftJobsController extends Controller
         $draftJob->bereitschaft = $request->bereitschaft;
         $draftJob->comment = $request->comment;
         $draftJob->learning = $request->learning;
+        $draftJob->ausbildung = $request->ausbildung;
+        $draftJob->ausbilder = $request->user;
         $draftJob->feeding_fee = $request->feedingFee;
         $draftJob->guest_start_place = $request->guestStartPlace;
         $draftJob->guest_start_time = $request->guestStartTime;
@@ -71,7 +73,7 @@ class DraftJobsController extends Controller
         $draftJob->country = $request->country;
         $draftJob->save();
 
-        return response()->json(["status" => true]);
+        return response()->json(["status" => true, "draft" => $draftJob]);
 
     }
 
@@ -111,6 +113,8 @@ class DraftJobsController extends Controller
         $draftJob->bereitschaft = $request->bereitschaft;
         $draftJob->comment = $request->comment;
         $draftJob->learning = $request->learning;
+        $draftJob->ausbildung = $request->ausbildung;
+        $draftJob->ausbilder = $request->user;
         $draftJob->feeding_fee = $request->feeding_fee;
         $draftJob->guest_start_place = $request->guest_start_place;
         $draftJob->guest_start_time = $request->guest_start_time;
@@ -205,6 +209,8 @@ class DraftJobsController extends Controller
         $finalized->cancel = $draft->cancel;
         $finalized->extra = $draft->extra;
         $finalized->learning = $draft->learning;
+        $finalized->ausbildung = $draft->ausbildung;
+        $finalized->ausbilder = $draft->ausbilder;
         $finalized->accomodation = $draft->accomodation;
         $finalized->bereitschaft = $draft->bereitschaft;
         $finalized->comment = $draft->comment;

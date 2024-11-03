@@ -143,6 +143,9 @@ export default function DraftJobs({ auth }) {
         let editingDraft = draft;
         editingDraft.breaks = JSON.parse(draft.breaks);
         editingDraft.client = draft.client_id;
+        if(editingDraft.ausbildung){
+            setShowLockführer(true);
+        }
         setFiles(JSON.parse(draft.files));
         setValues(camelCase(editingDraft));
 
@@ -769,6 +772,7 @@ export default function DraftJobs({ auth }) {
                                                                         id="user"
                                                                         name="user"
                                                                         required
+                                                                        value={values.ausbilder}
                                                                         onChange={(e) => {
                                                                             setFieldValue(
                                                                                 "user",
