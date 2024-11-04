@@ -1528,14 +1528,13 @@ class FinalizedJobsController extends Controller
                 $i++;
             }
         }
-        $absolute_total_hours = abs($total_hours);
-        $hours = floor($absolute_total_hours);
-        $minutes = ($absolute_total_hours - $hours) * 60;
-        $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+        $hours = floor($total_hours);
+        $minutes = ($total_hours - $hours) * 60;
+       
 
-        $total_hours_interval = new DateInterval('PT' . $hours . 'H' . $minutes . 'M');
-        $total_work_sum->h += $total_hours_interval->h;
-        $total_work_sum->i += $total_hours_interval->i;
+        $total_work_sum->h += $hours;
+        $total_work_sum->i += $minutes;
+        $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
         $data['totals']['dates'] = $i;
         $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
         $data['totals']['work_sum_amount'] = $total_work_summary_amount;
