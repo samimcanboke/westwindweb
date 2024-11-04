@@ -1532,7 +1532,7 @@ class FinalizedJobsController extends Controller
         }
         $hours = floor(abs($total_hours)) * ($total_hours < 0 ? -1 : 1);
         $minutes = ($total_hours - $hours) * 60;
-        
+        $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
         $total_work_sum->h += $hours;
         $total_work_sum->i += $minutes;
         if ($total_work_sum->i < 0) {
@@ -1543,7 +1543,6 @@ class FinalizedJobsController extends Controller
 
         $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
         $data['totals']['dates'] = $i;
-        $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
         $data['totals']['work_sum_amount'] = $total_work_summary_amount;
         $data['totals']['guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
         $data['totals']['breaks'] = sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00" ? sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) : "-";
