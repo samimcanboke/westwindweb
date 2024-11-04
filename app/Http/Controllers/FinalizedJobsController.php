@@ -1533,7 +1533,6 @@ class FinalizedJobsController extends Controller
         $hours = floor($total_hours);
         $minutes = ($total_hours - $hours) * 60;
        
-        dd($hours,$minutes);
         $total_work_sum->h += $hours;
         $total_work_sum->i += $minutes;
         $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
