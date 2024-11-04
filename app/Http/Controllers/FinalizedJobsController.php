@@ -1216,14 +1216,14 @@ class FinalizedJobsController extends Controller
         $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
         $data['hour_bank_this_month'] = sprintf('%02d:%02d', floor($total_hours), ($total_hours - floor($total_hours)) * 60);
 
+        
+
 
 
         $hour_banks_this_year = $user->hourBanks()->whereBetween('date', [Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString(), Carbon::create($year, 12, 31)->endOfDay()->toDateTimeString()])->get();
         $total_hours_this_year = $hour_banks_this_year->where('type', 'withdraw')->sum('hours') - $hour_banks_this_year->where('type', 'deposit')->sum('hours');
      
-        $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) :sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
-
-
+        $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
         $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
@@ -1528,10 +1528,11 @@ class FinalizedJobsController extends Controller
                 $i++;
             }
         }
-
-        $hours = floor($total_hours);
-        $minutes = ($total_hours - $hours) * 60;
+        $absolute_total_hours = abs($total_hours);
+        $hours = floor($absolute_total_hours);
+        $minutes = ($absolute_total_hours - $hours) * 60;
         $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
+
         $total_hours_interval = new DateInterval('PT' . $hours . 'H' . $minutes . 'M');
         $total_work_sum->h += $total_hours_interval->h;
         $total_work_sum->i += $total_hours_interval->i;
