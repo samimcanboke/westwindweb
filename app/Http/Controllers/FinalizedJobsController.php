@@ -1530,11 +1530,17 @@ class FinalizedJobsController extends Controller
                 $i++;
             }
         }
-        $hours = floor($total_hours);
+        $hours = floor(abs($total_hours)) * ($total_hours < 0 ? -1 : 1);
         $minutes = ($total_hours - $hours) * 60;
-       
+        
         $total_work_sum->h += $hours;
         $total_work_sum->i += $minutes;
+        if ($total_work_sum->i < 0) {
+            $total_work_sum->h -= 1;
+            $total_work_sum->i += 60;
+        }
+        
+
         $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
         $data['totals']['dates'] = $i;
         $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
