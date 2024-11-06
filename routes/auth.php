@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('registered', [RegisteredUserController::class, 'store_inside'])->name('registered');
     Route::get('show', [RegisteredUserController::class, 'show'])->name('users.show');
-    Route::get('show_exclude_admins', [RegisteredUserController::class, 'show_exclude_admins'])->name('users.show_exclude_admins');
+    Route::get('show_exclude_admins', [RegisteredUserController::class, 'show_exclude_admins'])->withoutMiddleware([IsAdmin::class])->name('users.show_exclude_admins');
     Route::get('show_all', [RegisteredUserController::class, 'show_all'])->name('users.show_all');
 
 });
