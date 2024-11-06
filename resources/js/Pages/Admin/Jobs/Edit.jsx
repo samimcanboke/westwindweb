@@ -116,6 +116,11 @@ export default function EditUser({ auth, id }) {
                             );
                             setSubmitting(false);
                             resetForm();
+                            Swal.fire({
+                                title: "Erfolgreich",
+                                text: "Aufgabe gespeichert",
+                                icon: "success",
+                            });
                         } else {
                             Swal.fire(
                                 "Fehlgeschlagen",
