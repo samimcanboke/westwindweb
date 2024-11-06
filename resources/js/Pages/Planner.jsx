@@ -97,7 +97,7 @@ export default function Planner({ auth }) {
                                                         " " +
                                                         job.end_time
                                                 ).format("HH:mm")}{" "}
-                                                : {job.from} - {job.to}
+                                                : {job.from_station.short_name} - {job.to_station.short_name}
                                             </AccordionTitle>
                                             <AccordionContent>
                                                 <Label>Datum : </Label>
