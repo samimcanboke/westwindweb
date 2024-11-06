@@ -90,7 +90,7 @@ class JobPlansController extends Controller
     public function get_user_job_plans()
     {
         $user_id = Auth::user()->id;
-        $jobPlan = JobPlans::where('user_id',$user_id)->get();
+        $jobPlan = JobPlans::where('user_id',$user_id)->with(['toStation:id,short_name', 'fromStation:id,short_name'])->get();
         return response()->json($jobPlan);
     }
 
