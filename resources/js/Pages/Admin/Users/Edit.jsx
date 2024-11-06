@@ -567,13 +567,14 @@ export default function EditUser({ auth, user_id }) {
                                 hours: "",
                                 type: "",
                                 date: "",
+                                credit: false,
                             }}
                             //validate={hourBankValidationSchema}
                             onSubmit={(
                                 values,
                                 { setSubmitting, setErrors }
                             ) => {
-                                if (values.type === "withdraw") {
+                                if (values.type === "withdraw" && !values.credit) {
                                     const totalHours = hourBanks.reduce(
                                         (acc, curr) => {
                                             return (
@@ -607,8 +608,18 @@ export default function EditUser({ auth, user_id }) {
                                     });
                             }}
                         >
-                            {({ isSubmitting, errors }) => (
+                            {({ isSubmitting, errors,values, setFieldValue }) => (
                                 <Form>
+                                    <div>
+                                        <ToggleSwitch 
+                                            id="credit"
+                                            name="credit"
+                                            value={values.credit}
+                                            onChange={(e) => {
+                                                setFieldValue("credit", e);
+                                            }}
+                                        />
+                                    </div>
                                     <div>
                                         <Label htmlFor="date">Datum</Label>
                                         <Field
