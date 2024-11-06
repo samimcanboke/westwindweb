@@ -327,12 +327,15 @@ export default function ConfirmedToEdit({ auth }) {
                                             getUnconfirmed();
                                             setShowEdit(false);
                                             setSubmitting(false);
+                                        
                                             Swal.fire({
                                                 title: "Erfolgreich",
                                                 text: "Job wurde gelschen",
                                                 icon: "success",
                                             });
-                                            location.reload();
+                                            setTimeout(() => {
+                                                location.reload();
+                                            }, 2000);
                                         }
                                     });
                             }}
