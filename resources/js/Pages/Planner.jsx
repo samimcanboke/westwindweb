@@ -116,7 +116,7 @@ export default function Planner({ auth }) {
                                                 ).format("DD.MM.YYYY HH:mm")}
                                                 <br />
                                                 <Label>Route : </Label>
-                                                {job.from} - {job.to}
+                                                {job.from_station.short_name} - {job.to_station.short_name}
                                                 <br />
                                                 <Label>Loknummer : </Label>
                                                 {job.locomotive_nummer}
