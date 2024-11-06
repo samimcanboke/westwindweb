@@ -165,6 +165,7 @@ export default function NewJobs({ auth }) {
         });
         axios.get(route("users.show")).then((res) => {
             if (res.status == 200) {
+                console.log(res.data);
                 setUsers(res.data);
             }
         });
