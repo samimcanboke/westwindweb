@@ -163,7 +163,7 @@ export default function NewJobs({ auth }) {
                 setClient(res.data);
             }
         });
-        axios.get(route("users.show")).then((res) => {
+        axios.get(route("users.show_exclude_admins")).then((res) => {
             if (res.status == 200) {
                 console.log(res.data);
                 setUsers(res.data);
