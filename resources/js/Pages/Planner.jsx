@@ -99,7 +99,7 @@ export default function Planner({ auth }) {
                                                         " " +
                                                         job.end_time
                                                 ).format("HH:mm")}{" "}
-                                                : {job.from_station.short_name ? job.from_station.short_name : "Keine Station"} - {job.to_station.short_name ? job.to_station.short_name : "Keine Station"}
+                                                : {job.from_station && job.from_station.short_name ? job.from_station.short_name : "Keine Station"} - {job.to_station && job.to_station.short_name ? job.to_station.short_name : "Keine Station"}
                                             </AccordionTitle>
                                             <AccordionContent>
                                                 <Label>Datum : </Label>
