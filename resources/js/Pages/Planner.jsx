@@ -118,7 +118,7 @@ export default function Planner({ auth }) {
                                                 ).format("DD.MM.YYYY HH:mm")}
                                                 <br />
                                                 <Label>Route : </Label>
-                                                {job.from_station.short_name ? job.from_station.short_name : "Keine Station"} - {job.to_station.short_name ? job.to_station.short_name : "Keine Station"}
+                                                : {job.from_station && job.from_station.short_name ? job.from_station.short_name : "Keine Station"} - {job.to_station && job.to_station.short_name ? job.to_station.short_name : "Keine Station"}
                                                 <br />
                                                 <Label>Loknummer : </Label>
                                                 {job.locomotive_nummer}
