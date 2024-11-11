@@ -715,6 +715,7 @@ export default function NewJobs({ auth }) {
                                         placeholder="Hinterlassen Sie einen Kommentar..."
                                         value={values.comment}
                                         rows={4}
+                                        maxLength={255} // Karakter sınırı eklendi
                                         className={
                                             errors.comment 
                                                 ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"

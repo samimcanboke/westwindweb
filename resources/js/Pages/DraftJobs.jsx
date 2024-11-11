@@ -807,6 +807,7 @@ export default function DraftJobs({ auth }) {
                                                             name="comment"
                                                             placeholder="Hinterlassen Sie einen Kommentar..."
                                                             rows={4}
+                                                            maxLength={255} // Karakter sınırı eklendi
                                                             className={
                                                                 errors.comment &&
                                                                     touched.comment
