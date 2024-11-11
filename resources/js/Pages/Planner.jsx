@@ -18,6 +18,7 @@ export default function Planner({ auth }) {
             .get(route("get-user-job-plans"))
             .then((response) => {
                 try {
+                    console.log(response.data);
                     if (response.status === 200) {
                         if (response.data.length > 0) {
                             console.log(response.data);
@@ -29,6 +30,7 @@ export default function Planner({ auth }) {
                                     new Date(a.start_date + " " + a.start_time)
                                 );
                             });
+                            
                             setJobs(response.data);
                         } else {
                             setJobs([]);
