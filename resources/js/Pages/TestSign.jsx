@@ -4,10 +4,11 @@ import SignatureCanvas from "react-signature-canvas";
 import { useState } from "react";
 
 export default function TestSign({ auth }) {
-    const [position, setPosition] = useState({
-        latitude: null,
-        longitude: null,
-    });
+    const [position, setPosition] = useState([{
+            latitude: null,
+            longitude: null,
+        },
+    ]);
     const [error, setError] = useState(null);
     const [isTracking, setIsTracking] = useState(false);
     const [permissionGranted, setPermissionGranted] = useState(false);
@@ -34,10 +35,10 @@ export default function TestSign({ auth }) {
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(
                 (position) => {
-                    setPosition({
+                    setPosition([...position, {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                    });
+                    }]);
                 },
                 (error) => {
                     setError(error.message);
@@ -91,12 +92,27 @@ export default function TestSign({ auth }) {
                                 <div>
                                     {isTracking ? (
                                         <p>
-                                            Latitude: {position.latitude} <br />
-                                            Longitude: {position.longitude}
+                                            Latitude: {position[position.length - 1].latitude} <br />
+                                            Longitude: {position[position.length - 1].longitude}
                                         </p>
                                     ) : (
                                         <p>Konum izleme başlatılıyor...</p>
                                     )}
+
+                                    {isTracking && (
+                                        <div>
+                                            {position.map((pos, index) => (
+                                                <div key={index}>
+                                                    <p>
+                                                        Latitude: {pos.latitude} <br />
+                                                        Longitude: {pos.longitude}
+                                                    </p>
+                                                    {index < position.length - 1 && <hr />}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
                                 </div>
                             )}
                             {error && <p>Error: {error}</p>}
