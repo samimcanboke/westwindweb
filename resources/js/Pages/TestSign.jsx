@@ -113,6 +113,8 @@ export default function TestSign({ auth }) {
                                         </div>
                                     )}
 
+                                    {JSON.stringify(position)}
+
                                 </div>
                             )}
                             {error && <p>Error: {error}</p>}
