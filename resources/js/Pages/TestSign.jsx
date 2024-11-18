@@ -34,6 +34,7 @@ export default function TestSign({ auth }) {
                     setPositions((prevPositions) => [
                         ...prevPositions,
                         {
+                            time: new Date().toLocaleString(),
                             latitude: position.coords.latitude,
                             longitude: position.coords.longitude,
                         },
@@ -59,6 +60,7 @@ export default function TestSign({ auth }) {
                         setPositions((prevPositions) => [
                             ...prevPositions,
                             {
+                                time: new Date().toLocaleString(),
                                 latitude: position.coords.latitude,
                                 longitude: position.coords.longitude,
                             },
@@ -112,20 +114,14 @@ export default function TestSign({ auth }) {
                                 </div>
                             ) : (
                                 <div>
-                                    {isTracking ? (
-                                        <p>
-                                            Latitude: {positions[positions.length - 1]?.latitude} <br />
-                                            Longitude: {positions[positions.length - 1]?.longitude}
-                                        </p>
-                                    ) : (
-                                        <p>Konum izleme başlatılıyor...</p>
-                                    )}
+                       
 
                                     {isTracking && (
                                         <div>
                                             {positions.map((pos, index) => (
                                                 <div key={index}>
                                                     <p>
+                                                        Time: {pos.time} <br />
                                                         Latitude: {pos.latitude} <br />
                                                         Longitude: {pos.longitude}
                                                     </p>
@@ -135,7 +131,7 @@ export default function TestSign({ auth }) {
                                         </div>
                                     )}
 
-                                    {JSON.stringify(positions)}
+                  
 
                                 </div>
                             )}
