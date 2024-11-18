@@ -1,14 +1,10 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import SignatureCanvas from "react-signature-canvas";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TestSign({ auth }) {
-    const [position, setPosition] = useState([{
-            latitude: null,
-            longitude: null,
-        },
-    ]);
+    const [positions, setPositions] = useState([]);
     const [error, setError] = useState(null);
     const [isTracking, setIsTracking] = useState(false);
     const [permissionGranted, setPermissionGranted] = useState(false);
@@ -35,10 +31,13 @@ export default function TestSign({ auth }) {
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(
                 (position) => {
-                    setPosition([...position, {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    }]);
+                    setPositions((prevPositions) => [
+                        ...prevPositions,
+                        {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                        },
+                    ]); 
                 },
                 (error) => {
                     setError(error.message);
@@ -51,6 +50,29 @@ export default function TestSign({ auth }) {
             );
         }
     };
+
+    useEffect(() => {
+        if (isTracking) {
+            const interval = setInterval(() => {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setPositions((prevPositions) => [
+                            ...prevPositions,
+                            {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                            },
+                        ]);
+                    },
+                    (error) => {
+                        setError(error.message);
+                    }
+                );
+            }, 5000);
+
+            return () => clearInterval(interval);
+        }
+    }, [isTracking]);
 
     return (
         <AuthenticatedLayout
@@ -92,8 +114,8 @@ export default function TestSign({ auth }) {
                                 <div>
                                     {isTracking ? (
                                         <p>
-                                            Latitude: {position[position.length - 1].latitude} <br />
-                                            Longitude: {position[position.length - 1].longitude}
+                                            Latitude: {positions[positions.length - 1]?.latitude} <br />
+                                            Longitude: {positions[positions.length - 1]?.longitude}
                                         </p>
                                     ) : (
                                         <p>Konum izleme başlatılıyor...</p>
@@ -101,19 +123,19 @@ export default function TestSign({ auth }) {
 
                                     {isTracking && (
                                         <div>
-                                            {position.map((pos, index) => (
+                                            {positions.map((pos, index) => (
                                                 <div key={index}>
                                                     <p>
                                                         Latitude: {pos.latitude} <br />
                                                         Longitude: {pos.longitude}
                                                     </p>
-                                                    {index < position.length - 1 && <hr />}
+                                                    {index < positions.length - 1 && <hr />}
                                                 </div>
                                             ))}
                                         </div>
                                     )}
 
-                                    {JSON.stringify(position)}
+                                    {JSON.stringify(positions)}
 
                                 </div>
                             )}
