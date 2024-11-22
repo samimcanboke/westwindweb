@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,22 +10,31 @@ use App\Models\SickLeaves;
 use App\Models\JobPlans;
 use App\Models\FinalizedJobs;
 use App\Models\DraftJobs;
-use App\Models\AdminExtra;
+use App\Models\AdminExtras;
 use App\Models\UsersBonus;
 use App\Models\UsersAdvance;
 use App\Models\HourBank;
 use App\Models\UserCertificate;
 use App\Models\UserSalaryReport;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use App\Models\UsersClient;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -142,7 +150,7 @@ class User extends Authenticatable
 
     public function adminExtras()
     {
-        return $this->hasMany(AdminExtra::class);
+        return $this->hasMany(AdminExtras::class);
     }
 
     public function bahnCard()
