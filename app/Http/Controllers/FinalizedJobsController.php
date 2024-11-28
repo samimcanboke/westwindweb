@@ -1502,9 +1502,30 @@ class FinalizedJobsController extends Controller
 
             $feeding_fee_text = "";
             if($finalized_job->ausland){
-                $feeding_fee_text = strtoupper($finalized_job->country . "/" . ($finalized_job->accomodation ? "Hotel" : "Heim"));
+                switch($finalized_job->feeding_fee){
+                    case 16:
+                        $temp_text = "Heim";
+                        break;
+                    case 32:
+                        $temp_text = "Hotel";
+                        break;
+                    default:
+                        $temp_text = "-";
+                        break;
+                  }
+                $feeding_fee_text = strtoupper($finalized_job->country . "/" . $temp_text);
             } else {
-                $feeding_fee_text = $finalized_job->accomodation ? "Hotel" : "Heim";
+              switch($finalized_job->feeding_fee){
+                case 16:
+                    $feeding_fee_text = "Heim";
+                    break;
+                case 32:
+                    $feeding_fee_text = "Hotel";
+                    break;
+                default:
+                    $feeding_fee_text = "-";
+                    break;
+              }
             }
 
 
