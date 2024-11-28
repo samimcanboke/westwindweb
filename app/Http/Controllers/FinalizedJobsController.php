@@ -933,7 +933,7 @@ class FinalizedJobsController extends Controller
             }
             $data['rows'][$user->id]['annual_leave_hours'] = floor($total_annual_leave_hours) == 0 ? "-" : floor($total_annual_leave_hours);
 
-            $total_sick_leave_hours = 0;
+            /*$total_sick_leave_hours = 0;
             foreach ($user->sickLeaves as $sickLeave) {
                 $start_date = \Carbon\Carbon::parse($sickLeave->start_date);
                 $end_date = \Carbon\Carbon::parse($sickLeave->end_date);
@@ -944,6 +944,11 @@ class FinalizedJobsController extends Controller
                     $days = $interval->d + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
                     $total_sick_leave_hours += $days * 8;
                 }
+            }*/
+            $total_sick_leave_hours = 0;
+            $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+            foreach($sickDays as $sickDay){
+                $total_sick_leave_hours += $sickDay->start_date->diffInDays($sickDay->end_date) * 8;
             }
             $data['rows'][$user->id]['sick_leave_hours'] = floor($total_sick_leave_hours) == 0 ? "-" : floor($total_sick_leave_hours);
             $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();

@@ -7,12 +7,20 @@ use App\Http\Controllers\Api\JWTAuthController;
 use App\Http\Middleware\JWTAuthentication;
 
 Route::middleware([JWTAuthentication::class])->group(function () {
-    Route::get('/user', [RegisteredUserController::class, 'show']);
-    Route::post('/user', [RegisteredUserController::class, 'store']);
-    Route::put('/user/{id}', [RegisteredUserController::class, 'update']);
-    Route::delete('/user/{id}', [RegisteredUserController::class, 'destroy']);
+    
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/', [RegisteredUserController::class, 'show']);
+        Route::post('/', [RegisteredUserController::class, 'store']);
+        Route::put('/{id}', [RegisteredUserController::class, 'update']);
+        Route::delete('/{id}', [RegisteredUserController::class, 'destroy']);
+    });
+    
     Route::post('/refresh', [JWTAuthController::class, 'refresh']); 
     Route::post('/logout', [JWTAuthController::class, 'logout']);
+
+    Route::group(['prefix' => 'plans'], function () {
+        Route::get('/', [PlanController::class, 'index']);
+    });
 });
 
 Route::post('/login', [JWTAuthController::class, 'login'])->withoutMiddleware(JWTAuthentication::class);

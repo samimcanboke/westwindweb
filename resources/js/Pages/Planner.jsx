@@ -20,6 +20,7 @@ export default function Planner({ auth }) {
                 try {
                     if (response.status === 200) {
                         if (response.data.length > 0) {
+                            console.log(response.data);
                             response.data.sort((a, b) => {
                                 return (
                                     new Date(
