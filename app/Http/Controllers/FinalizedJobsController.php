@@ -1723,6 +1723,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->work_end_time = $request->work_end_time;
         $finalizedJob->guest_end_place = $request->guest_end_place;
         $finalizedJob->guest_end_time = $request->guest_end_time;
+        $finalizedJob->shift_count = $request->shift_count;
         $finalizedJob->guest_end_end_place = $request->guest_end_end_place;
         $finalizedJob->guest_end_end_time = $request->guest_end_end_time;
         $finalizedJob->save();
@@ -1760,6 +1761,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->train_end_place = $request->train_end_place;
         $finalizedJob->train_end_time = $request->train_end_time;
         $finalizedJob->breaks = json_encode($request->breaks);
+        $finalizedJob->shift_count = $request->shiftZulage;
         $finalizedJob->work_end_place = $request->work_end_place;
         $finalizedJob->work_end_time = $request->work_end_time;
         $finalizedJob->guest_end_place = $request->guest_end_place;

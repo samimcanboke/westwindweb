@@ -133,15 +133,6 @@ export default function ConfirmedToEdit({ auth }) {
         });
     }, []);
 
-    function handleConfirm(e) {
-        e.preventDefault();
-        setLoading(true);
-        axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
-            getUnconfirmed();
-            setShowEdit(false);
-            setLoading(false);
-        });
-    }
 
     return (
         <AuthenticatedLayout
@@ -482,6 +473,15 @@ export default function ConfirmedToEdit({ auth }) {
                                                     <br />
 
                                                     <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
+                                        <ToggleSwitch
+                                            checked={values.shiftCount}
+                                            label="ShiftZulage berechnen"
+                                            id="shiftCount"
+                                            name="shiftCount"
+                                            onChange={(value) => {
+                                                setFieldValue("shiftCount", value);
+                                            }}
+                                        />
                                         <ToggleSwitch
                                             checked={values.cancel}
                                             label="Storniert"

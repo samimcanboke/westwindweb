@@ -12,9 +12,10 @@ import {
     ToggleSwitch,
     Select,
     Button,
+    Modal,
     Table,
 } from "flowbite-react";
-import { Formik, Field, FieldArray, Form,useFormikContext } from "formik";
+import { Formik, Field, FieldArray, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
 import Swal from "sweetalert2";
@@ -45,12 +46,21 @@ const snakeCase = (obj) => {
     return newObj;
 };
 
-const ConfirmButton = ({ onConfirm, setShowEdit, showEdit, getUnconfirmed }) => {
-    const { values } = useFormikContext();
+const ConfirmMdlButton = ({ setShowConfirmModal }) => {
+    return (
+        <Button onClick={() => { setShowConfirmModal(true); }} className="ml-4 bg-green-500">
+            Bestätigen
+        </Button>
+    );
+};
 
+const ConfirmButton = ({ onConfirm, setShowEdit, showEdit, getUnconfirmed, shiftZulage }) => {
+    const { values } = useFormikContext();
+    
+    
     const handleConfirm = (e) => {
         e.preventDefault();
-        axios.post("/jobs-confirmation", snakeCase(values)).then((res) => {
+        axios.post("/jobs-confirmation", { ...snakeCase(values), shiftZulage }).then((res) => {
             getUnconfirmed();
             setShowEdit(false);
         });
@@ -82,6 +92,8 @@ export default function WaitingConfirmed({ auth }) {
     const [drivers, setDrivers] = useState("");
     const [clients, setClients] = useState("");
     const [users, setUsers] = useState([]);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [shiftZulage, setShiftZulage] = useState(false);
 
 
 
@@ -133,7 +145,7 @@ export default function WaitingConfirmed({ auth }) {
                     let driver = driver_response.data.find(
                         (driver) => driver.id === job.user_id
                     );
-                    if(driver){
+                    if (driver) {
                         job.driverId = driver ? driver.id.toString().padStart(3, "0") : "000";
                         job.driverName = driver ? driver.name : "Fahrer nicht gefunden";
                     }
@@ -174,6 +186,7 @@ export default function WaitingConfirmed({ auth }) {
                 </div>
             )}
 
+
             {data.length > 0 && (
                 <div>
                     <div className="overflow-x-auto">
@@ -209,15 +222,15 @@ export default function WaitingConfirmed({ auth }) {
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.user_id &&
-                                                draft.user_id != "" &&
-                                                drivers
+                                                    draft.user_id != "" &&
+                                                    drivers
                                                     ? draft.driverId
                                                     : "Fahrer nicht gefunden"}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {draft.user_id &&
-                                                draft.user_id != "" &&
-                                                drivers
+                                                    draft.user_id != "" &&
+                                                    drivers
                                                     ? draft.driverName
                                                     : "Fahrer nicht gefunden"}
                                             </Table.Cell>
@@ -287,6 +300,30 @@ export default function WaitingConfirmed({ auth }) {
                                 }) => {
                                     return (
                                         <Form onSubmit={handleSubmit}>
+                                            <Modal
+                                                show={showConfirmModal}
+                                                onClose={() => setShowConfirmModal(false)}
+                                            >
+                                                <Modal.Header>
+                                                    <p>Hesaplanacak mı?</p>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    <p>ShiftZulage wird berechnet?</p>
+                                                    <ToggleSwitch
+                                                        checked={shiftZulage}
+                                                        label="ShiftZulage berechnen"
+                                                        id="shiftZulage"
+                                                        name="shiftZulage"
+                                                        onChange={(value) => {
+                                                            setShiftZulage(value);
+                                                        }}
+                                                    />
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button onClick={() => setShowConfirmModal(false)}>Abbrechen</Button>
+                                                    <ConfirmButton setShowEdit={setShowEdit} showEdit={showEdit} getUnconfirmed={getUnconfirmed} shiftZulage={shiftZulage} />
+                                                </Modal.Footer>
+                                            </Modal>
                                             <Accordion>
                                                 <AccordionPanel isOpen={false}>
                                                     <AccordionTitle>
@@ -345,7 +382,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             name="zugNummer"
                                                             className={
                                                                 errors.zugNummer &&
-                                                                touched.zugNummer
+                                                                    touched.zugNummer
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -386,7 +423,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.tourName &&
-                                                                touched.tourName
+                                                                    touched.tourName
                                                                     ? "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -418,7 +455,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.locomotiveNumber &&
-                                                                touched.locomotiveNumber
+                                                                    touched.locomotiveNumber
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -833,7 +870,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             rows={4}
                                                             className={
                                                                 errors.comment &&
-                                                                touched.comment
+                                                                    touched.comment
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1029,7 +1066,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestStartPlace &&
-                                                                touched.guestStartPlace
+                                                                    touched.guestStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1061,7 +1098,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 name="guestStartTime"
                                                                 className={
                                                                     errors.guestStartTime &&
-                                                                    touched.guestStartTime
+                                                                        touched.guestStartTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1118,7 +1155,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestStartEndPlace &&
-                                                                touched.guestStartEndPlace
+                                                                    touched.guestStartEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1149,7 +1186,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 name="guestStartEndTime"
                                                                 className={
                                                                     errors.guestStartEndTime &&
-                                                                    touched.guestStartEndTime
+                                                                        touched.guestStartEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1216,7 +1253,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }
                                                             className={
                                                                 errors.workStartPlace &&
-                                                                touched.workStartPlace
+                                                                    touched.workStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1245,7 +1282,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 id="workStartTime"
                                                                 className={
                                                                     errors.workStartTime &&
-                                                                    touched.workStartTime
+                                                                        touched.workStartTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1274,7 +1311,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                                            </div>
+                                                        </div>
                                                         {errors.workStartTime &&
                                                             touched.workStartTime && (
                                                                 <p className="text-red-500">
@@ -1312,7 +1349,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.trainStartPlace &&
-                                                                touched.trainStartPlace
+                                                                    touched.trainStartPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1342,7 +1379,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 name="trainStartTime"
                                                                 className={
                                                                     errors.trainStartTime &&
-                                                                    touched.trainStartTime
+                                                                        touched.trainStartTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1371,7 +1408,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                        </div>
+                                                        </div>
                                                         {errors.trainStartTime &&
                                                             touched.trainStartTime && (
                                                                 <p className="text-red-500">
@@ -1387,7 +1424,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <LocationField
                                                             id="trainEndPlace"
                                                             name="trainEndPlace"
-                                                            
+
                                                             label={"Zug Ankunftsort"}
                                                             onChange={(e) => {
                                                                 setFieldValue(
@@ -1400,7 +1437,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }
                                                             className={
                                                                 errors.trainEndPlace &&
-                                                                touched.trainEndPlace
+                                                                    touched.trainEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1430,7 +1467,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 name="trainEndTime"
                                                                 className={
                                                                     errors.trainEndTime &&
-                                                                    touched.trainEndTime
+                                                                        touched.trainEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1459,7 +1496,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                     <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" />
                                                                 </svg>
                                                             </span>
-                </div>
+                                                        </div>
                                                         {errors.trainEndTime &&
                                                             touched.trainEndTime && (
                                                                 <p className="text-red-500">
@@ -1490,7 +1527,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 <div className="">
                                                                     {values.breaks &&
                                                                         typeof values.breaks !==
-                                                                            "string" &&
+                                                                        "string" &&
                                                                         values.breaks.map(
                                                                             (
                                                                                 breakItem,
@@ -1560,7 +1597,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                         )}
                                                                     {values.breaks &&
                                                                         typeof values.breaks !==
-                                                                            "object" &&
+                                                                        "object" &&
                                                                         JSON.parse(
                                                                             values.breaks
                                                                         ).map(
@@ -1579,7 +1616,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                             Break
                                                                                             Start
                                                                                         </label>
-                                                        <Field
+                                                                                        <Field
                                                                                             name={`breaks.${index}.start`}
                                                                                             type="time"
                                                                                             className="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -1667,7 +1704,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         Arbeitsende
                                                     </AccordionTitle>
                                                     <AccordionContent>
-                                                        
+
                                                         <LocationField
                                                             id="workEndPlace"
                                                             name="workEndPlace"
@@ -1683,7 +1720,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             error={errors.workEndPlace}
                                                             className={
                                                                 errors.workEndPlace &&
-                                                                touched.workEndPlace
+                                                                    touched.workEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1712,7 +1749,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 id="workEndTime"
                                                                 className={
                                                                     errors.workEndTime &&
-                                                                    touched.workEndTime
+                                                                        touched.workEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1790,7 +1827,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestEndPlace &&
-                                                                touched.guestEndPlace
+                                                                    touched.guestEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1819,7 +1856,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 id="guestEndTime"
                                                                 className={
                                                                     errors.guestEndTime &&
-                                                                    touched.guestEndTime
+                                                                        touched.guestEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1875,7 +1912,7 @@ export default function WaitingConfirmed({ auth }) {
                                                             }}
                                                             className={
                                                                 errors.guestEndEndPlace &&
-                                                                touched.guestEndEndPlace
+                                                                    touched.guestEndEndPlace
                                                                     ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                                     : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                                                             }
@@ -1904,7 +1941,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                 id="guestEndEndTime"
                                                                 className={
                                                                     errors.guestEndEndTime &&
-                                                                    touched.guestEndEndTime
+                                                                        touched.guestEndEndTime
                                                                         ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                         : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                                 }
@@ -1912,16 +1949,16 @@ export default function WaitingConfirmed({ auth }) {
                                                                     values.guestEndEndTime ??
                                                                     undefined
                                                                 }
-                                                                    onChange={(
+                                                                onChange={(
                                                                     e
-                                                                    ) => {
-                                                                        setFieldValue(
+                                                                ) => {
+                                                                    setFieldValue(
                                                                         "guestEndEndTime",
                                                                         e.target
                                                                             .value
-                                                                        );
-                                                                    }}
-                                                                />
+                                                                    );
+                                                                }}
+                                                            />
                                                             <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                                                                 <svg
                                                                     className="w-4 h-4 text-gray-500 dark:text-gray-400"
@@ -1963,7 +2000,8 @@ export default function WaitingConfirmed({ auth }) {
                                                 >
                                                     Speichern
                                                 </Button>
-                                                <ConfirmButton setShowEdit={setShowEdit} showEdit={showEdit} getUnconfirmed={getUnconfirmed} />
+                                                <ConfirmMdlButton setShowConfirmModal={setShowConfirmModal} showConfirmModal={showConfirmModal} />
+
                                             </div>
                                         </Form>
                                     );
@@ -1973,6 +2011,7 @@ export default function WaitingConfirmed({ auth }) {
                     )}
                 </div>
             )}
+
         </AuthenticatedLayout>
     );
 }
