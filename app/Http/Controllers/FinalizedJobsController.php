@@ -702,6 +702,7 @@ class FinalizedJobsController extends Controller
             $total_deep_morning_shift = new DateInterval('PT0H0M');
             $total_sunday_holiday_hours = new DateInterval('PT0H0M');
             $i = 0;
+            $y = 0;
             $feeding_fee = 0;
 
             $ausbildung_hours = 0;
@@ -710,6 +711,9 @@ class FinalizedJobsController extends Controller
 
                     $initial_date = $finalized_job->initial_date;
 
+                    if($finalized_job->shift_count){
+                        $y++;
+                    }
                     if($finalized_job->ausbildung){
                         $ausbildung_hours += 1;
                     }
@@ -1035,7 +1039,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['sunday_holidays'] = "-";
             }
             $data['rows'][$user->id]['accomodations'] = $feeding_fee == 0 ? "-" : $feeding_fee . " €" ;
-            $data['rows'][$user->id]['total_work_day_amount'] = ($i >= 20 ? 20 * $i : $i * 6) . " €";
+            $data['rows'][$user->id]['total_work_day_amount'] = ($y >= 20 ? 20 * $y : $y * 6) . " €";
 
             $total_user_advance = 0;
             foreach ($user->usersAdvance as $advance) {
@@ -1294,6 +1298,7 @@ class FinalizedJobsController extends Controller
         $total_sunday_holiday_hours = new DateInterval('PT0H0M');
 
         $i = 0;
+        $y = 0;
         $feeding_fee = 0;
 
         $ausbildung_hours = 0;
@@ -1307,6 +1312,9 @@ class FinalizedJobsController extends Controller
 
                 if($finalized_job->ausbildung){
                     $ausbildung_hours += 1;
+                }
+                if($finalized_job->shift_count){
+                    $y++;
                 }
 
                 $initial_date = $finalized_job->initial_date;
@@ -1580,7 +1588,7 @@ class FinalizedJobsController extends Controller
         $data['totals']['public_holidays'] = sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) : "-";
         $data['totals']['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
         $data['totals']['accomodations'] = $feeding_fee . " €";
-        $data['totals']['total_work_day_amount'] = $i >= 20 ? 20 * $i : $i * 6;
+        $data['totals']['total_work_day_amount'] = $y >= 20 ? 20 * $y : $y * 6;
         $data['totals']['ausbildung_hours'] = $ausbildung_hours != 0 ? $ausbildung_hours * 22 : "-";
 
         $bahn_card = $user->bahnCard;
