@@ -475,7 +475,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                     <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
                                         <ToggleSwitch
                                             checked={values.shiftCount}
-                                            label="ShiftZulage berechnen"
+                                            label="Schichtzulage berechnen"
                                             id="shiftCount"
                                             name="shiftCount"
                                             onChange={(value) => {
