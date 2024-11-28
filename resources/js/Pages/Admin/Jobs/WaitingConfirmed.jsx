@@ -305,13 +305,13 @@ export default function WaitingConfirmed({ auth }) {
                                                 onClose={() => setShowConfirmModal(false)}
                                             >
                                                 <Modal.Header>
-                                                    <p>Hesaplanacak mı?</p>
+                                                    <p>Schichtzulage berechnen ?</p>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                    <p>ShiftZulage wird berechnet?</p>
+                                                    <p>Wird die Schichtzulage gültig sein?</p>
                                                     <ToggleSwitch
                                                         checked={shiftZulage}
-                                                        label="ShiftZulage berechnen"
+                                                        label="Schichtzulage berechnen"
                                                         id="shiftZulage"
                                                         name="shiftZulage"
                                                         onChange={(value) => {
