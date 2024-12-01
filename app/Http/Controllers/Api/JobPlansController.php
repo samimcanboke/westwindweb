@@ -18,6 +18,4 @@ class JobPlansController extends Controller
         return response()->json(['plan' => JobPlans::find($id)]);
     }   
 
-
-
 }

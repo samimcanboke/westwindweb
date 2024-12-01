@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\JWTAuthController;
+use App\Http\Controllers\Api\JobPlansController;
 use App\Http\Middleware\JWTAuthentication;
 
 Route::middleware([JWTAuthentication::class])->group(function () {
@@ -19,7 +20,7 @@ Route::middleware([JWTAuthentication::class])->group(function () {
     Route::post('/logout', [JWTAuthController::class, 'logout']);
 
     Route::group(['prefix' => 'plans'], function () {
-        Route::get('/', [PlanController::class, 'index']);
+        Route::get('/', [JobPlansController::class, 'index']);
     });
 });
 
