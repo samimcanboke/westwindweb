@@ -20,7 +20,8 @@ Route::middleware([JWTAuthentication::class])->group(function () {
     Route::post('/logout', [JWTAuthController::class, 'logout']);
 
     Route::group(['prefix' => 'plans'], function () {
-        Route::get('/', [JobPlansController::class, 'index']);
+        Route::get('/', [JobPlansController::class, 'index']);  
+        Route::get('/{id}', [JobPlansController::class, 'show']);
     });
 });
 
