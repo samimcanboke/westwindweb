@@ -65,7 +65,7 @@ const LocationField = ({ id, name, type, placeholder, label, value, onChange, cl
             </Label>
             <span className="text-xs text-gray-500">*Sie können schreiben</span>
             {isClearAllowed &&
-                <button onClick={handleClear}>Löschen</button>
+                <button className="text-white bg-red-600 rounded-md px-2 py-1 hover:bg-red-700 fixed right-0" onClick={handleClear}>Löschen</button>
             }
             <AsyncSelect
                 cacheOptions
