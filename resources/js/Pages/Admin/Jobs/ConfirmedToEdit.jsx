@@ -1232,14 +1232,23 @@ export default function ConfirmedToEdit({ auth }) {
                                                         id="trainStartPlace"
                                                         name="trainStartPlace"
                                                         label="Zug Abfahrtsort"
+                                                        isClearAllowed={true}
                                                         error={errors.trainStartPlace}
                                                         selected={values.trainStartPlace}
                                                         placeholder="Zug Abfahrtsort"
                                                         onChange={(e) => {
-                                                            setFieldValue(
-                                                                "trainStartPlace",
-                                                                e.value
-                                                            );
+                                                            if(e === null){
+                                                                setFieldValue(
+                                                                    "trainStartPlace",
+                                                                    null
+                                                                );
+                                                            } else {
+                                                                setFieldValue(
+                                                                    "trainStartPlace",
+                                                                    e.value
+                                                                );
+                                                            }
+                                                           
                                                         }}
                                                         className={
                                                             errors.trainStartPlace &&
@@ -1312,14 +1321,23 @@ export default function ConfirmedToEdit({ auth }) {
                                                         id="trainEndPlace"
                                                         name="trainEndPlace"
                                                         label="Zug Ankunftsort"
+                                                        isClearAllowed={true}
                                                         error={errors.trainEndPlace}
                                                         selected={values.trainEndPlace}
                                                         placeholder="Zug Ankunftsort"
                                                         onChange={(e) => {
-                                                            setFieldValue(
-                                                                "trainEndPlace",
-                                                                e.value
-                                                            );
+                                                            if(e === null){
+                                                                setFieldValue(
+                                                                    "trainEndPlace",
+                                                                    null
+                                                                );
+                                                            } else {
+                                                                setFieldValue(
+                                                                    "trainEndPlace",
+                                                                    e.value
+                                                                );
+                                                            }
+                                                           
                                                         }}
                                                         className={
                                                             errors.trainEndPlace &&

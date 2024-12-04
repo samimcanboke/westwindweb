@@ -1248,10 +1248,17 @@ export default function WaitingConfirmed({ auth }) {
                                                             type="text"
                                                             label="Startort"
                                                             onChange={(e) => {
-                                                                setFieldValue(
-                                                                    "workStartPlace",
-                                                                    e.value
-                                                                );
+                                                                if(e === null){
+                                                                    setFieldValue(
+                                                                        "workStartPlace",
+                                                                        null
+                                                                    );
+                                                                } else {
+                                                                    setFieldValue(
+                                                                        "workStartPlace",
+                                                                        e.value
+                                                                    );
+                                                                }
                                                             }}
                                                             selected={
                                                                 values.workStartPlace
@@ -1341,16 +1348,24 @@ export default function WaitingConfirmed({ auth }) {
                                                             id="trainStartPlace"
                                                             name="trainStartPlace"
                                                             type="text"
+                                                            isClearAllowed={true}
                                                             placeholder="Zug Abfahrtsort"
                                                             error={
                                                                 errors.trainStartPlace
                                                             }
                                                             label={"Zug Abfahrtsort"}
                                                             onChange={(e) => {
-                                                                setFieldValue(
-                                                                    "trainStartPlace",
-                                                                    e.value
-                                                                );
+                                                                if(e === null){
+                                                                    setFieldValue(
+                                                                        "trainStartPlace",
+                                                                        null
+                                                                    );
+                                                                } else {
+                                                                    setFieldValue(
+                                                                        "trainStartPlace",
+                                                                        e.value
+                                                                    );
+                                                                }
                                                             }}
                                                             className={
                                                                 errors.trainStartPlace &&
@@ -1429,13 +1444,20 @@ export default function WaitingConfirmed({ auth }) {
                                                         <LocationField
                                                             id="trainEndPlace"
                                                             name="trainEndPlace"
-
+                                                            isClearAllowed={true}
                                                             label={"Zug Ankunftsort"}
                                                             onChange={(e) => {
-                                                                setFieldValue(
-                                                                    "trainEndPlace",
-                                                                    e.value
-                                                                );
+                                                                if(e === null){
+                                                                    setFieldValue(
+                                                                        "trainEndPlace",
+                                                                        null
+                                                                    );
+                                                                } else {
+                                                                    setFieldValue(
+                                                                        "trainEndPlace",
+                                                                        e.value
+                                                                    );
+                                                                }
                                                             }}
                                                             error={
                                                                 errors.trainEndPlace
@@ -1709,7 +1731,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         Arbeitsende
                                                     </AccordionTitle>
                                                     <AccordionContent>
-
+                                                        
                                                         <LocationField
                                                             id="workEndPlace"
                                                             name="workEndPlace"
@@ -1717,11 +1739,19 @@ export default function WaitingConfirmed({ auth }) {
                                                             type="text"
                                                             placeholder="Arbeitsende Ort"
                                                             onChange={(e) => {
-                                                                setFieldValue(
-                                                                    "workEndPlace",
-                                                                    e.value
-                                                                );
+                                                                if(e === null){
+                                                                    setFieldValue(
+                                                                        "workEndPlace",
+                                                                        null
+                                                                    );
+                                                                } else {
+                                                                    setFieldValue(
+                                                                        "workEndPlace",
+                                                                        e.value
+                                                                    );
+                                                                }
                                                             }}
+                                                            isClearAllowed={true}
                                                             error={errors.workEndPlace}
                                                             className={
                                                                 errors.workEndPlace &&
