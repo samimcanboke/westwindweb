@@ -137,6 +137,7 @@ export default function WaitingConfirmed({ auth }) {
         console.log(camelCase(editingDraft));
         setValues(camelCase(editingDraft));
         setShowEdit(true);
+        setShowConfirmModal(false);
     };
     const getUnconfirmed = async () => {
         await axios.get("/data-unconfirmed-jobs").then(async (jobs) => {
