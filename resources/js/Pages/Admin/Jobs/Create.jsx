@@ -88,7 +88,7 @@ export default function Dashboard({ auth }) {
         }
         let dtfn = date;
         let finishDateTime = dtfn.add(guest ? 8 : 10, 'hours').format('YYYY-MM-DD HH:mm');
-       return {finishDateTime: finishDateTime, breakStart: breakDate.add(5, 'hours').format('HH:mm'), breakEnd: breakDateEnd.add(guest ? 5.75 : 5, 'hours').format('HH:mm')};
+       return {finishDateTime: finishDateTime, breakStart: breakDate.add(5, 'hours').format('HH:mm'), breakEnd: breakDateEnd.add(guest ? 6 : 5.75, 'hours').format('HH:mm')};
     }
 
     const calculateBreakTime = (start_date,start_time,end_date,end_time) => {
