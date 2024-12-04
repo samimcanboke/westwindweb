@@ -692,7 +692,7 @@ class FinalizedJobsController extends Controller
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
             $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
-            $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
+            $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024",];
             $total_public_holiday_hours = new DateInterval('PT0H0M');
             $total_work_sum = new DateInterval('PT0H0M');
             $total_guest_sum = new DateInterval('PT0H0M');
@@ -1762,7 +1762,7 @@ class FinalizedJobsController extends Controller
 
         return response()->json([
             "months" => ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-            "year" => ["2020", "2021", "2022", "2023", "2024"],
+            "year" => ["2020", "2021", "2022", "2023", "2024", "2025", "2026"],
             "users" => $users,
             "clients" => $clients,
         ]);
