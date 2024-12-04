@@ -134,6 +134,8 @@ export default function WaitingConfirmed({ auth }) {
         } catch (e) {
             console.log(e);
         }
+
+        
         console.log(camelCase(editingDraft));
         setValues(camelCase(editingDraft));
         setShowEdit(true);
@@ -268,7 +270,7 @@ export default function WaitingConfirmed({ auth }) {
                     {showEdit && (
                         <div>
                             <div className="flex justify-center items-center flex-column h-24 font-bold ">
-                                <p>Informationen bearbeiten</p>
+                                <p>{values.driverName} - Informationen bearbeiten - {values.tourName}</p>
                             </div>
                             <Formik
                                 initialValues={values}

@@ -105,6 +105,8 @@ export default function ConfirmedToEdit({ auth }) {
         } catch (e) {
             console.log(e);
         }
+
+        editingDraft.driverName = drivers.find(driver => driver.id === editingDraft.user_id);
         setValues(camelCase(editingDraft));
         setShowEdit(true);
     };
@@ -301,7 +303,7 @@ export default function ConfirmedToEdit({ auth }) {
                 {showEdit && (
                     <div>
                         <div className="flex justify-center items-center flex-column h-24 font-bold ">
-                            <p>Informationen bearbeiten</p>
+                            <p>{values.driverName.name ?? "Fahrer nicht gefunden"} - Informationen bearbeiten - {values.tourName}</p>
                         </div>
                         <Formik
                             initialValues={values}
