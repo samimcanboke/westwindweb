@@ -64,9 +64,8 @@ const LocationField = ({ id, name, type, placeholder, label, value, onChange, cl
                 {label}
             </Label>
             <span className="text-xs text-gray-500">*Sie können schreiben</span>
-            {isClearAllowed &&
-                <button className="text-white bg-red-600 rounded-md px-2 py-1 hover:bg-red-700 fixed right-0" onClick={handleClear}>Löschen</button>
-            }
+            
+
             <AsyncSelect
                 cacheOptions
                 defaultOptions
@@ -76,12 +75,20 @@ const LocationField = ({ id, name, type, placeholder, label, value, onChange, cl
                 noOptionsMessage={() => 'Keine Optionen gefunden'}
                 placeholder={placeholder}
                 value={station ? station : value}
+                
                 onChange={(selectedOption) => {
                     console.log(selectedOption);
                     onChange(selectedOption);
                 }}
                 menuPortalTarget={document.body} // Chrome tarayıcılarda sayfa kilitlenmesini önlemek için eklendi
             />
+            {isClearAllowed &&
+                <div className="relative" style={{top: '-34px'}}>
+                    <button className="text-red-600 border border-red-600 rounded-md px-2 py-1 hover:bg-red-600 hover:text-white ml-5 absolute right-10" style={{top: '-5px'}} onClick={handleClear}>Löschen</button>
+                </div>
+            }
+        
+            
         </>
     );
 };
