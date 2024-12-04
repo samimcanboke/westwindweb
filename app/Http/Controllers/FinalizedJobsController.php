@@ -692,7 +692,7 @@ class FinalizedJobsController extends Controller
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
             $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
-            $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024",];
+            $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024","01/01/2025","01/05/2025","18/04/2025","21/04/2025","29/05/2025","09/06/2025","03/10/2025","25/12/2025","26/12/2025"];
             $total_public_holiday_hours = new DateInterval('PT0H0M');
             $total_work_sum = new DateInterval('PT0H0M');
             $total_guest_sum = new DateInterval('PT0H0M');
@@ -1287,7 +1287,7 @@ class FinalizedJobsController extends Controller
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
 
         $data['totals']['dates'] = $finalized_jobs->count();
-        $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024"];
+        $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024","01/01/2025","01/05/2025","18/04/2025","21/04/2025","29/05/2025","09/06/2025","03/10/2025","25/12/2025","26/12/2025"];
         $total_public_holiday_hours = new DateInterval('PT0H0M');
         $total_work_sum = new DateInterval('PT0H0M') ;
         $total_guest_sum = new DateInterval('PT0H0M');
