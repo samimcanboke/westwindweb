@@ -1510,8 +1510,6 @@ class FinalizedJobsController extends Controller
 
             $feeding_fee_text =  $finalized_job->feeding_fee > 0 ? $finalized_job->feeding_fee . " €" : $finalized_job->feeding_fee ;
 
-
-
             $from = $finalized_job->work_start_place;
             $to = $finalized_job->work_end_place;
 

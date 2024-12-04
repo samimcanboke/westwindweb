@@ -63,6 +63,7 @@ const ConfirmButton = ({ onConfirm, setShowEdit, showEdit, getUnconfirmed, shift
         axios.post("/jobs-confirmation", { ...snakeCase(values), shiftZulage }).then((res) => {
             getUnconfirmed();
             setShowEdit(false);
+            setShowConfirmModal(false);
         });
     };
 
