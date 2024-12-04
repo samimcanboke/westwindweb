@@ -752,7 +752,7 @@ export default function WaitingConfirmed({ auth }) {
                                                         <br />
                                                         {values.ausbildung && (
                                                             <div className="max-w-md">
-                                                                <Label>Ausbilder</Label>
+                                                                <Label>Azubi</Label>
                                                                 <Select
                                                                     id="ausbilder"
                                                                     name="ausbilder"

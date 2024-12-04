@@ -762,7 +762,7 @@ export default function ConfirmedToEdit({ auth }) {
                                                 <Label
                                                     className={errors.user ? "text-red-500" : ""}
                                                     htmlFor="user"
-                                                    value="Wählen Sie Lockführer"
+                                                    value="Wählen Sie Azubi"
                                                 />
                                             </div>
                                             <Select
