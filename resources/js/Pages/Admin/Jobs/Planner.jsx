@@ -20,6 +20,8 @@ import {
     Select,
     Datepicker,
     ToggleSwitch,
+    Spinner,
+
 } from "flowbite-react";
 import Swal from "sweetalert2";
 import interact from "interactjs";
@@ -76,6 +78,7 @@ export default function Planner({ auth }) {
     const [selectedClients, setSelectedClients] = useState([]);
     const [clients, setClients] = useState([]);
     const [selectedDrivers, setSelectedDrivers] = useState([]);
+    const [setMachinistLoading, setSetMachinistLoading] = useState(false);
 
 
     const deleteFromuser = async (id) => {
@@ -760,6 +763,7 @@ export default function Planner({ auth }) {
         window.location.href = route("planner-jobs-edit", { id: id });
     };
     const setMachinist = async () => {
+        setSetMachinistLoading(true);
         setDriver(driver);
         await axios
             .put("/planner/jobs/" + driver, {
@@ -771,6 +775,15 @@ export default function Planner({ auth }) {
                 getPlansWithoutUser();
                 getUsersJobs();
                 setOpenModal(false);
+                setSetMachinistLoading(false);
+                if(!response.data.status){
+                    console.log(response.data);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Fehler",
+                        text: response.data.message,
+                    });
+                }
             });
     };
     const setSick = async () => {
@@ -1037,7 +1050,7 @@ export default function Planner({ auth }) {
                             className="w-full"
                             onChange={(e) => setDriver(e.target.value)}
                         >
-                            <option>Wählen</option>
+                            <option>Wählen Sie</option>
                             {selectedDrivers &&
                                 selectedDrivers.map((driver) => (
                                     <option key={driver.value} value={driver.value}>
@@ -1048,7 +1061,13 @@ export default function Planner({ auth }) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={setMachinist}>Zuweisen</Button>
+                    {setMachinistLoading ? (
+                        <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+                            <Spinner aria-label="Zuweisen..." size="sm" />
+                        </Button>
+                    ) : (
+                        <Button onClick={setMachinist} disabled={setMachinistLoading}>Zuweisen</Button>
+                    )}
                     <Button color="gray" onClick={() => setOpenModal(false)}>
                         Abbrechen
                     </Button>
