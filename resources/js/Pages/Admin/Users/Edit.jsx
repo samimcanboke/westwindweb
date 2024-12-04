@@ -1260,7 +1260,7 @@ export default function EditUser({ auth, user_id }) {
                                                     htmlFor="annual_leave_rights"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Jahresurlaubsanspruch (Stunden)
+                                                    Jahresurlaubsanspruch (Tage)
                                                 </label>
                                                 <Field
                                                     type="text"
