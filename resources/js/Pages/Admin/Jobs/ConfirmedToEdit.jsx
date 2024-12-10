@@ -1042,6 +1042,48 @@ export default function ConfirmedToEdit({ auth }) {
                                                             </p>
                                                         )}
                                                     <br />
+                                                    {values.guestStartTime && (
+                                                            <div className="mb-2 block">
+                                                                <Label
+                                                                    className={errors.gfStartStatus ? "text-red-500" : ""}
+                                                                    htmlFor="gf_status"
+                                                                    value="Wählen Sie Ihren GF Status"
+                                                                />
+                                                                <br />
+                                                                <div className="flex items-center">
+                                                                    <ToggleSwitch
+                                                                        checked={values.gfStartStatus === 2}
+                                                                        className="mr-6"
+                                                                        label="Haus"
+                                                                        id="cancel"
+                                                                        name="cancel"
+                                                                        onChange={(value) => {
+                                                                            if (value) {
+                                                                                setFieldValue("gfStartStatus", 2);
+                                                                            } else {
+                                                                                setFieldValue("gfStartStatus", 1);
+                                                                            }
+                                                                        }}
+                                                                    />
+
+                                                                    <ToggleSwitch
+                                                                        checked={values.gfStartStatus === 1}
+                                                                        className="mr-4"
+                                                                        label="Hotel"
+                                                                        id="hotel"
+                                                                        name="hotel"
+                                                                        onChange={(value) => {
+                                                                            if (value) {
+                                                                                setFieldValue("gfStartStatus", 1);
+                                                                            } else {
+                                                                                setFieldValue("gfStartStatus", 2);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        <br />
                                                     <Label>
                                                         Gastfahrt Ende
                                                     </Label>
@@ -1869,6 +1911,48 @@ export default function ConfirmedToEdit({ auth }) {
                                                             )}
                                                     </div>
                                                     <br />
+                                                    {values.guestEndEndTime && (
+                                                            <div className="mb-2 block">
+                                                                <Label
+                                                                    className={errors.gfEndStatus ? "text-red-500" : ""}
+                                                                    htmlFor="gf_status"
+                                                                    value="Wählen Sie Ihren GF Status"
+                                                                />
+                                                                <br />
+                                                                <div className="flex items-center">
+                                                                    <ToggleSwitch
+                                                                        checked={values.gfEndStatus === 2}
+                                                                        className="mr-6"
+                                                                        label="Haus"
+                                                                        id="gfEndStatusHouse"
+                                                                        name="gfEndStatus"
+                                                                        onChange={(value) => {
+                                                                            if (value) {
+                                                                                setFieldValue("gfEndStatus", 2);
+                                                                            } else {
+                                                                                setFieldValue("gfEndStatus", 1);
+                                                                            }
+                                                                        }}
+                                                                    />
+
+                                                                    <ToggleSwitch
+                                                                        checked={values.gfEndStatus === 1}
+                                                                        className="mr-4"
+                                                                        label="Hotel"
+                                                                        id="gfEndStatusHotel"
+                                                                        name="gfEndStatus"
+                                                                        onChange={(value) => {
+                                                                            if (value) {
+                                                                                setFieldValue("gfEndStatus", 1);
+                                                                            } else {
+                                                                                setFieldValue("gfEndStatus", 2);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        <br />
                                                 </AccordionContent>
                                             </AccordionPanel>
                                         </Accordion>

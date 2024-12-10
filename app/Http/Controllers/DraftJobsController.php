@@ -69,6 +69,8 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_end_place = $request->guestEndEndPlace;
         $draftJob->guest_end_end_time = $request->guestEndEndTime;
         $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
+        $draftJob->gf_start_status = $request->gfStartStatus;
+        $draftJob->gf_end_status = $request->gfEndStatus;
         $draftJob->ausland = $request->ausland;
         $draftJob->country = $request->country;
         $draftJob->save();
@@ -135,6 +137,8 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_end_time = $request->guest_end_end_time;
         $draftJob->ausland = $request->ausland;
         $draftJob->country = $request->country;
+        $draftJob->gf_start_status = $request->gf_start_status;
+        $draftJob->gf_end_status = $request->gf_end_status;
         if($request->images && json_encode($request->images) !== $draftJob->files){
             $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
         }
@@ -184,6 +188,8 @@ class DraftJobsController extends Controller
         $draftJob->guest_end_end_time = $request->guest_end_end_time ;
         $draftJob->ausland = $request->ausland ?? $draftJob->ausland;
         $draftJob->country = $request->country ?? $draftJob->country;
+        $draftJob->gf_start_status = $request->gf_start_status ?? $draftJob->gf_start_status;
+        $draftJob->gf_end_status = $request->gf_end_status ?? $draftJob->gf_end_status;
         if($request->images && json_encode($request->images) !== $draftJob->files){
             $draftJob->files = is_string($request->images) ? $request->images : json_encode($request->images);
         }
@@ -236,6 +242,8 @@ class DraftJobsController extends Controller
         $finalized->guest_end_end_time = $draft->guest_end_end_time;
         $finalized->ausland = $draft->ausland;
         $finalized->country = $draft->country;
+        $finalized->gf_start_status = $draft->gf_start_status;
+        $finalized->gf_end_status = $draft->gf_end_status;
         if($draft->files){
             $finalized->files = is_string($draft->files) ? $draft->files : json_encode($draft->files);
         }

@@ -398,15 +398,16 @@ class FinalizedJobsController extends Controller
                 }
                 $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
                 $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
-
+                $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Haus" : " ";
+                $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Haus" : " ";
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
                     "work_start_end_time" => $finalized_job->guest ? "GF Tour" : $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
                     "work_total" => $work_sum,
-                    "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
+                    "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time . " ( " . $gf_start_status . " )",
                     "guest_total_time" => $guest_start_sum,
-                    "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
+                    "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time . " ( " . $gf_end_status . " )",
                     "guest_back_total_time" => $guest_back_sum,
                     "accomodation" => ($finalized_job->feeding_fee == 32  ? "X" : "") . ($finalized_job->ausland ? $finalized_job->country : ""),
                     "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
@@ -572,15 +573,16 @@ class FinalizedJobsController extends Controller
 
                 $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
                 $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
-
+                $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Haus" : " ";
+                $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Haus" : " ";
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
                     "work_start_end_time" => $finalized_job->guest ? "GF Tour" : $finalized_job->work_start_time . " - " . $finalized_job->work_end_time,
                     "work_total" => $work_sum,
-                    "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time,
+                    "guest_start_end_time" => $finalized_job->guest_start_time . " - " . $finalized_job->guest_start_end_time . " ( " . $gf_start_status . " )",
                     "guest_total_time" => $guest_start_sum,
-                    "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time,
+                    "guest_back_start_end_time" => $finalized_job->guest_end_time . " - " . $finalized_job->guest_end_end_time . " ( " . $gf_end_status . " )",
                     "guest_back_total_time" => $guest_back_sum,
                     "accomodation" => ($finalized_job->feeding_fee == 32 ? "X" : "") . ($finalized_job->ausland ? $finalized_job->country : ""),
                     "extra" => $finalized_job->extra . (strtotime($guest_start_sum) > strtotime('04:00') ? "-X" : "") . (strtotime($guest_back_sum) > strtotime('04:00') ? "-X" : ""),
@@ -1707,6 +1709,8 @@ class FinalizedJobsController extends Controller
         $finalizedJob->shift_count = $request->shift_count;
         $finalizedJob->guest_end_end_place = $request->guest_end_end_place;
         $finalizedJob->guest_end_end_time = $request->guest_end_end_time;
+        $finalizedJob->gf_start_status = $request->gf_start_status;
+        $finalizedJob->gf_end_status = $request->gf_end_status;
         $finalizedJob->save();
         return response()->json(["status" => $finalizedJob]);
     }
@@ -1750,6 +1754,8 @@ class FinalizedJobsController extends Controller
         $finalizedJob->guest_end_end_place = $request->guest_end_end_place;
         $finalizedJob->guest_end_end_time = $request->guest_end_end_time;
         $finalizedJob->confirmation = true;
+        $finalizedJob->gf_start_status = $request->gf_start_status;
+        $finalizedJob->gf_end_status = $request->gf_end_status;
         $finalizedJob->save();
         return response()->json(["status" => true]);
     }

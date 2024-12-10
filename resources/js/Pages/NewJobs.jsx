@@ -59,6 +59,8 @@ const initialValues = {
     guestEndEndPlace: "",
     guestEndEndTime: "",
     files: [],
+    gfStartStatus: 0,
+    gfEndStatus: 0,
 };
 
 const validationSchema = Yup.object().shape({
@@ -140,6 +142,8 @@ const validationSchema = Yup.object().shape({
         then: () => Yup.string().required("Required"),
         otherwise: () => Yup.string().notRequired(),
     }),
+
+
 });
 
 export default function NewJobs({ auth }) {
@@ -831,6 +835,8 @@ export default function NewJobs({ auth }) {
                                             setFieldValue("earlyExit", value);
                                         }}
                                     />
+
+                                    
                                     <br />
                                     <Label className={errors.guestStartPlace ? "text-red-500" : ""}>GF Standort Beginn</Label>
                                     <Field
@@ -882,6 +888,49 @@ export default function NewJobs({ auth }) {
                                                 *{errors.guestStartTime}
                                             </p>
                                         )}
+                                    <br />
+
+                                    {values.guestStartTime && (
+                                        <div className="mb-2 block">
+                                            <Label
+                                                className={errors.gfStartStatus ? "text-red-500" : ""}
+                                                htmlFor="gf_status"
+                                                value="Wählen Sie Ihren GF Status"
+                                            />
+                                            <br />
+                                            <div className="flex items-center">
+                                                <ToggleSwitch
+                                                    checked={values.gfStartStatus === "2"}
+                                                    className="mr-6"
+                                                    label="Haus"
+                                                    id="cancel"
+                                                    name="cancel"
+                                                    onChange={(value) => {
+                                                        if(value){
+                                                            setFieldValue("gfStartStatus", "2");
+                                                        } else {
+                                                            setFieldValue("gfStartStatus", "1");
+                                                        }
+                                                    }}
+                                                />
+                                               
+                                               <ToggleSwitch
+                                                    checked={values.gfStartStatus === "1"}
+                                                    className="mr-4"
+                                                    label="Hotel"
+                                                    id="hotel"
+                                                    name="hotel"
+                                                    onChange={(value) => {
+                                                        if(value){
+                                                            setFieldValue("gfStartStatus", "1");
+                                                        } else {
+                                                            setFieldValue("gfStartStatus", "2");
+                                                        }
+                                                    }}
+                                                />   
+                                            </div>
+                                        </div>
+                                    )}
                                     <br />
 
                                     <Label className={errors.guestStartEndPlace ? "text-red-500" : ""}>GF Standort Ende</Label>
@@ -999,120 +1048,7 @@ export default function NewJobs({ auth }) {
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
-                         <Accordion>
-                            <AccordionPanel />
-                            <AccordionPanel isOpen={false}>
-                                <AccordionTitle className={Object.keys(errors).some(key => ['trainStartPlace', 'trainStartTime', 'trainEndPlace', 'trainEndTime'].includes(key)) ? "text-red-500" : ""}>
-                                    Zug Abfahrt und Ankunft
-                                </AccordionTitle>
-                                <AccordionContent>
-                                    <Label className={errors.trainStartPlace ? "text-red-500" : ""}>Zug Abfahrtsort</Label>
-                                    <LocationField
-                                        id="trainStartPlace"
-                                        name="trainStartPlace"
-                                        type="text"
-                                        placeholder="Zug Abfahrtsort"
-                                        onChange={(e) => {
-                                            setFieldValue(
-                                                "trainStartPlace",
-                                                e.value
-                                            );
-                                        }}
-                                        className={
-                                            errors.trainStartPlace
 
-                                                ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        }
-                                        selected={values.trainStartPlace}
-                                    />
-                                    {errors.trainStartPlace &&
-                                        (
-                                            <p className="text-red-500">
-                                                *{errors.trainStartPlace}
-                                            </p>
-                                        )}
-                                    <br />
-
-                                    <Label className={errors.trainStartTime ? "text-red-500" : ""}>Zug Abfahrtszeit</Label>
-                                    <div className="flex">
-                                        <input
-                                            type="time"
-                                            id="trainStartTime"
-                                            name="trainStartTime"
-                                            className={
-                                                errors.trainStartTime
-                                                    ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                    : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            }
-                                            value={values.trainStartTime}
-                                            onChange={(e) => {
-                                                setFieldValue(
-                                                    "trainStartTime",
-                                                    e.target.value
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                    {errors.trainStartTime && (
-                                            <p className="text-red-500">
-                                                *{errors.trainStartTime}
-                                            </p>
-                                        )}
-                                    <Label className={errors.trainEndPlace ? "text-red-500" : ""}>Zug Ankunftsort</Label>
-                                    <LocationField
-                                        id="trainEndPlace"
-                                        name="trainEndPlace"
-                                        type="text"
-                                        placeholder="Zug Ankunftsort"
-                                        onChange={(e) => {
-                                            setFieldValue(
-                                                "trainEndPlace",
-                                                e.value
-                                            );
-                                        }}
-                                        className={
-                                            errors.trainEndPlace
-                                                ? "placeholder:italic placeholder:text-slate-4000 block bg-white w-full border border-red-500 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                                : "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                                        }
-                                        selected={values.trainEndPlace}
-                                    />
-                                    {errors.trainEndPlace && (
-                                        <p className="text-red-500">
-                                            *{errors.trainEndPlace}
-                                        </p>
-                                    )}
-                                    <br />
-
-                                    <Label className={errors.trainEndTime ? "text-red-500" : ""}>Zug Ankunftszeit</Label>
-                                    <div className="flex">
-                                        <input
-                                            type="time"
-                                            id="trainEndTime"
-                                            name="trainEndTime"
-                                            className={
-                                                errors.trainEndTime 
-                                                    ? "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                    : "rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-blue-500 focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            }
-                                            value={values.trainEndTime}
-                                            onChange={(e) => {
-                                                setFieldValue(
-                                                    "trainEndTime",
-                                                    e.target.value
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                    {errors.trainEndTime && (
-                                            <p className="text-red-500">
-                                                *{errors.trainEndTime}
-                                            </p>
-                                        )}
-                                </AccordionContent>
-                            </AccordionPanel>
-                        </Accordion>
                         <Accordion>
                             <AccordionPanel />
                             <AccordionPanel isOpen={false}>
@@ -1539,6 +1475,48 @@ export default function NewJobs({ auth }) {
                                             )}
                                     </div>
                                     <br />
+                                    {values.guestEndEndTime && (
+                                        <div className="mb-2 block">
+                                            <Label
+                                                className={errors.gfEndStatus ? "text-red-500" : ""}
+                                                htmlFor="gf_status"
+                                                value="Wählen Sie Ihren GF Status"
+                                            />
+                                            <br />
+                                            <div className="flex items-center">
+                                                <ToggleSwitch
+                                                    checked={values.gfEndStatus === "2"}
+                                                    className="mr-6"
+                                                    label="Haus"
+                                                    id="gfEndStatusHouse"
+                                                    name="gfEndStatus"
+                                                    onChange={(value) => {
+                                                        if(value){
+                                                            setFieldValue("gfEndStatus", "2");
+                                                        } else {
+                                                            setFieldValue("gfEndStatus", "1");
+                                                        }
+                                                    }}
+                                                />
+                                               
+                                               <ToggleSwitch
+                                                    checked={values.gfEndStatus === "1"}
+                                                    className="mr-4"
+                                                    label="Hotel"
+                                                    id="gfEndStatusHotel"
+                                                    name="gfEndStatus"
+                                                    onChange={(value) => {
+                                                        if(value){
+                                                            setFieldValue("gfEndStatus", "1");
+                                                        } else {
+                                                            setFieldValue("gfEndStatus", "2");
+                                                        }
+                                                    }}
+                                                />   
+                                            </div>
+                                        </div>
+                                    )}
+                                    
                                 </AccordionContent>
                             </AccordionPanel>
                         </Accordion>
@@ -1560,6 +1538,9 @@ export default function NewJobs({ auth }) {
                                     Speichern
                                 </Button>
                             )}
+                             <div className="flex justify-center items-center">
+                               {JSON.stringify(errors)} 
+                            </div>
                         </div>
                     </Form>
                 )}
