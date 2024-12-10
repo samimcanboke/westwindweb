@@ -1082,7 +1082,7 @@ export default function DraftJobs({ auth }) {
                                                                     <ToggleSwitch
                                                                         checked={values.gfStartStatus === 2}
                                                                         className="mr-6"
-                                                                        label="Haus"
+                                                                        label="GF vom zu Hause"
                                                                         id="cancel"
                                                                         name="cancel"
                                                                         onChange={(value) => {
@@ -1097,7 +1097,7 @@ export default function DraftJobs({ auth }) {
                                                                     <ToggleSwitch
                                                                         checked={values.gfStartStatus === 1}
                                                                         className="mr-4"
-                                                                        label="Hotel"
+                                                                        label="GF vom Hotel"
                                                                         id="hotel"
                                                                         name="hotel"
                                                                         onChange={(value) => {
@@ -1919,7 +1919,7 @@ export default function DraftJobs({ auth }) {
                                                                     <ToggleSwitch
                                                                         checked={values.gfEndStatus === 2}
                                                                         className="mr-6"
-                                                                        label="Haus"
+                                                                        label="GF nach Hause"
                                                                         id="gfEndStatusHouse"
                                                                         name="gfEndStatus"
                                                                         onChange={(value) => {
@@ -1934,7 +1934,7 @@ export default function DraftJobs({ auth }) {
                                                                     <ToggleSwitch
                                                                         checked={values.gfEndStatus === 1}
                                                                         className="mr-4"
-                                                                        label="Hotel"
+                                                                        label="GF zum Hotel"
                                                                         id="gfEndStatusHotel"
                                                                         name="gfEndStatus"
                                                                         onChange={(value) => {

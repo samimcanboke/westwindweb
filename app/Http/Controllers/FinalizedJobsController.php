@@ -398,8 +398,8 @@ class FinalizedJobsController extends Controller
                 }
                 $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
                 $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
-                $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Haus" : " ";
-                $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Haus" : " ";
+                $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Heim" : " ";
+                $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Heim" : " ";
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
@@ -573,8 +573,8 @@ class FinalizedJobsController extends Controller
 
                 $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
                 $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
-                $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Haus" : " ";
-                $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Haus" : " ";
+                $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Heim" : " ";
+                $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Heim" : " ";
                 $data['rows'][] = [
                     "date" => Carbon::parse($finalized_job->initial_date)->format('d.m.Y'),
                     "driver" => $finalized_job->user->name,
