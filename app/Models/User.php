@@ -172,14 +172,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(HourBank::class);
     }
-    public function professions()
-    {
-        return $this->hasMany(UsersProfession::class);
-    }
-
     public function userCertificates()
     {
-        return $this->hasMany(UserCertificate::class);
+        return $this->hasMany(UserCertificate::class, 'user_id', 'id');
     }
 
     public function salaryReport()
@@ -211,4 +206,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(GPSLocation::class);
     }
+
+    public function usersProfessions()
+    {
+        return $this->hasMany(UsersProfession::class);
+    }
+
+    public function professions()
+    {
+        return $this->hasManyThrough(Professions::class, UsersProfession::class, 'user_id', 'id', 'id');
+    }
 }
+

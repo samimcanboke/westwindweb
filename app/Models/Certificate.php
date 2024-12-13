@@ -15,10 +15,16 @@ class Certificate extends Model
         'sort',
     ];
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
-    public function userCertificates()
+
+    public function userCertificate()
     {
         return $this->hasMany(UserCertificate::class);
     }
+
+    
 
 }

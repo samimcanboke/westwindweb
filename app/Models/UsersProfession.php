@@ -16,4 +16,8 @@ class UsersProfession extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function profession()
+    {
+        return $this->belongsTo(Professions::class);
+    }
 }

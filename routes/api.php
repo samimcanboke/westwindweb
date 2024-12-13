@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\JWTAuthController;
 use App\Http\Controllers\Api\JobPlansController;
 use App\Http\Middleware\JWTAuthentication;
+use App\Http\Controllers\Api\ProfileController;
 
 Route::middleware([JWTAuthentication::class])->group(function () {
     
@@ -14,6 +15,10 @@ Route::middleware([JWTAuthentication::class])->group(function () {
         Route::post('/', [RegisteredUserController::class, 'store']);
         Route::put('/{id}', [RegisteredUserController::class, 'update']);
         Route::delete('/{id}', [RegisteredUserController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('/', [ProfileController::class, 'index']);
     });
     
     Route::post('/refresh', [JWTAuthController::class, 'refresh']); 
