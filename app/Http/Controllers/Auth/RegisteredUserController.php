@@ -39,6 +39,12 @@ class RegisteredUserController extends Controller
         return response()->json($users);
     }
 
+    public function api_all()
+    {
+        $users = User::where('is_admin', 0)->where('is_active', 1)->where('leave_working_date', null)->get();
+        return response()->json($users);
+    }
+
     public function show_all()
     {
         $users = User::excludeAdminsIfAccountant()->get();

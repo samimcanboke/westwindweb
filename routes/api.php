@@ -14,7 +14,7 @@ Route::middleware([JWTAuthentication::class])->group(function () {
     
     Route::group(['prefix' => 'user'], function () {
         Route::get('/', [RegisteredUserController::class, 'show']);
-        Route::get('/all', [RegisteredUserController::class, 'show_exclude_admins']);
+        Route::get('/all', [RegisteredUserController::class, 'api_all']);
         Route::post('/', [RegisteredUserController::class, 'store']);
         Route::put('/{id}', [RegisteredUserController::class, 'update']);
         Route::delete('/{id}', [RegisteredUserController::class, 'destroy']);
