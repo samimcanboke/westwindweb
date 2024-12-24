@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\JWTAuthController;
 use App\Http\Controllers\Api\JobPlansController;
 use App\Http\Middleware\JWTAuthentication;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\NewJobController;
+use App\Http\Controllers\Api\LocationsController;
 
 Route::middleware([JWTAuthentication::class])->group(function () {
     
@@ -27,6 +29,16 @@ Route::middleware([JWTAuthentication::class])->group(function () {
     Route::group(['prefix' => 'plans'], function () {
         Route::get('/', [JobPlansController::class, 'index']);  
         Route::get('/{id}', [JobPlansController::class, 'show']);
+    });
+
+    Route::group(['prefix' => 'jobs'], function () {
+        Route::get('/', [NewJobController::class, 'index']);
+        Route::post('/', [NewJobController::class, 'save']);
+        Route::put('/{id}', [NewJobController::class, 'update']);
+        Route::delete('/{id}', [NewJobController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'locations'], function () {
+        Route::get('/', action: [LocationsController::class, 'index']);
     });
 });
 

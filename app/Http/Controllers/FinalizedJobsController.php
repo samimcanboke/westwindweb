@@ -1307,7 +1307,7 @@ class FinalizedJobsController extends Controller
         foreach ($finalized_jobs as $index => $finalized_job) {
             try {
 
-                //if($finalized_job->id !=  664){
+                //if($finalized_job->id !=  1072){
                 //    continue;
                 //}
 
@@ -1330,6 +1330,7 @@ class FinalizedJobsController extends Controller
                 if ($work_sum == "00:00" && !$finalized_job->guest) {
                     $work_sum = "24:00";
                 }
+                
   
                 $guest_start_total = "00:00";
                 if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
@@ -1387,6 +1388,7 @@ class FinalizedJobsController extends Controller
                 } else {
                     $total_breaks = "00:00";
                 }
+          
 
                 $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
                 $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);

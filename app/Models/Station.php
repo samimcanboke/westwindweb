@@ -17,6 +17,12 @@ class Station extends Model
         'longitude',
     ];
 
+    protected $visible = [
+        'id',
+        'name',
+        'short_name',
+    ];
+
     public function jobPlans()
     {
         return $this->hasMany(JobPlans::class);

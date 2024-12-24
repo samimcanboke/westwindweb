@@ -216,5 +216,17 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasManyThrough(Professions::class, UsersProfession::class, 'user_id', 'id', 'id');
     }
+
+    public function usersAnnualLeaves()
+    {
+        return $this->hasMany(UsersAnnualLeaves::class);
+    }
+
+    public function leftAnnualLeaves()
+    {
+        return $this->usersAnnualLeaves()->get()->sum(function ($annualLeave) {
+            return $annualLeave->leftAnnualLeaves();
+        });
+    }
 }
 
