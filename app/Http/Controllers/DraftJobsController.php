@@ -236,6 +236,7 @@ class DraftJobsController extends Controller
         $finalized->breaks = json_encode($draft->breaks);
         $finalized->work_end_place = $draft->work_end_place;
         $finalized->work_end_time = $draft->work_end_time;
+        $finalized->tour_id= $draft->tour_id;
         $finalized->guest_end_place = $draft->guest_end_place;
         $finalized->guest_end_time = $draft->guest_end_time;
         $finalized->guest_end_end_place = $draft->guest_end_end_place;
