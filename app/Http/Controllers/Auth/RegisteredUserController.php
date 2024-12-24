@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
 
     public function api_all()
     {
-        $users = User::where('is_admin', 0)->where('is_active', 1)->where('leave_working_date', null)->get();
+        $users = User::select('name','id')->where('is_admin', 0)->where('is_active', 1)->where('leave_working_date', null)->get();
         return response()->json($users);
     }
 
