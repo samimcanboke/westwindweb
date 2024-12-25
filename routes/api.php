@@ -39,7 +39,9 @@ Route::middleware([JWTAuthentication::class])->group(function () {
         Route::delete('/{id}', [NewJobController::class, 'destroy']);
     });
     Route::group(['prefix' => 'locations'], function () {
+        Route::get('/stations', action: [LocationsController::class, 'stations']);
         Route::get('/', action: [LocationsController::class, 'index']);
+        Route::post('/{tour_id}', action: [LocationsController::class, 'store']);
     });
 });
 
