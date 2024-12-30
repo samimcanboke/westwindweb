@@ -77,8 +77,11 @@ def is_merged_cell(cell):
 def unmerge_and_write(ws, cell, value):
     for merged_range in ws.merged_cells.ranges:
         if cell.coordinate in merged_range:
-            ws.unmerge_cells(str(merged_range))
-            break
+            min_col, min_row, max_col, max_row = range_boundaries(str(merged_range))
+            top_left_cell = ws.cell(row=min_row, column=min_col)
+            ws.unmerge_cells(str(merged_range)) 
+            top_left_cell.value = value  
+            return
     cell.value = value
 
 def add_lines(ws, rows):
