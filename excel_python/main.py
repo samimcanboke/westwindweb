@@ -1,6 +1,7 @@
 from openpyxl import load_workbook, drawing
 from openpyxl.styles import PatternFill, NamedStyle,Border, Side, Alignment, Font
 from flask import Flask, request, jsonify, send_file
+from openpyxl.utils.cell import range_boundaries
 import subprocess
 import os
 import json
@@ -65,6 +66,13 @@ def add_header(ws, year, month, name, id, mail, phone):
     ws['D6'].alignment = Alignment(horizontal='left')
     return ws
 
+
+def is_merged_cell(cell):
+    for merged_range in cell.parent.merged_cells.ranges:
+        min_col, min_row, max_col, max_row = range_boundaries(str(merged_range))
+        if min_row <= cell.row <= max_row and min_col <= cell.column <= max_col:
+            return True, min_col, min_row  # Return the top-left cell of the merge
+    return False, None, None
 
 def add_lines(ws, rows):
     count = len(rows['rows'])
@@ -136,7 +144,12 @@ def add_lines(ws, rows):
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
-            cell.value = rows['totals']['work_sum_amount']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['work_sum_amount'] 
+            else:
+                cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
