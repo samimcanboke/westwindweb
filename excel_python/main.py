@@ -156,49 +156,84 @@ def add_lines(ws, rows):
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 7:
-            cell.value = rows['totals']['guests']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['guests'] 
+            else:
+                cell.value = rows['totals']['guests']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 8:
-            cell.value = rows['totals']['breaks']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['breaks'] 
+            else:
+                cell.value = rows['totals']['breaks']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 9:
-            cell.value = rows['totals']['public_holidays']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['public_holidays'] 
+            else:
+                cell.value = rows['totals']['public_holidays']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 10:
-            cell.value = rows['totals']['sunday_holidays']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['sunday_holidays'] 
+            else:
+                cell.value = rows['totals']['sunday_holidays']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 11:
-            cell.value = rows['totals']['midnight_shift']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['midnight_shift'] 
+            else:
+                cell.value = rows['totals']['midnight_shift']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 12:
-            cell.value = rows['totals']['night_shift']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['night_shift'] 
+            else:
+                cell.value = rows['totals']['night_shift']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 13:
-            cell.value = rows['totals']['accomodations']
+            is_merged, min_col, min_row = is_merged_cell(cell)
+            if is_merged:
+                if cell.row == min_row and cell.column == min_col:
+                    cell.value = rows['totals']['accomodations'] 
+            else:
+                cell.value = rows['totals']['accomodations']
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
