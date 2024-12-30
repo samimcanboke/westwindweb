@@ -2,6 +2,7 @@ from openpyxl import load_workbook, drawing
 from openpyxl.styles import PatternFill, NamedStyle,Border, Side, Alignment, Font
 from flask import Flask, request, jsonify, send_file
 from openpyxl.utils.cell import range_boundaries
+from openpyxl.cell.cell import MergedCell
 import subprocess
 import os
 import json
@@ -146,6 +147,8 @@ def add_lines(ws, rows):
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
+            if isinstance(cell, MergedCell):
+                raise ValueError(f"Hücre ({cell.coordinate}) bir MergedCell olarak algılanıyor ama birleştirilmiş değil!")
             cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
