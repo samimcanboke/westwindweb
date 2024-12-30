@@ -1,7 +1,7 @@
 from openpyxl import load_workbook, drawing
 from openpyxl.styles import PatternFill, NamedStyle,Border, Side, Alignment, Font
 from flask import Flask, request, jsonify, send_file
-from openpyxl.utils.cell import range_boundaries
+
 import subprocess
 import os
 import json
@@ -66,23 +66,6 @@ def add_header(ws, year, month, name, id, mail, phone):
     ws['D6'].alignment = Alignment(horizontal='left')
     return ws
 
-
-def is_merged_cell(cell):
-    for merged_range in cell.parent.merged_cells.ranges:
-        min_col, min_row, max_col, max_row = range_boundaries(str(merged_range))
-        if min_row <= cell.row <= max_row and min_col <= cell.column <= max_col:
-            return True, min_col, min_row  # Return the top-left cell of the merge
-    return False, None, None
-
-def unmerge_and_write(ws, cell, value):
-    for merged_range in ws.merged_cells.ranges:
-        if cell.coordinate in merged_range:
-            min_col, min_row, max_col, max_row = range_boundaries(str(merged_range))
-            top_left_cell = ws.cell(row=min_row, column=min_col)
-            ws.unmerge_cells(str(merged_range)) 
-            top_left_cell.value = value  
-            return
-    cell.value = value
 
 def add_lines(ws, rows):
     count = len(rows['rows'])
@@ -154,7 +137,7 @@ def add_lines(ws, rows):
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
-            unmerge_and_write(ws, cell, rows['totals']['work_sum_amount']) 
+            cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
@@ -175,14 +158,14 @@ def add_lines(ws, rows):
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 9:
-            unmerge_and_write(ws, cell, rows['totals']['public_holidays']) 
+            cell.value = rows['totals']['public_holidays']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 10:
-            unmerge_and_write(ws, cell, rows['totals']['sunday_holidays'])
+            cell.value = rows['totals']['sunday_holidays']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
