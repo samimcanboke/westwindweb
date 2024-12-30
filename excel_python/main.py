@@ -79,7 +79,7 @@ def is_merged_cell(cell):
 
 def add_lines(ws, rows):
     count = len(rows['rows'])
-    total_needed = 23
+    total_needed = 31
     empty_border = Border()
     full_border = Border(
         top=Side(style='thin'),
