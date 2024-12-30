@@ -8,6 +8,8 @@ import json
 import logging
 from PIL import Image
 
+logging.basicConfig(level=logging.INFO)
+
 
 app = Flask(__name__)
 os.umask(0)
@@ -147,8 +149,10 @@ def add_lines(ws, rows):
             is_merged, min_col, min_row = is_merged_cell(cell)
             if is_merged:
                 if cell.row == min_row and cell.column == min_col:
+                    logging.info(f"cell is merged Row: {cell.row}, Column: {cell.column}, Value: {rows['totals']['work_sum_amount']}")
                     cell.value = rows['totals']['work_sum_amount'] 
             else:
+                logging.info(f"cell is not merged Row: {cell.row}, Column: {cell.column}, Value: {rows['totals']['work_sum_amount']}")
                 cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
