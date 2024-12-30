@@ -135,8 +135,7 @@ def add_lines(ws, rows):
             cell.value = row_values[col - 2]
 
     total = str(count + start + 1)
-    if(count + start + 1 > 19):
-        total = str(count + start + 7)
+
 
     number_format = NamedStyle(name="number")
     number_format.number_format = '#,##0.00'
