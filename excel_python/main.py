@@ -139,7 +139,7 @@ def add_lines(ws, rows):
 
     number_format = NamedStyle(name="number")
     number_format.number_format = '#,##0.00'
-    for column in range(3,18):
+    for column in range(2,17):
         cell = ws.cell(row=int(total),column=column)
         if column == 2:
             cell.value = str(count) + ""
