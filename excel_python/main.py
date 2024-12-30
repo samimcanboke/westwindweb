@@ -130,13 +130,18 @@ def add_lines(ws, rows):
     for column in range(2,17):
         cell = ws.cell(row=int(total),column=column)
         if column == 2:
-            cell.value = str(count) + " Tage"
+            cell.value = str(count) + ""
             cell.border = left_up_down_border
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
+            if ws.merged_cells.ranges:
+                for merged_cell in ws.merged_cells.ranges:
+                    if cell.coordinate in merged_cell:
+                        ws.unmerge_cells(str(merged_cell))
+                        break
             cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
