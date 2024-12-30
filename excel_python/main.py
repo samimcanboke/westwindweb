@@ -134,10 +134,10 @@ def add_lines(ws, rows):
             cell.border = full_border
             cell.value = row_values[col - 2]
 
-    total = str(count + start + 9)
+    total = str(count + start + 1)
     number_format = NamedStyle(name="number")
     number_format.number_format = '#,##0.00'
-    for column in range(2,17):
+    for column in range(3,18):
         cell = ws.cell(row=int(total),column=column)
         if column == 2:
             cell.value = str(count) + ""
