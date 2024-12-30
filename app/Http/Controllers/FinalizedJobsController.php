@@ -1396,7 +1396,13 @@ class FinalizedJobsController extends Controller
             } catch (\Exception $ex) {
                 dd($finalized_job,$ex);
             }
-
+            if ($finalized_job->ausland == 0 && Carbon::parse($finalized_job->initial_date) > Carbon::parse('2024-12-01')) {
+                if ($finalized_job->feeding_fee == 16) {
+                    $finalized_job->feeding_fee = 14;
+                } elseif ($finalized_job->feeding_fee == 32) {
+                    $finalized_job->feeding_fee = 28;
+                }
+            }
             $feeding_fee += $finalized_job->feeding_fee;
             if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel && !$finalized_job->guest) {
                 $public_holiday_hours = $this->calculatePublicHolidayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $public_holidays, $initial_date);
@@ -1511,13 +1517,7 @@ class FinalizedJobsController extends Controller
                     $total_breaks = "00:00";
                 }
             }
-            if ($finalized_job->ausland == 0 && Carbon::parse($finalized_job->initial_date) > Carbon::parse('2024-12-01')) {
-                if ($finalized_job->feeding_fee == 16) {
-                    $finalized_job->feeding_fee = 14;
-                } elseif ($finalized_job->feeding_fee == 32) {
-                    $finalized_job->feeding_fee = 28;
-                }
-            }
+          
             $feeding_fee_text =  $finalized_job->feeding_fee > 0 ? $finalized_job->feeding_fee . " €" : $finalized_job->feeding_fee ;
 
             $from = $finalized_job->work_start_place;
