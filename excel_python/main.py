@@ -79,7 +79,7 @@ def is_merged_cell(cell):
 
 def add_lines(ws, rows):
     count = len(rows['rows'])
-    total_needed = 31
+    total_needed = 23
     empty_border = Border()
     full_border = Border(
         top=Side(style='thin'),
@@ -134,7 +134,7 @@ def add_lines(ws, rows):
             cell.border = full_border
             cell.value = row_values[col - 2]
 
-    total = str(count + start + 1)
+    total = str(count + start + 9)
     number_format = NamedStyle(name="number")
     number_format.number_format = '#,##0.00'
     for column in range(2,17):
