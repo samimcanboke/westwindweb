@@ -146,14 +146,7 @@ def add_lines(ws, rows):
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
-            is_merged, min_col, min_row = is_merged_cell(cell)
-            if is_merged:
-                if cell.row == min_row and cell.column == min_col:
-                    logging.info(f"cell is merged Row: {cell.row}, Column: {cell.column}, Value: {rows['totals']['work_sum_amount']}")
-                    cell.value = rows['totals']['work_sum_amount'] 
-            else:
-                logging.info(f"cell is not merged Row: {cell.row}, Column: {cell.column}, Value: {rows['totals']['work_sum_amount']}")
-                cell.value = rows['totals']['work_sum_amount']
+            cell.value = rows['totals']['work_sum_amount']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
@@ -174,24 +167,14 @@ def add_lines(ws, rows):
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 9:
-            is_merged, min_col, min_row = is_merged_cell(cell)
-            if is_merged:
-                if cell.row == min_row and cell.column == min_col:
-                    cell.value = rows['totals']['public_holidays'] 
-            else:
-                cell.value = rows['totals']['public_holidays']
+            cell.value = rows['totals']['public_holidays']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 10:
-            is_merged, min_col, min_row = is_merged_cell(cell)
-            if is_merged:
-                if cell.row == min_row and cell.column == min_col:
-                    cell.value = rows['totals']['sunday_holidays'] 
-            else:
-                cell.value = rows['totals']['sunday_holidays']
+            cell.value = rows['totals']['sunday_holidays']
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
