@@ -74,6 +74,13 @@ def is_merged_cell(cell):
             return True, min_col, min_row  # Return the top-left cell of the merge
     return False, None, None
 
+def unmerge_and_write(ws, cell, value):
+    for merged_range in ws.merged_cells.ranges:
+        if cell.coordinate in merged_range:
+            ws.unmerge_cells(str(merged_range))
+            break
+    cell.value = value
+
 def add_lines(ws, rows):
     count = len(rows['rows'])
     total_needed = 23
@@ -144,12 +151,7 @@ def add_lines(ws, rows):
         elif column == 3:
             cell.border = up_down_border
         elif column == 4:
-            is_merged, min_col, min_row = is_merged_cell(cell)
-            if is_merged:
-                if cell.row == min_row and cell.column == min_col:
-                    cell.value = rows['totals']['work_sum_amount'] 
-            else:
-                cell.value = rows['totals']['work_sum_amount']
+            unmerge_and_write(ws, cell, rows['totals']['work_sum_amount']) 
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
@@ -170,19 +172,14 @@ def add_lines(ws, rows):
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 9:
-            is_merged, min_col, min_row = is_merged_cell(cell)
-            if is_merged:
-                if cell.row == min_row and cell.column == min_col:
-                    cell.value = rows['totals']['public_holidays'] 
-            else:
-                cell.value = rows['totals']['public_holidays']
+            unmerge_and_write(ws, cell, rows['totals']['public_holidays']) 
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
             cell.font = Font(name='Calibri', size=11, bold=True)
             cell.border = up_down_border
         elif column == 10:
-            cell.value = rows['totals']['sunday_holidays']
+            unmerge_and_write(ws, cell, rows['totals']['sunday_holidays'])
             cell.style = number_format
             cell.fill = PatternFill(start_color="F8EEC7", end_color="F8EEC7", fill_type="solid")
             cell.alignment = Alignment(horizontal='center', vertical='center')
