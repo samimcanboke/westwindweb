@@ -1098,9 +1098,9 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
                 $data['rows'][$user->id]['accomodations'] = "-";
                 $data['rows'][$user->id]['extra_work'] = "-";
-            } else if($user->id == 21){
-                $data['rows'][$user->id]['salary'] = "28,13";
-                $data['rows'][$user->id]['workhours'] = "160";
+            } else if($user->id == 2){
+                $data['rows'][$user->id]['salary'] = "28,13 €";
+                $data['rows'][$user->id]['workhours'] = "160,00";
                 $data['rows'][$user->id]['total_work_day_amount'] = "-";
                 $data['rows'][$user->id]['guests'] = "-";
                 $data['rows'][$user->id]['breaks'] = "-";
