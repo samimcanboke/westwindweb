@@ -563,12 +563,12 @@ export default function WaitingConfirmed({ auth }) {
                                                                             ) {
                                                                                 setFieldValue(
                                                                                     "feedingFee",
-                                                                                    32
+                                                                                    28
                                                                                 );
                                                                             } else {
                                                                                 setFieldValue(
                                                                                     "feedingFee",
-                                                                                    16
+                                                                                    14
                                                                                 );
                                                                             }
                                                                         }
@@ -616,7 +616,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                             } else {
                                                                                 setFieldValue(
                                                                                     "feedingFee",
-                                                                                    32
+                                                                                    28
                                                                                 );
                                                                             }
                                                                         } else {
@@ -648,7 +648,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                             } else {
                                                                                 setFieldValue(
                                                                                     "feedingFee",
-                                                                                    16
+                                                                                    14
                                                                                 );
                                                                             }
                                                                         }
@@ -816,7 +816,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                 } else {
                                                                                     setFieldValue(
                                                                                         "feedingFee",
-                                                                                        32
+                                                                                        28
                                                                                     );
                                                                                 }
                                                                             } else {
@@ -843,7 +843,7 @@ export default function WaitingConfirmed({ auth }) {
                                                                                 } else {
                                                                                     setFieldValue(
                                                                                         "feedingFee",
-                                                                                        16
+                                                                                        14
                                                                                     );
                                                                                 }
                                                                             }
@@ -999,36 +999,18 @@ export default function WaitingConfirmed({ auth }) {
                                                                     ""
                                                                 }
                                                             >
-                                                                <option
-                                                                    value={0}
-                                                                >
-                                                                    0€
-                                                                </option>
-                                                                <option
-                                                                    value={16}
-                                                                >
-                                                                    16€
-                                                                </option>
-                                                                <option
-                                                                    value={32}
-                                                                >
-                                                                    32€
-                                                                </option>
-                                                                <option
-                                                                    value={43}
-                                                                >
-                                                                    43€
-                                                                </option>{" "}
-                                                                <option
-                                                                    value={47}
-                                                                >
-                                                                    47€
-                                                                </option>
-                                                                <option
-                                                                    value={64}
-                                                                >
-                                                                    64€
-                                                                </option>
+                                                                <option value={0}>0€</option>
+                                            <option value={14}>14€</option>
+                                            <option value={43} disabled={!values.ausland}>43€</option>
+                                            <option value={47} disabled={!values.ausland}>47€</option>
+                                            <option value={64} disabled={!values.ausland}>64€</option>
+                                            <option value={28} disabled={!values.ausland}>28€</option>
+                                            <option
+                                                value={32}
+                                                disabled={!values.accomodation && !values.ausland}
+                                            >
+                                                32€
+                                            </option>
                                                             </Select>
                                                         </div>
                                                     </AccordionContent>

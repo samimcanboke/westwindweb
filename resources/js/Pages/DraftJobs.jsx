@@ -564,7 +564,7 @@ export default function DraftJobs({ auth }) {
                                                                     } else {
                                                                         if (values.accomodation) {
 
-                                                                            setFieldValue("feedingFee", 32);
+                                                                            setFieldValue("feedingFee", 28);
 
 
                                                                         } else {
@@ -735,7 +735,7 @@ export default function DraftJobs({ auth }) {
                                                                                 } else if (e.target.value === "ch") {
                                                                                     setFieldValue("feedingFee", 64);
                                                                                 } else {
-                                                                                    setFieldValue("feedingFee", 32);
+                                                                                    setFieldValue("feedingFee", 28);
                                                                                 }
                                                                             } else {
                                                                                 if (e.target.value === "nl") {
