@@ -806,10 +806,11 @@ export default function NewJobs({ auth }) {
                                             value={values.feedingFee}
                                         >
                                             <option value={0}>0€</option>
-                                            <option value={16}>16€</option>
+                                            <option value={14}>14€</option>
                                             <option value={43} disabled={!values.ausland}>43€</option>
                                             <option value={47} disabled={!values.ausland}>47€</option>
                                             <option value={64} disabled={!values.ausland}>64€</option>
+                                            <option value={28} disabled={!values.ausland}>28€</option>
                                             <option
                                                 value={32}
                                                 disabled={!values.accomodation && !values.ausland}
