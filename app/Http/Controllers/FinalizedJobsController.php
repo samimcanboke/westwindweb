@@ -1069,7 +1069,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['midnight_shift'] = "80,00";
                 $data['rows'][$user->id]['night_shift'] = "80,00";
                 $data['rows'][$user->id]['sub_total'] = "160,00";
-                $data['rows'][$user->id]['public_holidays'] = user->id == 9 ? "-" : "10,00";;
+                $data['rows'][$user->id]['public_holidays'] = $user->id == 9 ? "-" : "10,00";;
                 $data['rows'][$user->id]['sunday_holidays'] = "40,00";
                 $data['rows'][$user->id]['accomodations'] = "-";
             } else if( $user->id == 17){
