@@ -681,16 +681,9 @@ class FinalizedJobsController extends Controller
                 break;
         }
 
-        $query = FinalizedJobs::where('confirmation', 1)->where('user_id', 8)
-            ->whereBetween('initial_date', [$startDate->toDateTimeString(), $endDate->toDateTimeString()]);
-        $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
-
 
         $users = User::where('is_active', 1)->get();
         foreach ($users as $user) {
-            if($user->id == 1 || $user->id == 2 || $user->id == 16){
-                continue;
-            }
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
             $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
