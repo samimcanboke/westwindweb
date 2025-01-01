@@ -1734,6 +1734,7 @@ class FinalizedJobsController extends Controller
         $finalizedJob->cancel = $request->cancel;
         $finalizedJob->learning = $request->learning;
         $finalizedJob->ausbildung = $request->ausbildung;
+        $finalizedJob->ausland = $request->ausland;
         $finalizedJob->ausbilder = $request->ausbilder;
         $finalizedJob->extra = $request->extra;
         $finalizedJob->accomodation = $request->accomodation;

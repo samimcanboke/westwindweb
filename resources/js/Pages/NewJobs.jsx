@@ -493,7 +493,7 @@ export default function NewJobs({ auth }) {
 
 
                                                     } else {
-                                                        setFieldValue("feedingFee", 16);
+                                                        setFieldValue("feedingFee", 14);
                                                     }
                                                 }
                                                 setFieldValue("ausland", value);
@@ -563,7 +563,7 @@ export default function NewJobs({ auth }) {
                                                     } else {
                                                         setFieldValue(
                                                             "feedingFee",
-                                                            16
+                                                            14
                                                         );
                                                     }
                                                 }
@@ -648,7 +648,7 @@ export default function NewJobs({ auth }) {
                                                             } else if (e.target.value === "ch") {
                                                                 setFieldValue("feedingFee", 43);
                                                             } else {
-                                                                setFieldValue("feedingFee", 16);
+                                                                setFieldValue("feedingFee", 14);
                                                             }
                                                         }
                                                     }}
