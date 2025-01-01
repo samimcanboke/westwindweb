@@ -1072,7 +1072,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['public_holidays'] = "-";
                 $data['rows'][$user->id]['sunday_holidays'] = "40,00";
                 $data['rows'][$user->id]['accomodations'] = "-";
-            } else if( $user->id == 17 || $user->id == 2){
+            } else if( $user->id == 17){
                 $data['rows'][$user->id]['workhours'] = "Gehalt";
                 $data['rows'][$user->id]['total_work_day_amount'] = "-";
                 $data['rows'][$user->id]['guests'] = "-";
@@ -1096,6 +1096,22 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['sub_total'] = "-";
                 $data['rows'][$user->id]['sick_leave_hours'] = "-";
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
+                $data['rows'][$user->id]['accomodations'] = "-";
+                $data['rows'][$user->id]['extra_work'] = "-";
+            } else if($user->id == 21){
+                $data['rows'][$user->id]['salary'] = "28,13";
+                $data['rows'][$user->id]['workhours'] = "160";
+                $data['rows'][$user->id]['total_work_day_amount'] = "-";
+                $data['rows'][$user->id]['guests'] = "-";
+                $data['rows'][$user->id]['breaks'] = "-";
+                $data['rows'][$user->id]['ausbildung_hours'] = "-";
+                $data['rows'][$user->id]['midnight_shift'] = "24,00";
+                $data['rows'][$user->id]['night_shift'] = "20,00";
+                $data['rows'][$user->id]['sub_total'] = "-";
+                $data['rows'][$user->id]['sick_leave_hours'] = "-";
+                $data['rows'][$user->id]['annual_leave_hours'] = "-";
+                $data['rows'][$user->id]['public_holidays'] = "8,00";
+                $data['rows'][$user->id]['sunday_holidays'] = "16,00";
                 $data['rows'][$user->id]['accomodations'] = "-";
                 $data['rows'][$user->id]['extra_work'] = "-";
             }
