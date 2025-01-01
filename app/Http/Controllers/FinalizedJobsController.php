@@ -682,7 +682,7 @@ class FinalizedJobsController extends Controller
         }
 
 
-        $users = User::where('is_active', 1)->get();
+        $users = User::where('is_active', 1)->orderBy('driver_id', 'asc')->get();
         foreach ($users as $user) {
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
