@@ -533,7 +533,7 @@ export default function NewJobs({ auth }) {
                                                     } else {
                                                         setFieldValue(
                                                             "feedingFee",
-                                                            32
+                                                            28
                                                         );
                                                     }
                                                 } else {
