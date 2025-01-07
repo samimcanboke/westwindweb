@@ -1015,7 +1015,11 @@ class FinalizedJobsController extends Controller
             $total_night_shift_minutes = $total_night_shift->i + $total_deep_morning_shift->i;
             $total_night_shift_decimal = $total_night_shift_hours + ($total_night_shift_minutes / 60);
             $data['rows'][$user->id]['night_shift'] = $total_night_shift_decimal != 0 ? number_format($total_night_shift_decimal, 2, ',', '') : "-";
-            $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i));
+            try{
+                $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i));
+            } catch (\Exception $ex) {
+                dd($total_work_sum,$total_break_time,$ex,$user,$startDate,$endDate);
+            }
             $decimal_hours = $total_hours->h + ($total_hours->i / 60);
             $data['rows'][$user->id]['sub_total'] = number_format($decimal_hours, 2, ',', '');
             if (sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00") {
