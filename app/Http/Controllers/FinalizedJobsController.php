@@ -1022,7 +1022,7 @@ class FinalizedJobsController extends Controller
                     $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', 0, 0));
                 }
             } catch (\Exception $ex) {
-                dd($total_work_sum,$total_break_time,$ex,$user,$startDate,$endDate);
+                dd($total_work_sum,$total_break_time,$startDate,$endDate,$ex);
             }
             $decimal_hours = $total_hours->h + ($total_hours->i / 60);
             $data['rows'][$user->id]['sub_total'] = number_format($decimal_hours, 2, ',', '');
