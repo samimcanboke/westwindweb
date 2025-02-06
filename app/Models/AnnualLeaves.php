@@ -20,5 +20,12 @@ class AnnualLeaves extends Model
         'start_date' => 'date',
         'end_date' => 'date',
     ];
+
+    public function scopeActiveUsers($query)
+    {
+        return $query->whereHas('user', function ($query) {
+            $query->whereNull('leave_working_date');
+        });
+    }
 }
 

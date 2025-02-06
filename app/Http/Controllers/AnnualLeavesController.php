@@ -11,7 +11,7 @@ class AnnualLeavesController extends Controller
 {
     public function index()
     {
-        $annualLeaves = AnnualLeaves::all();
+        $annualLeaves = AnnualLeaves::activeUsers()->get();
         foreach ($annualLeaves as $annualLeave) {
             $annualLeave->user = User::where('id', $annualLeave->user_id)->withoutLeaveWorkingDate()->first();
         }
