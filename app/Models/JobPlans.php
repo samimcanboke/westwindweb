@@ -23,6 +23,12 @@ class JobPlans extends Model
         'start_pause_time',
         'end_pause_time',
     ];
+    public function scopeActiveUsers($query)
+    {
+        return $query->whereHas('user', function ($query) {
+            $query->whereNull('leave_working_date');
+        });
+    }
 
     public function user()
     {
