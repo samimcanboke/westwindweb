@@ -38,6 +38,9 @@ class JobPlansController extends Controller
     public function get_users_jobs()
     {
         $jobs = JobPlans::whereNotNull('user_id')
+            ->whereHas('user', function($query) {
+                $query->whereNull('leave_working_date');
+            })
             ->with(['toStation:id,short_name', 'fromStation:id,short_name'])
             ->get();
         
