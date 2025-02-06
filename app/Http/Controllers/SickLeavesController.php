@@ -11,7 +11,7 @@ class SickLeavesController extends Controller
 {
     public function index()
     {
-        $sickLeaves = SickLeaves::all();
+        $sickLeaves = SickLeaves::activeUsers()->get();
         foreach ($sickLeaves as $sickLeave) {
             $sickLeave->user = User::where('id', $sickLeave->user_id)->withoutLeaveWorkingDate()->first();
         }
