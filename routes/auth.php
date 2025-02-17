@@ -65,5 +65,6 @@ Route::middleware('auth')->group(function () {
     Route::get('show', [RegisteredUserController::class, 'show'])->name('users.show');
     Route::get('show_exclude_admins', [RegisteredUserController::class, 'show_exclude_admins'])->withoutMiddleware([IsAdmin::class])->name('users.show_exclude_admins');
     Route::get('show_all', [RegisteredUserController::class, 'show_all'])->name('users.show_all');
+    Route::get('show_with_is_active', [RegisteredUserController::class, 'show_with_is_active'])->name('users.show_with_is_active');
 
 });

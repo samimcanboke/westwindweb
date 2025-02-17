@@ -126,7 +126,7 @@ export default function ConfirmedToEdit({ auth }) {
     };
 
     useEffect(() => {
-        axios.get(route("users.show")).then((res) => {
+        axios.get(route("users.show_with_is_active")).then((res) => {
             setDrivers(res.data);
             setUsers(res.data);
         });

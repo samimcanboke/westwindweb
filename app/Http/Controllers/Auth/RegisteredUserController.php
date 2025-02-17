@@ -39,6 +39,12 @@ class RegisteredUserController extends Controller
         return response()->json($users);
     }
 
+    public function show_with_is_active()
+    {
+        $users = User::get();
+        return response()->json($users);
+    }
+    
     public function api_all()
     {
         $users = User::select('name','id')->where('is_admin', 0)->where('is_active', 1)->where('leave_working_date', null)->get();
