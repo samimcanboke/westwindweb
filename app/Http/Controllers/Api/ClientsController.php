@@ -8,13 +8,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\DraftJobs;
 use Illuminate\Support\Str;
 use App\Models\JobPlans;
-use App\Models\Clients;
+use App\Models\Client;
 
 class ClientsController extends Controller
 {
     public function index()
     {
-        $clients = Clients::all();
+        $clients = Client::all();
         return response()->json($clients);
     }
 }
