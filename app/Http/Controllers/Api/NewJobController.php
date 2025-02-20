@@ -22,13 +22,15 @@ class NewJobController extends Controller
     {
         $user = JWTAuth::user();
         $jobPlan = JobPlans::find($request->job_plan_id);
-        if($user->id != $jobPlan->user_id){
-            return response()->json(['message' => 'You are not authorized to create a draft job for this job plan'], 403);
+        if(!$jobPlan){
+            $jobPlanId = null;
+        }else{
+            $jobPlanId = $jobPlan->id;
         }
         try{
             $draftJob = new DraftJobs();
-            $draftJob->user_id = $jobPlan->user_id;
-            $draftJob->job_plan_id = $request->job_plan_id;
+            $draftJob->user_id = $user->id;
+            $draftJob->job_plan_id = $jobPlanId;
             $draftJob->client_id = $jobPlan->client_id;
             $draftJob->tour_id = Str::uuid();
             $draftJob->save();
