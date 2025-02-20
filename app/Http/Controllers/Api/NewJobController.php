@@ -8,7 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\DraftJobs;
 use Illuminate\Support\Str;
 use App\Models\JobPlans;
-
+use App\Models\Client;
 class NewJobController extends Controller
 {
     public function index(Request $request)
@@ -27,7 +27,7 @@ class NewJobController extends Controller
             if($request->client_id == null){
                 return response()->json(['message' => 'Client ID is required'], 400);
             } else {
-                $client = Clients::find($request->client_id);
+                $client = Client::where('id', $request->client_id)->first();
                 if(!$client){
                     return response()->json(['message' => 'Client not found'], 404);
                 }
