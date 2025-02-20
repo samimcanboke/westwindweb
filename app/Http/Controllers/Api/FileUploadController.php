@@ -8,10 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FileUploadController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+
 
     public function upload(Request $request)
     {
