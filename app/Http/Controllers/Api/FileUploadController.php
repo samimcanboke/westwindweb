@@ -14,6 +14,7 @@ class FileUploadController extends Controller
     {
         $uploadedFiles = [];
         $user = JWTAuth::user();
+        dd($user);
         if ($request->hasFile('files')) {
             $file = $request->file('files');
             $uniqueId = uniqid();
