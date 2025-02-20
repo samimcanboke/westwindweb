@@ -24,14 +24,23 @@ class NewJobController extends Controller
         $jobPlan = JobPlans::find($request->job_plan_id);
         if(!$jobPlan){
             $jobPlanId = null;
+            if($request->client_id == null){
+                return response()->json(['message' => 'Client ID is required'], 400);
+            } else {
+                $client = Clients::find($request->client_id);
+                if(!$client){
+                    return response()->json(['message' => 'Client not found'], 404);
+                }
+            }
         }else{
             $jobPlanId = $jobPlan->id;
+            $client = $jobPlan->client;
         }
         try{
             $draftJob = new DraftJobs();
             $draftJob->user_id = $user->id;
             $draftJob->job_plan_id = $jobPlanId;
-            $draftJob->client_id = $jobPlan->client_id;
+            $draftJob->client_id = $client->id;
             $draftJob->tour_id = Str::uuid();
             $draftJob->save();
         }catch(\Exception $e){
