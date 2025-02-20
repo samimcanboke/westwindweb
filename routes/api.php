@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\NewJobController;
 use App\Http\Controllers\Api\LocationsController;
 use App\Http\Controllers\Api\ClientsController;
+use App\Http\Controllers\Api\FileUploadController;
+
 Route::middleware([JWTAuthentication::class])->group(function () {
     
     Route::group(['prefix' => 'user'], function () {
@@ -46,6 +48,10 @@ Route::middleware([JWTAuthentication::class])->group(function () {
         Route::get('/stations', action: [LocationsController::class, 'stations']);
         Route::get('/', action: [LocationsController::class, 'index']);
         Route::post('/{tour_id}', action: [LocationsController::class, 'store']);
+    });
+
+    Route::group(['prefix' => 'files'], function () {
+        Route::post('/upload', [FileUploadController::class, 'upload']);
     });
 });
 
