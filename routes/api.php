@@ -9,7 +9,7 @@ use App\Http\Middleware\JWTAuthentication;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\NewJobController;
 use App\Http\Controllers\Api\LocationsController;
-
+use App\Http\Controllers\Api\ClientsController;
 Route::middleware([JWTAuthentication::class])->group(function () {
     
     Route::group(['prefix' => 'user'], function () {
@@ -18,6 +18,10 @@ Route::middleware([JWTAuthentication::class])->group(function () {
         Route::post('/', [RegisteredUserController::class, 'store']);
         Route::put('/{id}', [RegisteredUserController::class, 'update']);
         Route::delete('/{id}', [RegisteredUserController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'clients'], function () {
+        Route::get('/', [ClientsController::class, 'index']);
     });
 
     Route::group(['prefix' => 'profile'], function () {
