@@ -22,7 +22,7 @@ class NewJobController extends Controller
     {
         $user = JWTAuth::user();
         $jobPlan = JobPlans::find($request->job_plan_id);
-        dd($jobPlan,$request->job_plan_id,$request->all());
+        dd($request->all());
         if(!$jobPlan){
             $jobPlanId = null;
             if($request->client_id == null){
