@@ -22,7 +22,7 @@ class NewJobController extends Controller
     {
         $user = JWTAuth::user();
         $jobPlan = JobPlans::where('id', $request->job_plan_id)->first();
-        return response()->json($jobPlan);
+        return response()->json(['message' => 'Job plan found', 'job_plan' => $jobPlan]);
         print_r($request->all());
         die();
         if(!$jobPlan){
