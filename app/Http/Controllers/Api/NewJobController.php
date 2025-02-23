@@ -21,7 +21,7 @@ class NewJobController extends Controller
     public function save(Request $request)
     {
         $user = JWTAuth::user();
-        $jobPlan = JobPlans::find($request->job_plan_id);
+        $jobPlan = JobPlans::where('id', $request->job_plan_id)->first();
         return response()->json($jobPlan);
         print_r($request->all());
         die();
