@@ -37,7 +37,6 @@ class NewJobController extends Controller
             $client = $jobPlan->client;
         }
         try{
-            dd($user,$jobPlanId,$client);
             $draftJob = new DraftJobs();
             $draftJob->user_id = $user->id;
             $draftJob->job_plan_id = $jobPlanId;
