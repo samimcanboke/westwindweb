@@ -26,4 +26,9 @@ class Client extends Model
     {
         return $this->hasMany(UsersClient::class);
     }
+
+    public function jobPlans()
+    {
+        return $this->hasMany(JobPlans::class);
+    }
 }

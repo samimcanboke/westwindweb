@@ -46,4 +46,9 @@ class JobPlans extends Model
     {
         return $this->belongsTo(Station::class, 'from', 'id');
     }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }
