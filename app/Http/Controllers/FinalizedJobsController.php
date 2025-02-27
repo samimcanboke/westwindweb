@@ -1266,22 +1266,29 @@ class FinalizedJobsController extends Controller
 
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
-        $annual_leave_days = $user->annualLeaves()
-            ->where(function($query) use ($startDate, $endDate) {
-                $query->where(function($subQuery) use ($startDate, $endDate) {
-                    $subQuery->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
-                             ->orWhereBetween('end_date', [$startDate->toDateString(), $endDate->toDateString()]);
-                });
-            })
+        $annualLeavesByYear = $user->annualLeaves()
             ->get()
-            ->map(function($leave) use ($startDate, $endDate) {
+            ->groupBy(function($leave) {
+                return Carbon::parse($leave->start_date)->year;
+            });
+
+        $annual_leave_days = 0;
+        foreach ($annualLeavesByYear as $year => $leaves) {
+            $yearlyLeaveDays = $leaves->map(function($leave) use ($year, $startDate, $endDate) {
                 $leaveStart = Carbon::parse($leave->start_date);
                 $leaveEnd = Carbon::parse($leave->end_date);
                 $overlapStart = $leaveStart->greaterThan($startDate) ? $leaveStart : $startDate;
                 $overlapEnd = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
                 return $overlapStart->diffInDays($overlapEnd);
-            })
-            ->sum() ?? 0;
+            })->sum();
+
+            if ($year == $startDate->year) {
+                $annual_leave_days += max(0, 30 - $yearlyLeaveDays);
+            } else {
+                $annual_leave_days += max(0, 30 - $yearlyLeaveDays);
+            }
+        }
+
         $data['annual_leave_days'] = number_format($annual_leave_days, 2, ',', '');
         $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
 

@@ -84,7 +84,7 @@ class NewJobController extends Controller
             $draftJob->guest_end_time = $request->guest_end_time;
             $draftJob->guest_end_end_place = $request->guest_end_end_place;
             $draftJob->guest_end_end_time = $request->guest_end_end_time;
-            $draftJob->learning = $request->learning;
+            $draftJob->learning = $request->learning ?? 0;
             $draftJob->files = json_encode($request->files); // Convert files to JSON string
             $draftJob->ausland = $request->ausland;
             $draftJob->country = $request->country;
