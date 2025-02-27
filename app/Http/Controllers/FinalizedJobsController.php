@@ -1254,36 +1254,49 @@ class FinalizedJobsController extends Controller
         
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
-        $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
-            ->where('end_date', '<', $startDate->toDateString())
+        // 1. Önceki yılın (örneğin 2024) başlangıç ve bitiş tarihlerini belirleyelim:
+        $previousYear = $startDate->copy()->subYear()->year; // Örneğin, $startDate 2025 ise, önceki yıl 2024 olur.
+        $previousYearStart = Carbon::create($previousYear, 1, 1)->toDateString();
+        $previousYearEnd   = Carbon::create($previousYear, 12, 31)->toDateString();
+
+        // 2. 2024 yılında kullanılmış izin günlerini hesaplıyoruz:
+        $leavesUsedPreviousYear = $user->annualLeaves()
+            ->whereBetween('start_date', [$previousYearStart, $previousYearEnd])
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
-                $leaveEnd = Carbon::parse($leave->end_date);
+                $leaveEnd   = Carbon::parse($leave->end_date);
+                // Burada diffInDays, iki tarih arasındaki farkı gün olarak veriyor.
                 return $leaveStart->diffInDays($leaveEnd);
             })
-            ->sum() ?? 0;
+            ->sum();
 
-        $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
+        // 3. Devreden gün: Eğer 2024 için 30 günlük hakkın tamamı kullanılmamışsa, kullanılmayan günleri devreye alıyoruz.
+        $carryOver = max(0, 30 - $leavesUsedPreviousYear);
 
-        $annual_leave_days = $user->annualLeaves()
-            ->where(function($query) use ($startDate, $endDate) {
-                $query->where(function($subQuery) use ($startDate, $endDate) {
-                    $subQuery->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
-                             ->orWhereBetween('end_date', [$startDate->toDateString(), $endDate->toDateString()]);
-                });
-            })
+        // 4. Cari yıl için temel izin hakkı:
+        $currentYearBase = 30;
+
+        // 5. Cari yılın toplam izin hakkı = cari yılın 30 günü + devreden gün:
+        $totalRights = $currentYearBase + $carryOver;
+
+        // 6. Cari yılda alınan izin günlerini hesaplıyoruz:
+        $currentYearLeavesUsed = $user->annualLeaves()
+            ->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
             ->get()
             ->map(function($leave) use ($startDate, $endDate) {
                 $leaveStart = Carbon::parse($leave->start_date);
-                $leaveEnd = Carbon::parse($leave->end_date);
+                $leaveEnd   = Carbon::parse($leave->end_date);
+                // İzin döneminin cari yıl içerisindeki kısmını hesaplıyoruz:
                 $overlapStart = $leaveStart->greaterThan($startDate) ? $leaveStart : $startDate;
-                $overlapEnd = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
+                $overlapEnd   = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
                 return $overlapStart->diffInDays($overlapEnd);
             })
-            ->sum() ?? 0;
-        $data['annual_leave_days'] = number_format($annual_leave_days, 2, ',', '');
-        $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
+            ->sum();
+
+        // 7. Sonuçları formatlayıp veri dizisine ekleyelim:
+        $data['annual_leave_days'] = number_format($totalRights, 2, ',', ''); // Cari yıl için toplam izin hakkı (30 + devreden)
+        $data['annual_leave_left'] = number_format($totalRights - $currentYearLeavesUsed, 2, ',', ''); // Bu yıl kullanılabilir kalan izin günü
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
