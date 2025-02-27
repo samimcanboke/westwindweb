@@ -1254,56 +1254,71 @@ class FinalizedJobsController extends Controller
         
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
         
-        $previousYear = $startDate->copy()->subYear()->year;
-       
-        $previousYearStart = Carbon::create($previousYear, 1, 1)->toDateString();
-        $previousYearEnd   = Carbon::create($previousYear, 12, 31)->toDateString();
-       
-        $leavesUsedPreviousYear = $user->annualLeaves()
-            ->whereBetween('start_date', [$previousYearStart, $previousYearEnd])
-            ->get()
-            ->map(function($leave) {
-                $leaveStart = Carbon::parse($leave->start_date);
-                $leaveEnd   = Carbon::parse($leave->end_date);
-                return $leaveStart->diffInDays($leaveEnd);
-            })
-            ->sum();
-        $carryOver = max(0, 30 - $leavesUsedPreviousYear);
-        
-        $startWorkingYear = Carbon::parse($user->start_working_date)->year;
-        $totalRights = 0;
 
-        for ($year = $startWorkingYear; $year <= $previousYear; $year++) {
-            $previousYearStart = Carbon::create($year, 1, 1)->toDateString();
-            $previousYearEnd = Carbon::create($year, 12, 31)->toDateString();
+        $fullRights = $user->annual_leave_rights; // Örn: 30
 
-            $leavesUsedPreviousYear = $user->annualLeaves()
-                ->whereBetween('start_date', [$previousYearStart, $previousYearEnd])
-                ->get()
-                ->map(function($leave) {
-                    $leaveStart = Carbon::parse($leave->start_date);
-                    $leaveEnd = Carbon::parse($leave->end_date);
-                    return $leaveStart->diffInDays($leaveEnd);
-                })
-                ->sum();
+// Raporlama periyodu (örneğin seçili ayın başlangıç ve bitiş tarihleri)
+$reportStart = Carbon::parse($startDate);
+$reportEnd   = Carbon::parse($endDate);
+$reportYear  = $reportStart->year;
 
-            $carryOver = max(0, 30 - $leavesUsedPreviousYear);
-            $totalRights += $user->annual_leave_rights + $carryOver;
+// Kullanıcının işe başlangıç tarihi ve yılı
+$userStart   = Carbon::parse($user->start_working_date);
+$userStartYear = $userStart->year;
+
+// 1. Toplam kazanılmış hakların (entitlement) hesaplanması
+$totalEntitlement = 0;
+for ($year = $userStartYear; $year <= $reportYear; $year++) {
+    // İlk yıl için, işe başladığı ay göz önüne alınarak prorata hesaplama
+    if ($year == $userStartYear) {
+        if ($year == $reportYear) {
+            // Eğer rapor, kullanıcının ilk yılında ise; kullanıcının başladığı aydan rapor ayına kadar hak kazanımı
+            $monthsAccrued = $reportStart->month - $userStart->month + 1;
+            $monthsTotal   = 12 - $userStart->month + 1; // İlk yılda çalışılabilir toplam ay
+            $entitlement   = $fullRights * ($monthsAccrued / $monthsTotal);
+        } else {
+            // Rapor, ilk yıldan sonraki bir tarihteyse; ilk yılda işe başladığı aydan Aralık ayına kadar tüm hak verilir
+            $entitlement = $fullRights;
         }
-        $data['annual_leave_rights'] = number_format($totalRights, 2, ',', '');
-        $currentYearLeavesUsed = $user->annualLeaves()
-            ->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
-            ->get()
-            ->map(function($leave) use ($startDate, $endDate) {
-                $leaveStart = Carbon::parse($leave->start_date);
-                $leaveEnd   = Carbon::parse($leave->end_date);
-                $overlapStart = $leaveStart->greaterThan($startDate) ? $leaveStart : $startDate;
-                $overlapEnd   = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
-                return $overlapStart->diffInDays($overlapEnd);
-            })
-            ->sum();
-        $data['annual_leave_days'] = number_format($currentYearLeavesUsed / 8, 2, ',', ''); 
-        $data['annual_leave_left'] = number_format($totalRights - $currentYearLeavesUsed, 2, ',', ''); 
+    } else {
+        // İlk yıldan sonraki tam yıllar için tam hak veriliyor
+        $entitlement = $fullRights;
+    }
+    $totalEntitlement += $entitlement;
+}
+
+// 2. Kullanıcının işe başladığından, rapor başlangıcına (reportStart) kadar kullandığı toplam izin günleri
+$totalUsed = $user->annualLeaves()
+    ->where('start_date', '>=', $userStart->toDateString())
+    ->where('start_date', '<', $reportStart->toDateString())
+    ->get()
+    ->map(function($leave) {
+        $leaveStart = Carbon::parse($leave->start_date);
+        $leaveEnd   = Carbon::parse($leave->end_date);
+        return $leaveStart->diffInDays($leaveEnd);
+    })->sum();
+
+// Bu durumda, rapor tarihine kadar kalan hak:
+$annual_leave_left = $totalEntitlement - $totalUsed;
+
+// 3. Raporlanan ay içinde kullanılan izin günleri (aylık kullanım)
+// (Eğer veride saat bazlı tutulan bilgi varsa; örneğin 8 saat = 1 gün ise dönüşüm yapabilirsiniz)
+$monthlyUsed = $user->annualLeaves()
+    ->whereBetween('start_date', [$reportStart->toDateString(), $reportEnd->toDateString()])
+    ->get()
+    ->map(function($leave) use ($reportStart, $reportEnd) {
+        $leaveStart  = Carbon::parse($leave->start_date);
+        $leaveEnd    = Carbon::parse($leave->end_date);
+        // Rapor ayı içindeki kesişim (overlap) hesaplanıyor
+        $overlapStart = $leaveStart->greaterThan($reportStart) ? $leaveStart : $reportStart;
+        $overlapEnd   = $leaveEnd->lessThan($reportEnd) ? $leaveEnd : $reportEnd;
+        return $overlapStart->diffInDays($overlapEnd);
+    })->sum();
+
+// Formatlama (örneğin, ondalık ayracı olarak virgül kullanmak isteniyorsa)
+$data['annual_leave_rights'] = number_format($totalEntitlement, 2, ',', '');
+$data['annual_leave_days']   = number_format($monthlyUsed, 2, ',', ''); // Bu ayda kullanılan toplam izin gün sayısı
+$data['annual_leave_left']   = number_format($annual_leave_left, 2, ',', '');
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
