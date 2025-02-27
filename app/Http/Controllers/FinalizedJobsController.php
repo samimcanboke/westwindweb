@@ -1270,7 +1270,26 @@ class FinalizedJobsController extends Controller
             ->sum();
         $carryOver = max(0, 30 - $leavesUsedPreviousYear);
         
-        $totalRights = $user->annual_leave_rights + $carryOver;
+        $startWorkingYear = Carbon::parse($user->start_working_date)->year;
+        $totalRights = 0;
+
+        for ($year = $startWorkingYear; $year <= $previousYear; $year++) {
+            $previousYearStart = Carbon::create($year, 1, 1)->toDateString();
+            $previousYearEnd = Carbon::create($year, 12, 31)->toDateString();
+
+            $leavesUsedPreviousYear = $user->annualLeaves()
+                ->whereBetween('start_date', [$previousYearStart, $previousYearEnd])
+                ->get()
+                ->map(function($leave) {
+                    $leaveStart = Carbon::parse($leave->start_date);
+                    $leaveEnd = Carbon::parse($leave->end_date);
+                    return $leaveStart->diffInDays($leaveEnd);
+                })
+                ->sum();
+
+            $carryOver = max(0, 30 - $leavesUsedPreviousYear);
+            $totalRights += $user->annual_leave_rights + $carryOver;
+        }
         $data['annual_leave_rights'] = number_format($totalRights, 2, ',', '');
         $currentYearLeavesUsed = $user->annualLeaves()
             ->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
