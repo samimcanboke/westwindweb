@@ -1253,13 +1253,9 @@ class FinalizedJobsController extends Controller
         
         
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
-
-        // 1. Önceki yılın (örneğin 2024) başlangıç ve bitiş tarihlerini belirleyelim:
         $previousYear = $startDate->copy()->subYear()->year; // Örneğin, $startDate 2025 ise, önceki yıl 2024 olur.
         $previousYearStart = Carbon::create($previousYear, 1, 1)->toDateString();
         $previousYearEnd   = Carbon::create($previousYear, 12, 31)->toDateString();
-
-        // 2. 2024 yılında kullanılmış izin günlerini hesaplıyoruz:
         $leavesUsedPreviousYear = $user->annualLeaves()
             ->whereBetween('start_date', [$previousYearStart, $previousYearEnd])
             ->get()
@@ -1270,33 +1266,22 @@ class FinalizedJobsController extends Controller
                 return $leaveStart->diffInDays($leaveEnd);
             })
             ->sum();
-
-        // 3. Devreden gün: Eğer 2024 için 30 günlük hakkın tamamı kullanılmamışsa, kullanılmayan günleri devreye alıyoruz.
         $carryOver = max(0, 30 - $leavesUsedPreviousYear);
-
-        // 4. Cari yıl için temel izin hakkı:
         $currentYearBase = 30;
-
-        // 5. Cari yılın toplam izin hakkı = cari yılın 30 günü + devreden gün:
         $totalRights = $currentYearBase + $carryOver;
-
-        // 6. Cari yılda alınan izin günlerini hesaplıyoruz:
         $currentYearLeavesUsed = $user->annualLeaves()
             ->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
             ->get()
             ->map(function($leave) use ($startDate, $endDate) {
                 $leaveStart = Carbon::parse($leave->start_date);
                 $leaveEnd   = Carbon::parse($leave->end_date);
-                // İzin döneminin cari yıl içerisindeki kısmını hesaplıyoruz:
                 $overlapStart = $leaveStart->greaterThan($startDate) ? $leaveStart : $startDate;
                 $overlapEnd   = $leaveEnd->lessThan($endDate) ? $leaveEnd : $endDate;
                 return $overlapStart->diffInDays($overlapEnd);
             })
             ->sum();
-
-        // 7. Sonuçları formatlayıp veri dizisine ekleyelim:
-        $data['annual_leave_days'] = number_format($totalRights, 2, ',', ''); // Cari yıl için toplam izin hakkı (30 + devreden)
-        $data['annual_leave_left'] = number_format($totalRights - $currentYearLeavesUsed, 2, ',', ''); // Bu yıl kullanılabilir kalan izin günü
+        $data['annual_leave_days'] = number_format($totalRights, 2, ',', ''); 
+        $data['annual_leave_left'] = number_format($totalRights - $currentYearLeavesUsed, 2, ',', ''); 
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
@@ -1614,8 +1599,8 @@ class FinalizedJobsController extends Controller
 
 
         $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
-        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $annual_leave_days * 8), (($sub_total + $annual_leave_days * 8) - floor($sub_total + $annual_leave_days * 8)) * 60);
-        $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8))) * 60);
+        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $totalRights * 8), (($sub_total + $totalRights * 8) - floor($sub_total + $totalRights * 8)) * 60);
+        $data['left_hours'] = $total_hours_req - ($sub_total + $totalRights * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $totalRights * 8)), ($total_hours_req - ($sub_total + $totalRights * 8) - floor($total_hours_req - ($sub_total + $totalRights * 8))) * 60);
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
