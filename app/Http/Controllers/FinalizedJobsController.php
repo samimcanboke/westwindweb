@@ -1253,22 +1253,24 @@ class FinalizedJobsController extends Controller
         
         
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
-        $previousYear = $startDate->copy()->subYear()->year; // Örneğin, $startDate 2025 ise, önceki yıl 2024 olur.
+        
+        $previousYear = $startDate->copy()->subYear()->year;
+       
         $previousYearStart = Carbon::create($previousYear, 1, 1)->toDateString();
         $previousYearEnd   = Carbon::create($previousYear, 12, 31)->toDateString();
+       
         $leavesUsedPreviousYear = $user->annualLeaves()
             ->whereBetween('start_date', [$previousYearStart, $previousYearEnd])
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
                 $leaveEnd   = Carbon::parse($leave->end_date);
-                // Burada diffInDays, iki tarih arasındaki farkı gün olarak veriyor.
                 return $leaveStart->diffInDays($leaveEnd);
             })
             ->sum();
         $carryOver = max(0, 30 - $leavesUsedPreviousYear);
-        $currentYearBase = 30;
-        $totalRights = $currentYearBase + $carryOver;
+        
+        $totalRights = $user->annual_leave_rights + $carryOver;
         $data['annual_leave_rights'] = number_format($totalRights, 2, ',', '');
         $currentYearLeavesUsed = $user->annualLeaves()
             ->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
