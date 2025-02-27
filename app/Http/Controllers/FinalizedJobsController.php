@@ -1298,11 +1298,10 @@ $totalUsed = $user->annualLeaves()
         return $leaveStart->diffInDays($leaveEnd);
     })->sum();
 
-// Bu durumda, rapor tarihine kadar kalan hak:
+
 $annual_leave_left = $totalEntitlement - $totalUsed;
 
-// 3. Raporlanan ay içinde kullanılan izin günleri (aylık kullanım)
-// (Eğer veride saat bazlı tutulan bilgi varsa; örneğin 8 saat = 1 gün ise dönüşüm yapabilirsiniz)
+
 $monthlyUsed = $user->annualLeaves()
     ->whereBetween('start_date', [$reportStart->toDateString(), $reportEnd->toDateString()])
     ->get()
@@ -1636,8 +1635,8 @@ $data['annual_leave_left']   = number_format($annual_leave_left, 2, ',', '');
 
 
         $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
-        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $totalRights * 8), (($sub_total + $totalRights * 8) - floor($sub_total + $totalRights * 8)) * 60);
-        $data['left_hours'] = $total_hours_req - ($sub_total + $totalRights * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $totalRights * 8)), ($total_hours_req - ($sub_total + $totalRights * 8) - floor($total_hours_req - ($sub_total + $totalRights * 8))) * 60);
+        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $totalUsed * 8), (($sub_total + $totalUsed * 8) - floor($sub_total + $totalUsed * 8)) * 60);
+        $data['left_hours'] = $total_hours_req - ($sub_total + $totalUsed * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $totalUsed * 8)), ($total_hours_req - ($sub_total + $totalUsed * 8) - floor($total_hours_req - ($sub_total + $totalUsed * 8))) * 60);
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
