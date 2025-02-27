@@ -1269,6 +1269,7 @@ class FinalizedJobsController extends Controller
         $carryOver = max(0, 30 - $leavesUsedPreviousYear);
         $currentYearBase = 30;
         $totalRights = $currentYearBase + $carryOver;
+        $data['annual_leave_rights'] = number_format($totalRights, 2, ',', '');
         $currentYearLeavesUsed = $user->annualLeaves()
             ->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
             ->get()
