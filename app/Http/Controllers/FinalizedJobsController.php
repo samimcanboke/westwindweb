@@ -1283,7 +1283,7 @@ class FinalizedJobsController extends Controller
                 return $overlapStart->diffInDays($overlapEnd);
             })
             ->sum();
-        $data['annual_leave_days'] = number_format($totalRights, 2, ',', ''); 
+        $data['annual_leave_days'] = number_format($currentYearLeavesUsed / 8, 2, ',', ''); 
         $data['annual_leave_left'] = number_format($totalRights - $currentYearLeavesUsed, 2, ',', ''); 
 
         $data['sick_days_this_month'] = 0;
