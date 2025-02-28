@@ -42,7 +42,6 @@ class JobPlansController extends Controller
             ->with(['toStation:id,short_name', 'fromStation:id,short_name'])
             ->get();
 
-            dd($jobs);
         
         foreach($jobs as $job){
             $job->to = $job->toStation->short_name ?? $job->to;
