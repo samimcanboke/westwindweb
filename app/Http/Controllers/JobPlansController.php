@@ -93,7 +93,10 @@ class JobPlansController extends Controller
     {
         $user_id = Auth::user()->id;
         $jobPlan = JobPlans::where('user_id', $user_id)
-            ->whereMonth('start_date', Carbon::now()->month)
+            ->where(function($query) {
+                $query->whereMonth('start_date', Carbon::now()->month)
+                      ->orWhereMonth('start_date', Carbon::now()->addMonth()->month);
+            })
             ->with(['toStation:id,short_name', 'fromStation:id,short_name'])
             ->get();
         return response()->json($jobPlan);
