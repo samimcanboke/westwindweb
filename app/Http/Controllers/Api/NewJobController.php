@@ -56,7 +56,7 @@ class NewJobController extends Controller
         if (!$draftJob) {
             return response()->json(['message' => 'Draft job not found'], 404);
         }
-        dd($request->files);
+        dd($request->uploaded_files);
         try{
             $draftJob->initial_date = $request->initial_date;
             $draftJob->zug_nummer = $request->zug_nummer;
@@ -85,7 +85,7 @@ class NewJobController extends Controller
             $draftJob->guest_end_end_place = $request->guest_end_end_place;
             $draftJob->guest_end_end_time = $request->guest_end_end_time;
             $draftJob->learning = $request->learning ?? 0;
-            $draftJob->files = json_encode($request->files); 
+            $draftJob->files = json_encode($request->uploaded_files); 
             $draftJob->ausland = $request->ausland;
             $draftJob->country = $request->country;
             $draftJob->early_exit = $request->early_exit;
