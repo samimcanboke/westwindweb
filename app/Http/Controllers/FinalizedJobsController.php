@@ -946,7 +946,7 @@ class FinalizedJobsController extends Controller
                 }
             }*/
             $total_sick_leave_hours = 0;
-            $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+            $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subDay()->toDateString()])->get();
             foreach($sickDays as $sickDay){
                 $total_sick_leave_hours += $sickDay->start_date->diffInDays($sickDay->end_date) * 8;
             }
@@ -1078,7 +1078,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['midnight_shift'] = "80,00";
                 $data['rows'][$user->id]['night_shift'] = "80,00";
                 $data['rows'][$user->id]['sub_total'] = "160,00";
-                $data['rows'][$user->id]['public_holidays'] = $user->id == 9 ? "-" : "10,00";;
+                $data['rows'][$user->id]['public_holidays'] = "-";;
                 $data['rows'][$user->id]['sunday_holidays'] = "40,00";
                 $data['rows'][$user->id]['accomodations'] = "-";
             } else if( $user->id == 17){
@@ -1119,7 +1119,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['sub_total'] = "-";
                 $data['rows'][$user->id]['sick_leave_hours'] = "-";
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
-                $data['rows'][$user->id]['public_holidays'] = "8,00";
+                $data['rows'][$user->id]['public_holidays'] = "-";
                 $data['rows'][$user->id]['sunday_holidays'] = "16,00";
                 $data['rows'][$user->id]['accomodations'] = "-";
                 $data['rows'][$user->id]['extra_work'] = "-";
