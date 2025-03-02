@@ -1286,10 +1286,7 @@ class FinalizedJobsController extends Controller
         $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
 
         $data['sick_days_this_month'] = 0;
-        $sickDaysQuery = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()]);
-        $sickDaysSql = $sickDaysQuery->toSql();
-        $sickDaysBindings = $sickDaysQuery->getBindings();
-        dd($sickDaysSql, $sickDaysBindings);
+        $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subDay()->toDateString()])->get();
         foreach($sickDays as $sickDay){
             $data['sick_days_this_month'] += $sickDay->start_date->diffInDays($sickDay->end_date);
         }
