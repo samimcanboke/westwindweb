@@ -946,7 +946,7 @@ class FinalizedJobsController extends Controller
                 }
             }*/
             $total_sick_leave_hours = 0;
-            $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subDay()->toDateString()])->get();
+            $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subMinutes(1)->toDateString()])->get();
             foreach($sickDays as $sickDay){
                 $total_sick_leave_hours += $sickDay->start_date->diffInDays($sickDay->end_date) * 8;
             }
