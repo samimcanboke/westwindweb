@@ -1287,6 +1287,7 @@ class FinalizedJobsController extends Controller
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+        dd($sickDays);
         foreach($sickDays as $sickDay){
             $data['sick_days_this_month'] += $sickDay->start_date->diffInDays($sickDay->end_date);
         }
