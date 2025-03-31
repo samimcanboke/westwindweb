@@ -1258,7 +1258,12 @@ class FinalizedJobsController extends Controller
         
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
-        $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
+
+        $workingStartDate = Carbon::parse($user->start_working_date);
+        $userAnnualLeaveRights = $workingStartDate->diffInMonths(now()) * 2.5;
+        dd($userAnnualLeaveRights);
+
+        $annual_leave_rights = $userAnnualLeaveRights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
             ->get()
             ->map(function($leave) {
@@ -1267,7 +1272,6 @@ class FinalizedJobsController extends Controller
                 return $leaveStart->diffInDays($leaveEnd);
             })
             ->sum() ?? 0;
-
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
         $annual_leave_days = $user->annualLeaves()
@@ -1286,8 +1290,11 @@ class FinalizedJobsController extends Controller
                 return $overlapStart->diffInDays($overlapEnd);
             })
             ->sum() ?? 0;
+           
         $data['annual_leave_days'] = number_format($annual_leave_days, 2, ',', '');
         $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
+
+        
 
         $data['sick_days_this_month'] = 0;
         $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subDay()->toDateString()])->get();
