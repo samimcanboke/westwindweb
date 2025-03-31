@@ -1261,7 +1261,7 @@ class FinalizedJobsController extends Controller
 
         $workingStartDate = Carbon::parse($user->start_working_date);
         $userAnnualLeaveRights = $workingStartDate->diffInMonths(now()) * 2.5;
-        dd($userAnnualLeaveRights);
+
 
         $annual_leave_rights = $userAnnualLeaveRights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
