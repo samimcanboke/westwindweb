@@ -1745,7 +1745,7 @@ class FinalizedJobsController extends Controller
 
     public function confirm_jobs(Request $request, FinalizedJobs $finalizedJobs)
     {
-        $finalizedJob = FinalizedJobs::find($request->id);
+        $finalizedJob = FinalizedJobs::where("id", $request->id)->first();
         $finalizedJob->client_id = $request->client_id;
         $finalizedJob->initial_date = $request->initial_date;
         $finalizedJob->zug_nummer = $request->zug_nummer;
