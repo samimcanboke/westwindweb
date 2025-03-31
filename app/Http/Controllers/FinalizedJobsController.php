@@ -1259,12 +1259,12 @@ class FinalizedJobsController extends Controller
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
 
-        $workingStartDate = Carbon::parse($user->start_working_date);
-        $userAnnualLeaveRights = $workingStartDate->diffInMonths(now()) * 2.5;
+                
 
 
-        $annual_leave_rights = $userAnnualLeaveRights - $user->annualLeaves()
+        $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
+            ->where('end_date', '>', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
@@ -1279,6 +1279,7 @@ class FinalizedJobsController extends Controller
                 $query->where(function($subQuery) use ($startDate, $endDate) {
                     $subQuery->whereBetween('start_date', [$startDate->toDateString(), $endDate->toDateString()])
                              ->orWhereBetween('end_date', [$startDate->toDateString(), $endDate->toDateString()]);
+                             
                 });
             })
             ->get()
