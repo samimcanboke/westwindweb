@@ -1308,10 +1308,14 @@ class FinalizedJobsController extends Controller
         foreach($sickDays as $sickDay){
             $data['sick_days_this_year'] += $sickDay->start_date->diffInDays($sickDay->end_date);
         }
+        
+        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
         $query = FinalizedJobs::where('user_id', $user->id);
         if ($request->client_id) {
             $query->where('client_id', $request->client_id);
         }
+
         $query->where('confirmation', 1)->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
 
         $finalized_jobs = $query->orderBy('initial_date', 'asc')->get();
