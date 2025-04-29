@@ -708,6 +708,7 @@ class FinalizedJobsController extends Controller
 
             $ausbildung_hours = 0;
             foreach ($finalized_jobs as $index => $finalized_job) {
+              
                 try {
 
                     $initial_date = $finalized_job->initial_date;
@@ -1023,11 +1024,18 @@ class FinalizedJobsController extends Controller
             $total_night_shift_minutes = $total_night_shift->i + $total_deep_morning_shift->i;
             $total_night_shift_decimal = $total_night_shift_hours + ($total_night_shift_minutes / 60);
             $data['rows'][$user->id]['night_shift'] = $total_night_shift_decimal != 0 ? number_format($total_night_shift_decimal, 2, ',', '') : "-";
+          
+          
             try{
-                if($total_break_time->h != 0 && $total_break_time->i != 0){
+                if($total_break_time->h != 0 && $total_break_time->i != 0 ){
                     $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i));
                 } else {
-                    $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', 0, 0));
+                    if($total_work_sum->h >= 0 && $total_work_sum->i >= 0){
+                        $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', 0, 0));
+                    }
+                    else {
+                        $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d',0, 0), sprintf('%02d:%02d', 0, 0));
+                    }
                 }
             } catch (\Exception $ex) {
                 dd($total_work_sum,$total_break_time,$startDate,$endDate,$ex);
