@@ -1338,7 +1338,18 @@ class FinalizedJobsController extends Controller
             "32" => 0,
         ];
 
-        $right_of_annuals = $left_annuals_from_2024[$user->id] + $user->annual_leave_rights;
+       
+        $leave_working_date_left = 0;
+        if($user->leave_working_date){
+            $leave_working_date = Carbon::parse($user->leave_working_date);
+            $fark = $leave_working_date->diffInDays(Carbon::create($year, 12, 31));
+            $leave_working_date_left = floor(($fark % 30) * 2.5);
+
+        } else {
+            $leave_working_date_left = 0;
+        }
+
+        $right_of_annuals = $left_annuals_from_2024[$user->id] + ($user->annual_leave_rights - $leave_working_date_left);
 
         $annual_leave_rights = $right_of_annuals - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
