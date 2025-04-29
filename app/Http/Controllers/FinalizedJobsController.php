@@ -1361,7 +1361,6 @@ class FinalizedJobsController extends Controller
             })
             ->sum() ?? 0;
 
-        dd($annual_leave_rights, $right_of_annuals);
             
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
