@@ -997,7 +997,7 @@ class FinalizedJobsController extends Controller
                 $salary_amount = $salary->salary;
                 $data['rows'][$user->id]['salary'] = $salary_amount . " €";
             }catch(\Exception $ex){
-                dd($ex,$user,$startDate->toDateString());
+                $data['rows'][$user->id]['salary'] = " - ";
             }
            
            
