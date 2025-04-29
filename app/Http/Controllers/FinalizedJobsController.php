@@ -1306,12 +1306,21 @@ class FinalizedJobsController extends Controller
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
 
-                
+        $calisma_suresi = 0;
+        if ($user->start_working_date) {
+            $start_working_date = Carbon::parse($user->start_working_date);
+            if($user->leave_working_date){
+                $leave_working_date = Carbon::parse($user->leave_working_date);
+                $ay_sayisi = $start_working_date->diffInMonths($leave_working_date);
+            }else{
+                $ay_sayisi = $start_working_date->diffInMonths(Carbon::create($year, 12, 31));
+            }
+            $calisma_suresi = $ay_sayisi * 2.5;
+        }
+       
 
-
-        $annual_leave_rights = $user->annual_leave_rights - $user->annualLeaves()
+        $annual_leave_rights = $calisma_suresi - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
-            ->where('end_date', '>', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
