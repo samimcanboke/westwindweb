@@ -1361,7 +1361,7 @@ class FinalizedJobsController extends Controller
             })
             ->sum() ?? 0;
 
-        $annual_leave_rights = $right_of_annuals - $annual_leave_days;
+        $annual_leave_rights = $right_of_annuals - $annual_leave_rights;
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
         $annual_leave_days = $user->annualLeaves()
