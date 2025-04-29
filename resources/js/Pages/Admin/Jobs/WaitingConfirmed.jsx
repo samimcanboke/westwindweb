@@ -60,7 +60,7 @@ const ConfirmButton = ({ onConfirm, setShowEdit, showEdit, getUnconfirmed, shift
     
     const handleConfirm = (e) => {
         e.preventDefault();
-        axios.post("/jobs-confirmation", { ...snakeCase(values), shiftZulage }).then((res) => {
+        axios.post("/jobs-confirmation", { ...snakeCase(values), shiftZulage: false }).then((res) => {
             getUnconfirmed();
             setShowEdit(false);
             setShowConfirmModal(false);
@@ -310,19 +310,11 @@ export default function WaitingConfirmed({ auth }) {
                                                 onClose={() => setShowConfirmModal(false)}
                                             >
                                                 <Modal.Header>
-                                                    <p>Schichtzulage berechnen ?</p>
+                                                    <p>Haben Sie die Tour überprüft?</p>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                    <p>Wird die Schichtzulage gültig sein?</p>
-                                                    <ToggleSwitch
-                                                        checked={shiftZulage}
-                                                        label="Schichtzulage berechnen"
-                                                        id="shiftZulage"
-                                                        name="shiftZulage"
-                                                        onChange={(value) => {
-                                                            setShiftZulage(value);
-                                                        }}
-                                                    />
+                                                    <p>Haben Sie alles überprüft, ob es korrekt eingegeben wurde? Denken Sie daran, dass Sie die Bestätigung nach der Bestätigung nicht mehr zurücknehmen können. Bitte führen Sie die Kontrollen sorgfältig durch.</p>
+                                                   
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <Button onClick={() => setShowConfirmModal(false)}>Abbrechen</Button>
