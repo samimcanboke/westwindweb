@@ -1005,18 +1005,17 @@ class FinalizedJobsController extends Controller
 
             }
 
-            $guest_text = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
-            if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
-                $guest_text = $guest_text . " (22€)";
-            }
-
-            $data['rows'][$user->id]['normal_guests'] = $guest_text;
+            $data['rows'][$user->id]['normal_guests'] =  $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
 
             if ($total_guest_sum != "00:00") {
                 $hours = $total_guest_sum->h;
                 $minutes = $total_guest_sum->i;
                 $decimal_hours = $hours + ($minutes / 60);
-                $data['rows'][$user->id]['guests'] = number_format($decimal_hours, 2, ',', '');
+                $guest_text = number_format($decimal_hours, 2, ',', '');
+                if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
+                    $guest_text = $guest_text . " (22€)";
+                }
+                $data['rows'][$user->id]['guests'] = $guest_text;
             } else {
                 $data['rows'][$user->id]['guests'] = "00:00";
             }
