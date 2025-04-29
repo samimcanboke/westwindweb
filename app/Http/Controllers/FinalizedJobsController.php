@@ -1337,12 +1337,18 @@ class FinalizedJobsController extends Controller
             "31" => 0,
             "32" => 0,
         ];
-
+        $start_of_annual_leave_working_date = null;
+        $user_start_working_date = Carbon::parse($user->start_working_date);
+        if ($user_start_working_date->year >= 2025 && $user_start_working_date->month >= 1) {
+            $start_of_annual_leave_working_date = Carbon::create($year, 1, 1)->startOfDay()->diffInMonths($user_start_working_date);
+        } else {
+            $start_of_annual_leave_working_date = Carbon::create($year, 1, 1);
+        }
        
         $leave_working_date_left = 0;
         if($user->leave_working_date){
             $leave_working_date = Carbon::parse($user->leave_working_date);
-            $fark = abs($leave_working_date->diffInMonths(Carbon::create($year, 1, 1)));
+            $fark = abs($leave_working_date->diffInMonths($start_of_annual_leave_working_date));
             $leave_working_date_left = ceil($fark * 2.5); //9
         } else {
             $leave_working_date_left = $user->annual_leave_rights;
