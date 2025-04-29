@@ -1342,18 +1342,17 @@ class FinalizedJobsController extends Controller
         $leave_working_date_left = 0;
         if($user->leave_working_date){
             $leave_working_date = Carbon::parse($user->leave_working_date);
-            $fark = $leave_working_date->diffInDays(Carbon::create($year, 12, 31));
-            $leave_working_date_left = floor(($fark % 30) * 2.5);
-
+            $fark = abs($leave_working_date->diffInMonths(Carbon::create($year, 1, 1)));
+            $leave_working_date_left = ceil($fark * 2.5); //9
         } else {
-            $leave_working_date_left = 0;
+            $leave_working_date_left = $user->annual_leave_rights;
         }
 
-        $right_of_annuals = $left_annuals_from_2024[$user->id] + ($user->annual_leave_rights - $leave_working_date_left);
+        $right_of_annuals = $left_annuals_from_2024[$user->id] + $user->annual_leave_rights;
 
-        $annual_leave_rights = $right_of_annuals - $user->annualLeaves()
-            ->where('end_date', '<', $startDate->toDateString())
-            ->where('end_date', '>', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
+        $annual_leave_rights = $user->annualLeaves()
+            ->where('start_date', '>=', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
+            ->where('end_date', '<=', $startDate->toDateString())
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
@@ -1361,6 +1360,9 @@ class FinalizedJobsController extends Controller
                 return $leaveStart->diffInDays($leaveEnd);
             })
             ->sum() ?? 0;
+
+        dd($annual_leave_rights, $right_of_annuals);
+            
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
         $annual_leave_days = $user->annualLeaves()
