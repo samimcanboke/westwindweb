@@ -1012,14 +1012,13 @@ class FinalizedJobsController extends Controller
                     $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
                     $data['rows'][$user->id]['workhours25'] = " - ";
                 }
-
-
-                $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
             } else {
                 $data['rows'][$user->id]['extra_work'] = "-";
-
             }
 
+            if(is_null($data['rows'][$user->id]['extra_work'])){
+                dd($data['rows'][$user->id]);
+            }
             $data['rows'][$user->id]['normal_guests'] =  $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
 
             if ($total_guest_sum != "00:00") {
