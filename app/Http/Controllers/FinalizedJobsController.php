@@ -1339,7 +1339,7 @@ class FinalizedJobsController extends Controller
         ];
         $start_of_annual_leave_working_date = null;
         $user_start_working_date = Carbon::parse($user->start_working_date);
-        if ($user_start_working_date->year >= 2025 && $user_start_working_date->month >= 1) {
+        if ($user_start_working_date->year >= 2025 && $user_start_working_date->month > 1) {
             $start_of_annual_leave_working_date = Carbon::create($year, 1, 1)->startOfDay()->diffInMonths($user_start_working_date);
         } else {
             $start_of_annual_leave_working_date = Carbon::create($year, 1, 1);
