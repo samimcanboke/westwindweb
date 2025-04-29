@@ -985,7 +985,12 @@ class FinalizedJobsController extends Controller
             $startDate = Carbon::create($year, $month, 1)->startOfMonth();
             $salaryService = new SalaryService();
             $salary = $salaryService->getSalaryAtDate($user, $startDate->toDateString());
-            $salary_amount = ($total_guest_sum->h >= 0 || $total_guest_sum->i >= 0) && $salary->salary >= 22 ? $salary->salary. " €" . " (22€)" : $user->salary. " €";
+            $salary_amount = $salary->salary;
+            if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
+                $salary_amount = $salary->salary . " € (22€)";
+            } else {
+                $salary_amount = $salary->salary . " €";
+            }
             $data['rows'][$user->id]['salary'] = $salary_amount;
 
             $extra_work_hours = $total_work_hours - (160 * 60);
