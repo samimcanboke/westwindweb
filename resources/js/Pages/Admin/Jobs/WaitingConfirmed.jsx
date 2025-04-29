@@ -313,7 +313,7 @@ export default function WaitingConfirmed({ auth }) {
                                                     <p>Haben Sie die Tour überprüft?</p>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                    <p>Haben Sie alles überprüft, ob es korrekt eingegeben wurde? Denken Sie daran, dass Sie die Bestätigung nach der Bestätigung nicht mehr zurücknehmen können. Bitte führen Sie die Kontrollen sorgfältig durch.</p>
+                                                    <p>Wollen Sie die Tour bestätigen?</p>
                                                    
                                                 </Modal.Body>
                                                 <Modal.Footer>
