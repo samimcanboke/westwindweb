@@ -56,6 +56,48 @@ def main_excel():
         return "Content type is not supported."
 
 
+
+@app.route('/create-excel-new', methods=['POST'])
+def main_excel_new():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        used_data = json.loads(request.json)
+        app.logger.info(used_data)
+        wb = load_workbook(filename='./test_new.xlsx')
+        ws = wb.active
+        ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+        ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
+        ws.page_setup.fitToHeight = 0
+        ws.page_setup.fitToWidth = 1
+        ws = add_header(ws, used_data["year"],
+                            used_data["month"],
+                            used_data["name"],
+                            used_data["id"],
+                            used_data["mail"],
+                            used_data["phone"]
+                            )
+        ws, total_height = add_lines(ws, used_data)
+        ws = sum_lines_new(ws, used_data, total_height)
+        #img = drawing.image.Image('./logo.jpg')
+        #img.anchor = 'N1'
+        #ws.add_image(img)
+        #img2 = drawing.image.Image('./logo.jpg')
+        #img2.anchor = 'N39'
+        #ws.add_image(img2)
+        wb.save("/tmp/result.xlsx")
+        os.chmod("/tmp/result.xlsx", 0o666)
+        result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result.xlsx"], capture_output=True, text=True)
+        app.logger.info(f"LibreOffice output: {result.stdout}")
+        app.logger.error(f"LibreOffice error: {result.stderr}")
+        try:
+            return send_file('/tmp/result.pdf', as_attachment=True)
+        finally:
+            if os.path.exists('/tmp/result.pdf'):
+                os.remove('/tmp/result.pdf')
+                os.remove('/tmp/result.xlsx')
+    else:
+        return "Content type is not supported."
+
 def add_header(ws, year, month, name, id, mail, phone):
     ws['C2'] = year
     ws['D2'] = month
@@ -272,6 +314,46 @@ def sum_lines(ws,used_data, total_height):
     ws['O45'].alignment = Alignment(horizontal='center', vertical='center')
     ws['O45'].fill = PatternFill(start_color="f01111", end_color="f01111", fill_type="solid")
     return ws
+
+
+def sum_lines_new(ws,used_data, total_height):
+    ws['E43'].value = str(used_data['totals']['dates']) + " Tage"
+    for row in range(43, 54):
+        ws.row_dimensions[row].height = 40
+    ws['E44'].value = str(used_data['totals']['workhours']) + " St"
+    ws['E45'].value = str(used_data['totals']['breaks']) + " St"
+    ws['E46'].value = str(used_data['totals']['ausbildung_hours']) + " €"
+    ws['E47'].value = str(used_data['totals']['sub_total']) + " St"
+    ws['E48'].value = str(used_data['totals']['night_shift']) + " St"
+    ws['E49'].value = str(used_data['totals']['midnight_shift']) + " St"
+    ws['E50'].value = str(used_data['totals']['sunday_holidays']) + " St"
+    ws['E51'].value = str(used_data['totals']['public_holidays']) + " St"
+    ws['E52'].value = str(used_data['totals']['guests']) + " St"
+    ws['E53'].value = str(used_data['totals']['accomodations'])
+    ws['K43'].value = str(used_data['hour_bank_this_month'])
+    ws['K44'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K44'].value = str(used_data['hour_bank_this_year'])
+    ws['K46'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K46'].value = str(used_data['sick_days_this_month'])
+    ws['K47'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K47'].value = str(used_data['sick_days_this_year'])
+    ws['K49'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K49'].value = str(used_data['annual_leave_days'])
+    ws['K50'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K50'].value = str(used_data['annual_leave_rights'])
+    ws['K51'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['K51'].value = str(used_data['annual_leave_left'])
+    ws['K43'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O43'].value = str(used_data['total_hours_req'])
+    ws['O43'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O44'].value = str(used_data['total_made_hours'])
+    ws['O44'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O45'].value = str(used_data['left_hours'])
+    ws['O45'].alignment = Alignment(horizontal='center', vertical='center')
+    ws['O45'].fill = PatternFill(start_color="f01111", end_color="f01111", fill_type="solid")
+    return ws
+
+
 
 
 @app.route('/create-total-excel', methods=['POST'])
