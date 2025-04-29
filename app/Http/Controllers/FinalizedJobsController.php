@@ -1370,7 +1370,6 @@ class FinalizedJobsController extends Controller
                 return $leaveStart->diffInDays($leaveEnd);
             })
             ->sum() ?? 0;
-        dd($right_of_annuals, $annual_leave_rights,$start_of_annual_leave_working_date,$leave_working_date_left);
         $annual_leave_rights = $right_of_annuals - $annual_leave_rights;
         
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
