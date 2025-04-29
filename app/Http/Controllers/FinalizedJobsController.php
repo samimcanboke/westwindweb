@@ -983,9 +983,11 @@ class FinalizedJobsController extends Controller
             $minutes = ($remaining_hours * 60) % 60;
             $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
             if($startDate->month > 3 && $startDate->year >= 2025){
-                if(number_format($hours + ($minutes / 60), 2, ',', '') > 20){
+                if($hours + ($minutes / 60) > 20){
                     $data['rows'][$user->id]['workhours'] = "20,00";
-                    $data['rows'][$user->id]['workhours25'] = number_format($hours + ($minutes / 60), 2, ',', '') - 20;
+                    $data['rows'][$user->id]['workhours25'] = number_format($hours + ($minutes / 60) - 20, 2, ',', '');
+                } else {
+                    $data['rows'][$user->id]['workhours25'] = " - ";
                 }
             }
             $startDate = Carbon::create($year, $month, 1)->startOfMonth();
