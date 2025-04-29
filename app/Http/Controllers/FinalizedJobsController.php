@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Station;
+use App\Services\SalaryService;
 use DateTimeZone;
 class FinalizedJobsController extends Controller
 {
@@ -688,6 +689,7 @@ class FinalizedJobsController extends Controller
                 continue;
             }
 
+
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
             $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
@@ -979,8 +981,10 @@ class FinalizedJobsController extends Controller
             $hours = floor($remaining_hours);
             $minutes = ($remaining_hours * 60) % 60;
             $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
-    
-            $data['rows'][$user->id]['salary'] = $user->salary . " €" ;
+            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+            $salaryService = new SalaryService();
+            $salary = $salaryService->getSalaryAtDate($user, $startDate->toDateString());
+            $data['rows'][$user->id]['salary'] = $salary->salary  ?? $user->salary . " €" ;
 
             $extra_work_hours = $total_work_hours - (160 * 60);
             if ($extra_work_hours > 0) {

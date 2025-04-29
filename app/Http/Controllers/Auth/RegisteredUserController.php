@@ -16,6 +16,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Carbon\Carbon;
 use App\Models\UsersClient;
+use App\Services\SalaryService;
+
 
 class RegisteredUserController extends Controller
 {
@@ -65,7 +67,11 @@ class RegisteredUserController extends Controller
 
     public function show_user($user_id)
     {
-        $user = User::find($user_id);
+        $user = User::where('id',$user_id)->first();
+
+        $salaryService = new SalaryService();
+        $salary = $salaryService->getSalaryAtDate($user, now()->toDateString());
+        $user->salary = $salary->salary ?? $user->salary; 
         return response()->json($user);
     }
     /**
@@ -152,20 +158,37 @@ class RegisteredUserController extends Controller
             'tax_id' => $request->tax_id,
 
         ]);
+
+        $salaryService = new SalaryService();
+        $salaryService->updateSalary($user, $request->salary, now()->toDateString());
+
+
         event(new UserRegistered($user));
         return response()->json(['success'=>true, 'message' => 'User created successfully']);
     }
 
     public function edit_inside(Request $request)
     {
-        $user = User::find($request->id);
+        $user = User::where('id',$request->id)->first();
         if($request->password != null){
             $request->merge(['password' => Hash::make($request->password)]);
         } else{
             $request->merge(['password' => $user->password]);
         }
+        
         $start = Carbon::createFromDate($request->start_working_date);
         $data['start_working_date'] = $start->format('Y-m-d');
+
+        $salaryService = new SalaryService();
+        $salary = $salaryService->getSalaryAtDate($user, now()->toDateString());
+        if($salary->salary ?? $user->salary != $request->salary){
+            if(!$salary){
+                $salaryService->updateSalary($user, $user->salary, $user->start_working_date);
+                $salaryService->updateSalary($user, $request->salary, now()->toDateString());
+            }else{
+                $salaryService->updateSalary($user, $request->salary, now()->toDateString());
+            }
+        }
         $request->merge($data);
         $user->update($request->all());
         return response()->json(['success'=>true, 'message' => 'User updated successfully']);

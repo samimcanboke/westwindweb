@@ -228,5 +228,9 @@ class User extends Authenticatable implements JWTSubject
             return $annualLeave->leftAnnualLeaves();
         });
     }
+    public function salaries()
+    {
+        return $this->hasMany(UserSalary::class);
+    }
 }
 
