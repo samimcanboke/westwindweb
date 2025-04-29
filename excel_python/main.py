@@ -488,7 +488,10 @@ def create_total_excel_new():
                 ws[f'E{row_num}'] = f"{row_data['workhours']}"
                 ws[f'F{row_num}'] = f"{row_data['guests']}"
                 ws[f'G{row_num}'] = f"{row_data['extra_work']}"
-                ws[f'H{row_num}'] = f"{row_data['workhours25']}"
+                if 'workhours25' in row_data:
+                    ws[f'H{row_num}'] = f"{row_data['workhours25']}"
+                else:
+                    ws[f'H{row_num}'] = ""
                 ws[f'I{row_num}'] = f"{row_data['ausbildung_hours']}"
                 ws[f'J{row_num}'] = f"{row_data['night_shift']}"
                 ws[f'K{row_num}'] = f"{row_data['midnight_shift']}"
