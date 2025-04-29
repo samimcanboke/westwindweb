@@ -1305,22 +1305,44 @@ class FinalizedJobsController extends Controller
         
         $data['hour_bank_this_year'] = $total_hours_this_year > 0 ? '-'. sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60) : sprintf('%02d:%02d', floor($total_hours_this_year), ($total_hours_this_year - floor($total_hours_this_year)) * 60);
 
+        $left_annuals_from_2024 = [
+            "2" => 0,
+            "3" => 0,
+            "4" => 0,
+            "5" => 0,
+            "6" => 0,
+            "7" => 13,
+            "8" => 13,
+            "9" => 0,
+            "10" => 6,
+            "11" => 0,
+            "12" => 11,
+            "13" => 0.5,
+            "14" => 0,
+            "15" => 0,
+            "17" => 0,
+            "18" => 8,
+            "19" => 8,
+            "20" => 0,
+            "21" => 0,
+            "22" => 0,
+            "23" => 5,
+            "24" => 0,
+            "25" => 0.5,
+            "26" => 0,
+            "27" => 0,
+            "28" => 0,
+            "29" => 0,
+            "30" => 0,
+            "31" => 0,
+            "32" => 0,
+        ];
 
-        $calisma_suresi = 0;
-        if ($user->start_working_date) {
-            $start_working_date = Carbon::parse($user->start_working_date);
-            if($user->leave_working_date){
-                $leave_working_date = Carbon::parse($user->leave_working_date);
-                $ay_sayisi = $start_working_date->diffInMonths($leave_working_date);
-            }else{
-                $ay_sayisi = $start_working_date->diffInMonths(Carbon::create($year, 12, 31));
-            }
-            $calisma_suresi = $ay_sayisi * 2.5;
-        }
-       
+        $right_of_annuals = $left_annuals_from_2024[$user->id] + $user->annual_leave_rights;
 
-        $annual_leave_rights = $calisma_suresi - $user->annualLeaves()
+        $annual_leave_rights = $right_of_annuals - $user->annualLeaves()
             ->where('end_date', '<', $startDate->toDateString())
+            ->where('end_date', '>', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
             ->get()
             ->map(function($leave) {
                 $leaveStart = Carbon::parse($leave->start_date);
