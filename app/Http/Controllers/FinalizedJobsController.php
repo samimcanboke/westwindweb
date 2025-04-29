@@ -1626,7 +1626,7 @@ class FinalizedJobsController extends Controller
         $data['totals']['public_holidays'] = sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) : "-";
         $data['totals']['sunday_holidays'] = sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00" ? sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) : "-";
         $data['totals']['accomodations'] = $feeding_fee . " €";
-        if($startDate->month >= 4 && $startDate->year == 2025){
+        if($startDate->month < 4 && $startDate->year <= 2025){
             $data['totals']['total_work_day_amount'] = $y >= 20 ? 20 * $y : $y * 6;
         }else{
             $data['totals']['total_work_day_amount'] = 0;
@@ -1648,7 +1648,7 @@ class FinalizedJobsController extends Controller
         $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8))) * 60);
         if ($data && $finalized_jobs->count() > 0) {
             try {
-                if($startDate->month >= 4 && $startDate->year == 2025){
+                if($startDate->month < 4 && $startDate->year <= 2025){
                     $file_req = Http::withHeaders([
                         'Content-Type' => 'application/json',
                     ])->post('http://excel:8000/create-excel', json_encode($data));
