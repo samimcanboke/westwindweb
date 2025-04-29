@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\JWTAuthentication;
-
+use App\Http\Middleware\LogRequestTime;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \App\Http\Middleware\IsAdmin::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            LogRequestTime::class,
         ]);
         $middleware->api(append: [
             JWTAuthentication::class,
