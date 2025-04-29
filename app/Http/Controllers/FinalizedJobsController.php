@@ -1008,6 +1008,9 @@ class FinalizedJobsController extends Controller
                         $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
                         $data['rows'][$user->id]['workhours25'] = " - ";
                     }
+                } else {
+                    $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
+                    $data['rows'][$user->id]['workhours25'] = " - ";
                 }
 
 
