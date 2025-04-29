@@ -982,6 +982,12 @@ class FinalizedJobsController extends Controller
             $hours = floor($remaining_hours);
             $minutes = ($remaining_hours * 60) % 60;
             $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
+            if($startDate->month > 3 && $startDate->year >= 2025){
+                if(number_format($hours + ($minutes / 60), 2, ',', '') > 20){
+                    $data['rows'][$user->id]['workhours'] = "20,00";
+                    $data['rows'][$user->id]['workhours25'] = number_format($hours + ($minutes / 60), 2, ',', '') - 20;
+                }
+            }
             $startDate = Carbon::create($year, $month, 1)->startOfMonth();
             $salaryService = new SalaryService();
             try{
@@ -1156,9 +1162,15 @@ class FinalizedJobsController extends Controller
 
         if ($data['rows'] && count($data['rows']) > 0) {
             try {
-                $file_req = Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                ])->post('http://excel:8000/create-total-excel', json_encode($data));
+                if($startDate->month > 3 && $startDate->year >= 2025){
+                    $file_req = Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                    ])->post('http://excel:8000/create-total-excel-new', json_encode($data));
+                }else{
+                    $file_req = Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                    ])->post('http://excel:8000/create-total-excel', json_encode($data));
+                }
             } catch (\Exception $ex) {
                 dd($ex);
             }

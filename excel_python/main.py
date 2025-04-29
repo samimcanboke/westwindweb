@@ -441,6 +441,92 @@ def create_total_excel():
         return "Content type is not supported."
 
 
+@app.route('/create-total-excel-new', methods=['POST'])
+def create_total_excel_new():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        used_data = json.loads(request.json)
+        wb = load_workbook(filename='./total_report_new.xlsx')
+        ws = wb.active
+        rows_list = []
+        for key, value in used_data['rows'].items():
+            rows_list.append(value)
+        used_data['rows'] = rows_list
+        app.logger.info(used_data)
+        ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+        ws.page_setup.paperSize = ws.PAPERSIZE_TABLOID
+        ws.page_setup.fitToHeight = 0
+        ws.page_setup.fitToWidth = 1
+        ws['C3'].alignment = Alignment(horizontal='center', vertical='center')
+        ws.row_dimensions[3].height = 25
+        ws.row_dimensions[4].height = 25
+        ws['C4'].alignment = Alignment(horizontal='center', vertical='center')
+        ws['D3'] = used_data['month']
+        ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
+        ws['D4'] = used_data['year']
+        ws['D4'].alignment = Alignment(horizontal='center', vertical='center')
+        for row in used_data['rows']:
+            row_num = 10
+            for row_data in used_data['rows']:
+                if row_num % 2 != 0:
+                    for col in range(2, 19):  # B to M columns
+                        cell = ws.cell(row=row_num, column=col)
+                        cell.fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
+
+                for col in range(2, 19):  # B to M columns
+                    cell = ws.cell(row=row_num, column=col)
+                    ws.row_dimensions[row_num].height = 30
+                    cell.font = Font(name='Montserrat', size=12, bold=False)
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+                    cell.border = Border(left=Side(style='thin'),
+                                         right=Side(style='thin'),
+                                         top=Side(style='thin'),
+                                         bottom=Side(style='thin'))
+                ws[f'B{row_num}'] = f"{row_data['id']}"
+                ws[f'C{row_num}'] = f"{row_data['name']}"
+                ws[f'D{row_num}'] = f"{row_data['salary']}"
+                ws[f'E{row_num}'] = f"{row_data['workhours']}"
+                ws[f'F{row_num}'] = f"{row_data['guests']}"
+                ws[f'G{row_num}'] = f"{row_data['extra_work']}"
+                ws[f'H{row_num}'] = f"{row_data['workhours25']}"
+                ws[f'I{row_num}'] = f"{row_data['ausbildung_hours']}"
+                ws[f'J{row_num}'] = f"{row_data['night_shift']}"
+                ws[f'K{row_num}'] = f"{row_data['midnight_shift']}"
+                ws[f'L{row_num}'] = f"{row_data['sunday_holidays']}"
+                ws[f'M{row_num}'] = f"{row_data['public_holidays']}"
+                ws[f'N{row_num}'] = f"{row_data['annual_leave_hours']}"
+                ws[f'O{row_num}'] = f"{row_data['sick_leave_hours']}"
+                ws[f'P{row_num}'] = f"{row_data['accomodations']}"
+
+                if row_data['user_bonus']:
+                    ws[f'Q{row_num}'] = f"+{row_data['user_bonus']} €"
+                    ws[f'Q{row_num}'].font = Font(color="00FF00")
+                    ws[f'Q{row_num}'].fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
+                else:
+                    ws[f'Q{row_num}'] = row_data['user_bonus']
+                if row_data['user_advance']:
+                    ws[f'R{row_num}'] = f"-{row_data['user_advance']} €"
+                    ws[f'R{row_num}'].font = Font(color="FF0000")
+                    ws[f'R{row_num}'].fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
+                else:
+                    ws[f'R{row_num}'] = row_data['user_advance']
+                row_num += 1
+        wb.save("/tmp/result_total_new.xlsx")
+        os.chmod("/tmp/result_total_new.xlsx", 0o666)
+        result = subprocess.run(["unoconv", "-f", "pdf", "/tmp/result_total_new.xlsx"], capture_output=True, text=True)
+        app.logger.info(f"LibreOffice output: {result.stdout}")
+        app.logger.error(f"LibreOffice error: {result.stderr}")
+        try:
+            return send_file('/tmp/result_total_new.pdf', as_attachment=True)
+        finally:
+            if os.path.exists('/tmp/result_total_new.pdf'):
+                os.remove('/tmp/result_total_new.pdf')
+                os.remove('/tmp/result_total_new.xlsx')
+    else:
+        return "Content type is not supported."
+
+
+
 
 @app.route('/create-excel-client-multiple', methods=['POST'])
 def main_excel_client():
