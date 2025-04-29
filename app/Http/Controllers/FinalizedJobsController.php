@@ -987,12 +987,7 @@ class FinalizedJobsController extends Controller
             try{
                 $salary = $salaryService->getSalaryAtDate($user, $startDate->toDateString());
                 $salary_amount = $salary->salary;
-                if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
-                    $salary_amount = $salary->salary . " € (22€)";
-                } else {
-                    $salary_amount = $salary->salary . " €";
-                }
-                $data['rows'][$user->id]['salary'] = $salary_amount;
+                $data['rows'][$user->id]['salary'] = $salary_amount . " €";
             }catch(\Exception $ex){
                 dd($ex,$user,$startDate->toDateString());
             }
@@ -1010,7 +1005,12 @@ class FinalizedJobsController extends Controller
 
             }
 
-            $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
+            $guest_text = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
+            if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
+                $guest_text = $guest_text . " (22€)";
+            }
+
+            $data['rows'][$user->id]['normal_guests'] = $guest_text;
 
             if ($total_guest_sum != "00:00") {
                 $hours = $total_guest_sum->h;
