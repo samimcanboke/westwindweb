@@ -1114,6 +1114,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
                 $data['rows'][$user->id]['total_day'] = 0;
                 $data['rows'][$user->id]['extra_work'] = "-";
+                $data['rows'][$user->id]['workhours25'] = "-";
                 $data['rows'][$user->id]['guests'] = $user->id == 9 ? "-" : "-";
                 $data['rows'][$user->id]['breaks'] = "-";
                 $data['rows'][$user->id]['midnight_shift'] = "80,00";
@@ -1135,6 +1136,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
                 $data['rows'][$user->id]['accomodations'] = "-";
                 $data['rows'][$user->id]['extra_work'] = "-";
+                $data['rows'][$user->id]['workhours25'] = "-";
             } else if($user->id == 14 || $user->id == 15 || $user->id == 21){
                 $data['rows'][$user->id]['workhours'] = "Aushilfe";
                 $data['rows'][$user->id]['total_work_day_amount'] = "-";
@@ -1148,6 +1150,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['annual_leave_hours'] = "-";
                 $data['rows'][$user->id]['accomodations'] = "-";
                 $data['rows'][$user->id]['extra_work'] = "-";
+                $data['rows'][$user->id]['workhours25'] = "-";
             } else if($user->id == 2){
                 $data['rows'][$user->id]['salary'] = "28,13 €";
                 $data['rows'][$user->id]['workhours'] = "160,00";
@@ -1164,6 +1167,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['sunday_holidays'] = "16,00";
                 $data['rows'][$user->id]['accomodations'] = "-";
                 $data['rows'][$user->id]['extra_work'] = "-";
+                $data['rows'][$user->id]['workhours25'] = "-";
             }
         }
 
