@@ -25,8 +25,8 @@ export default function Authenticated({ user, header, children }) {
         useEffect(()=>{
             getWaitConfirmedCount();
             getWeeklyTodos();
-            let id = setInterval(getWaitConfirmedCount, 10000);
-            let id2 = setInterval(getWeeklyTodos, 10000);
+            let id = setInterval(getWaitConfirmedCount, 60000);
+            let id2 = setInterval(getWeeklyTodos, 60000);
             return () => {
                 clearInterval(id);
                 clearInterval(id2);
