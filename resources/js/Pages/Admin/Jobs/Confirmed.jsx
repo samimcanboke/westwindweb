@@ -74,7 +74,7 @@ export default function Dashboard({ auth }) {
                 });
             }
         });
-        axios.get(route("users.show")).then((res) => {
+        axios.get(route("users.show_all")).then((res) => {
             setDrivers(res.data);
             //console.log(res.data);
         });
