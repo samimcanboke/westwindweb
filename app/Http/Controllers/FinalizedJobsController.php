@@ -994,7 +994,7 @@ class FinalizedJobsController extends Controller
             $salaryService = new SalaryService();
             try{
                 $salary = $salaryService->getSalaryAtDate($user, $startDate->toDateString());
-                $salary_amount = $salary->salary;
+                $salary_amount = $salary->salary ?? 0;
                 $data['rows'][$user->id]['salary'] = $salary_amount . " €";
             }catch(\Exception $ex){
                 $data['rows'][$user->id]['salary'] = " - ";
