@@ -982,14 +982,7 @@ class FinalizedJobsController extends Controller
             $hours = floor($remaining_hours);
             $minutes = ($remaining_hours * 60) % 60;
             $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
-            if($startDate->month > 3 && $startDate->year >= 2025){
-                if($hours + ($minutes / 60) > 20){
-                    $data['rows'][$user->id]['workhours'] = "20,00";
-                    $data['rows'][$user->id]['workhours25'] = number_format($hours + ($minutes / 60) - 20, 2, ',', '');
-                } else {
-                    $data['rows'][$user->id]['workhours25'] = " - ";
-                }
-            }
+            
             $startDate = Carbon::create($year, $month, 1)->startOfMonth();
             $salaryService = new SalaryService();
             try{
@@ -1007,6 +1000,17 @@ class FinalizedJobsController extends Controller
                 $extra_work_hours_h = floor($extra_work_hours / 60);
                 $extra_work_hours_i = $extra_work_hours % 60;
                 $extra_work_hours_decimal = $extra_work_hours_h + ($extra_work_hours_i / 60);
+                if($startDate->month > 3 && $startDate->year >= 2025){
+                    if($extra_work_hours_decimal > 20){
+                        $data['rows'][$user->id]['extra_work'] = "20,00";
+                        $data['rows'][$user->id]['workhours25'] = number_format($extra_work_hours_decimal - 20, 2, ',', '');
+                    } else {
+                        $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
+                        $data['rows'][$user->id]['workhours25'] = " - ";
+                    }
+                }
+
+
                 $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
             } else {
                 $data['rows'][$user->id]['extra_work'] = "-";
