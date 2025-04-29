@@ -1348,7 +1348,7 @@ class FinalizedJobsController extends Controller
             $leave_working_date_left = $user->annual_leave_rights;
         }
 
-        $right_of_annuals = $left_annuals_from_2024[$user->id] + $user->annual_leave_rights;
+        $right_of_annuals = $left_annuals_from_2024[$user->id] + $leave_working_date_left;
 
         $annual_leave_rights = $user->annualLeaves()
             ->where('start_date', '>=', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
@@ -1361,7 +1361,7 @@ class FinalizedJobsController extends Controller
             })
             ->sum() ?? 0;
 
-            
+        $annual_leave_rights = $right_of_annuals - $annual_leave_days;
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
         $annual_leave_days = $user->annualLeaves()
