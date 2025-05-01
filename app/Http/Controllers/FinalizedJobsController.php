@@ -1025,6 +1025,7 @@ class FinalizedJobsController extends Controller
                 $data['rows'][$user->id]['extra_work'] = "-";
             }
 
+   
             $data['rows'][$user->id]['normal_guests'] =  $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
 
             if ($total_guest_sum != "00:00") {
