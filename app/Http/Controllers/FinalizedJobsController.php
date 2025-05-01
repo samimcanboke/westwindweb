@@ -690,10 +690,6 @@ class FinalizedJobsController extends Controller
             }
 
 
-            if($user->id != 30){
-                continue;
-            }
-
 
             $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
                 ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
