@@ -627,172 +627,176 @@ class FinalizedJobsController extends Controller
         }
     }
 
-    public function get_total_report(Request $request)
-    {
-        $data = [
-            "year" => "",
-            "month" => "",
-        ];
-        $month = $request->month;
-        $year = $request->year;
+public function get_total_report(Request $request)
+{
+    $data = [
+        "year" => "",
+        "month" => "",
+    ];
+    $month = $request->month;
+    $year = $request->year;
 
+    $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+    $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
+
+    $data['year'] = $year;
+    switch ($month) {
+        case 1:
+            $data['month'] = "Januar";
+            break;
+        case 2:
+            $data['month'] = "Februar";
+            break;
+        case 3:
+            $data['month'] = "März";
+            break;
+        case 4:
+            $data['month'] = "April";
+            break;
+        case 5:
+            $data['month'] = "Mai";
+            break;
+        case 6:
+            $data['month'] = "Juni";
+            break;
+        case 7:
+            $data['month'] = "Juli";
+            break;
+        case 8:
+            $data['month'] = "August";
+            break;
+        case 9:
+            $data['month'] = "September";
+            break;
+        case 10:
+            $data['month'] = "Oktober";
+            break;
+        case 11:
+            $data['month'] = "November";
+            break;
+        case 12:
+            $data['month'] = "Dezember";
+            break;
+        default:
+            $data['month'] = $month;
+            break;
+    }
+
+    $users = User::where('is_active', 1)->orderBy('driver_id', 'asc')->get();
+    foreach ($users as $user) {
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth()->addMinute();
-
-        $data['year'] = $year;
-        switch ($month) {
-            case 1:
-                $data['month'] = "Januar";
-                break;
-            case 2:
-                $data['month'] = "Februar";
-                break;
-            case 3:
-                $data['month'] = "März";
-                break;
-            case 4:
-                $data['month'] = "April";
-                break;
-            case 5:
-                $data['month'] = "Mai";
-                break;
-            case 6:
-                $data['month'] = "Juni";
-                break;
-            case 7:
-                $data['month'] = "Juli";
-                break;
-            case 8:
-                $data['month'] = "August";
-                break;
-            case 9:
-                $data['month'] = "September";
-                break;
-            case 10:
-                $data['month'] = "Oktober";
-                break;
-            case 11:
-                $data['month'] = "November";
-                break;
-            case 12:
-                $data['month'] = "Dezember";
-                break;
-            default:
-                $data['month'] = $month;
-                break;
+        if ($user->id == 15 || $user->id == 14 || $user->id == 29) {
+            continue;
         }
 
+        if ($user->id != 30) {
+            // continue;
+        }
 
-        $users = User::where('is_active', 1)->orderBy('driver_id', 'asc')->get();
-        foreach ($users as $user) {
-            if($user->id == 15 || $user->id == 14 || $user->id == 29){
-                continue;
-            }
+        $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
+            ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
+        $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
+        $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024", "01/01/2025", "01/05/2025", "18/04/2025", "21/04/2025", "29/05/2025", "09/06/2025", "03/10/2025", "25/12/2025", "26/12/2025"];
+        $total_public_holiday_hours = new DateInterval('PT0H0M');
+        $total_work_sum = new DateInterval('PT0H0M');
+        $total_work_hours = new DateInterval('PT0H0M');
+        $total_hours = new DateInterval('PT0H0M');
+        $total_guest_sum = new DateInterval('PT0H0M');
+        $total_break_time = new DateInterval('PT0H0M');
+        $total_midnight_shift = new DateInterval('PT0H0M');
+        $total_night_shift = new DateInterval('PT0H0M');
+        $total_deep_morning_shift = new DateInterval('PT0H0M');
+        $total_sunday_holiday_hours = new DateInterval('PT0H0M');
+    
+        $i = 0;
+        $y = 0;
+        $feeding_fee = 0;
 
+        $ausbildung_hours = 0;
 
+        foreach ($finalized_jobs as $index => $finalized_job) {
 
-            $query = FinalizedJobs::where('confirmation', 1)->where('user_id', $user->id)
-                ->whereBetween('initial_date', [$startDate->toDateString(), $endDate->toDateString()]);
-            $finalized_jobs = $query->orderBy('initial_date', 'asc')->orderBy('user_id', 'asc')->get();
-            $public_holidays = ["29/03/2024", "01/04/2024", "01/05/2024", "09/05/2024", "20/05/2024", "03/10/2024", "25/12/2024", "26/12/2024","01/01/2025","01/05/2025","18/04/2025","21/04/2025","29/05/2025","09/06/2025","03/10/2025","25/12/2025","26/12/2025"];
-            $total_public_holiday_hours = new DateInterval('PT0H0M');
-            $total_work_sum = new DateInterval('PT0H0M');
-            $total_guest_sum = new DateInterval('PT0H0M');
-            $total_break_time = new DateInterval('PT0H0M');
-            $total_midnight_shift = new DateInterval('PT0H0M');
-            $total_night_shift = new DateInterval('PT0H0M');
-            $total_deep_morning_shift = new DateInterval('PT0H0M');
-            $total_sunday_holiday_hours = new DateInterval('PT0H0M');
-            $i = 0;
-            $y = 0;
-            $feeding_fee = 0;
+            try {
 
-            $ausbildung_hours = 0;
-            foreach ($finalized_jobs as $index => $finalized_job) {
-              
-                try {
+                $initial_date = $finalized_job->initial_date;
 
-                    $initial_date = $finalized_job->initial_date;
+                if ($finalized_job->shift_count) {
+                    $y++;
+                }
+                if ($finalized_job->ausbildung) {
+                    $ausbildung_hours += 1;
+                }
 
-                    if($finalized_job->shift_count){
-                        $y++;
+                $work_sum = $finalized_job->guest ? "00:00" : $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
+                if ($work_sum == "00:00" && !$finalized_job->guest) {
+                    $work_sum = "24:00";
+                }
+                $guest_start_total = "00:00";
+
+                if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
+                    $guest_start_total = $this->guest_diffrence($finalized_job->guest_start_time, $finalized_job->guest_start_end_time, $initial_date);
+                    if ($guest_start_total != "00:00") {
+                        $total_guest_sum = $this->calculateTotalSum($guest_start_total, $total_guest_sum);
                     }
-                    if($finalized_job->ausbildung){
-                        $ausbildung_hours += 1;
+                }
+                $guest_end_total = "00:00";
+                if ($finalized_job->guest_end_time && $finalized_job->guest_end_end_time) {
+                    $guest_end_total = $this->guest_diffrence($finalized_job->guest_end_time, $finalized_job->guest_end_end_time, $initial_date);
+                    if ($guest_end_total != "00:00") {
+                        $total_guest_sum = $this->calculateTotalSum($guest_end_total, $total_guest_sum);
                     }
+                }
 
-                    $work_sum = $finalized_job->guest ? "00:00" : $this->hour_diffrence($this->convertTimeToDatetime($initial_date, $finalized_job->work_start_time), $this->convertTimeToDatetime($initial_date, $finalized_job->work_end_time));
-                    if ($work_sum == "00:00" && !$finalized_job->guest) {
-                        $work_sum = "24:00";
-                    }
-                    $guest_start_total = "00:00";
+                $guest_total_tmp = $this->calculateTotalTimesSum($guest_start_total, $guest_end_total);
+                $guest_total = sprintf('%02d:%02d', $guest_total_tmp->h, $guest_total_tmp->i);
 
-                    if ($finalized_job->guest_start_time && $finalized_job->guest_start_end_time) {
-                        $guest_start_total = $this->guest_diffrence($finalized_job->guest_start_time, $finalized_job->guest_start_end_time, $initial_date);
-                        if ($guest_start_total != "00:00") {
-                            $total_guest_sum = $this->calculateTotalSum($guest_start_total, $total_guest_sum);
+                $break_total = new DateInterval('PT0S');
+                $breaks = json_decode($finalized_job->breaks);
+                if (gettype($breaks) == "string") {
+                    $breaks = json_decode($breaks);
+                }
+                if ($breaks) {
+                    foreach ($breaks as $break) {
+                        if (!empty($break->start)) {
+                            $start = $this->convertTimeToDatetime($initial_date, $break->start);
+                        } else {
+                            continue;
                         }
-                    }
-                    $guest_end_total = "00:00";
-                    if ($finalized_job->guest_end_time && $finalized_job->guest_end_end_time) {
-                        $guest_end_total = $this->guest_diffrence($finalized_job->guest_end_time, $finalized_job->guest_end_end_time, $initial_date);
-                        if ($guest_end_total != "00:00") {
-                            $total_guest_sum = $this->calculateTotalSum($guest_end_total, $total_guest_sum);
+                        if (!empty($break->end)) {
+                            $end = $this->convertTimeToDatetime($initial_date, $break->end);
+                        } else {
+                            continue;
                         }
-                    }
-
-                    $guest_total_tmp = $this->calculateTotalTimesSum($guest_start_total, $guest_end_total);
-                    $guest_total = sprintf('%02d:%02d', $guest_total_tmp->h, $guest_total_tmp->i);
-
-                    $break_total = new DateInterval('PT0S');
-                    $breaks = json_decode($finalized_job->breaks);
-                    if (gettype($breaks) == "string") {
-                        $breaks = json_decode($breaks);
-                    }
-                    if ($breaks) {
-                        foreach ($breaks as $break) {
-                            if(!empty($break->start)){
-                                $start = $this->convertTimeToDatetime($initial_date, $break->start);
-                            }else{
-                                continue;
-                            }
-                            if(!empty($break->end)){
-                                $end = $this->convertTimeToDatetime($initial_date, $break->end);
-                            }else{
-                                continue;
-                            }
-                            if($start > $end){
-                                $end->modify('+1 day');
-                            }
-
-                            $diff = $end->diff($start);
-                            $break_total->h += $diff->h;
-                            $break_total->i += $diff->i;
-                            $break_total->s += $diff->s;
+                        if ($start > $end) {
+                            $end->modify('+1 day');
                         }
 
-                        if ($break_total->s >= 60) {
-                            $break_total->i += floor($break_total->s / 60);
-                            $break_total->s %= 60;
-                        }
-
-                        if ($break_total->i >= 60) {
-                            $break_total->h += floor($break_total->i / 60);
-                            $break_total->i %= 60;
-                        }
-
-                        $total_breaks = sprintf('%02d:%02d', $break_total->h, $break_total->i);
-                    } else {
-                        $total_breaks = "00:00";
+                        $diff = $end->diff($start);
+                        $break_total->h += $diff->h;
+                        $break_total->i += $diff->i;
+                        $break_total->s += $diff->s;
                     }
 
-                    $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
-                    $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
+                    if ($break_total->s >= 60) {
+                        $break_total->i += floor($break_total->s / 60);
+                        $break_total->s %= 60;
+                    }
 
-                    $total_work_sum = $this->calculateTotalSum($work_sum, $total_work_sum);
-               
+                    if ($break_total->i >= 60) {
+                        $break_total->h += floor($break_total->i / 60);
+                        $break_total->i %= 60;
+                    }
 
+                    $total_breaks = sprintf('%02d:%02d', $break_total->h, $break_total->i);
+                } else {
+                    $total_breaks = "00:00";
+                }
 
+                $work_sum = $this->calculateTotalExtract($work_sum, $total_breaks);
+                $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
+
+                $total_work_sum = $this->calculateTotalSum($work_sum, $total_work_sum);
 
                 $feeding_fee += $finalized_job->feeding_fee;
                 if (!$finalized_job->bereitschaft && !$finalized_job->learning && !$finalized_job->cancel && !$finalized_job->guest) {
@@ -804,7 +808,6 @@ class FinalizedJobsController extends Controller
                     if ($test_public_holiday->h == 0 && $test_public_holiday->i == 0 && $test_public_holiday->s == 0) {
 
                         $midnight_hours = $this->calculateMidNightHours($finalized_job->work_start_time, $finalized_job->work_end_time, $initial_date);
-                        //dd($midnight_hours);
                         if ($midnight_hours != 0) {
                             $total_midnight_shift = $this->calculateTotalSum($midnight_hours, $total_midnight_shift);
                         } else {
@@ -871,7 +874,7 @@ class FinalizedJobsController extends Controller
 
                         $sunday_hours = $this->calculateSundayHours($finalized_job->work_start_time . " - " . $finalized_job->work_end_time, $initial_date);
                         $total_sunday_holiday_hours = $this->calculateTotalSum($sunday_hours, $total_sunday_holiday_hours);
-                        if($deep_morning_hours_tmp == 0){
+                        if ($deep_morning_hours_tmp == 0) {
                             $deep_morning_hours_tmp = "00:00";
                         }
                         $night_hours = $this->calculateTotalTimesSum($deep_morning_hours_tmp, $night_hours_tmp);
@@ -906,302 +909,273 @@ class FinalizedJobsController extends Controller
                 }
 
                 $i++;
-                } catch (\Exception $ex) {
-                    dd($finalized_job,$ex);
-                }
+            } catch (\Exception $ex) {
+                dd($finalized_job, $ex);
             }
+        }
 
+        if ($finalized_jobs->count() > 0 && $finalized_jobs[0]->client_id) {
+            $client = Client::where('id', $finalized_jobs[0]->client_id)->first();
+        } else {
+            $client = new Client();
+            $client->name = "Lte Niederlande";
+        }
 
-            if($finalized_jobs->count() > 0 && $finalized_jobs[0]->client_id){
-                $client = Client::where('id', $finalized_jobs[0]->client_id)->first();
-            }else{
-                $client = new Client();
-                $client->name = "Lte Niederlande";
+        $user_bahn_card = $user->bahnCard;
+        if ($user_bahn_card) {
+            $bahnCard = $user_bahn_card->class;
+        } else {
+            $bahnCard = 0;
+        }
+
+        $total_annual_leave_hours = 0;
+
+        foreach ($user->annualLeaves as $annualLeave) {
+            $start_date = \Carbon\Carbon::parse($annualLeave->start_date);
+            $end_date = \Carbon\Carbon::parse($annualLeave->end_date);
+            if ($start_date < $endDate && $end_date > $startDate) {
+                $overlap_start = max($start_date, $startDate);
+                $overlap_end = min($end_date, $endDate);
+                $interval = $overlap_start->diff($overlap_end);
+                $days = $interval->d + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
+                $total_annual_leave_hours += $days * 8;
             }
+        }
+        $data['rows'][$user->id]['annual_leave_hours'] = floor($total_annual_leave_hours) == 0 ? "-" : floor($total_annual_leave_hours);
 
-            $user_bahn_card = $user->bahnCard;
-            if($user_bahn_card){
-                $bahnCard = $user_bahn_card->class;
-            }else{
-                $bahnCard = 0;
-            }
+        $total_sick_leave_hours = 0;
+        $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subMinutes(1)->toDateString()])->get();
+        foreach ($sickDays as $sickDay) {
+            $total_sick_leave_hours += $sickDay->start_date->diffInDays($sickDay->end_date) * 8;
+        }
+        $data['rows'][$user->id]['sick_leave_hours'] = floor($total_sick_leave_hours) == 0 ? "-" : floor($total_sick_leave_hours);
+        $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
+        $data['rows'][$user->id]['name'] = $user->name;
+        $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
+        $data['rows'][$user->id]['total_day'] = $i;
+        
+        if ($bahnCard == 1) {
+            $total_work_sum->h -= 10;
+        }
 
+        $total_hours = 0;
+        $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
+        $total_hours = $hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours');
 
-            $total_annual_leave_hours = 0;
-            foreach ($user->annualLeaves as $annualLeave) {
-                $start_date = \Carbon\Carbon::parse($annualLeave->start_date);
-                $end_date = \Carbon\Carbon::parse($annualLeave->end_date);
-                if ($start_date < $endDate && $end_date > $startDate) {
-                    $overlap_start = max($start_date, $startDate);
-                    $overlap_end = min($end_date, $endDate);
-                    $interval = $overlap_start->diff($overlap_end);
-                    $days = $interval->d + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
-                    $total_annual_leave_hours += $days * 8;
-                }
-            }
-            $data['rows'][$user->id]['annual_leave_hours'] = floor($total_annual_leave_hours) == 0 ? "-" : floor($total_annual_leave_hours);
+        $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
+     
+        $total_work_hours += $total_hours * 60;
 
-            /*$total_sick_leave_hours = 0;
-            foreach ($user->sickLeaves as $sickLeave) {
-                $start_date = \Carbon\Carbon::parse($sickLeave->start_date);
-                $end_date = \Carbon\Carbon::parse($sickLeave->end_date);
-                if ($start_date < $endDate && $end_date > $startDate) {
-                    $overlap_start = max($start_date, $startDate);
-                    $overlap_end = min($end_date, $endDate);
-                    $interval = $overlap_start->diff($overlap_end);
-                    $days = $interval->d + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
-                    $total_sick_leave_hours += $days * 8;
-                }
-            }*/
-            $total_sick_leave_hours = 0;
-            $sickDays = $user->sickLeaves()->whereBetween('start_date', [$startDate->toDateString(), $endDate->subMinutes(1)->toDateString()])->get();
-            foreach($sickDays as $sickDay){
-                $total_sick_leave_hours += $sickDay->start_date->diffInDays($sickDay->end_date) * 8;
-            }
-            $data['rows'][$user->id]['sick_leave_hours'] = floor($total_sick_leave_hours) == 0 ? "-" : floor($total_sick_leave_hours);
-            $data['rows'][$user->id]['total_day'] = $finalized_jobs->count();
-            $data['rows'][$user->id]['name'] = $user->name;
-            $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
-            $data['rows'][$user->id]['total_day'] = $i;
-            if ($bahnCard == 1) {
-                $total_work_sum->h -= 10;
-            }
+        $remaining_hours = 0;
+        $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours));
+        $hours = floor($remaining_hours);
+        $minutes = ($remaining_hours * 60) % 60;
+        $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
 
+        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+        $salaryService = new SalaryService();
+        try {
+            $salary = $salaryService->getSalaryAtDate($user, $startDate->toDateString());
+            $salary_amount = $salary->salary ?? 0;
+            $data['rows'][$user->id]['salary'] = $salary_amount . " €";
+        } catch (\Exception $ex) {
+            $data['rows'][$user->id]['salary'] = " - ";
+        }
 
-
-            $hour_banks = $user->hourBanks()->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])->get();
-            $total_hours =$hour_banks->where('type', 'withdraw')->sum('hours') - $hour_banks->where('type', 'deposit')->sum('hours') ;
-
-            
-            $total_work_hours = $total_work_sum->h * 60 + $total_work_sum->i + $total_break_time->h * 60 + $total_break_time->i + floor($total_annual_leave_hours * 60) + floor($total_sick_leave_hours * 60);
-            
-            $total_work_hours += $total_hours * 60;
-
-            
-    
-            $remaining_hours = 160 - (floor($total_annual_leave_hours) + floor($total_sick_leave_hours) );
-            $hours = floor($remaining_hours);
-            $minutes = ($remaining_hours * 60) % 60;
-            $data['rows'][$user->id]['workhours'] = number_format($hours + ($minutes / 60), 2, ',', '');
-           
-
-
-
-
-            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
-            $salaryService = new SalaryService();
-            try{
-                $salary = $salaryService->getSalaryAtDate($user, $startDate->toDateString());
-                $salary_amount = $salary->salary ?? 0;
-                $data['rows'][$user->id]['salary'] = $salary_amount . " €";
-            }catch(\Exception $ex){
-                $data['rows'][$user->id]['salary'] = " - ";
-            }
-           
-           
-
-            $extra_work_hours = $total_work_hours - (160 * 60);
-            if ($extra_work_hours > 0) {
-                $extra_work_hours_h = floor($extra_work_hours / 60);
-                $extra_work_hours_i = $extra_work_hours % 60;
-                $extra_work_hours_decimal = $extra_work_hours_h + ($extra_work_hours_i / 60);
-                if($startDate->month > 3 && $startDate->year >= 2025){
-                    if($extra_work_hours_decimal > 20){
-                        $data['rows'][$user->id]['extra_work'] = "20,00";
-                        $data['rows'][$user->id]['workhours25'] = number_format($extra_work_hours_decimal - 20, 2, ',', '');
-                    } else {
-                        $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
-                        $data['rows'][$user->id]['workhours25'] = " - ";
-                    }
+        $extra_work_hours = $total_work_hours - (160 * 60);
+        if ($extra_work_hours > 0) {
+            $extra_work_hours_h = floor($extra_work_hours / 60);
+            $extra_work_hours_i = $extra_work_hours % 60;
+            $extra_work_hours_decimal = $extra_work_hours_h + ($extra_work_hours_i / 60);
+            if ($startDate->month > 3 && $startDate->year >= 2025) {
+                if ($extra_work_hours_decimal > 20) {
+                    $data['rows'][$user->id]['extra_work'] = "20,00";
+                    $data['rows'][$user->id]['workhours25'] = number_format($extra_work_hours_decimal - 20, 2, ',', '');
                 } else {
                     $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
                     $data['rows'][$user->id]['workhours25'] = " - ";
                 }
             } else {
-                $data['rows'][$user->id]['extra_work'] = "-";
+                $data['rows'][$user->id]['extra_work'] = number_format($extra_work_hours_decimal, 2, ',', '');
+                $data['rows'][$user->id]['workhours25'] = " - ";
             }
-
-   
-            $data['rows'][$user->id]['normal_guests'] =  $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
-
-            if ($total_guest_sum != "00:00") {
-                $hours = $total_guest_sum->h;
-                $minutes = $total_guest_sum->i;
-                $decimal_hours = $hours + ($minutes / 60);
-                $guest_text = number_format($decimal_hours, 2, ',', '');
-                if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
-                    $guest_text = $guest_text . " (22€)";
-                }
-                $data['rows'][$user->id]['guests'] = $guest_text;
-            } else {
-                $data['rows'][$user->id]['guests'] = "00:00";
-            }
-            if (sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00") {
-                $hours = $total_break_time->h;
-                $minutes = $total_break_time->i;
-                $decimal_hours = $hours + ($minutes / 60);
-                $data['rows'][$user->id]['breaks'] = number_format($decimal_hours, 2, ',', '');
-            } else {
-                $data['rows'][$user->id]['breaks'] = "-";
-            }
-            $hours = $total_midnight_shift->h;
-            $minutes = $total_midnight_shift->i;
-            $decimal_hours = $hours + ($minutes / 60);
-            $data['rows'][$user->id]['midnight_shift'] = $decimal_hours != 0 ? number_format($decimal_hours, 2, ',', '') : "-";
-            $total_night_shift_hours = $total_night_shift->h + $total_deep_morning_shift->h;
-            $total_night_shift_minutes = $total_night_shift->i + $total_deep_morning_shift->i;
-            $total_night_shift_decimal = $total_night_shift_hours + ($total_night_shift_minutes / 60);
-            $data['rows'][$user->id]['night_shift'] = $total_night_shift_decimal != 0 ? number_format($total_night_shift_decimal, 2, ',', '') : "-";
-          
-          
-            try{
-                if($total_break_time->h != 0 && $total_break_time->i != 0 ){
-                    $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i));
-                } else {
-                    if($total_work_sum->h >= 0 && $total_work_sum->i >= 0){
-                        $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', 0, 0));
-                    }
-                    else {
-                        $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d',0, 0), sprintf('%02d:%02d', 0, 0));
-                    }
-                }
-            } catch (\Exception $ex) {
-                dd($total_work_sum,$total_break_time,$startDate,$endDate,$ex);
-            }
-            $decimal_hours = $total_hours->h + ($total_hours->i / 60);
-            $data['rows'][$user->id]['sub_total'] = number_format($decimal_hours, 2, ',', '');
-            if (sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00") {
-                $hours = $total_public_holiday_hours->h;
-                $minutes = $total_public_holiday_hours->i;
-                $decimal_hours = $hours + ($minutes / 60);
-                $data['rows'][$user->id]['public_holidays'] = number_format($decimal_hours, 2, ',', '');
-            } else {
-                $data['rows'][$user->id]['public_holidays'] = "-";
-            }
-            if (sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00") {
-                $hours = $total_sunday_holiday_hours->h;
-                $minutes = $total_sunday_holiday_hours->i;
-                $decimal_hours = $hours + ($minutes / 60);
-                $data['rows'][$user->id]['sunday_holidays'] = number_format($decimal_hours, 2, ',', '');
-            } else {
-                $data['rows'][$user->id]['sunday_holidays'] = "-";
-            }
-            $data['rows'][$user->id]['accomodations'] = $feeding_fee == 0 ? "-" : $feeding_fee . " €" ;
-            $data['rows'][$user->id]['total_work_day_amount'] = ($y >= 20 ? 20 * $y : $y * 6) . " €";
-
-            $total_user_advance = 0;
-            foreach ($user->usersAdvance as $advance) {
-                $transaction_date = \Carbon\Carbon::parse($advance->transaction_date);
-                if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
-                    $total_user_advance += $advance->amount;
-                }
-            }
-            $data['rows'][$user->id]['ausbildung_hours'] = $ausbildung_hours != 0 ? $ausbildung_hours * 22 . " €" : "-";
-            $data['rows'][$user->id]['user_advance'] = $total_user_advance ? $total_user_advance : null;
-
-            $total_user_bonus = 0;
-            foreach ($user->usersBonus as $bonus) {
-                $transaction_date = \Carbon\Carbon::parse($bonus->transaction_date);
-                if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
-                    $total_user_bonus += $bonus->amount;
-                }
-            }
-            $data['rows'][$user->id]['user_bonus'] =$total_user_bonus ? $total_user_bonus : null;
-            if($user->id == 4 || $user->id == 9){
-                $data['rows'][$user->id]['workhours'] = "160,00";
-                $data['rows'][$user->id]['annual_leave_hours'] = $total_annual_leave_hours > 0 ? number_format($total_annual_leave_hours, 2, ',', '') : "-";
-                $data['rows'][$user->id]['sick_leave_hours'] = $total_sick_leave_hours > 0 ? number_format($total_sick_leave_hours, 2, ',', '') : "-";
-                $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['ausbildung_hours'] = "-";
-                $data['rows'][$user->id]['name'] = $user->name;
-                $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
-                $data['rows'][$user->id]['total_day'] = 0;
-                $data['rows'][$user->id]['extra_work'] = "-";
-                $data['rows'][$user->id]['workhours25'] = "-";
-                $data['rows'][$user->id]['guests'] = $user->id == 9 ? "-" : "-";
-                $data['rows'][$user->id]['breaks'] = "-";
-                $data['rows'][$user->id]['midnight_shift'] = "80,00";
-                $data['rows'][$user->id]['night_shift'] = "80,00";
-                $data['rows'][$user->id]['sub_total'] = "160,00";
-                $data['rows'][$user->id]['public_holidays'] = "-";;
-                $data['rows'][$user->id]['sunday_holidays'] = "40,00";
-                $data['rows'][$user->id]['accomodations'] = "-";
-            } else if( $user->id == 17){
-                $data['rows'][$user->id]['workhours'] = "Gehalt";
-                $data['rows'][$user->id]['total_work_day_amount'] = "-";
-                $data['rows'][$user->id]['guests'] = "-";
-                $data['rows'][$user->id]['breaks'] = "-";
-                $data['rows'][$user->id]['ausbildung_hours'] = "-";
-                $data['rows'][$user->id]['midnight_shift'] = "-";
-                $data['rows'][$user->id]['night_shift'] = "-";
-                $data['rows'][$user->id]['sub_total'] = "-";
-                $data['rows'][$user->id]['sick_leave_hours'] = "-";
-                $data['rows'][$user->id]['annual_leave_hours'] = "-";
-                $data['rows'][$user->id]['accomodations'] = "-";
-                $data['rows'][$user->id]['extra_work'] = "-";
-                $data['rows'][$user->id]['workhours25'] = "-";
-            } else if($user->id == 14 || $user->id == 15 || $user->id == 21){
-                $data['rows'][$user->id]['workhours'] = "Aushilfe";
-                $data['rows'][$user->id]['total_work_day_amount'] = "-";
-                $data['rows'][$user->id]['guests'] = "-";
-                $data['rows'][$user->id]['ausbildung_hours'] = "-";
-                $data['rows'][$user->id]['breaks'] = "-";
-                $data['rows'][$user->id]['midnight_shift'] = "-";
-                $data['rows'][$user->id]['night_shift'] = "-";
-                $data['rows'][$user->id]['sub_total'] = "-";
-                $data['rows'][$user->id]['sick_leave_hours'] = "-";
-                $data['rows'][$user->id]['annual_leave_hours'] = "-";
-                $data['rows'][$user->id]['accomodations'] = "-";
-                $data['rows'][$user->id]['extra_work'] = "-";
-                $data['rows'][$user->id]['workhours25'] = "-";
-            } else if($user->id == 2){
-                $data['rows'][$user->id]['salary'] = "28,13 €";
-                $data['rows'][$user->id]['workhours'] = "160,00";
-                $data['rows'][$user->id]['total_work_day_amount'] = "-";
-                $data['rows'][$user->id]['guests'] = "-";
-                $data['rows'][$user->id]['breaks'] = "-";
-                $data['rows'][$user->id]['ausbildung_hours'] = "-";
-                $data['rows'][$user->id]['midnight_shift'] = "24,00";
-                $data['rows'][$user->id]['night_shift'] = "20,00";
-                $data['rows'][$user->id]['sub_total'] = "-";
-                $data['rows'][$user->id]['sick_leave_hours'] = "-";
-                $data['rows'][$user->id]['annual_leave_hours'] = "-";
-                $data['rows'][$user->id]['public_holidays'] = "-";
-                $data['rows'][$user->id]['sunday_holidays'] = "16,00";
-                $data['rows'][$user->id]['accomodations'] = "-";
-                $data['rows'][$user->id]['extra_work'] = "-";
-                $data['rows'][$user->id]['workhours25'] = "-";
-            }
-        }
-
-
-        if ($data['rows'] && count($data['rows']) > 0) {
-            try {
-                if($startDate->month > 3 && $startDate->year >= 2025){
-                    $file_req = Http::withHeaders([
-                        'Content-Type' => 'application/json',
-                    ])->post('http://excel:8000/create-total-excel-new', json_encode($data));
-                }else{
-                    $file_req = Http::withHeaders([
-                        'Content-Type' => 'application/json',
-                    ])->post('http://excel:8000/create-total-excel', json_encode($data));
-                }
-            } catch (\Exception $ex) {
-                dd($ex);
-            }
-
-            $uniq_id = uniqid();
-            $filePath = 'pdfs/' . $uniq_id . '.pdf';
-            Storage::put($filePath, $file_req->body());
-            return response()->json(["status" => true, "file" => $uniq_id]);
         } else {
-            return response()->json(["status" => false]);
+            $data['rows'][$user->id]['extra_work'] = "-";
         }
 
+        $data['rows'][$user->id]['normal_guests'] = $total_guest_sum != "00:00" ? sprintf('%02d:%02d', $total_guest_sum->h, $total_guest_sum->i) : "00:00";
 
+        if ($total_guest_sum != "00:00") {
+            $hours = $total_guest_sum->h;
+            $minutes = $total_guest_sum->i;
+            $decimal_hours = $hours + ($minutes / 60);
+            $guest_text = number_format($decimal_hours, 2, ',', '');
+            if ($salary_amount > 22 && ($total_guest_sum->h > 0 || $total_guest_sum->i > 0)) {
+                $guest_text = $guest_text . " (22€)";
+            }
+            $data['rows'][$user->id]['guests'] = $guest_text;
+        } else {
+            $data['rows'][$user->id]['guests'] = "00:00";
+        }
+        if (sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i) != "00:00") {
+            $hours = $total_break_time->h;
+            $minutes = $total_break_time->i;
+            $decimal_hours = $hours + ($minutes / 60);
+            $data['rows'][$user->id]['breaks'] = number_format($decimal_hours, 2, ',', '');
+        } else {
+            $data['rows'][$user->id]['breaks'] = "-";
+        }
+        $hours = $total_midnight_shift->h;
+        $minutes = $total_midnight_shift->i;
+        $decimal_hours = $hours + ($minutes / 60);
+        $data['rows'][$user->id]['midnight_shift'] = $decimal_hours != 0 ? number_format($decimal_hours, 2, ',', '') : "-";
+        $total_night_shift_hours = $total_night_shift->h + $total_deep_morning_shift->h;
+        $total_night_shift_minutes = $total_night_shift->i + $total_deep_morning_shift->i;
+        $total_night_shift_decimal = $total_night_shift_hours + ($total_night_shift_minutes / 60);
+        $data['rows'][$user->id]['night_shift'] = $total_night_shift_decimal != 0 ? number_format($total_night_shift_decimal, 2, ',', '') : "-";
 
+        try {
+            if ($total_break_time->h != 0 && $total_break_time->i != 0) {
+                $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', $total_break_time->h, $total_break_time->i));
+            } else {
+                if ($total_work_sum->h >= 0 && $total_work_sum->i >= 0) {
+                    $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i), sprintf('%02d:%02d', 0, 0));
+                } else {
+                    $total_hours = $this->calculateTotalTimesSum(sprintf('%02d:%02d', 0, 0), sprintf('%02d:%02d', 0, 0));
+                }
+            }
+        } catch (\Exception $ex) {
+            dd($total_work_sum, $total_break_time, $startDate, $endDate, $ex);
+        }
+        $decimal_hours = $total_hours->h + ($total_hours->i / 60);
+        $data['rows'][$user->id]['sub_total'] = number_format($decimal_hours, 2, ',', '');
+        if (sprintf('%02d:%02d', $total_public_holiday_hours->h, $total_public_holiday_hours->i) != "00:00") {
+            $hours = $total_public_holiday_hours->h;
+            $minutes = $total_public_holiday_hours->i;
+            $decimal_hours = $hours + ($minutes / 60);
+            $data['rows'][$user->id]['public_holidays'] = number_format($decimal_hours, 2, ',', '');
+        } else {
+            $data['rows'][$user->id]['public_holidays'] = "-";
+        }
+        if (sprintf('%02d:%02d', $total_sunday_holiday_hours->h, $total_sunday_holiday_hours->i) != "00:00") {
+            $hours = $total_sunday_holiday_hours->h;
+            $minutes = $total_sunday_holiday_hours->i;
+            $decimal_hours = $hours + ($minutes / 60);
+            $data['rows'][$user->id]['sunday_holidays'] = number_format($decimal_hours, 2, ',', '');
+        } else {
+            $data['rows'][$user->id]['sunday_holidays'] = "-";
+        }
+        $data['rows'][$user->id]['accomodations'] = $feeding_fee == 0 ? "-" : $feeding_fee . " €";
+        $data['rows'][$user->id]['total_work_day_amount'] = ($y >= 20 ? 20 * $y : $y * 6) . " €";
 
+        $total_user_advance = 0;
+        foreach ($user->usersAdvance as $advance) {
+            $transaction_date = \Carbon\Carbon::parse($advance->transaction_date);
+            if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
+                $total_user_advance += $advance->amount;
+            }
+        }
+        $data['rows'][$user->id]['ausbildung_hours'] = $ausbildung_hours != 0 ? $ausbildung_hours * 22 . " €" : "-";
+        $data['rows'][$user->id]['user_advance'] = $total_user_advance ? $total_user_advance : null;
+
+        $total_user_bonus = 0;
+        foreach ($user->usersBonus as $bonus) {
+            $transaction_date = \Carbon\Carbon::parse($bonus->transaction_date);
+            if ($transaction_date >= $startDate && $transaction_date <= $endDate) {
+                $total_user_bonus += $bonus->amount;
+            }
+        }
+        $data['rows'][$user->id]['user_bonus'] = $total_user_bonus ? $total_user_bonus : null;
+        if ($user->id == 4 || $user->id == 9) {
+            $data['rows'][$user->id]['workhours'] = "160,00";
+            $data['rows'][$user->id]['annual_leave_hours'] = $total_annual_leave_hours > 0 ? number_format($total_annual_leave_hours, 2, ',', '') : "-";
+            $data['rows'][$user->id]['sick_leave_hours'] = $total_sick_leave_hours > 0 ? number_format($total_sick_leave_hours, 2, ',', '') : "-";
+            $data['rows'][$user->id]['total_day'] = 0;
+            $data['rows'][$user->id]['ausbildung_hours'] = "-";
+            $data['rows'][$user->id]['name'] = $user->name;
+            $data['rows'][$user->id]['id'] = sprintf('%03d', $user->driver_id);
+            $data['rows'][$user->id]['total_day'] = 0;
+            $data['rows'][$user->id]['extra_work'] = "-";
+            $data['rows'][$user->id]['workhours25'] = "-";
+            $data['rows'][$user->id]['guests'] = $user->id == 9 ? "-" : "-";
+            $data['rows'][$user->id]['breaks'] = "-";
+            $data['rows'][$user->id]['midnight_shift'] = "80,00";
+            $data['rows'][$user->id]['night_shift'] = "80,00";
+            $data['rows'][$user->id]['sub_total'] = "160,00";
+            $data['rows'][$user->id]['public_holidays'] = "-";;
+            $data['rows'][$user->id]['sunday_holidays'] = "40,00";
+            $data['rows'][$user->id]['accomodations'] = "-";
+        } else if ($user->id == 17) {
+            $data['rows'][$user->id]['workhours'] = "Gehalt";
+            $data['rows'][$user->id]['total_work_day_amount'] = "-";
+            $data['rows'][$user->id]['guests'] = "-";
+            $data['rows'][$user->id]['breaks'] = "-";
+            $data['rows'][$user->id]['ausbildung_hours'] = "-";
+            $data['rows'][$user->id]['midnight_shift'] = "-";
+            $data['rows'][$user->id]['night_shift'] = "-";
+            $data['rows'][$user->id]['sub_total'] = "-";
+            $data['rows'][$user->id]['sick_leave_hours'] = "-";
+            $data['rows'][$user->id]['annual_leave_hours'] = "-";
+            $data['rows'][$user->id]['accomodations'] = "-";
+            $data['rows'][$user->id]['extra_work'] = "-";
+            $data['rows'][$user->id]['workhours25'] = "-";
+        } else if ($user->id == 14 || $user->id == 15 || $user->id == 21) {
+            $data['rows'][$user->id]['workhours'] = "Aushilfe";
+            $data['rows'][$user->id]['total_work_day_amount'] = "-";
+            $data['rows'][$user->id]['guests'] = "-";
+            $data['rows'][$user->id]['ausbildung_hours'] = "-";
+            $data['rows'][$user->id]['breaks'] = "-";
+            $data['rows'][$user->id]['midnight_shift'] = "-";
+            $data['rows'][$user->id]['night_shift'] = "-";
+            $data['rows'][$user->id]['sub_total'] = "-";
+            $data['rows'][$user->id]['sick_leave_hours'] = "-";
+            $data['rows'][$user->id]['annual_leave_hours'] = "-";
+            $data['rows'][$user->id]['accomodations'] = "-";
+            $data['rows'][$user->id]['extra_work'] = "-";
+            $data['rows'][$user->id]['workhours25'] = "-";
+        } else if ($user->id == 2) {
+            $data['rows'][$user->id]['salary'] = "28,13 €";
+            $data['rows'][$user->id]['workhours'] = "160,00";
+            $data['rows'][$user->id]['total_work_day_amount'] = "-";
+            $data['rows'][$user->id]['guests'] = "-";
+            $data['rows'][$user->id]['breaks'] = "-";
+            $data['rows'][$user->id]['ausbildung_hours'] = "-";
+            $data['rows'][$user->id]['midnight_shift'] = "24,00";
+            $data['rows'][$user->id]['night_shift'] = "20,00";
+            $data['rows'][$user->id]['sub_total'] = "-";
+            $data['rows'][$user->id]['sick_leave_hours'] = "-";
+            $data['rows'][$user->id]['annual_leave_hours'] = "-";
+            $data['rows'][$user->id]['public_holidays'] = "-";
+            $data['rows'][$user->id]['sunday_holidays'] = "16,00";
+            $data['rows'][$user->id]['accomodations'] = "-";
+            $data['rows'][$user->id]['extra_work'] = "-";
+            $data['rows'][$user->id]['workhours25'] = "-";
+        }
     }
+
+    if ($data['rows'] && count($data['rows']) > 0) {
+        try {
+            if ($startDate->month > 3 && $startDate->year >= 2025) {
+                $file_req = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post('http://excel:8000/create-total-excel-new', json_encode($data));
+            } else {
+                $file_req = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post('http://excel:8000/create-total-excel', json_encode($data));
+            }
+        } catch (\Exception $ex) {
+            dd($ex);
+        }
+
+        $uniq_id = uniqid();
+        $filePath = 'pdfs/' . $uniq_id . '.pdf';
+        Storage::put($filePath, $file_req->body());
+        return response()->json(["status" => true, "file" => $uniq_id]);
+    } else {
+        return response()->json(["status" => false]);
+    }
+}
 
     public function get_finalized(Request $request)
     {
