@@ -1698,8 +1698,8 @@ public function get_total_report(Request $request)
 
 
         $data['total_hours_req'] = sprintf('%03d:00', $total_hours_req );
-        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8), (($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8) - floor($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8)) * 60);
-        $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8 + $sick_leave_days * 8))) * 60);
+        $data['total_made_hours'] = sprintf('%03d:%02d', floor($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8), (($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8) - floor($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8)) * 60);
+        $data['left_hours'] = $total_hours_req - ($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8) < 0 ? "00:00" : sprintf('%02d:%02d', floor($total_hours_req - ($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8)), ($total_hours_req - ($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8) - floor($total_hours_req - ($sub_total + $annual_leave_days * 8 + $data['sick_days_this_month'] * 8))) * 60);
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 if($startDate->month < 4 && $startDate->year <= 2025){
