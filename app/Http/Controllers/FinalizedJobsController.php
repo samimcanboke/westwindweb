@@ -1503,7 +1503,7 @@ public function get_total_report(Request $request)
                 $total_break_time = $this->calculateTotalSum($total_breaks, $total_break_time);
                 $total_work_sum = $this->calculateTotalSum($work_sum, $total_work_sum);
             } catch (\Exception $ex) {
-                dd($finalized_job,$ex);
+                dd($finalized_job,$ex, $work_sum, $total_breaks, $total_work_sum, $initial_date);
             }
             if ($finalized_job->ausland == 0 && Carbon::parse($finalized_job->initial_date) > Carbon::parse('2024-12-01')) {
                 if ($finalized_job->feeding_fee == 16) {
