@@ -1362,7 +1362,7 @@ public function get_total_report(Request $request)
             })
             ->sum() ?? 0;
         $annual_leave_rights = $right_of_annuals - $annual_leave_right;
-        dd("annual_leave_rights",$annual_leave_rights, $annual_leave_right, $right_of_annuals);
+        dd("annual_leave_rights",$annual_leave_rights, $annual_leave_right, $right_of_annuals,$left_annuals_from_2024[$user->id],$leave_working_date_left);
         
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
