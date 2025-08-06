@@ -1351,7 +1351,7 @@ public function get_total_report(Request $request)
         $right_of_annuals = $left_annuals_from_2024[$user->id] + $leave_working_date_left;
       
         
-        $annual_leave_rights = $user->annualLeaves()
+        $annual_leave_right = $user->annualLeaves()
             ->where('start_date', '>=', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
             ->where('end_date', '<=', $startDate->toDateString())
             ->get()
@@ -1361,8 +1361,8 @@ public function get_total_report(Request $request)
                 return $leaveStart->diffInDays($leaveEnd);
             })
             ->sum() ?? 0;
-        $annual_leave_rights = $right_of_annuals - $annual_leave_rights;
-        dd("annual_leave_rights",$annual_leave_rights);
+        $annual_leave_rights = $right_of_annuals - $annual_leave_right;
+        dd("annual_leave_rights",$annual_leave_rights, $annual_leave_right);
         
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
