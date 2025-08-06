@@ -1340,9 +1340,7 @@ public function get_total_report(Request $request)
         } else {
             if($user_start_working_date->year >= 2025 && $user_start_working_date->month > 1){
                 $ayFarki = Carbon::create($year, 1, 1)->startOfDay()->diffInMonths($user_start_working_date);
-                
                 $leave_working_date_left = $user->annual_leave_rights - (($ayFarki) * 2.5);
-                dd($leave_working_date_left,$ayFarki);
             } else {
                 $leave_working_date_left = $user->annual_leave_rights;
             }
@@ -1364,7 +1362,6 @@ public function get_total_report(Request $request)
             })
             ->sum() ?? 0;
         $annual_leave_rights = $right_of_annuals - $annual_leave_right;
-        dd("annual_leave_rights",$annual_leave_rights, $annual_leave_right, $right_of_annuals,$left_annuals_from_2024[$user->id],$leave_working_date_left);
         
         $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
 
