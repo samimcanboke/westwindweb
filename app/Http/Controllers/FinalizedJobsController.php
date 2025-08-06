@@ -1384,7 +1384,7 @@ public function get_total_report(Request $request)
             ->sum() ?? 0;
            
         $data['annual_leave_days'] = number_format($annual_leave_days, 2, ',', '');
-        $data['annual_leave_left'] = number_format(floatval($annual_leave_rights) - floatval($annual_leave_days), 2, ',', '');
+        $data['annual_leave_left'] = number_format(floatval($right_of_annuals) - floatval($annual_leave_days), 2, ',', '');
 
         
 
