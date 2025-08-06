@@ -1349,7 +1349,7 @@ public function get_total_report(Request $request)
    
 
         $right_of_annuals = $left_annuals_from_2024[$user->id] + $leave_working_date_left;
-        dd($right_of_annuals);
+        dd("right_of_annuals",$right_of_annuals);
         
         $annual_leave_rights = $user->annualLeaves()
             ->where('start_date', '>=', Carbon::create($year, 1, 1)->startOfDay()->toDateTimeString())
