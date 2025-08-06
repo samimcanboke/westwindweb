@@ -1363,8 +1363,8 @@ public function get_total_report(Request $request)
             ->sum() ?? 0;
         $annual_leave_rights = $right_of_annuals - $annual_leave_right;
         
-        $data['annual_leave_rights'] = number_format($annual_leave_rights, 2, ',', '');
-        dd($leave_working_date_left,$right_of_annuals,$annual_leave_rights,$annual_leave_right,$user->annual_leave_rights);
+        $data['annual_leave_rights'] = number_format($right_of_annuals, 2, ',', '');
+        //dd($leave_working_date_left,$right_of_annuals,$annual_leave_rights,$annual_leave_right,$user->annual_leave_rights);
         $annual_leave_days = $user->annualLeaves()
             ->where(function($query) use ($startDate, $endDate) {
                 $query->where(function($subQuery) use ($startDate, $endDate) {
