@@ -1346,6 +1346,8 @@ public function get_total_report(Request $request)
             }
         }
 
+        dd($leave_working_date_left);
+
         $right_of_annuals = $left_annuals_from_2024[$user->id] + $leave_working_date_left;
         
         $annual_leave_rights = $user->annualLeaves()
