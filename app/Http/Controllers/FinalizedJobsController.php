@@ -1339,7 +1339,7 @@ public function get_total_report(Request $request)
             $leave_working_date_left = ceil($fark * 2.5); //9
         } else {
             if($user_start_working_date->year >= 2025 && $user_start_working_date->month > 1){
-                $leave_working_date_left = $user->annual_leave_rights - (Carbon::create($year, 1, 1)->startOfDay()->diffInMonths($user_start_working_date) * 2.5);
+                $leave_working_date_left = $user->annual_leave_rights - ((Carbon::create($year, 1, 1)->startOfDay()->diffInMonths($user_start_working_date) + 1) * 2.5);
             } else {
                 $leave_working_date_left = $user->annual_leave_rights;
             }
@@ -1666,6 +1666,7 @@ public function get_total_report(Request $request)
                 $i++;
             }
         }
+      
         $hours = floor(abs($total_hours)) * ($total_hours < 0 ? -1 : 1);
         $minutes = ($total_hours - $hours) * 60;
         $total_work_summary_amount = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
@@ -1674,10 +1675,12 @@ public function get_total_report(Request $request)
 
         $total_work_sum->h += $hours;
         $total_work_sum->i += $minutes;
+       
         if ($total_work_sum->i < 0) {
             $total_work_sum->h -= 1;
             $total_work_sum->i += 60;
         }
+
         $data['totals']['workhours'] = sprintf('%02d:%02d', $total_work_sum->h, $total_work_sum->i);
 
 
