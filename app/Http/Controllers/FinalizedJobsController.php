@@ -383,6 +383,7 @@ class FinalizedJobsController extends Controller
             'week' => 'required_without:month',
             'month' => 'required_without:week',
             'year' => 'required',
+            'raw_data' => 'nullable'
         ]);
 
         $data = [
@@ -402,6 +403,7 @@ class FinalizedJobsController extends Controller
         $user_query = false;
         $weekly_query = false;
 
+        $raw_data = $request->raw_data ?? false;
         if ($request->month && $request->month != "Suchen...") {
             if ($request->user_id) {
                 $data['month'] = $request->month;
@@ -499,6 +501,11 @@ class FinalizedJobsController extends Controller
                 dd($th);
             }
         }
+
+        if ($raw_data === true) {
+            return response()->json(["status" => true, "data" => $data]);
+        }
+
         if ($data && $finalized_jobs->count() > 0) {
             try {
                 $file_req = Http::withHeaders([
