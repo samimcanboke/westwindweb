@@ -42,8 +42,8 @@ export default function ConfirmedToClient({ auth }) {
                 week: filter.week,
                 month: filter.month,
                 year: filter.year,
-                raw_data: true,
-                test: true,
+                // raw_data: true,
+                // test: true,
             })
             .then((res) => {
                 setIsSubmitting(false);
