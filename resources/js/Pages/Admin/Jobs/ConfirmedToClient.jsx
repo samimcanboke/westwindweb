@@ -295,12 +295,13 @@ export default function ConfirmedToClient({ auth }) {
                                 <span className="pl-3">Loading...</span>
                             </Button>
                         ) : (
-                            <Button
-                                className="bg-green-500"
-                                onClick={convertPDF}
-                            >
-                                PDF Download
-                            </Button>
+                            // <Button
+                            //     className="bg-green-500"
+                            //     onClick={convertPDF}
+                            // >
+                            //     PDF Download
+                            // </Button>
+                            <div> </div>
                         )}
                     </div>
                 </div>
