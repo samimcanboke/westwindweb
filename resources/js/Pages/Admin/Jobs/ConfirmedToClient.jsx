@@ -42,6 +42,7 @@ export default function ConfirmedToClient({ auth }) {
                 week: filter.week,
                 month: filter.month,
                 year: filter.year,
+                raw_data: true,
             })
             .then((res) => {
                 setIsSubmitting(false);
@@ -49,7 +50,8 @@ export default function ConfirmedToClient({ auth }) {
                     "/download-pdf/" + res.data.file + ".pdf",
                     "_blank"
                 );
-            }).catch(err => {
+            })
+            .catch((err) => {
                 setIsSubmitting(false);
                 Swal.fire({
                     icon: "error",
