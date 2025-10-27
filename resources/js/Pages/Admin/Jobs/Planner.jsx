@@ -1902,7 +1902,7 @@ export default function Planner({ auth }) {
                     }
                 >
                     <div
-                        className="bg-white overflow-x-auto shadow-sm sm:rounded-lg"
+                        className="bg-white overflow-hidden shadow-sm sm:rounded-lg "
                         style={{ minHeight: "40rem" }}
                     >
                         {userJobs &&
@@ -2107,448 +2107,439 @@ export default function Planner({ auth }) {
                                         </div>
                                     </div>
                                     {userJobs && (
-                                        <div
-                                            className="overflow-x-auto"
-                                            style={{ width: "100%" }}
-                                        >
-                                            <Timeline
-                                                groups={
-                                                    selectedUsers.length > 0
-                                                        ? selectedUsers
-                                                        : users
-                                                }
-                                                items={userJobs}
-                                                itemRenderer={({
-                                                    item,
-                                                    itemContext,
-                                                    getItemProps,
-                                                    getResizeProps,
-                                                }) => {
-                                                    const {
-                                                        left: leftResizeProps,
-                                                        right: rightResizeProps,
-                                                    } = getResizeProps();
+                                        <Timeline
+                                            groups={
+                                                selectedUsers.length > 0
+                                                    ? selectedUsers
+                                                    : users
+                                            }
+                                            items={userJobs}
+                                            itemRenderer={({
+                                                item,
+                                                itemContext,
+                                                getItemProps,
+                                                getResizeProps,
+                                            }) => {
+                                                const {
+                                                    left: leftResizeProps,
+                                                    right: rightResizeProps,
+                                                } = getResizeProps();
 
-                                                    return (
-                                                        <div
-                                                            {...getItemProps(
-                                                                item.itemProps
-                                                            )}
-                                                            key={item.id}
-                                                            dataitemid={item.id}
-                                                        >
-                                                            {itemContext.useResizeHandle ? (
-                                                                <div
-                                                                    {...leftResizeProps}
-                                                                />
-                                                            ) : (
-                                                                ""
-                                                            )}
-
+                                                return (
+                                                    <div
+                                                        {...getItemProps(
+                                                            item.itemProps
+                                                        )}
+                                                        key={item.id}
+                                                        dataitemid={item.id}
+                                                    >
+                                                        {itemContext.useResizeHandle ? (
                                                             <div
-                                                                className="rct-item-content"
-                                                                style={{
-                                                                    maxHeight: `${itemContext.dimensions.height}`,
-                                                                }}
-                                                            >
-                                                                {
-                                                                    itemContext.title
-                                                                }
-                                                            </div>
+                                                                {...leftResizeProps}
+                                                            />
+                                                        ) : (
+                                                            ""
+                                                        )}
 
-                                                            {itemContext.useResizeHandle ? (
-                                                                <div
-                                                                    {...rightResizeProps}
-                                                                />
-                                                            ) : (
-                                                                ""
-                                                            )}
+                                                        <div
+                                                            className="rct-item-content"
+                                                            style={{
+                                                                maxHeight: `${itemContext.dimensions.height}`,
+                                                            }}
+                                                        >
+                                                            {itemContext.title}
                                                         </div>
-                                                    );
-                                                }}
-                                                unit="day"
-                                                defaultTimeStart={moment().add(
-                                                    -256,
-                                                    "hour"
-                                                )}
-                                                defaultTimeEnd={moment().add(
-                                                    256,
-                                                    "hour"
-                                                )}
-                                                maxZoom={3000000000}
-                                                traditionalZoom={true}
-                                                sidebarWidth={250}
-                                                visibleTimeStart={
-                                                    visibleTimeStart
-                                                }
-                                                visibleTimeEnd={visibleTimeEnd}
-                                                timeSteps={{
-                                                    second: 60,
-                                                    minute: 60,
-                                                    hour: 1,
-                                                    day: 1,
-                                                    month: 1,
-                                                    year: 1,
-                                                }}
-                                                onItemMove={handleItemMove}
-                                            >
-                                                <TimelineHeaders>
-                                                    <CustomHeader unit="month">
-                                                        {({
-                                                            headerContext: {
-                                                                intervals,
-                                                            },
-                                                            getRootProps,
-                                                            getIntervalProps,
-                                                            showPeriod,
-                                                            data,
-                                                        }) => {
-                                                            return (
-                                                                <div
-                                                                    {...getRootProps()}
-                                                                >
-                                                                    {intervals.map(
-                                                                        (
-                                                                            interval
-                                                                        ) => {
-                                                                            const displayNone =
-                                                                                {
-                                                                                    display:
-                                                                                        "none",
-                                                                                    height: "0px",
-                                                                                };
-                                                                            const intervalStyle =
-                                                                                {
-                                                                                    lineHeight:
-                                                                                        "30px",
-                                                                                    textAlign:
-                                                                                        "center",
-                                                                                    borderLeft:
-                                                                                        "1px solid black",
-                                                                                    cursor: "pointer",
-                                                                                    backgroundColor:
-                                                                                        "#c51f21",
-                                                                                    color: "white",
-                                                                                    border: "1px solid #bababa",
-                                                                                };
-                                                                            return (
-                                                                                <div
-                                                                                    onClick={() => {
-                                                                                        showPeriod(
-                                                                                            interval.startTime,
-                                                                                            interval.endTime
-                                                                                        );
-                                                                                    }}
-                                                                                    {...getIntervalProps(
-                                                                                        {
-                                                                                            interval,
-                                                                                            style:
-                                                                                                interval.labelWidth <=
-                                                                                                19
-                                                                                                    ? displayNone
-                                                                                                    : intervalStyle,
-                                                                                        }
+
+                                                        {itemContext.useResizeHandle ? (
+                                                            <div
+                                                                {...rightResizeProps}
+                                                            />
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                    </div>
+                                                );
+                                            }}
+                                            unit="day"
+                                            defaultTimeStart={moment().add(
+                                                -256,
+                                                "hour"
+                                            )}
+                                            defaultTimeEnd={moment().add(
+                                                256,
+                                                "hour"
+                                            )}
+                                            maxZoom={3000000000}
+                                            traditionalZoom={true}
+                                            sidebarWidth={250}
+                                            visibleTimeStart={visibleTimeStart}
+                                            visibleTimeEnd={visibleTimeEnd}
+                                            timeSteps={{
+                                                second: 60,
+                                                minute: 60,
+                                                hour: 1,
+                                                day: 1,
+                                                month: 1,
+                                                year: 1,
+                                            }}
+                                            onItemMove={handleItemMove}
+                                        >
+                                            <TimelineHeaders>
+                                                <CustomHeader unit="month">
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const displayNone =
+                                                                            {
+                                                                                display:
+                                                                                    "none",
+                                                                                height: "0px",
+                                                                            };
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    "#c51f21",
+                                                                                color: "white",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style:
+                                                                                            interval.labelWidth <=
+                                                                                            19
+                                                                                                ? displayNone
+                                                                                                : intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div>
+                                                                                    {interval.startTime.format(
+                                                                                        "MMMM"
                                                                                     )}
-                                                                                >
-                                                                                    <div>
-                                                                                        {interval.startTime.format(
-                                                                                            "MMMM"
-                                                                                        )}
-                                                                                    </div>
                                                                                 </div>
-                                                                            );
-                                                                        }
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        }}
-                                                    </CustomHeader>
-                                                    <CustomHeader unit="week">
-                                                        {({
-                                                            headerContext: {
-                                                                intervals,
-                                                            },
-                                                            getRootProps,
-                                                            getIntervalProps,
-                                                            showPeriod,
-                                                            data,
-                                                        }) => {
-                                                            return (
-                                                                <div
-                                                                    {...getRootProps()}
-                                                                >
-                                                                    {intervals.map(
-                                                                        (
-                                                                            interval
-                                                                        ) => {
-                                                                            const displayNone =
-                                                                                {
-                                                                                    display:
-                                                                                        "none",
-                                                                                    height: "0px",
-                                                                                };
-                                                                            const intervalStyle =
-                                                                                {
-                                                                                    lineHeight:
-                                                                                        "30px",
-                                                                                    textAlign:
-                                                                                        "center",
-                                                                                    borderLeft:
-                                                                                        "1px solid black",
-                                                                                    cursor: "pointer",
-                                                                                    backgroundColor:
-                                                                                        moment(
-                                                                                            interval.startTime
-                                                                                        ).week() %
-                                                                                            2 >
-                                                                                        0
-                                                                                            ? "blue"
-                                                                                            : "pink",
-                                                                                    color:
-                                                                                        moment(
-                                                                                            interval.startTime
-                                                                                        ).week() %
-                                                                                            2 >
-                                                                                        0
-                                                                                            ? "pink"
-                                                                                            : "blue",
-                                                                                    border: "1px solid #bababa",
-                                                                                };
-                                                                            return (
-                                                                                <div
-                                                                                    onClick={() => {
-                                                                                        showPeriod(
-                                                                                            interval.startTime,
-                                                                                            interval.endTime
-                                                                                        );
-                                                                                    }}
-                                                                                    {...getIntervalProps(
-                                                                                        {
-                                                                                            interval,
-                                                                                            style:
-                                                                                                interval.labelWidth <=
-                                                                                                19
-                                                                                                    ? displayNone
-                                                                                                    : intervalStyle,
-                                                                                        }
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                                <CustomHeader unit="week">
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const displayNone =
+                                                                            {
+                                                                                display:
+                                                                                    "none",
+                                                                                height: "0px",
+                                                                            };
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    moment(
+                                                                                        interval.startTime
+                                                                                    ).week() %
+                                                                                        2 >
+                                                                                    0
+                                                                                        ? "blue"
+                                                                                        : "pink",
+                                                                                color:
+                                                                                    moment(
+                                                                                        interval.startTime
+                                                                                    ).week() %
+                                                                                        2 >
+                                                                                    0
+                                                                                        ? "pink"
+                                                                                        : "blue",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style:
+                                                                                            interval.labelWidth <=
+                                                                                            19
+                                                                                                ? displayNone
+                                                                                                : intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div>
+                                                                                    KW{" "}
+                                                                                    {interval.startTime.format(
+                                                                                        "w"
                                                                                     )}
-                                                                                >
-                                                                                    <div>
-                                                                                        KW{" "}
-                                                                                        {interval.startTime.format(
-                                                                                            "w"
-                                                                                        )}
-                                                                                    </div>
                                                                                 </div>
-                                                                            );
-                                                                        }
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        }}
-                                                    </CustomHeader>
-                                                    <CustomHeader
-                                                        height={30}
-                                                        headerData={{
-                                                            someData: "data",
-                                                        }}
-                                                        unit="day"
-                                                    >
-                                                        {({
-                                                            headerContext: {
-                                                                intervals,
-                                                            },
-                                                            getRootProps,
-                                                            getIntervalProps,
-                                                            showPeriod,
-                                                            data,
-                                                        }) => {
-                                                            return (
-                                                                <div
-                                                                    {...getRootProps()}
-                                                                >
-                                                                    {intervals.map(
-                                                                        (
-                                                                            interval
-                                                                        ) => {
-                                                                            const intervalStyle =
-                                                                                {
-                                                                                    lineHeight:
-                                                                                        "30px",
-                                                                                    textAlign:
-                                                                                        "center",
-                                                                                    borderLeft:
-                                                                                        "1px solid black",
-                                                                                    cursor: "pointer",
-                                                                                    backgroundColor:
-                                                                                        moment(
-                                                                                            interval.startTime
-                                                                                        ).day() ===
-                                                                                        0
-                                                                                            ? "gray"
-                                                                                            : moment(
-                                                                                                  interval.startTime
-                                                                                              ).day() ===
-                                                                                              1
-                                                                                            ? "red"
-                                                                                            : moment(
-                                                                                                  interval.startTime
-                                                                                              ).day() ===
-                                                                                              2
-                                                                                            ? "green"
-                                                                                            : moment(
-                                                                                                  interval.startTime
-                                                                                              ).day() ===
-                                                                                              3
-                                                                                            ? "red"
-                                                                                            : moment(
-                                                                                                  interval.startTime
-                                                                                              ).day() ===
-                                                                                              4
-                                                                                            ? "green"
-                                                                                            : moment(
-                                                                                                  interval.startTime
-                                                                                              ).day() ===
-                                                                                              5
-                                                                                            ? "red"
-                                                                                            : moment(
-                                                                                                  interval.startTime
-                                                                                              ).day() ===
-                                                                                              6
-                                                                                            ? "green"
-                                                                                            : "black",
-                                                                                    color:
-                                                                                        moment(
-                                                                                            interval.startTime
-                                                                                        ).day() ===
-                                                                                        0
-                                                                                            ? "black"
-                                                                                            : "white",
-                                                                                    border: "1px solid #bababa",
-                                                                                };
-                                                                            return (
-                                                                                <div
-                                                                                    onClick={() => {
-                                                                                        showPeriod(
-                                                                                            interval.startTime,
-                                                                                            interval.endTime
-                                                                                        );
-                                                                                    }}
-                                                                                    {...getIntervalProps(
-                                                                                        {
-                                                                                            interval,
-                                                                                            style: intervalStyle,
-                                                                                        }
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                                <CustomHeader
+                                                    height={30}
+                                                    headerData={{
+                                                        someData: "data",
+                                                    }}
+                                                    unit="day"
+                                                >
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    moment(
+                                                                                        interval.startTime
+                                                                                    ).day() ===
+                                                                                    0
+                                                                                        ? "gray"
+                                                                                        : moment(
+                                                                                              interval.startTime
+                                                                                          ).day() ===
+                                                                                          1
+                                                                                        ? "red"
+                                                                                        : moment(
+                                                                                              interval.startTime
+                                                                                          ).day() ===
+                                                                                          2
+                                                                                        ? "green"
+                                                                                        : moment(
+                                                                                              interval.startTime
+                                                                                          ).day() ===
+                                                                                          3
+                                                                                        ? "red"
+                                                                                        : moment(
+                                                                                              interval.startTime
+                                                                                          ).day() ===
+                                                                                          4
+                                                                                        ? "green"
+                                                                                        : moment(
+                                                                                              interval.startTime
+                                                                                          ).day() ===
+                                                                                          5
+                                                                                        ? "red"
+                                                                                        : moment(
+                                                                                              interval.startTime
+                                                                                          ).day() ===
+                                                                                          6
+                                                                                        ? "green"
+                                                                                        : "black",
+                                                                                color:
+                                                                                    moment(
+                                                                                        interval.startTime
+                                                                                    ).day() ===
+                                                                                    0
+                                                                                        ? "black"
+                                                                                        : "white",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style: intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div>
+                                                                                    {interval.startTime.format(
+                                                                                        interval.labelWidth <
+                                                                                            150
+                                                                                            ? "DD"
+                                                                                            : "dddd DD.MM"
                                                                                     )}
-                                                                                >
-                                                                                    <div>
-                                                                                        {interval.startTime.format(
-                                                                                            interval.labelWidth <
-                                                                                                150
-                                                                                                ? "DD"
-                                                                                                : "dddd DD.MM"
-                                                                                        )}
-                                                                                    </div>
                                                                                 </div>
-                                                                            );
-                                                                        }
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        }}
-                                                    </CustomHeader>
-                                                    <CustomHeader
-                                                        height={30}
-                                                        headerData={{
-                                                            someData: "data",
-                                                        }}
-                                                        unit="hour"
-                                                    >
-                                                        {({
-                                                            headerContext: {
-                                                                intervals,
-                                                            },
-                                                            getRootProps,
-                                                            getIntervalProps,
-                                                            showPeriod,
-                                                            data,
-                                                        }) => {
-                                                            return (
-                                                                <div
-                                                                    {...getRootProps()}
-                                                                >
-                                                                    {intervals.map(
-                                                                        (
-                                                                            interval
-                                                                        ) => {
-                                                                            const displayNone =
-                                                                                {
-                                                                                    display:
-                                                                                        "none",
-                                                                                    height: "0px",
-                                                                                };
-                                                                            const intervalStyle =
-                                                                                {
-                                                                                    lineHeight:
-                                                                                        "30px",
-                                                                                    textAlign:
-                                                                                        "center",
-                                                                                    borderLeft:
-                                                                                        "1px solid black",
-                                                                                    cursor: "pointer",
-                                                                                    backgroundColor:
-                                                                                        moment(
-                                                                                            interval.startTime
-                                                                                        ).hour() %
-                                                                                            2 >
-                                                                                        0
-                                                                                            ? "black"
-                                                                                            : "white",
-                                                                                    color:
-                                                                                        moment(
-                                                                                            interval.startTime
-                                                                                        ).hour() %
-                                                                                            2 >
-                                                                                        0
-                                                                                            ? "white"
-                                                                                            : "black",
-                                                                                    border: "1px solid #bababa",
-                                                                                };
-                                                                            return (
-                                                                                <div
-                                                                                    onClick={() => {
-                                                                                        showPeriod(
-                                                                                            interval.startTime,
-                                                                                            interval.endTime
-                                                                                        );
-                                                                                    }}
-                                                                                    {...getIntervalProps(
-                                                                                        {
-                                                                                            interval,
-                                                                                            style:
-                                                                                                interval.labelWidth <=
-                                                                                                19
-                                                                                                    ? displayNone
-                                                                                                    : intervalStyle,
-                                                                                        }
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                                <CustomHeader
+                                                    height={30}
+                                                    headerData={{
+                                                        someData: "data",
+                                                    }}
+                                                    unit="hour"
+                                                >
+                                                    {({
+                                                        headerContext: {
+                                                            intervals,
+                                                        },
+                                                        getRootProps,
+                                                        getIntervalProps,
+                                                        showPeriod,
+                                                        data,
+                                                    }) => {
+                                                        return (
+                                                            <div
+                                                                {...getRootProps()}
+                                                            >
+                                                                {intervals.map(
+                                                                    (
+                                                                        interval
+                                                                    ) => {
+                                                                        const displayNone =
+                                                                            {
+                                                                                display:
+                                                                                    "none",
+                                                                                height: "0px",
+                                                                            };
+                                                                        const intervalStyle =
+                                                                            {
+                                                                                lineHeight:
+                                                                                    "30px",
+                                                                                textAlign:
+                                                                                    "center",
+                                                                                borderLeft:
+                                                                                    "1px solid black",
+                                                                                cursor: "pointer",
+                                                                                backgroundColor:
+                                                                                    moment(
+                                                                                        interval.startTime
+                                                                                    ).hour() %
+                                                                                        2 >
+                                                                                    0
+                                                                                        ? "black"
+                                                                                        : "white",
+                                                                                color:
+                                                                                    moment(
+                                                                                        interval.startTime
+                                                                                    ).hour() %
+                                                                                        2 >
+                                                                                    0
+                                                                                        ? "white"
+                                                                                        : "black",
+                                                                                border: "1px solid #bababa",
+                                                                            };
+                                                                        return (
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    showPeriod(
+                                                                                        interval.startTime,
+                                                                                        interval.endTime
+                                                                                    );
+                                                                                }}
+                                                                                {...getIntervalProps(
+                                                                                    {
+                                                                                        interval,
+                                                                                        style:
+                                                                                            interval.labelWidth <=
+                                                                                            19
+                                                                                                ? displayNone
+                                                                                                : intervalStyle,
+                                                                                    }
+                                                                                )}
+                                                                            >
+                                                                                <div>
+                                                                                    {interval.startTime.format(
+                                                                                        "HH"
                                                                                     )}
-                                                                                >
-                                                                                    <div>
-                                                                                        {interval.startTime.format(
-                                                                                            "HH"
-                                                                                        )}
-                                                                                    </div>
                                                                                 </div>
-                                                                            );
-                                                                        }
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        }}
-                                                    </CustomHeader>
-                                                </TimelineHeaders>
-                                            </Timeline>
-                                        </div>
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </CustomHeader>
+                                            </TimelineHeaders>
+                                        </Timeline>
                                     )}
                                 </>
                             )}
