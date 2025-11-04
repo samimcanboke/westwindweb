@@ -1,28 +1,31 @@
-import { useEffect, useState } from 'react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
+import { useEffect, useState } from "react";
+import ApplicationLogo from "@/Components/ApplicationLogo";
+import Dropdown from "@/Components/Dropdown";
+import NavLink from "@/Components/NavLink";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
+import { Link } from "@inertiajs/react";
 
 export default function Authenticated({ user, header, children }) {
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [showingNavigationDropdown, setShowingNavigationDropdown] =
+        useState(false);
     const [waitConfirmedCount, setWaitConfirmedCount] = useState(0);
     const [weeklyTodos, setWeeklyTodos] = useState(0);
     const getWaitConfirmedCount = async () => {
-        const response = await axios.get(route('wait-confirmed-jobs-count'));
+        // Axios'un tanımlı olduğu varsayılıyor
+        const response = await axios.get(route("wait-confirmed-jobs-count"));
         setWaitConfirmedCount(response.data.count);
-    }
+    };
 
     const getWeeklyTodos = async () => {
-        const response = await axios.get(route('get-weekly-todos'));
+        // Axios'un tanımlı olduğu varsayılıyor
+        const response = await axios.get(route("get-weekly-todos"));
         setWeeklyTodos(response.data.count);
-    }
+    };
 
     window.userId = user.id;
 
-    if(user.is_admin || user.accountant){
-        useEffect(()=>{
+    if (user.is_admin || user.accountant) {
+        useEffect(() => {
             getWaitConfirmedCount();
             getWeeklyTodos();
             let id = setInterval(getWaitConfirmedCount, 60000);
@@ -30,128 +33,211 @@ export default function Authenticated({ user, header, children }) {
             return () => {
                 clearInterval(id);
                 clearInterval(id2);
-            }
-        },[])
+            };
+        }, []);
     }
 
     return (
-
-        <div className="min-h-screen bg-gray-100">
-            {user.id && (<span id="user-id" style={{display: 'none'}}>{user.id}</span>)}
-            <nav className="bg-white border-b border-gray-100">
+        // Arka planı hafifçe gri yaparak navbardan ayırıyoruz
+        <div className="min-h-screen bg-indigo-100">
+            {user.id && (
+                <span id="user-id" style={{ display: "none" }}>
+                    {user.id}
+                </span>
+            )}
+            {/* Navbar'ı koyu indigo, kalın gölge ve yapışkan hale getiriyoruz */}
+            <nav className="bg-indigo-700 shadow-2xl border-b border-indigo-500 sticky top-0 z-40">
                 <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
                                 <Link href="/dashboard">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    {/* Logo rengini yüksek kontrastlı beyaz yapıyoruz */}
+                                    <ApplicationLogo className="block h-9 w-auto fill-current text-white" />
                                 </Link>
                             </div>
 
-                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                            {/* Büyük ekran navigasyon linkleri - Beyaz metin, Cyan vurgu */}
+                            <div className="hidden xl:flex space-x-2 sm:-my-px sm:ms-8 text-sm font-medium justcontent-center items-center">
+                                <NavLink
+                                    href={route("dashboard")}
+                                    active={route().current("dashboard")}
+                                    className="px-3 text-white hover:text-cyan-400 active:text-cyan-400 active:border-cyan-400 transition-colors duration-200"
+                                >
                                     Dashboard
                                 </NavLink>
-                            </div>
-                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('new-jobs')} active={route().current('new-jobs')}>
-                                Neue Berichte
+                                <NavLink
+                                    href={route("new-jobs")}
+                                    active={route().current("new-jobs")}
+                                    className="px-3 text-white hover:text-cyan-400 active:text-cyan-400 active:border-cyan-400 transition-colors duration-200"
+                                >
+                                    Neue Berichte
                                 </NavLink>
-                            </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('draft-jobs')} active={route().current('draft-jobs')}>
-                                Bericht Entwürfe
+                                <NavLink
+                                    href={route("draft-jobs")}
+                                    active={route().current("draft-jobs")}
+                                    className="px-3 text-white hover:text-cyan-400 active:text-cyan-400 active:border-cyan-400 transition-colors duration-200"
+                                >
+                                    Bericht Entwürfe
                                 </NavLink>
-                            </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('finalized-jobs')} active={route().current('finalized-jobs')}>
+                                <NavLink
+                                    href={route("finalized-jobs")}
+                                    active={route().current("finalized-jobs")}
+                                    className="px-3 text-white hover:text-cyan-400 active:text-cyan-400 active:border-cyan-400 transition-colors duration-200"
+                                >
                                     Eingereichte Berichte
                                 </NavLink>
-                            </div>
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('planner')} active={route().current('planner')}>
+                                <NavLink
+                                    href={route("planner")}
+                                    active={route().current("planner")}
+                                    className="px-3 text-white hover:text-cyan-400 active:text-cyan-400 active:border-cyan-400 transition-colors duration-200"
+                                >
                                     Planung
                                 </NavLink>
-                            </div>
-                            {/*<div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('sick-leaves')} active={route().current('sick-leaves')}>
-                                    Krankmeldungen
-                                </NavLink>
-                            </div>
-                            <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                <NavLink href={route('annual-leaves')} active={route().current('annual-leaves')}>
-                                Urlaubsanträge
-                                </NavLink>
-                            </div>*/}
-                            {(user.is_admin || user.accountant) && (
-                                <div className="hidden xl:flex space-x-6 sm:-my-px sm:ms-10">
-                                    <Dropdown>
+
+                                {(user.is_admin || user.accountant) && (
+                                    <Dropdown className="hidden xl:flex">
                                         <Dropdown.Trigger>
-                                        <button
-                                                    type="button"
-                                                    className="inline-flex mt-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                            <button
+                                                type="button"
+                                                className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-bold rounded-full text-indigo-700 bg-white hover:bg-gray-200 focus:outline-none transition duration-150 ease-in-out shadow-lg" // Beyaz buton, koyu metin
+                                            >
+                                                Admin-Menü
+                                                {waitConfirmedCount > 0 && (
+                                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full ring-2 ring-indigo-700">
+                                                        {" "}
+                                                        {/* Kırmızı rozet, koyu halka */}
+                                                        {waitConfirmedCount}
+                                                    </span>
+                                                )}
+                                                <svg
+                                                    className="ms-2 -me-0.5 h-4 w-4 text-indigo-700"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
                                                 >
-                                                    Admin-Menü
-                                                    {waitConfirmedCount > 0 && (
-                                                        <span className="absolute bg-red-600 text-red-100 px-2 py-1 text-xs font-bold rounded-full top-2 right-2">{waitConfirmedCount}</span>
-                                                    )}
-
-                                                    <svg
-                                                        className="ms-2 -me-0.5 h-4 w-4"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                </button>
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
                                         </Dropdown.Trigger>
-                                        <Dropdown.Content>
-
-                                            <Dropdown.Link href={route('users.index')}>Benutzer</Dropdown.Link>
-                                            <Dropdown.Link href={route('clients-index')}>Kunden</Dropdown.Link>
-                                            <Dropdown.Link href={route('confirmed-jobs')}>Bestätigte Berichte</Dropdown.Link>
-                                            <Dropdown.Link href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</Dropdown.Link>
-                                            <Dropdown.Link href={route('confirmed-jobs-to-edit')}>Bearbeiten Bestätigte Berichte</Dropdown.Link>
-                                            <Dropdown.Link href={route('admin-planner')}>Planung</Dropdown.Link>
-                                            <Dropdown.Link href={route('clients.new-job')}>Kundenaufträge</Dropdown.Link>
-                                            <Dropdown.Link href={route('confirmed-jobs-to-client')}>Kunden Berichte</Dropdown.Link>
-                                            <Dropdown.Link href={route('bahn-cards')}>Bahnkarten</Dropdown.Link>
-                                            <Dropdown.Link href={route('aggreements.view')}>Vertrag</Dropdown.Link>
-                                            <Dropdown.Link href={route('certificates')}>Zertifikate</Dropdown.Link>
-                                            <Dropdown.Link href={route('programs.view')}>Programme</Dropdown.Link>
-                                            <Dropdown.Link href={route('todo.view')}>
+                                        <Dropdown.Content className="mt-2 rounded-xl shadow-2xl bg-white border border-gray-100">
+                                            <Dropdown.Link
+                                                href={route("users.index")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Benutzer
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("clients-index")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Kunden
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("confirmed-jobs")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Bestätigte Berichte
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route(
+                                                    "wait-confirmed-jobs"
+                                                )}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Unbestätigte Berichte
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route(
+                                                    "confirmed-jobs-to-edit"
+                                                )}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Bearbeiten Bestätigte Berichte
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("admin-planner")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Planung
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("clients.new-job")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Kundenaufträge
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route(
+                                                    "confirmed-jobs-to-client"
+                                                )}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Kunden Berichte
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("bahn-cards")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Bahnkarten
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("aggreements.view")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Vertrag
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("certificates")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Zertifikate
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("programs.view")}
+                                                className="hover:bg-indigo-50 text-gray-700"
+                                            >
+                                                Programme
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("todo.view")}
+                                                className="flex justify-between items-center hover:bg-indigo-50 text-gray-700"
+                                            >
                                                 ToDo Liste
                                                 {weeklyTodos > 0 && (
-                                                    <span className="bg-red-600 text-red-100 px-2 py-1 text-xs font-bold rounded-full ms-2">
+                                                    <span className="bg-cyan-500 text-white px-2 py-0.5 text-xs font-bold rounded-full ms-2">
+                                                        {" "}
+                                                        {/* ToDo badge'i Cyan yaptık */}
                                                         {weeklyTodos}
                                                     </span>
                                                 )}
                                             </Dropdown.Link>
                                         </Dropdown.Content>
                                     </Dropdown>
-                                </div>
-                            )}
+                                )}
+                            </div>
 
+                            {/* Admin Menü Dropdown - Yüksek Kontrastlı Beyaz Buton */}
                         </div>
 
-                        <div className="hidden xl:flex xl:items-center xl:ms-6">
-                            <div className="ms-3 relative">
+                        {/* Kullanıcı Menüsü - Yüksek Kontrastlı Buton */}
+                        <div className="hidden xl:flex xl:items-center">
+                            <div className=" relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                className="inline-flex items-center px-4 py-2 border border-white text-sm leading-4 font-semibold rounded-full text-indigo-600 bg-white hover:bg-gray-300 hover:border-gray-300  focus:outline-none transition duration-150 ease-in-out shadow-md"
                                             >
                                                 {user.name}
 
                                                 <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
+                                                    className="ms-2 -me-0.5 h-4 w-4 text-indigo-600"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
@@ -166,16 +252,44 @@ export default function Authenticated({ user, header, children }) {
                                         </span>
                                     </Dropdown.Trigger>
 
-                                    <Dropdown.Content>
-
-                                        <Dropdown.Link href={route('new-jobs')}>Neue Berichte</Dropdown.Link>
-                                        <Dropdown.Link href={route('draft-jobs')}>Bericht Entwürfe</Dropdown.Link>
-                                        <Dropdown.Link href={route('finalized-jobs')}>Eingereichte Berichte </Dropdown.Link>
-                                        <Dropdown.Link href={route('planner')}>Planung</Dropdown.Link>
-                                        {/*<Dropdown.Link href={route('sick-leaves')}>Krankmeldungen</Dropdown.Link>
-                                        <Dropdown.Link href={route('annual-leaves')}>Urlaubsanträge</Dropdown.Link>*/}
-                                        <Dropdown.Link href={route('profile.edit')}>Profil</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
+                                    <Dropdown.Content className="mt-2 rounded-xl shadow-2xl bg-white border border-gray-100">
+                                        <Dropdown.Link
+                                            href={route("new-jobs")}
+                                            className="hover:bg-indigo-50 text-gray-700"
+                                        >
+                                            Neue Berichte
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route("draft-jobs")}
+                                            className="hover:bg-indigo-50 text-gray-700"
+                                        >
+                                            Bericht Entwürfe
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route("finalized-jobs")}
+                                            className="hover:bg-indigo-50 text-gray-700"
+                                        >
+                                            Eingereichte Berichte{" "}
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route("planner")}
+                                            className="hover:bg-indigo-50 text-gray-700"
+                                        >
+                                            Planung
+                                        </Dropdown.Link>
+                                        <div className="border-t border-gray-100 my-1"></div>
+                                        <Dropdown.Link
+                                            href={route("profile.edit")}
+                                            className="hover:bg-indigo-50 text-gray-700"
+                                        >
+                                            Profil
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route("logout")}
+                                            method="post"
+                                            as="button"
+                                            className="hover:bg-red-50 hover:text-red-600 text-gray-700" // Çıkış butonu için hafif kırmızı hover
+                                        >
                                             Abmelden
                                         </Dropdown.Link>
                                     </Dropdown.Content>
@@ -183,21 +297,39 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                         </div>
 
+                        {/* Mobil Menü Butonu - Koyu arka plana uyumlu */}
                         <div className="-me-2 flex items-center xl:hidden">
                             <button
-                                onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                                onClick={() =>
+                                    setShowingNavigationDropdown(
+                                        (previousState) => !previousState
+                                    )
+                                }
+                                className="inline-flex items-center justify-center p-2 rounded-lg text-indigo-200 hover:text-white hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 focus:text-white transition duration-150 ease-in-out" // Koyu arka plana uyumlu ikon ve hover
                             >
-                                <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <svg
+                                    className="h-6 w-6"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
                                     <path
-                                        className={!showingNavigationDropdown ? 'inline-flex' : 'hidden'}
+                                        className={
+                                            !showingNavigationDropdown
+                                                ? "inline-flex"
+                                                : "hidden"
+                                        }
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth="2"
                                         d="M4 6h16M4 12h16M4 18h16"
                                     />
                                     <path
-                                        className={showingNavigationDropdown ? 'inline-flex' : 'hidden'}
+                                        className={
+                                            showingNavigationDropdown
+                                                ? "inline-flex"
+                                                : "hidden"
+                                        }
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth="2"
@@ -209,90 +341,206 @@ export default function Authenticated({ user, header, children }) {
                     </div>
                 </div>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' xl:hidden'}>
+                {/* Mobil Navigasyon İçeriği - Koyu temaya uygun */}
+                <div
+                    className={
+                        (showingNavigationDropdown ? "block" : "hidden") +
+                        " xl:hidden bg-indigo-800 border-t border-indigo-600"
+                    }
+                >
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                        <ResponsiveNavLink
+                            href={route("dashboard")}
+                            active={route().current("dashboard")}
+                            className="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                        >
                             Armaturenbrett
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("new-jobs")}
+                            className="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                        >
+                            Neue Berichte
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("draft-jobs")}
+                            className="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                        >
+                            Bericht Entwürfe
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("finalized-jobs")}
+                            className="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                        >
+                            Eingereichte Berichte
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("planner")}
+                            className="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                        >
+                            Planung
                         </ResponsiveNavLink>
                     </div>
 
-                    <div className="pt-2 pb-3 space-y-1">
-                    {(user.is_admin || user.accountant) && (
-
-                                <div className="">
-                                    <Dropdown>
-                                        <Dropdown.Trigger>
+                    {/* Mobil Admin Dropdown - Koyu temaya uygun */}
+                    <div className="pt-2 pb-3 space-y-1 px-4">
+                        {(user.is_admin || user.accountant) && (
+                            <div className="border border-indigo-600 bg-indigo-700 rounded-lg p-2">
+                                <Dropdown>
+                                    <Dropdown.Trigger>
                                         <button
-                                                    type="button"
-                                                    className="inline-flex mt-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                                >
-                                                    Admin-Menü
-                                                    {waitConfirmedCount > 0 && (
-                                                        <span className="absolute bg-red-600 text-red-100 px-2 py-1 text-xs font-bold rounded-full top-2 right-2">{waitConfirmedCount}</span>
-                                                    )}
-                                                    <svg
-                                                        className="ms-2 -me-0.5 h-4 w-4"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                        </Dropdown.Trigger>
-                                        <Dropdown.Content className="mt-2 l-0 w-full">
-                                            <ResponsiveNavLink href={route('users.index')}>Benutzer</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('clients-index')}>Kunden</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('confirmed-jobs')}>Bestätigte Berichte</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('wait-confirmed-jobs')}>Unbestätigte Berichte</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('confirmed-jobs-to-edit')}>Bearbeiten Bestätigte Berichte</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('admin-planner')}>Planung</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('clients.new-job')}>Kundenaufträge</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('confirmed-jobs-to-client')}>Kunden Berichte</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('aggreements.view')}>Vertrag</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('certificates')}>Zertifikate</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('programs.view')}>Programme</ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('todo.view')}>ToDo Liste</ResponsiveNavLink>
-                                        </Dropdown.Content>
-                                    </Dropdown>
-                                </div>
-                            )}
-
+                                            type="button"
+                                            className="w-full text-left inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none transition ease-in-out duration-150 relative"
+                                        >
+                                            Admin-Menü
+                                            {waitConfirmedCount > 0 && (
+                                                <span className="absolute right-4 bg-red-500 text-white w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full ring-2 ring-indigo-700">
+                                                    {waitConfirmedCount}
+                                                </span>
+                                            )}
+                                            <svg
+                                                className="ms-2 -me-0.5 h-4 w-4 absolute right-1 top-1/2 transform -translate-y-1/2 text-white"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </Dropdown.Trigger>
+                                    <Dropdown.Content className="mt-2 w-full shadow-lg rounded-lg bg-indigo-700">
+                                        <ResponsiveNavLink
+                                            href={route("users.index")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Benutzer
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("clients-index")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Kunden
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("confirmed-jobs")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Bestätigte Berichte
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("wait-confirmed-jobs")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Unbestätigte Berichte
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route(
+                                                "confirmed-jobs-to-edit"
+                                            )}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Bearbeiten Bestätigte Berichte
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("admin-planner")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Planung
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("clients.new-job")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Kundenaufträge
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route(
+                                                "confirmed-jobs-to-client"
+                                            )}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Kunden Berichte
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("aggreements.view")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Vertrag
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("certificates")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Zertifikate
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("programs.view")}
+                                            className="text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            Programme
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink
+                                            href={route("todo.view")}
+                                            className="flex justify-between items-center text-indigo-800 hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            ToDo Liste
+                                            {weeklyTodos > 0 && (
+                                                <span className="bg-cyan-500 text-white px-2 py-0.5 text-xs font-bold rounded-full ms-2">
+                                                    {weeklyTodos}
+                                                </span>
+                                            )}
+                                        </ResponsiveNavLink>
+                                    </Dropdown.Content>
+                                </Dropdown>
+                            </div>
+                        )}
                     </div>
 
-                    <div className="pt-4 pb-1 border-t border-gray-200">
+                    {/* Mobil Kullanıcı Bilgileri ve Çıkış */}
+                    <div className="pt-4 pb-1 border-t border-indigo-600">
                         <div className="px-4">
-                            <div className="font-medium text-base text-gray-800">{user.name}</div>
-                            <div className="font-medium text-sm text-gray-500">{user.email}</div>
+                            <div className="font-semibold text-base text-white">
+                                {user.name}
+                            </div>
+                            <div className="font-normal text-sm text-indigo-200">
+                                {user.email}
+                            </div>
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('new-jobs')}>Neue Berichte</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('draft-jobs')}>Bericht Entwürfe</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('finalized-jobs')}>Eingereichte Berichte</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('planner')}>Planung</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('sick-leaves')}>Krankmeldungen</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('annual-leaves')}>Urlaubsanträge</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('profile.edit')}>Profil</ResponsiveNavLink>
-                            <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                            Abmelden
+                            <ResponsiveNavLink
+                                href={route("profile.edit")}
+                                className="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                            >
+                                Profil
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                method="post"
+                                href={route("logout")}
+                                as="button"
+                                className="text-red-400 hover:bg-red-900 hover:text-white" // Koyu tema için kırmızı çıkış butonu
+                            >
+                                Abmelden
                             </ResponsiveNavLink>
                         </div>
                     </div>
                 </div>
             </nav>
-
             {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
+                <header className="bg-indigo-100">
+                    {" "}
+                    {/* Header'ı beyaz ve belirgin gölgeli tuttuk */}
+                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {header}
+                    </div>
                 </header>
             )}
-
-            <main>{children}</main>
+            <main className="container mx-auto py-4">{children}</main>{" "}
+            {/* Ana içerik alanına dikey boşluk ekledik */}
         </div>
     );
 }
