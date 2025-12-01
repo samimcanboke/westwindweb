@@ -470,8 +470,10 @@ class FinalizedJobsController extends Controller
                 } else {
                     $guest_back_sum = "00:00";
                 }
-                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
-                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
+                $start_station_obj = Station::where('id', $finalized_job->work_start_place)->first();
+                $start_station = $start_station_obj ? $start_station_obj->short_name : $finalized_job->work_start_place;
+                $end_station_obj = Station::where('id', $finalized_job->work_end_place)->first();
+                $end_station = $end_station_obj ? $end_station_obj->short_name : $finalized_job->work_end_place;
                 $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Heim" : " ";
                 $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Heim" : " ";
                 $data['rows'][] = [
@@ -650,8 +652,10 @@ class FinalizedJobsController extends Controller
                     $guest_back_sum = "00:00";
                 }
 
-                $start_station = Station::where('id', $finalized_job->work_start_place) ? Station::where('id', $finalized_job->work_start_place)->first()->short_name : $finalized_job->work_start_place;
-                $end_station = Station::where('id', $finalized_job->work_end_place) ? Station::where('id', $finalized_job->work_end_place)->first()->short_name : $finalized_job->work_end_place;
+                $start_station_obj = Station::where('id', $finalized_job->work_start_place)->first();
+                $start_station = $start_station_obj ? $start_station_obj->short_name : $finalized_job->work_start_place;
+                $end_station_obj = Station::where('id', $finalized_job->work_end_place)->first();
+                $end_station = $end_station_obj ? $end_station_obj->short_name : $finalized_job->work_end_place;
                 $gf_start_status = $finalized_job->gf_start_status ? $finalized_job->gf_start_status == 1 ? "Hotel" : "Heim" : " ";
                 $gf_end_status = $finalized_job->gf_end_status ? $finalized_job->gf_end_status == 1 ? "Hotel" : "Heim" : " ";
                 $data['rows'][] = [
