@@ -29,7 +29,9 @@ class FinalizedJobsController extends Controller
     {
         $initial_datetime = new DateTime($initial_date);
         $initial_datetime->setTimezone(new DateTimeZone('Europe/Berlin'));
-        list($hour, $minute) = explode(':', $time);
+        // list($hour, $minute) = explode(':', $time);
+        [$hour, $minute] = array_pad(explode(':', (string) $time, 2), 2, 0);
+
         $new_datetime = clone $initial_datetime;
         if ($hour == "00" && $minute == "00") {
             $new_datetime->modify('+1 day');
